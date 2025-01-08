@@ -4,7 +4,12 @@
 
 
 html {
-    background-color: rgb(236, 238, 254);
+    @apply bg-bg
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
 }
 
 * {
