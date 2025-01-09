@@ -1,5 +1,5 @@
-import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -11,6 +11,8 @@ import { Component } from '@angular/core';
 export class SidebarNavComponent {
   showChannels = true;
   showContacts = true;
+  showUser = false;
+  @Output() showUserChange = new EventEmitter<boolean>();
 
   toggleChannels() {
     this.showChannels = !this.showChannels;
@@ -18,5 +20,9 @@ export class SidebarNavComponent {
 
   toggleContacts() {
     this.showContacts = !this.showContacts;
+  }
+
+  openDialog() {
+    this.showUserChange.emit(true); 
   }
 }
