@@ -21,7 +21,7 @@ export class RegisterComponent {
       password: ['', [Validators.required, Validators.minLength(6)]], // Passwort min. 6 Zeichen
       terms: [false, Validators.requiredTrue], // Checkbox muss ausgewählt sein
       id: '',
-      avatar: '',
+      avatar: '/imgs/avatar/elias_neumann.svg',
       status: 'offline'
     });
   }
