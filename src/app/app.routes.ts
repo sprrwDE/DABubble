@@ -7,6 +7,5 @@ import { AppComponent } from './app.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: MainPageComponent },
-
-    { path: 'single-user', component: SingleUserComponent },
+  { path: 'single-user', component: SingleUserComponent },
 ];
