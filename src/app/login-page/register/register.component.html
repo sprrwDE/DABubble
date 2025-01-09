@@ -1,51 +1,72 @@
-<form class="bg-white rounded-3xl flex flex-col justify-center items-center w-1/2 p-12 shadow-lg m-auto"
+<form class="bg-white rounded-3xl flex flex-col justify-center items-center w-2/3 p-12 shadow-lg m-auto"
     [formGroup]="contactForm" (submit)="onSubmit()">
 
-    <!-- Überschrift und Beschreibung -->
-    <div class="flex flex-col justify-center items-center gap-8 pb-8">
-        <h1 class="text-4xl font-bold text-primary text-center">Konto erstellen</h1>
-        <p class="text-center text-xl">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</p>
-    </div>
+    <div class="w-full">
+        <!-- Überschrift und Beschreibung -->
+        <div class="flex flex-col justify-center items-center gap-8 pb-8">
+            <div class="flex items-center justify-between w-full">
 
-    <!-- Eingabefelder -->
-    <div class="flex flex-col gap-7 pb-4 w-full">
-        <!-- Name -->
-        <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
-            <label for="name" class="sr-only">Name und Nachname</label>
-            <img src="imgs/icons/person_filled.svg" alt="Name Icon">
-            <input id="name" formControlName="name" type="text" placeholder="Name und Nachname"
-                class="bg-transparent flex-1 focus:outline-none" />
+                <div class="text-black hover:text-primary cursor-pointer hover:bg-bg rounded-[100%] flex justify-center items-center size-6"
+                    [routerLink]="['/login']">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0_182_258" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                            width="24" height="24">
+                            <rect width="24" height="24" fill="white" />
+                        </mask>
+                        <g mask="url(#mask0_182_258)">
+                            <path
+                                d="M10.875 19.3001L4.275 12.7001C4.175 12.6001 4.104 12.4917 4.062 12.3751C4.02067 12.2584 4 12.1334 4 12.0001C4 11.8667 4.02067 11.7417 4.062 11.6251C4.104 11.5084 4.175 11.4001 4.275 11.3001L10.875 4.70008C11.0583 4.51675 11.2873 4.42075 11.562 4.41208C11.8373 4.40408 12.075 4.50008 12.275 4.70008C12.475 4.88342 12.5793 5.11242 12.588 5.38708C12.596 5.66242 12.5 5.90008 12.3 6.10008L7.4 11.0001H18.575C18.8583 11.0001 19.096 11.0957 19.288 11.2871C19.4793 11.4791 19.575 11.7167 19.575 12.0001C19.575 12.2834 19.4793 12.5207 19.288 12.7121C19.096 12.9041 18.8583 13.0001 18.575 13.0001H7.4L12.3 17.9001C12.4833 18.0834 12.5793 18.3167 12.588 18.6001C12.596 18.8834 12.5 19.1167 12.3 19.3001C12.1167 19.5001 11.8833 19.6001 11.6 19.6001C11.3167 19.6001 11.075 19.5001 10.875 19.3001Z" />
+                        </g>
+                    </svg>
+                </div>
+
+                <h1 class="text-5xl font-bold text-primary text-center">Konto erstellen</h1>
+                <div class="size-6 invisible"></div>
+            </div>
+            <p class="text-center text-xl">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.
+            </p>
         </div>
 
-        <!-- E-Mail -->
-        <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
-            <label for="email" class="sr-only">E-Mail-Adresse</label>
-            <img src="imgs/icons/mail.svg" alt="Mail Icon">
-            <input id="email" formControlName="email" type="email" placeholder="beispielname@email.com"
-                class="bg-transparent flex-1 focus:outline-none" />
+        <!-- Eingabefelder -->
+        <div class="flex flex-col gap-7 pb-4 w-full">
+            <!-- Name -->
+            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+                <label for="name" class="sr-only">Name und Nachname</label>
+                <img src="imgs/icons/person_filled.svg" alt="Name Icon">
+                <input id="name" formControlName="name" type="text" placeholder="Name und Nachname"
+                    class="bg-transparent flex-1 focus:outline-none" />
+            </div>
+
+            <!-- E-Mail -->
+            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+                <label for="email" class="sr-only">E-Mail-Adresse</label>
+                <img src="imgs/icons/mail.svg" alt="Mail Icon">
+                <input id="email" formControlName="email" type="email" placeholder="beispielname@email.com"
+                    class="bg-transparent flex-1 focus:outline-none" />
+            </div>
+
+            <!-- Passwort -->
+            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+                <label for="password" class="sr-only">Passwort</label>
+                <img src="imgs/icons/lock.svg" alt="Lock Icon">
+                <input id="password" formControlName="password" type="password" placeholder="Passwort"
+                    class="bg-transparent flex-1 focus:outline-none" />
+            </div>
         </div>
 
-        <!-- Passwort -->
-        <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
-            <label for="password" class="sr-only">Passwort</label>
-            <img src="imgs/icons/lock.svg" alt="Lock Icon">
-            <input id="password" formControlName="password" type="password" placeholder="Passwort"
-                class="bg-transparent flex-1 focus:outline-none" />
+        <!-- Checkbox -->
+        <div class="flex items-center mb-4">
+            <input id="terms" formControlName="terms" type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
+            <label for="terms" class="ms-2 text-sm font-medium text-gray-900">
+                Ich stimme den <a href="#" class="text-blue-600 hover:underline">Nutzungsbedingungen</a> zu.
+            </label>
+        </div>
+
+        <!-- Button -->
+        <div class="flex justify-end w-full">
+            <button type="submit" class="" [disabled]="contactForm.invalid"> Weiter </button>
         </div>
     </div>
-
-    <!-- Checkbox -->
-    <div class="flex items-center mb-4">
-        <input id="terms" formControlName="terms" type="checkbox"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
-        <label for="terms" class="ms-2 text-sm font-medium text-gray-900">
-            Ich stimme den <a href="#" class="text-blue-600 hover:underline">Nutzungsbedingungen</a> zu.
-        </label>
-    </div>
-
-    <!-- Button -->
-    <button type="submit" class="bg-blue-500 text-white py-3 px-6 rounded-full w-full hover:bg-blue-600"
-        [disabled]="contactForm.invalid">
-        Registrieren
-    </button>
 </form>
