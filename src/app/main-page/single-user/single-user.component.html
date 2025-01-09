@@ -1,10 +1,14 @@
-<section class="flex items-center justify-center h-screen bg-gray-100">
+<section class="w-screen flex items-center justify-center h-screen bg-gray-100 z-[9999]" (click)="closeDialog()"
+>
   <div
     class="bg-white rounded-3xl w-1/5 min-h-[600px] p-8 shadow-lg border border-gray-300 flex flex-col items-center justify-between"
+    (click)="$event.stopPropagation()"
   >
-    <div class="flex justify-between w-full">
+    <div class="flex justify-between w-full"
+    >
       <span class="text-2xl">Profil</span>
       <svg
+      class="cursor-pointer"
         width="14"
         height="14"
         viewBox="0 0 14 14"
