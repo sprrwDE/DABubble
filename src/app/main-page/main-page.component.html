@@ -4,8 +4,8 @@
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
       [ngClass]="{
-        'w-0': !openSidebar,
-        'w-[350px] w-full': openSidebar
+        'w-px': !openSidebar,
+        'w-full': openSidebar
       }"
       (showUserChange)="showUser = $event"
     ></app-sidebar-nav>
