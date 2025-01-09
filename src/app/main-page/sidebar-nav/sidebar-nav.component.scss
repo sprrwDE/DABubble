@@ -16,6 +16,15 @@
   }
 }
 
+.add-channel-btn {
+  &:hover {
+    svg,
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
 .contact-item {
   @apply hover:bg-bg hover:cursor-pointer px-[20px] py-[4px] rounded-[35px] w-full flex items-center gap-[10px] transition-all duration-100;
 
@@ -30,4 +39,32 @@
 
 .active-contact {
   @apply bg-bg text-primary;
+}
+
+.show-channels-btn,
+.show-contacts-btn {
+  &:hover {
+    svg,
+    path {
+      @apply fill-primary;
+    }
+
+    @apply text-primary;
+  }
+}
+
+.plus-btn {
+  height: 24px;
+  width: 24px;
+  transition: 0.15s;
+  @apply rounded-full;
+
+  &:hover {
+    svg,
+    path {
+      @apply fill-primary;
+      @apply stroke-primary;
+    }
+    @apply bg-bg;
+  }
 }
