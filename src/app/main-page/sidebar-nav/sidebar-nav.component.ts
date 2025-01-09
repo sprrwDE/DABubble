@@ -1,11 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { SingleUserComponent } from "../single-user/single-user.component";
 
 @Component({
   selector: 'app-sidebar-nav',
   standalone: true,
-  imports: [NgClass, SingleUserComponent],
+  imports: [NgClass],
   templateUrl: './sidebar-nav.component.html',
   styleUrl: './sidebar-nav.component.scss',
 })
