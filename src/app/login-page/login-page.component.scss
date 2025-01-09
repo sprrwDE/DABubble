@@ -1,0 +1,9 @@
+.btn-3 {
+    padding: 8px;
+    text-align: center;
+    border: 1px transparent solid;
+    &:hover {
+        border: 1px rgb(173, 176, 217) solid;
+        border-radius: 9999px;
+    }
+}
