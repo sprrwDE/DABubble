@@ -1,0 +1,7 @@
+.profile-container {
+  &:hover {
+    path {
+      @apply fill-primary;
+    }
+  }
+}

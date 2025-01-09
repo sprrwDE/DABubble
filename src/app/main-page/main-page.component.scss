@@ -5,4 +5,21 @@
   svg {
     transform: rotate(180deg);
   }
+
+  p {
+    @apply font-light;
+  }
+
+  &:hover {
+    svg,
+    rect,
+    path {
+      @apply stroke-primary;
+    }
+
+    p {
+      @apply text-primary;
+      @apply font-bold;
+    }
+  }
 }

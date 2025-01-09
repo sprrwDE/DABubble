@@ -1,0 +1,33 @@
+.channel-item {
+  @apply hover:bg-bg hover:cursor-pointer px-[20px] py-[4px] rounded-[35px] w-full flex items-center gap-[10px] transition-all duration-150;
+
+  svg,
+  path {
+    @apply fill-black;
+  }
+}
+
+.active-channel {
+  @apply bg-bg text-primary;
+
+  svg,
+  path {
+    @apply fill-primary;
+  }
+}
+
+.contact-item {
+  @apply hover:bg-bg hover:cursor-pointer px-[20px] py-[4px] rounded-[35px] w-full flex items-center gap-[10px] transition-all duration-100;
+
+  img {
+    @apply h-[50px] w-[50px] rounded-full;
+  }
+
+  p {
+    @apply text-[18px];
+  }
+}
+
+.active-contact {
+  @apply bg-bg text-primary;
+}
