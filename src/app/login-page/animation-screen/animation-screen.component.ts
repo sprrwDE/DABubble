@@ -1,12 +1,22 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-animation-screen',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './animation-screen.component.html',
   styleUrl: './animation-screen.component.scss'
 })
-export class AnimationScreenComponent {
+export class AnimationScreenComponent implements OnInit{
+animation: boolean = true;
+
+ngOnInit(): void {
+  setTimeout(() => {
+    this.animation = false;
+  }, 5500);
+}
+ 
+
 
 }
