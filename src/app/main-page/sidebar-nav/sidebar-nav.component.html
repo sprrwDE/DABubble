@@ -9,6 +9,7 @@
     </div>
 
     <svg
+      class="hover-primary p-[8px] box-content"
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -45,7 +46,7 @@
       >
         <div
           (click)="toggleChannels()"
-          class="show-channels-btn px-[10px] hover:cursor-pointer py-[5px] flex items-center gap-[15px] select-none"
+          class="transition-svg-text hover-primary px-[10px] py-[5px] flex items-center gap-[15px] select-none"
         >
           <svg
             [ngClass]="{ 'rotate-[-90deg]': !showChannels }"
@@ -167,7 +168,7 @@
 
         <!-- Add Channel btn -->
         <div
-          class="add-channel-btn flex items-center gap-[10px] hover:cursor-pointer hover:text-primary px-[20px] py-[4px]"
+          class="hover-primary transition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
         >
           <svg
             width="24"
@@ -208,11 +209,10 @@
       >
         <div
           (click)="toggleContacts()"
-          class="show-contacts-btn flex px-[10px] py-[10px] hover:cursor-pointer items-center gap-[15px] select-none transition-all duration-150 ease-in-out"
+          class="transition-svg-text hover-primary flex px-[10px] py-[10px] items-center gap-[15px] select-none"
         >
           <svg
             [ngClass]="{ 'rotate-[-90deg]': !showContacts }"
-            class="transition-all duration-150 ease-in"
             width="10"
             height="7"
             viewBox="0 0 10 7"
@@ -227,7 +227,6 @@
 
           <div class="flex items-center gap-[10px]">
             <svg
-              class="transition-all duration-150 ease-in"
               width="24"
               height="24"
               viewBox="0 0 24 24"

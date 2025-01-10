@@ -38,3 +38,69 @@ button {
 img {
   user-select: none;
 }
+
+.hover-primary-bg {
+  cursor: pointer;
+
+  &:hover {
+    @apply bg-bg text-primary;
+
+    svg,
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.hover-primary {
+  cursor: pointer;
+
+  &:hover {
+    @apply text-primary;
+
+    svg,
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.transition-svg-text {
+  transition: 0.2s;
+
+  svg,
+  path {
+    transition: 0.2s;
+  }
+}
+
+// Scrollbar
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-lines;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-hover;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+  display: none;
+  height: 0;
+  width: 0;
+}

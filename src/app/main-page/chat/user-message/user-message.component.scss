@@ -1,0 +1,39 @@
+.message {
+  @apply flex items-start gap-[15px];
+
+  > img {
+    @apply h-[70px] w-[70px] rounded-full;
+  }
+}
+
+.main-chat-message-container {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+
+  &:before {
+    transition: 0.1s ease-in-out;
+
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -45px;
+    width: 100vw;
+    height: 100%;
+    @apply bg-bg;
+    z-index: -1;
+    opacity: 0;
+  }
+
+  &:hover {
+    &:before {
+      opacity: 1;
+    }
+  }
+}
+
+.reaction-bar {
+  @apply rounded-[25px] rounded-br-[0px] absolute top-[-50%] left-[40px] bg-white pl-[20px] pr-[15px] py-[5px];
+
+  opacity: 0;
+}

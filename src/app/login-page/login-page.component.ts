@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from "./login/login.component";
+import { AnimationScreenComponent } from "./animation-screen/animation-screen.component";
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [LoginComponent],
+  imports: [ AnimationScreenComponent, RouterLink, RouterOutlet],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss'
 })
