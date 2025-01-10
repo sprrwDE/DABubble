@@ -23,7 +23,7 @@ export class FirebaseService {
 
         this.fetchedCollectionSubject.next(fetchedData);
 
-        console.log('Daten abgerufen:', fetchedData);
+        // console.log('Daten abgerufen:', fetchedData);
       });
     } catch (error) {
       console.error('Fehler beim Abrufen der Daten:', error);

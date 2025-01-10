@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-single-user',
@@ -9,9 +10,15 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class SingleUserComponent {
   @Output() closeEvent = new EventEmitter<void>();
+  @Input() userData!: User;
+
 
   closeDialog() {
     this.closeEvent.emit();
+  }
+
+  ngOnInit() {
+    console.log('User Data:', this.userData);
   }
 
 }

@@ -7,7 +7,7 @@
         'w-px': !openSidebar,
         'w-full': openSidebar
       }"
-      (showUserChange)="showUser = $event"
+      (showUserChange)="openUserDetails($event)"
     ></app-sidebar-nav>
     <app-chat class="w-full"></app-chat>
     <app-reply-panel></app-reply-panel>
@@ -49,6 +49,9 @@
   </div>
 </section>
 
-@if(showUser) {
-<app-single-user (closeEvent)="showUser = false"></app-single-user>
+@if(selectedUser) {
+  <app-single-user 
+    [userData]="selectedUser" 
+    (closeEvent)="selectedUser = null">
+  </app-single-user>
 }

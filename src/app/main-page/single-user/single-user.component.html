@@ -24,13 +24,20 @@
     </div>
     <img src="/images/bald.png" alt="Example" class="rounded-full w-1/2" />
     <div class="w-full">
-        <h2 class="text-3xl">Steffen Hoffmann</h2>
+        <h2 class="text-3xl">{{userData.name}}</h2>
         <div class="flex items-center gap-4">
-            <svg width="12" height="12" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8.5" r="8" fill="#92C83E"/>
-                </svg>
+        @if(userData.status === "Aktiv") {
+          <svg width="12" height="12" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8.5" r="8" fill="#92C83E"/>
+            </svg>
+        } @else {
+          <svg width="12" height="12" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8.5" r="8" fill="#686868"/>
+            </svg>
+        }
+
                 
-            <span>Aktiv</span>
+            <span>{{userData.status}}</span>
         </div>
     </div>
     <div class="flex w-full items-start gap-4">
@@ -61,7 +68,7 @@
       </svg>
       <div class="block">
         <h4 class="text-xl">E-Mail Adresse</h4>
-        <a href="mailto:thehoffmann@beispiel.de">thehoffmann&#64;beispiel.de</a>
+        <a href="mailto:thehoffmann@beispiel.de">{{userData.email}}</a>
       </div>
     </div>
     <button class="flex items-center gap-4">
