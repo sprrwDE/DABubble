@@ -38,3 +38,38 @@ button {
 img {
   user-select: none;
 }
+
+.hover-primary-bg {
+  cursor: pointer;
+
+  &:hover {
+    @apply bg-bg text-primary;
+
+    svg,
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.hover-primary {
+  cursor: pointer;
+
+  &:hover {
+    @apply text-primary;
+
+    svg,
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.transition-svg-text {
+  transition: 0.2s;
+
+  svg,
+  path {
+    transition: 0.2s;
+  }
+}
