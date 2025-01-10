@@ -6,16 +6,30 @@
   @apply ml-[-15px];
 }
 
-.main-chat-send-btn {
-  cursor: pointer;
-  &:hover {
-    svg,
-    path {
-      @apply fill-chat;
+.main-chat-date {
+  @apply w-full flex overflow-hidden justify-center items-center;
+
+  p {
+    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px];
+    position: relative;
+
+    &:before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      height: 1px;
+      width: 100vw;
+      @apply bg-lines;
+      border-radius: 10px;
+    }
+
+    &:before {
+      left: 100%;
+    }
+
+    &::after {
+      right: 100%;
     }
   }
-}
-
-.main-chat-input-container:has(textarea:focus) {
-  @apply border-primary;
 }

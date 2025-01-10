@@ -1,0 +1,13 @@
+.main-chat-send-btn {
+  cursor: pointer;
+  &:hover {
+    svg,
+    path {
+      @apply fill-chat;
+    }
+  }
+}
+
+.main-chat-input-container:has(textarea:focus) {
+  @apply border-primary;
+}
