@@ -18,7 +18,7 @@ export class SidebarNavComponent {
   showUser = false;
   allUsers: User[] = [];
   fetchedCollection$: Observable<any>
-  @Output() showUserChange = new EventEmitter<boolean>();
+  @Output() showUserChange = new EventEmitter<User | null>();
 
   constructor(private service: FirebaseService) {
     this.fetchedCollection$ = service.fetchedCollection$;
@@ -33,7 +33,6 @@ export class SidebarNavComponent {
             ...rawData,
           })
       );
-      console.log('allusers', this.allUsers)
     });
   }
 
@@ -45,7 +44,7 @@ export class SidebarNavComponent {
     this.showContacts = !this.showContacts;
   }
 
-  openDialog() {
-    this.showUserChange.emit(true);
+  openDialog(user: User) {
+    this.showUserChange.emit(user); 
   }
 }

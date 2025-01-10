@@ -5,6 +5,7 @@ import { ChatComponent } from './chat/chat.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { NgClass, NgIf } from '@angular/common';
 import { SingleUserComponent } from './single-user/single-user.component';
+import { User } from '../shared/models/user.model';
 
 @Component({
   selector: 'app-main-page',
@@ -24,10 +25,17 @@ import { SingleUserComponent } from './single-user/single-user.component';
 export class MainPageComponent {
   openSidebar = true;
   showUser = false;
+  selectedUser: User | null = null;
 
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }
 
+  openUserDetails(user: User | null) {
+    if (user) {
+      this.selectedUser = user;
+      this.showUser = true;
+    }
+  }
 
 }
