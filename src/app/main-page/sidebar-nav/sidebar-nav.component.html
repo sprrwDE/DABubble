@@ -269,10 +269,12 @@
           <p>Frederik Beck (Du)</p>
         </div>
 
-        <div class="contact-item">
-          <img src="imgs/avatar1.png" alt="" />
-          <p>Frederik Beck</p>
-        </div>
+        @for (user of allUsers; track $index) {
+          <div class="contact-item">
+            <img src="{{user.image}}" alt="" />
+            <p>{{user.name}}</p>
+          </div>
+        }
       </div>
     </div>
   </div>

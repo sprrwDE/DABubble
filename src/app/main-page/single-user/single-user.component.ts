@@ -14,5 +14,4 @@ export class SingleUserComponent {
     this.closeEvent.emit();
   }
 
-
 }
