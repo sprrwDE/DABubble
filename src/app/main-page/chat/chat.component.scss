@@ -5,3 +5,17 @@
 .group-members-avatar:not(:first-child) {
   @apply ml-[-15px];
 }
+
+.main-chat-send-btn {
+  cursor: pointer;
+  &:hover {
+    svg,
+    path {
+      @apply fill-chat;
+    }
+  }
+}
+
+.main-chat-input-container:has(textarea:focus) {
+  @apply border-primary;
+}
