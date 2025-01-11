@@ -32,7 +32,6 @@
     width: 70px;
     height: 70px;
   }
-
 }
 
 .logo {
@@ -61,8 +60,13 @@
     opacity: 1;
   }
 
+  97% {
+    z-index: 1;
+  }
+
   100% {
     opacity: 0;
+    z-index: -9999;
   }
 }
 
