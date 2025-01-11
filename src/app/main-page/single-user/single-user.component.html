@@ -1,14 +1,15 @@
-<section class="w-screen fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-50 h-screen z-[9999]" (click)="closeDialog()"
+<section
+  class="w-screen fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-50 h-screen z-[9999]"
+  (click)="closeDialog()"
 >
   <div
     class="bg-white rounded-3xl w-1/5 min-h-[600px] p-8 shadow-lg border border-gray-300 flex flex-col items-center justify-between"
     (click)="$event.stopPropagation()"
   >
-    <div class="flex justify-between w-full"
-    >
+    <div class="flex justify-between w-full">
       <span class="text-2xl">Profil</span>
       <svg
-      class="cursor-pointer"
+        class="cursor-pointer"
         width="14"
         height="14"
         viewBox="0 0 14 14"
@@ -22,23 +23,44 @@
         />
       </svg>
     </div>
-    <img src="/images/bald.png" alt="Example" class="rounded-full w-1/2" />
+    <img src="{{ userData.image }}" alt="Example" class="rounded-full w-1/2" />
     <div class="w-full">
-        <h2 class="text-3xl">{{userData.name}}</h2>
-        <div class="flex items-center gap-4">
-        @if(userData.status === "Online") {
-          <svg width="12" height="12" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8" cy="8.5" r="8" fill="#92C83E"/>
-            </svg>
+      <h2 class="text-3xl">{{ userData.name }}</h2>
+      <div class="flex items-center gap-4">
+        @if(userData.status === "online") {
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 17"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="8" cy="8.5" r="8" fill="#92C83E" />
+        </svg>
+        } @else if (userData.status === "abwesend") {
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 17"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="8" cy="8.5" r="8" fill="#ffc93b" />
+        </svg>
         } @else {
-          <svg width="12" height="12" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8" cy="8.5" r="8" fill="#686868"/>
-            </svg>
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 17"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="8" cy="8.5" r="8" fill="#686868" />
+        </svg>
         }
 
-                
-            <span>{{userData.status}}</span>
-        </div>
+        <span>{{ userData.status }}</span>
+      </div>
     </div>
     <div class="flex w-full items-start gap-4">
       <svg
@@ -68,14 +90,23 @@
       </svg>
       <div class="block">
         <h4 class="text-xl">E-Mail Adresse</h4>
-        <a href="mailto:thehoffmann@beispiel.de">{{userData.email}}</a>
+        <a href="mailto:thehoffmann@beispiel.de">{{ userData.email }}</a>
       </div>
     </div>
     <button class="flex items-center gap-4">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.3 18.8L16 16.5H2C1.45 16.5 0.979333 16.3043 0.588 15.913C0.196 15.521 0 15.05 0 14.5V2.5C0 1.95 0.196 1.479 0.588 1.087C0.979333 0.695667 1.45 0.5 2 0.5H18C18.55 0.5 19.021 0.695667 19.413 1.087C19.8043 1.479 20 1.95 20 2.5V18.075C20 18.525 19.796 18.8373 19.388 19.012C18.9793 19.1873 18.6167 19.1167 18.3 18.8ZM2 2.5V14.5H16.825L18 15.675V2.5H2Z" fill="white"/>
-            </svg>
-        <span>Nachricht</span>            
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18.3 18.8L16 16.5H2C1.45 16.5 0.979333 16.3043 0.588 15.913C0.196 15.521 0 15.05 0 14.5V2.5C0 1.95 0.196 1.479 0.588 1.087C0.979333 0.695667 1.45 0.5 2 0.5H18C18.55 0.5 19.021 0.695667 19.413 1.087C19.8043 1.479 20 1.95 20 2.5V18.075C20 18.525 19.796 18.8373 19.388 19.012C18.9793 19.1873 18.6167 19.1167 18.3 18.8ZM2 2.5V14.5H16.825L18 15.675V2.5H2Z"
+          fill="white"
+        />
+      </svg>
+      <span>Nachricht</span>
     </button>
   </div>
 </section>
