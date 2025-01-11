@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FirebaseService } from '../../shared/services/firebase.service';
 
 @Component({
   selector: 'app-select-avatar',
@@ -10,6 +11,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   styleUrl: './select-avatar.component.scss'
 })
 export class SelectAvatarComponent implements OnInit {
+  currentAvatar: string = 'imgs/avatar/profile.svg'
+
+
   avatars: string[] = [
     'imgs/avatar/1av.svg',
     'imgs/avatar/2av.svg',
@@ -21,7 +25,7 @@ export class SelectAvatarComponent implements OnInit {
 
   userId!: string;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private firebaseService: FirebaseService) {
 
   }
   ngOnInit(): void {
@@ -29,4 +33,14 @@ export class SelectAvatarComponent implements OnInit {
     console.log('empfagne user id: ', this.userId)
   }
 
+  selectAvatar(index:number) {
+    this.currentAvatar = this.avatars[index]
+    this.firebaseService.changeProfileImage(this.userId, this.avatars[index])
+  }
+
+
+  test() {
+    console.log(this.userId)
+    this.firebaseService.getUser(this.userId)
+  }
 }
