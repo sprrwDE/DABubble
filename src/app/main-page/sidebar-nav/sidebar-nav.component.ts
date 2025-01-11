@@ -1,8 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FirebaseService } from '../../shared/services/firebase.service';
 import { User } from '../../shared/models/user.model';
-import { Observable } from 'rxjs';
+import { UserService } from '../../shared/services/user.service';
 
 
 @Component({
@@ -17,23 +16,9 @@ export class SidebarNavComponent {
   showContacts = true;
   showUser = false;
   allUsers: User[] = [];
-  fetchedCollection$: Observable<any>
   @Output() showUserChange = new EventEmitter<User | null>();
 
-  constructor(private service: FirebaseService) {
-    this.fetchedCollection$ = service.fetchedCollection$;
-    this.service.getData('users')
-  }
-
-  ngOnInit() {
-    this.fetchedCollection$.subscribe((data) => {
-      this.allUsers = data.map(
-        (rawData:any) =>
-          new User({
-            ...rawData,
-          })
-      );
-    });
+  constructor(public user: UserService) {
   }
 
   toggleChannels() {

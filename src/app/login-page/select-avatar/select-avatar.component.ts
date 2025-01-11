@@ -39,8 +39,8 @@ export class SelectAvatarComponent implements OnInit {
   }
 
 
-  test() {
+/* test() {
     console.log(this.userId)
     this.firebaseService.getUser(this.userId)
-  }
+  }  */
 }
