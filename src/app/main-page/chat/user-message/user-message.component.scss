@@ -29,11 +29,40 @@
     &:before {
       opacity: 1;
     }
+
+    .reaction-bar {
+      opacity: 1;
+      transform: translateY(-50%);
+    }
+  }
+
+  .reaction-bar {
+    opacity: 0;
+    transform: translateX(100px) translateY(-50%);
   }
 }
 
 .reaction-bar {
-  @apply rounded-[25px] rounded-br-[0px] absolute top-[-50%] left-[40px] bg-white pl-[20px] pr-[15px] py-[5px];
+  @apply flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 left-[30px] bg-white pl-[20px] pr-[15px] py-[5px];
 
-  opacity: 0;
+  .reaction-item {
+    @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
+
+    &:hover {
+      @apply bg-bg;
+
+      svg,
+      path {
+        @apply fill-primary;
+      }
+    }
+  }
+
+  .reaction-item-like {
+    @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
+
+    &:hover {
+      @apply bg-bg;
+    }
+  }
 }
