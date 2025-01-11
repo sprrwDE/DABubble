@@ -1,8 +1,8 @@
 <section
-  class="flex w-full h-full px-[45px] py-[32px] rounded-[30px] bg-white relative overflow-hidden"
+  class="flex w-full h-full pb-[32px] rounded-[30px] bg-white relative overflow-hidden"
 >
   <header
-    class="flex justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+    class="z-10 bg-white flex justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
   >
     <div
       class="hover-primary-bg rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
@@ -87,21 +87,76 @@
 
   <main class="main-chat w-full h-full flex flex-col justify-end">
     <!-- Hier die messages rein rendern -->
-    <div class="main-chat-messages-container flex flex-col gap-[30px]">
+    <div
+      class="main-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px] mt-[100px]"
+    >
+      <div class="main-chat-date">
+        <p>Dienstag, 14 Januar</p>
+      </div>
+
+      <app-user-message
+        [message]="'Die Nachricht hier rein rendern'"
+        [time]="'11:11 Uhr'"
+        [name]="'Name hier rein rendern'"
+        [imgUrl]="'imgs/avatar1.png'"
+        [isContact]="true"
+        [lastAnswerTime]="'00:00 Uhr'"
+        [numberOfAnswers]="2"
+        [isAnswer]="true"
+      ></app-user-message>
+
+      <app-user-message
+        [message]="'Die Nachricht hier rein rendern'"
+        [time]="'11:11 Uhr'"
+        [name]="'Name hier rein rendern'"
+        [imgUrl]="'imgs/avatar1.png'"
+        [isContact]="true"
+        [lastAnswerTime]="'11:11 Uhr'"
+        [numberOfAnswers]="0"
+        [isAnswer]="false"
+      ></app-user-message>
+
       <!-- test date -->
       <div class="main-chat-date">
-        <p>Heute</p>
+        <p>Mittwoch, 15 Januar</p>
       </div>
+
       <!-- user test message -->
       <app-user-message
         [message]="'Die Nachricht hier rein rendern'"
         [time]="'00:00 Uhr'"
         [name]="'Name hier rein rendern'"
         [imgUrl]="'imgs/avatar1.png'"
+        [isContact]="false"
+      ></app-user-message>
+
+      <!-- test date -->
+      <div class="main-chat-date">
+        <p>Heute</p>
+      </div>
+
+      <app-user-message
+        [message]="'Die Nachricht hier rein rendern'"
+        [time]="'11:11 Uhr'"
+        [name]="'Name hier rein rendern'"
+        [imgUrl]="'imgs/avatar1.png'"
+        [isContact]="true"
+        [lastAnswerTime]="'11:11 Uhr'"
+        [numberOfAnswers]="0"
+        [isAnswer]="false"
+      ></app-user-message>
+
+      <!-- user test message -->
+      <app-user-message
+        [message]="'Die Nachricht hier rein rendern'"
+        [time]="'00:00 Uhr'"
+        [name]="'Name hier rein rendern'"
+        [imgUrl]="'imgs/avatar1.png'"
+        [isContact]="false"
       ></app-user-message>
     </div>
 
     <!-- input -->
-    <app-message-input></app-message-input>
+    <app-message-input class="px-[45px]"></app-message-input>
   </main>
 </section>

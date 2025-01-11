@@ -7,29 +7,35 @@
 }
 
 .main-chat-date {
-  @apply w-full flex overflow-hidden justify-center items-center;
+  @apply w-full flex justify-center items-center px-[45px] relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    width: calc(100% - 90px);
+    left: 45px;
+    @apply bg-lines;
+    border-radius: 100px;
+    z-index: 1;
+  }
 
   p {
-    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px];
+    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px] z-10 bg-white;
     position: relative;
-
-    &:before,
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      height: 1px;
-      width: 100vw;
-      @apply bg-lines;
-      border-radius: 10px;
-    }
-
-    &:before {
-      left: 100%;
-    }
-
-    &::after {
-      right: 100%;
-    }
   }
+}
+
+.main-chat-messages-container {
+  // Versteckt die Scrollbar in Webkit-basierten Browsern (Chrome, Safari)
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Versteckt die Scrollbar in Firefox
+  scrollbar-width: none;
+
+  // Versteckt die Scrollbar in IE/Edge
+  -ms-overflow-style: none;
 }

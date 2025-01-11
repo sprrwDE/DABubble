@@ -12,7 +12,7 @@
   overflow: visible;
 
   &:before {
-    transition: 0.1s ease-in-out;
+    transition: 0.2s ease-in-out;
 
     content: "";
     position: absolute;
@@ -34,16 +34,16 @@
       opacity: 1;
       transform: translateY(-50%);
     }
+
+    .contact-message {
+      @apply bg-white;
+    }
   }
 
   .reaction-bar {
     opacity: 0;
     transform: translateX(100px) translateY(-50%);
   }
-}
-
-.reaction-bar {
-  @apply flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 left-[30px] bg-white pl-[20px] pr-[15px] py-[5px];
 }
 
 .reaction-item {
