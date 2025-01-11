@@ -10,7 +10,8 @@ import { ResetPasswordComponent } from './login-page/reset-password/reset-passwo
 import { ChangePasswordComponent } from './login-page/change-password/change-password.component';
 
 export const routes: Routes = [
-  { path: '', component: MainPageComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'main', component: MainPageComponent },
   {
     path: 'login',
     component: LoginPageComponent, // Die Login-Seite mit <app-login> oder <app-register>

@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
       .then((result) => {
         console.log('User signed in:', result.user);
         this.updateFirebase(result.user)
-        this.router.navigate(['/'])
+        this.router.navigate(['/main'])
       })
       .catch((error) => {
         console.error('Error during Google sign-in:', error);
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password)
-      this.router.navigate(['/'])
+      this.router.navigate(['/main'])
     }
 
   }
