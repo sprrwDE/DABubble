@@ -264,19 +264,18 @@
         [ngClass]="{ 'h-full': showContacts, 'h-0': !showContacts }"
         class="pl-[5px] flex flex-col gap-[15px] overflow-hidden h-full transition-all duration-150 ease-in select-none"
       >
-<!--         <div class="contact-item" (click)="openDialog(user)">
+        <!--         <div class="contact-item" (click)="openDialog(user)">
           <img src="imgs/avatar1.png" alt="" />
           <p>Frederik Beck (Du)</p>
         </div> -->
 
-        @for (user of allUsers; track $index) {
-          <div class="contact-item" (click)="openDialog(user)">
-            <img src="{{user.image}}" alt="" />
-            <p>{{user.name}}</p>
-          </div>
+        @for (user of user.arr; track $index) {
+        <div class="contact-item" (click)="openDialog(user)">
+          <img src="{{ user.image }}" alt="" />
+          <p>{{ user.name }}</p>
+        </div>
         }
       </div>
     </div>
   </div>
 </section>
-
