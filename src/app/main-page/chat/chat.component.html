@@ -93,7 +93,12 @@
         <p>Heute</p>
       </div>
       <!-- user test message -->
-      <app-user-message></app-user-message>
+      <app-user-message
+        [message]="'Die Nachricht hier rein rendern'"
+        [time]="'00:00 Uhr'"
+        [name]="'Name hier rein rendern'"
+        [imgUrl]="'imgs/avatar1.png'"
+      ></app-user-message>
     </div>
 
     <!-- input -->
