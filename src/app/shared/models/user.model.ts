@@ -3,7 +3,6 @@ export class User {
  email!: string;
  image!: string;
  status!: string;
- pw!: string;
  id!: string;
 
  constructor(obj?: any) {
@@ -11,7 +10,16 @@ export class User {
     this.email = obj ? obj.email : '';
     this.image = obj ? obj.image : '';
     this.status = obj ? obj.status : '';
-    this.pw = obj ? obj.pw : '';
     this.id = obj ? obj.id : '';
+ }
+
+ toJSON() {
+   return {
+     name: this.name,
+     email: this.email,
+     image: this.image,
+     status: this.status,
+     id: this.id,
+   };
  }
 }

@@ -5,6 +5,7 @@ import { DataProtectionComponent } from './legal/data-protection/data-protection
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterComponent } from './login-page/register/register.component';
 import { LoginComponent } from './login-page/login/login.component';
+import { SelectAvatarComponent } from './login-page/select-avatar/select-avatar.component';
 
 export const routes: Routes = [
   { path: '', component: MainPageComponent },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: LoginComponent }, // Standardmäßig <app-login>
       { path: 'register', component: RegisterComponent }, // <app-register> bei /login/register
+      { path: 'avatar/:userId', component: SelectAvatarComponent },
     ],
   },
   { path: 'impressum', component: ImprintComponent},
