@@ -12,9 +12,7 @@ export class AnimationScreenComponent implements OnInit{
 animation: boolean = true; // AUF TRUE STELLEN FÜR DIE ANIMATION
 
 ngOnInit(): void {
-  setTimeout(() => {
-    this.animation = false;
-  }, 5500);
+
 }
  
 
