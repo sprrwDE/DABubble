@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, updateDoc , getDoc, collection, onSnapshot, DocumentData, doc } from '@angular/fire/firestore';
+import { Firestore, updateDoc, getDoc, collection, onSnapshot, DocumentData, doc, setDoc } from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,13 +42,34 @@ export class FirebaseService {
     }
   }
 
-  async changeProfileImage(id:string, image:string) {
+  async addUser(userInterface: User) {
+    let user: any;
+    console.log("der userinterface ist das hier: ",userInterface)
+    if (userInterface instanceof User) {
+      user = userInterface.toJSON();
+    } else {
+      user = userInterface;
+    }
+
     try {
-      const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
-      await updateDoc(docRef, {image});
+      const docRef = doc(this.firestore, `users/${user.id}`);
+      await setDoc(docRef, user);
+      console.log('Dokument mit benutzerdefinierter ID erfolgreich gespeichert:', user.id);
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
   }
+
+
+  async changeProfileImage(id: string, image: string) {
+    try {
+      const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
+      await updateDoc(docRef, { image });
+    } catch (error) {
+      console.error('Fehler beim Speichern des Dokuments:', error);
+    }
+  }
+
+
 
 }
