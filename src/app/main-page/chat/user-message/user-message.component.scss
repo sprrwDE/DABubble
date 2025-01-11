@@ -44,25 +44,25 @@
 
 .reaction-bar {
   @apply flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 left-[30px] bg-white pl-[20px] pr-[15px] py-[5px];
+}
 
-  .reaction-item {
-    @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
+.reaction-item {
+  @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
 
-    &:hover {
-      @apply bg-bg;
+  &:hover {
+    @apply bg-bg;
 
-      svg,
-      path {
-        @apply fill-primary;
-      }
+    svg,
+    path {
+      @apply fill-primary;
     }
   }
+}
 
-  .reaction-item-like {
-    @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
+.reaction-item-like {
+  @apply rounded-full flex items-center justify-center p-[8px] hover:scale-110 box-content;
 
-    &:hover {
-      @apply bg-bg;
-    }
+  &:hover {
+    @apply bg-bg;
   }
 }
