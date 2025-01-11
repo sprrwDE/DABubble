@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './animation-screen.component.scss'
 })
 export class AnimationScreenComponent implements OnInit {
-  animation: boolean = true; // AUF TRUE STELLEN FÜR DIE ANIMATION
+  animation: boolean = false; // AUF TRUE STELLEN FÜR DIE ANIMATION
 
   ngOnInit(): void {
   }
