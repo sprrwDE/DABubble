@@ -6,7 +6,7 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  arr: User[] = []
+  allUsers: User[] = []
 
   constructor(private fb: FirebaseService) {
     this.loadUsers();
@@ -14,11 +14,10 @@ export class UserService {
 
   async loadUsers() {
     try {
-      this.arr = await this.fb.getCollection('users');
-      console.log('Daten geladen:', this.arr);
+      this.allUsers = await this.fb.getCollection('users');
+      console.log('Userdaten geladen:', this.allUsers);
     } catch (error) {
       console.error('Fehler beim Laden der Benutzerdaten:', error);
     }
   }
-  
 }
