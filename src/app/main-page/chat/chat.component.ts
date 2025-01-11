@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
 
@@ -10,4 +10,17 @@ import { MessageInputComponent } from './message-input/message-input.component';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
-export class ChatComponent {}
+export class ChatComponent implements AfterViewInit {
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.chatContainer.nativeElement.scrollTop =
+        this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {}
+  }
+}
