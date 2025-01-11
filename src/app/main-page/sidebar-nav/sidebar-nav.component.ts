@@ -15,7 +15,6 @@ export class SidebarNavComponent {
   showChannels = true;
   showContacts = true;
   showUser = false;
-  allUsers: User[] = [];
   @Output() showUserChange = new EventEmitter<User | null>();
 
   constructor(public user: UserService) {

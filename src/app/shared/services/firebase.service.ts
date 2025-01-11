@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   getDocs,
+  onSnapshot
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 
@@ -14,7 +15,6 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class FirebaseService {
-
   constructor(private firestore: Firestore) {}
 
   async getCollection(col: string): Promise<any[]> {
@@ -45,7 +45,39 @@ export class FirebaseService {
     }
   }
 
-  //// 
+  //// Test
+
+  async updateSingleDoc(col: string, id: string, status:string) {
+    const washingtonRef = doc(this.firestore, col, id);
+    await updateDoc(washingtonRef, {
+      status: status,
+    });
+  }
+
+  subscribeToSingleDoc(col: string, id: string, callback: (data: any) => void): () => void {
+    try {
+      const docRef = doc(this.firestore, col, id);
+  
+      const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          console.log('Live Document Data:', data);
+          callback(data); // Callback aufrufen und Daten übergeben
+        } else {
+          console.log('No such document!');
+          callback(null); // Keine Daten vorhanden
+        }
+      });
+  
+      return unsubscribe;
+    } catch (error) {
+      console.error('Error setting up listener:', error);
+      return () => {};
+    }
+  }
+  
+  
+  ////
 
   async addUser(userInterface: User) {
     let user: any;

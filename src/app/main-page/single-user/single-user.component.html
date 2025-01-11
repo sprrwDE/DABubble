@@ -26,8 +26,9 @@
     <img src="{{ userData.image }}" alt="Example" class="rounded-full w-1/2" />
     <div class="w-full">
       <h2 class="text-3xl">{{ userData.name }}</h2>
-      <div class="flex items-center gap-4">
-        @if(userData.status === "online") {
+     
+    <div *ngIf="currentUserData$  | async as currentUserData" class="flex items-center gap-4">
+        @if(currentUserData.status === "online") {
         <svg
           width="12"
           height="12"
@@ -37,7 +38,7 @@
         >
           <circle cx="8" cy="8.5" r="8" fill="#92C83E" />
         </svg>
-        } @else if (userData.status === "abwesend") {
+        } @else if (currentUserData.status === "abwesend") {
         <svg
           width="12"
           height="12"
@@ -58,9 +59,9 @@
           <circle cx="8" cy="8.5" r="8" fill="#686868" />
         </svg>
         }
-
-        <span>{{ userData.status }}</span>
-      </div>
+        
+        <span>{{ currentUserData.status }}</span>
+      </div> 
     </div>
     <div class="flex w-full items-start gap-4">
       <svg

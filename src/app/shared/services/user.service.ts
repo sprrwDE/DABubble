@@ -7,8 +7,10 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   allUsers: User[] = []
+  db
 
   constructor(private fb: FirebaseService) {
+    this.db = fb;
     this.loadUsers();
    }
 
@@ -19,5 +21,17 @@ export class UserService {
     } catch (error) {
       console.error('Fehler beim Laden der Benutzerdaten:', error);
     }
+  }
+
+  ngOnInit() {
+
+  }
+
+  // test
+
+  updateStatus(id:string) {
+    setTimeout(() => {
+      this.db.updateSingleDoc('users', id, 'online')
+    }, 5000);
   }
 }
