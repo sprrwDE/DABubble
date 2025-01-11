@@ -45,15 +45,17 @@ export class FirebaseService {
     }
   }
 
-  //// Test
+  ////// Test
 
+  // Nur für Hilfsfunktion zum Status Updaten in Userservice
   async updateSingleDoc(col: string, id: string, status:string) {
-    const washingtonRef = doc(this.firestore, col, id);
-    await updateDoc(washingtonRef, {
+    const updateRef = doc(this.firestore, col, id);
+    await updateDoc(updateRef, {
       status: status,
     });
   }
 
+  // Subscribe Single Doc
   subscribeToSingleDoc(col: string, id: string, callback: (data: any) => void): () => void {
     try {
       const docRef = doc(this.firestore, col, id);
@@ -75,9 +77,7 @@ export class FirebaseService {
       return () => {};
     }
   }
-  
-  
-  ////
+  //////
 
   async addUser(userInterface: User) {
     let user: any;
