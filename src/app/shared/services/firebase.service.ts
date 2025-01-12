@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Firestore, updateDoc, getDoc, collection, onSnapshot, DocumentData, doc, setDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  updateDoc,
+  getDoc,
+  collection,
+  onSnapshot,
+  DocumentData,
+  doc,
+  setDoc,
+} from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -10,7 +19,7 @@ export class FirebaseService {
   private fetchedCollectionSubject = new BehaviorSubject<DocumentData[]>([]);
   fetchedCollection$ = this.fetchedCollectionSubject.asObservable();
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore) {}
 
   getData(db: string) {
     try {
@@ -44,7 +53,7 @@ export class FirebaseService {
 
   async addUser(userInterface: User) {
     let user: any;
-    console.log("der userinterface ist das hier: ",userInterface)
+    console.log('der userinterface ist das hier: ', userInterface);
     if (userInterface instanceof User) {
       user = userInterface.toJSON();
     } else {
@@ -54,12 +63,14 @@ export class FirebaseService {
     try {
       const docRef = doc(this.firestore, `users/${user.id}`);
       await setDoc(docRef, user);
-      console.log('Dokument mit benutzerdefinierter ID erfolgreich gespeichert:', user.id);
+      console.log(
+        'Dokument mit benutzerdefinierter ID erfolgreich gespeichert:',
+        user.id
+      );
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
   }
-
 
   async changeProfileImage(id: string, image: string) {
     try {
@@ -69,7 +80,4 @@ export class FirebaseService {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
   }
-
-
-
 }
