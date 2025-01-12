@@ -1,4 +1,4 @@
-<section class="">
+<section class="relative">
   <app-header-bar></app-header-bar>
 
   <div class="h-[calc(100vh-102px)] flex flex-row p-4">
@@ -56,6 +56,15 @@
       />
     </svg>
   </div>
+
+  <!-- popup background -->
+  <div
+    class="transition-svg-text w-full h-full absolute top-0 left-0 bottom-0 right-0 z-[99] bg-[rgba(0,0,0,0.3)]"
+    [ngClass]="{ 'opacity-0 pointer-events-none': !popupService.popupOpen }"
+  ></div>
+
+  <!-- popup -->
+  <app-popup [centerPopup]="true" [popupCorner]="'tp'"></app-popup>
 </section>
 
 @if(selectedUser) {
