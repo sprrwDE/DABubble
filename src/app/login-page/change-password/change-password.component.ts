@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, MinLengthValidator, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -18,6 +18,7 @@ export class ChangePasswordComponent implements OnInit {
   message: string = '';
   error: string = '';
   changePasswordForm: FormGroup;
+  @Output() notification = new EventEmitter<string>();
 
   constructor(private route: ActivatedRoute, private auth: Auth, private router: Router, private fb: FormBuilder) {
     this.changePasswordForm = this.fb.group({
@@ -59,8 +60,9 @@ export class ChangePasswordComponent implements OnInit {
       return;
     }
     const newPassword = this.changePasswordForm.get('password1')?.value;
-    
+
     try {
+      this.notification.emit("Anmelden")
       await confirmPasswordReset(this.auth, this.oobCode, newPassword);
       this.message = 'Passwort erfolgreich geändert.';
       this.error = '';
