@@ -1,8 +1,12 @@
+<!-- Login animation  -->
 <app-animation-screen></app-animation-screen>
+
+<!-- Blue notification box -->
+<app-blue-notification-box [message]="notificationMessage" [visible]="notificationVisible"></app-blue-notification-box>
 
 <section class="w-full h-screen flex flex-col justify-between p-5">
     <div class="flex justify-end">
-       
+
 
         <div class="flex flex-col gap-4 text-right">
             <span class="">Neu bei DABubble?</span>
@@ -11,7 +15,7 @@
     </div>
 
     <div class="flex justify-center items-center h-screen">
-            <router-outlet></router-outlet>
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
     </div>
     <div class="flex justify-center gap-6">
         <a [routerLink]="'/impressum'" href="" class="text-primary btn-3">Impressum</a>

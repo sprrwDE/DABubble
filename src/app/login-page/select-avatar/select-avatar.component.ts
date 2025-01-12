@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FirebaseService } from '../../shared/services/firebase.service';
+
 
 @Component({
   selector: 'app-select-avatar',
@@ -12,7 +13,7 @@ import { FirebaseService } from '../../shared/services/firebase.service';
 })
 export class SelectAvatarComponent implements OnInit {
   currentAvatar: string = 'imgs/avatar/profile.svg'
-
+  @Output() notification = new EventEmitter<string>();
 
   avatars: string[] = [
     'imgs/avatar/1av.svg',
@@ -25,7 +26,7 @@ export class SelectAvatarComponent implements OnInit {
 
   userId!: string;
 
-  constructor(private route: ActivatedRoute, private firebaseService: FirebaseService) {
+  constructor(private route: ActivatedRoute, private firebaseService: FirebaseService, private routerLink: Router) {
 
   }
   ngOnInit(): void {
@@ -33,14 +34,23 @@ export class SelectAvatarComponent implements OnInit {
     console.log('empfagne user id: ', this.userId)
   }
 
-  selectAvatar(index:number) {
+  selectAvatar(index: number) {
     this.currentAvatar = this.avatars[index]
-    this.firebaseService.changeProfileImage(this.userId, this.avatars[index])
+
   }
 
+  confirmAvatar() {
+    this.firebaseService.changeProfileImage(this.userId, this.currentAvatar)
+    this.showNotification()
+    setTimeout(() => {
+      this.routerLink.navigate(['/login'])
+    }, 2500);
 
-/* test() {
-    console.log(this.userId)
-    this.firebaseService.getUser(this.userId)
-  }  */
+  }
+
+  // this.notification.emit(`<img src="imgs/icons/send.svg" alt="">`)
+
+  showNotification() {
+    this.notification.emit("Konto erfolgreich erstellt!")
+  }
 }
