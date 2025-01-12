@@ -1,5 +1,6 @@
 <section class="">
   <app-header-bar></app-header-bar>
+
   <div class="h-[calc(100vh-102px)] flex flex-row p-4">
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
@@ -9,8 +10,16 @@
       }"
       (showUserChange)="openUserDetails($event)"
     ></app-sidebar-nav>
+
     <app-chat class="w-full"></app-chat>
-    <app-reply-panel></app-reply-panel>
+
+    <app-reply-panel
+      class="w-[450px] duration-300 max-w-[450px] overflow-hidden"
+      [ngClass]="{
+        'w-px': !panelService.isReplyPanelOpen,
+        'w-full': panelService.isReplyPanelOpen
+      }"
+    ></app-reply-panel>
   </div>
 
   <div
@@ -50,8 +59,6 @@
 </section>
 
 @if(selectedUser) {
-  <app-single-user 
-    [userData]="selectedUser" 
-    (closeEvent)="selectedUser = null">
-  </app-single-user>
+<app-single-user [userData]="selectedUser" (closeEvent)="selectedUser = null">
+</app-single-user>
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,4 +8,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {}
+export class MessageInputComponent {
+  @Input() isReplayInput: boolean = false;
+}

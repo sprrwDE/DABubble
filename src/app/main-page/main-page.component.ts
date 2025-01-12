@@ -7,6 +7,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { SingleUserComponent } from './single-user/single-user.component';
 import { User } from '../shared/models/user.model';
 import { UserService } from '../shared/services/user.service';
+import { PanelService } from '../shared/services/panel.service';
 
 @Component({
   selector: 'app-main-page',
@@ -19,12 +20,12 @@ import { UserService } from '../shared/services/user.service';
     NgClass,
     NgIf,
     SingleUserComponent,
-],
+  ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  constructor(private user: UserService) {
+  constructor(private user: UserService, public panelService: PanelService) {
     // console.log(user.arr)
   }
 
@@ -42,5 +43,4 @@ export class MainPageComponent {
       this.showUser = true;
     }
   }
-
 }

@@ -1,0 +1,22 @@
+.line {
+  width: 100%;
+  height: 1px;
+  @apply bg-lines;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+}
+
+.reply-chat-messages-container {
+  // Versteckt die Scrollbar in Webkit-basierten Browsern (Chrome, Safari)
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // Versteckt die Scrollbar in Firefox
+  scrollbar-width: none;
+
+  // Versteckt die Scrollbar in IE/Edge
+  -ms-overflow-style: none;
+}
