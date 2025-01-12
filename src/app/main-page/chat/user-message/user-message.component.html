@@ -1,12 +1,21 @@
 <div
-  class="main-chat-message-container transition-svg-text message px-[45px] py-[10px] flex items-center relative justify-end gap-[10px]"
-  [ngClass]="{ 'flex-row-reverse': isContact }"
+  class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
+  [ngClass]="{
+    'flex-row-reverse': isContact,
+    'px-[30px]': isReplay,
+    'px-[45px]': !isReplay
+  }"
 >
   <div
     class="reaction-bar flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 bg-white pl-[20px] pr-[15px] py-[5px] transition-svg-text"
-    [ngClass]="{ 'right-[50px]': isContact, 'left-[50px]': !isContact }"
+    [ngClass]="{
+      'right-[50px]': isContact,
+      'left-[50px]': !isContact,
+      'right-[30px]': isContact && isReplay,
+      'left-[30px]': !isContact && isReplay
+    }"
   >
-    <div class="transition-svg-text reaction-item-like">
+    <div *ngIf="!isReplay" class="transition-svg-text reaction-item-like">
       <svg
         width="20"
         height="20"
@@ -25,7 +34,7 @@
       </svg>
     </div>
 
-    <div class="transition-svg-text reaction-item-like">
+    <div *ngIf="!isReplay" class="transition-svg-text reaction-item-like">
       <svg
         width="20"
         height="20"
@@ -120,7 +129,7 @@
       </svg>
     </div>
 
-    <div class="reaction-item">
+    <div (click)="openReplyPanel()" *ngIf="!isReplay" class="reaction-item">
       <svg
         width="24"
         height="24"
@@ -148,7 +157,7 @@
       </svg>
     </div>
 
-    <div class="reaction-item">
+    <div *ngIf="!isContact" class="reaction-item">
       <svg
         width="24"
         height="24"
@@ -181,6 +190,7 @@
     class="flex flex-col gap-[10px]"
     [ngClass]="{ 'items-start': isContact, 'items-end': !isContact }"
   >
+    <!-- name and time -->
     <div
       class="flex items-center justify-end gap-[20px]"
       [ngClass]="{ 'flex-row-reverse': isContact }"
@@ -192,6 +202,7 @@
       </p>
     </div>
 
+    <!-- message -->
     <p
       class="text-[18px] rounded-[30px] p-[15px] max-w-[675px] flex justify-end items-center transition-svg-text"
       [ngClass]="{
@@ -202,8 +213,11 @@
       {{ message }}
     </p>
 
-    <!-- icon-container -->
-    <div *ngIf="!isContact" class="flex items-center justify-end gap-[10px]">
+    <!-- add icon-btn -->
+    <div
+      *ngIf="likes.length > 0"
+      class="flex items-center justify-end gap-[10px]"
+    >
       <div
         class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text hover:scale-110"
       >
@@ -236,17 +250,23 @@
     </div>
 
     <!-- answer btn container -->
-    <div *ngIf="isContact" class="flex items-center gap-[20px]">
-      <p class="text-primary text-[18px] hover:font-bold hover:cursor-pointer">
+    <div
+      *ngIf="numberOfAnswers > 0 && !isReplay"
+      class="flex items-center gap-[20px]"
+    >
+      <p
+        (click)="openReplyPanel()"
+        class="text-primary text-[18px] hover:font-bold hover:cursor-pointer"
+      >
         <!-- Ins Span die Anzahl der Antworten rein rendern -->
         <span> {{ numberOfAnswers }} </span> Antworten
       </p>
 
-      <p class="text-[14px] text-disable" *ngIf="isAnswer">
+      <p class="text-[14px] text-disable">
         Letzte Antwort <span> {{ lastAnswerTime }} </span>
       </p>
     </div>
   </div>
 
-  <img src="{{ imgUrl }}" alt="" />
+  <img src="{{ imgUrl || '' }}" alt="" />
 </div>

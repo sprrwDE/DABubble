@@ -36,7 +36,7 @@
     </svg>
   </div>
 
-  <div class="flex flex-col gap-[25px]">
+  <div class="h-full overflow-hidden flex flex-col gap-[25px]">
     <!-- Channels Container -->
 
     <div class="flex flex-col pb-[20px]">
@@ -95,6 +95,7 @@
         </div>
 
         <svg
+          (click)="popupService.openPopup()"
           class="hover:cursor-pointer plus-btn"
           width="24"
           height="24"
@@ -202,7 +203,7 @@
 
     <!-- Direct Messages Container -->
 
-    <div class="flex flex-col">
+    <div class="flex flex-col h-full overflow-hidden">
       <div
         [ngClass]="{ 'pb-[0px] ': !showContacts, 'pb-[25px]': showContacts }"
         class="flex items-center w-full justify-between transition-all duration-500 ease-in-out"
@@ -262,14 +263,8 @@
       <div
         id="all-users"
         [ngClass]="{ 'h-full': showContacts, 'h-0': !showContacts }"
-        class="pl-[5px] flex flex-col gap-[15px] overflow-hidden h-full transition-all duration-150 ease-in select-none"
+        class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
       >
-        <!--
-          <div class="contact-item" (click)="openDialog(user)">
-          <img src="imgs/avatar1.png" alt="" />
-          <p>Frederik Beck (Du)</p>
-        </div> 
-        -->
         @for (user of user.allUsers; track $index) {
         <div class="contact-item" (click)="openDialog(user)">
           <img src="{{ user.image }}" alt="" />

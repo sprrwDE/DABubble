@@ -20,7 +20,7 @@
 
     <img class="size-40 hover:bg-[rgb(230,230,230)] rounded-[100%] p-1" [src]="currentAvatar" alt="Avatar">
 
-    <h2 (click)="test()" class="text-3xl font-bold pt-8 pb-4">Frederik Beck</h2>
+    <h2 class="text-3xl font-bold pt-8 pb-4">Frederik Beck</h2>
     <div class="text-left w-full">
         <span class="text-xl">Aus der Liste wählen</span>
         <div class="flex gap-4 mt-8 justify-center">
@@ -28,7 +28,10 @@
         </div>
     </div>
 
+    
+
+
     <div class="w-full flex justify-end pt-8">
-        <button>Weiter</button>
+        <button (click)="confirmAvatar()">Weiter</button>
     </div>
 </div>

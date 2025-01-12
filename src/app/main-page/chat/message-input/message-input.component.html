@@ -5,7 +5,9 @@
   <textarea
     #chatInput
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
-    placeholder="Nachricht an #Entwicklerteam"
+    placeholder="{{
+      isReplayInput ? 'Antworten...' : 'Nachricht an #Entwicklerteam'
+    }}"
   ></textarea>
 
   <!-- icons -->

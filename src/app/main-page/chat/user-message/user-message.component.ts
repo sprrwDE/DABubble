@@ -1,5 +1,6 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { PanelService } from '../../../shared/services/panel.service';
 
 @Component({
   selector: 'app-user-message',
@@ -14,8 +15,24 @@ export class UserMessageComponent {
   @Input() name: string = '';
   @Input() imgUrl: string = '';
   @Input() isContact: boolean = false;
-  @Input() isAnswer: boolean = false;
+  @Input() isReplay: boolean = false;
   @Input() lastAnswerTime: string = '';
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<string> = [];
+
+  constructor(private panelService: PanelService) {}
+
+  openReplyPanel() {
+    this.panelService.openReplyPanel();
+
+    // Hier muss dann statt der message die ID des chats (replay chats) übergeben werden
+    this.panelService.renderReplyPanel(
+      this.message,
+      this.name,
+      this.time,
+      this.imgUrl,
+      this.isContact,
+      this.numberOfAnswers
+    );
+  }
 }

@@ -7,7 +7,9 @@ import { NgClass, NgIf } from '@angular/common';
 import { SingleUserComponent } from './single-user/single-user.component';
 import { User } from '../shared/models/user.model';
 import { UserService } from '../shared/services/user.service';
-
+import { PanelService } from '../shared/services/panel.service';
+import { PopupService } from '../shared/services/popup.service';
+import { PopupComponent } from '../popup/popup.component';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -19,12 +21,17 @@ import { UserService } from '../shared/services/user.service';
     NgClass,
     NgIf,
     SingleUserComponent,
-],
+    PopupComponent,
+  ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  constructor(private user: UserService) {
+  constructor(
+    private user: UserService,
+    public panelService: PanelService,
+    public popupService: PopupService
+  ) {
     // console.log(user.arr)
   }
 
@@ -42,5 +49,4 @@ export class MainPageComponent {
       this.showUser = true;
     }
   }
-
 }

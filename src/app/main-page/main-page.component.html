@@ -1,5 +1,6 @@
-<section class="">
+<section class="relative">
   <app-header-bar></app-header-bar>
+
   <div class="h-[calc(100vh-102px)] flex flex-row p-4">
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
@@ -9,8 +10,16 @@
       }"
       (showUserChange)="openUserDetails($event)"
     ></app-sidebar-nav>
+
     <app-chat class="w-full"></app-chat>
-    <app-reply-panel></app-reply-panel>
+
+    <app-reply-panel
+      class="w-[450px] duration-300 max-w-[450px] overflow-hidden"
+      [ngClass]="{
+        'w-px': !panelService.isReplyPanelOpen,
+        'w-full': panelService.isReplyPanelOpen
+      }"
+    ></app-reply-panel>
   </div>
 
   <div
@@ -47,11 +56,18 @@
       />
     </svg>
   </div>
+
+  <!-- popup background -->
+  <div
+    class="transition-svg-text w-full h-full absolute top-0 left-0 bottom-0 right-0 z-[99] bg-[rgba(0,0,0,0.3)]"
+    [ngClass]="{ 'opacity-0 pointer-events-none': !popupService.popupOpen }"
+  ></div>
+
+  <!-- popup -->
+  <app-popup [centerPopup]="true" [popupCorner]="'tp'"></app-popup>
 </section>
 
 @if(selectedUser) {
-  <app-single-user 
-    [userData]="selectedUser" 
-    (closeEvent)="selectedUser = null">
-  </app-single-user>
+<app-single-user [userData]="selectedUser" (closeEvent)="selectedUser = null">
+</app-single-user>
 }

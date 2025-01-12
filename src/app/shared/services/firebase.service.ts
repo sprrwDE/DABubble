@@ -7,7 +7,7 @@ import {
   doc,
   setDoc,
   getDocs,
-  onSnapshot
+  onSnapshot,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 
@@ -48,7 +48,7 @@ export class FirebaseService {
   ////// Test
 
   // Nur für Hilfsfunktion zum Status Updaten in Userservice
-  async updateSingleDoc(col: string, id: string, status:string) {
+  async updateSingleDoc(col: string, id: string, status: string) {
     const updateRef = doc(this.firestore, col, id);
     await updateDoc(updateRef, {
       status: status,
@@ -56,10 +56,14 @@ export class FirebaseService {
   }
 
   // Subscribe Single Doc
-  subscribeToSingleDoc(col: string, id: string, callback: (data: any) => void): () => void {
+  subscribeToSingleDoc(
+    col: string,
+    id: string,
+    callback: (data: any) => void
+  ): () => void {
     try {
       const docRef = doc(this.firestore, col, id);
-  
+
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -70,7 +74,7 @@ export class FirebaseService {
           callback(null); // Keine Daten vorhanden
         }
       });
-  
+
       return unsubscribe;
     } catch (error) {
       console.error('Error setting up listener:', error);

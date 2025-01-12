@@ -2,12 +2,13 @@ import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
-
+import { PopupService } from '../../shared/services/popup.service';
 
 @Component({
   selector: 'app-sidebar-nav',
   standalone: true,
   imports: [NgClass],
+  providers: [PopupService],
   templateUrl: './sidebar-nav.component.html',
   styleUrl: './sidebar-nav.component.scss',
 })
@@ -17,8 +18,7 @@ export class SidebarNavComponent {
   showUser = false;
   @Output() showUserChange = new EventEmitter<User | null>();
 
-  constructor(public user: UserService) {
-  }
+  constructor(public user: UserService, public popupService: PopupService) {}
 
   toggleChannels() {
     this.showChannels = !this.showChannels;
@@ -29,6 +29,6 @@ export class SidebarNavComponent {
   }
 
   openDialog(user: User) {
-    this.showUserChange.emit(user); 
+    this.showUserChange.emit(user);
   }
 }
