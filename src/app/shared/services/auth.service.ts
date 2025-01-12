@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, onAuthStateChanged, User, sendPasswordResetEmail } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -29,5 +29,9 @@ export class AuthService {
   // Abmelden
   async logout(): Promise<void> {
     return await signOut(this.auth);
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    return await sendPasswordResetEmail(this.auth, email);
   }
 }

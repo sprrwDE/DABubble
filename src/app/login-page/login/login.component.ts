@@ -3,17 +3,27 @@ import { Auth, User, signInWithPopup, GoogleAuthProvider } from '@angular/fire/a
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { User as AppUser } from '../../shared/models/user.model';
 import { AuthService } from '../../shared/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router) {
+  loginForm: FormGroup;
+
+  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
     this.auth.onAuthStateChanged((user: User | null) => {
       if (user) {
         console.log('Logged in user:', user.displayName, user.email);
@@ -33,7 +43,7 @@ export class LoginComponent implements OnInit {
       .then((result) => {
         console.log('User signed in:', result.user);
         this.updateFirebase(result.user)
-        this.router.navigate(['/'])
+        this.goToMainPage()
       })
       .catch((error) => {
         console.error('Error during Google sign-in:', error);
@@ -58,4 +68,22 @@ export class LoginComponent implements OnInit {
     this.authService.logout()
   }
 
+
+  onLogin() {
+    if(this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+    }
+
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password)
+      this.goToMainPage()
+    }
+
+  }
+
+
+  goToMainPage() {
+    this.router.navigate(['/main'])
+  }
 }
