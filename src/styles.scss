@@ -75,6 +75,18 @@ img {
   }
 }
 
+.popup-input-container {
+  @apply flex items-center gap-[20px] border-[1px] border-lines rounded-[40px] px-[20px] py-[18px] hover:cursor-text hover:border-chat;
+
+  input {
+    @apply h-full w-full border-none outline-none;
+  }
+
+  &:has(input:focus) {
+    @apply border-hover;
+  }
+}
+
 // Scrollbar
 
 /* width */

@@ -95,7 +95,7 @@
         </div>
 
         <svg
-          (click)="popupService.openPopup()"
+          (click)="openPopup('create-channel', '')"
           class="hover:cursor-pointer plus-btn"
           width="24"
           height="24"
@@ -170,6 +170,7 @@
         <!-- Add Channel btn -->
         <div
           class="hover-primary transition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
+          (click)="openPopup('create-channel', '')"
         >
           <svg
             width="24"

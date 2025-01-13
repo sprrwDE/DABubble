@@ -8,7 +8,6 @@ import { SingleUserComponent } from './single-user/single-user.component';
 import { User } from '../shared/models/user.model';
 import { UserService } from '../shared/services/user.service';
 import { PanelService } from '../shared/services/panel.service';
-import { PopupService } from '../shared/services/popup.service';
 import { PopupComponent } from '../popup/popup.component';
 @Component({
   selector: 'app-main-page',
@@ -27,11 +26,7 @@ import { PopupComponent } from '../popup/popup.component';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  constructor(
-    private user: UserService,
-    public panelService: PanelService,
-    public popupService: PopupService
-  ) {
+  constructor(private user: UserService, public panelService: PanelService) {
     // console.log(user.arr)
   }
 
@@ -39,6 +34,9 @@ export class MainPageComponent {
   showUser = false;
   selectedUser: User | null = null;
 
+  public popupOpen = false;
+  public popupType: string = '';
+  public popupCorner: string = '';
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }
@@ -48,5 +46,11 @@ export class MainPageComponent {
       this.selectedUser = user;
       this.showUser = true;
     }
+  }
+
+  openPopup(event: { type: string; corner: string }) {
+    this.popupOpen = true;
+    this.popupType = event.type;
+    this.popupCorner = event.corner;
   }
 }
