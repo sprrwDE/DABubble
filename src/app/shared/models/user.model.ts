@@ -11,6 +11,8 @@ export class User {
     this.image = obj ? obj.image : '';
     this.status = obj ? obj.status : '';
     this.id = obj ? obj.id : '';
+
+    this.trackMouseStatus()
  }
 
  toJSON() {
@@ -21,5 +23,11 @@ export class User {
      status: this.status,
      id: this.id,
    };
+ }
+
+ trackMouseStatus() {
+  setInterval(() => {
+    console.log('mouse moved')
+  }, 15000);
  }
 }
