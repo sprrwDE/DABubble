@@ -37,6 +37,7 @@ export class MainPageComponent {
   public popupOpen = false;
   public popupType: string = '';
   public popupCorner: string = '';
+
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }

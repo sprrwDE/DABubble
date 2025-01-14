@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-create-channel-popup',
   standalone: true,
-  imports: [],
+  imports: [NgClass, NgIf],
   templateUrl: './create-channel-popup.component.html',
   styleUrl: './create-channel-popup.component.scss',
 })

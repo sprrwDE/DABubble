@@ -1,17 +1,28 @@
 <div
-  class="p-[40px] rounded-[30px] transition-svg-text box-shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[100]"
+  class="p-[40px] rounded-[30px] transition-svg-text box-shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
   [ngClass]="{
     'scale-0': !popupOpen,
-    'rounded-tl-[00px]': popupCorner === 'tl',
-    'rounded-tr-[00px]': popupCorner === 'tr',
-    'rounded-bl-[00px]': popupCorner === 'bl',
-    'rounded-br-[00px]': popupCorner === 'br',
-    'rounded-[30px]': popupCorner === '',
-    'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]': centerPopup
+    'rounded-tl-[0px]': popupCorner === 'tl',
+    'rounded-tr-[0px]': popupCorner === 'tr',
+    'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]': popupType === 'create-channel',
+    'top-[100%] left-[0] max-w-[870px] min-w-[870px] cursor-default': popupType === 'channel-details',
   }"
 >
   <app-create-channel-popup
-    (closePopupEvent)="closePopup()"
     *ngIf="popupType === 'create-channel'"
+    (closePopupEvent)="closePopup()"
   ></app-create-channel-popup>
+
+  <app-channel-details-popup
+    *ngIf="popupType === 'channel-details'"
+    (closePopupEvent)="closePopup()"
+  ></app-channel-details-popup>
 </div>
+
+<!-- popup background -->
+
+<div
+  class="transition-svg-text min-w-[100vw] min-h-[100vh] fixed top-0 left-0 bottom-0 right-0 z-[9999] bg-[rgba(0,0,0,0.3)]"
+  [ngClass]="{ 'opacity-0 pointer-events-none': !popupOpen }"
+  (click)="$event.stopPropagation(); closePopup()"
+></div>

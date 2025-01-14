@@ -5,7 +5,8 @@
     class="z-10 bg-white flex justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
   >
     <div
-      class="hover-primary-bg rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
+      (click)="openPopup('channel-details', 'tl')"
+      class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
     >
       <svg
         width="32"
@@ -35,10 +36,14 @@
           fill="black"
         />
       </svg>
-    </div>
 
-    <!-- 
-     -->
+      <app-popup
+        [popupCorner]="popupCorner"
+        [popupOpen]="popupOpen"
+        [popupType]="popupType"
+        (closePopupEvent)="closePopup()"
+      ></app-popup>
+    </div>
 
     <div class="flex items-center gap-[15px]">
       <div

@@ -22,7 +22,7 @@
   }
 
   p {
-    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px] z-10 bg-white;
+    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px] z-[2] bg-white;
     position: relative;
   }
 }
