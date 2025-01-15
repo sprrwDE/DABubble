@@ -5,7 +5,7 @@
     class="z-10 bg-white flex justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
   >
     <div
-      (click)="openPopup('channel-details', 'tl')"
+      (click)="openChannelDetailsPopup('channel-details', 'tl')"
       class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
     >
       <svg
@@ -38,16 +38,17 @@
       </svg>
 
       <app-popup
-        [popupCorner]="popupCorner"
-        [popupOpen]="popupOpen"
-        [popupType]="popupType"
-        (closePopupEvent)="closePopup()"
+        [popupCorner]="channelDetailsPopupCorner"
+        [popupOpen]="channelDetailsPopupOpen"
+        [popupType]="channelDetailsPopupType"
+        (closePopupEvent)="closeChannelDetailsPopup()"
       ></app-popup>
     </div>
 
     <div class="flex items-center gap-[15px]">
       <div
-        class="hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
+        class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
+        (click)="openMemberListPopup('member-list', 'tr', false)"
       >
         <div class="flex items-center">
           <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
@@ -56,9 +57,17 @@
         </div>
 
         <p class="text-[20px] font-semibold">3</p>
+
+        <app-popup
+          [popupCorner]="memberListPopupCorner"
+          [popupOpen]="memberListPopupOpen"
+          [popupType]="memberListPopupType"
+          (closePopupEvent)="closeMemberListPopup()"
+        ></app-popup>
       </div>
 
       <div
+        (click)="openMemberListPopup('member-list', 'tr', true)"
         class="hover-primary transition-svg-text flex items-center justify-center bg-bg rounded-full p-[8px]"
       >
         <svg

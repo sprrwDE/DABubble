@@ -1,0 +1,218 @@
+<section
+  *ngIf="!showAddMembersPopup"
+  class="member-list-popup flex flex-col gap-[20px]"
+>
+  <div class="flex items-center justify-between w-full">
+    <h2 class="text-[24px] font-bold">Mitglieder</h2>
+
+    <div
+      (click)="closePopup($event)"
+      class="flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_105708_9092"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="24"
+          height="24"
+        >
+          <rect width="24" height="24" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_105708_9092)">
+          <path
+            d="M12 13.4L7.09999 18.3C6.91665 18.4833 6.68332 18.575 6.39999 18.575C6.11665 18.575 5.88332 18.4833 5.69999 18.3C5.51665 18.1167 5.42499 17.8833 5.42499 17.6C5.42499 17.3167 5.51665 17.0833 5.69999 16.9L10.6 12L5.69999 7.09999C5.51665 6.91665 5.42499 6.68332 5.42499 6.39999C5.42499 6.11665 5.51665 5.88332 5.69999 5.69999C5.88332 5.51665 6.11665 5.42499 6.39999 5.42499C6.68332 5.42499 6.91665 5.51665 7.09999 5.69999L12 10.6L16.9 5.69999C17.0833 5.51665 17.3167 5.42499 17.6 5.42499C17.8833 5.42499 18.1167 5.51665 18.3 5.69999C18.4833 5.88332 18.575 6.11665 18.575 6.39999C18.575 6.68332 18.4833 6.91665 18.3 7.09999L13.4 12L18.3 16.9C18.4833 17.0833 18.575 17.3167 18.575 17.6C18.575 17.8833 18.4833 18.1167 18.3 18.3C18.1167 18.4833 17.8833 18.575 17.6 18.575C17.3167 18.575 17.0833 18.4833 16.9 18.3L12 13.4Z"
+            fill="black"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-[15px]">
+    <div class="flex flex-col gap-[13px]">
+      <!-- User hier rein rendern -->
+
+      <!-- user1 -->
+      <div
+        class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+      >
+        <div class="relative">
+          <img
+            class="w-[50px] h-[50px] rounded-full"
+            src="imgs/avatar1.png"
+            alt=""
+          />
+
+          <!-- change the color of bg -->
+          <div
+            class="bg-online absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+          ></div>
+        </div>
+
+        <p>Frederik Beck <span *ngIf="true">(Du)</span></p>
+      </div>
+
+      <!-- user2 -->
+      <div
+        class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+      >
+        <div class="relative">
+          <img
+            class="w-[50px] h-[50px] rounded-full"
+            src="imgs/avatar1.png"
+            alt=""
+          />
+
+          <!-- change the color of bg -->
+          <div
+            class="bg-online absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+          ></div>
+        </div>
+
+        <p>Frederik Beck <span *ngIf="false">(Du)</span></p>
+      </div>
+
+      <!-- user3 -->
+      <div
+        class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+      >
+        <div class="relative">
+          <img
+            class="w-[50px] h-[50px] rounded-full"
+            src="imgs/avatar1.png"
+            alt=""
+          />
+
+          <!-- change the color of bg -->
+          <div
+            class="bg-online absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+          ></div>
+        </div>
+
+        <p>Frederik Beck <span *ngIf="false">(Du)</span></p>
+      </div>
+    </div>
+
+    <div
+      (click)="showAddMembersSection($event)"
+      class="hover-primary-bg flex items-center gap-[15px] transition-svg-text px-[29px] py-[12px] rounded-[100px]"
+    >
+      <div class="bg-bg p-[5px] rounded-full">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+            id="mask0_105708_9192"
+            style="mask-type: alpha"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="24"
+            height="24"
+          >
+            <rect width="24" height="24" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_105708_9192)">
+            <path
+              d="M19 14C18.7167 14 18.4793 13.904 18.288 13.712C18.096 13.5207 18 13.2833 18 13V11H16C15.7167 11 15.4793 10.904 15.288 10.712C15.096 10.5207 15 10.2833 15 10C15 9.71667 15.096 9.479 15.288 9.287C15.4793 9.09567 15.7167 9 16 9H18V7C18 6.71667 18.096 6.479 18.288 6.287C18.4793 6.09567 18.7167 6 19 6C19.2833 6 19.5207 6.09567 19.712 6.287C19.904 6.479 20 6.71667 20 7V9H22C22.2833 9 22.5207 9.09567 22.712 9.287C22.904 9.479 23 9.71667 23 10C23 10.2833 22.904 10.5207 22.712 10.712C22.5207 10.904 22.2833 11 22 11H20V13C20 13.2833 19.904 13.5207 19.712 13.712C19.5207 13.904 19.2833 14 19 14ZM9 12C7.9 12 6.95833 11.6083 6.175 10.825C5.39167 10.0417 5 9.1 5 8C5 6.9 5.39167 5.95833 6.175 5.175C6.95833 4.39167 7.9 4 9 4C10.1 4 11.0417 4.39167 11.825 5.175C12.6083 5.95833 13 6.9 13 8C13 9.1 12.6083 10.0417 11.825 10.825C11.0417 11.6083 10.1 12 9 12ZM2 20C1.71667 20 1.47933 19.904 1.288 19.712C1.096 19.5207 1 19.2833 1 19V17.2C1 16.6333 1.146 16.1123 1.438 15.637C1.72933 15.1623 2.11667 14.8 2.6 14.55C3.63333 14.0333 4.68333 13.6457 5.75 13.387C6.81667 13.129 7.9 13 9 13C10.1 13 11.1833 13.129 12.25 13.387C13.3167 13.6457 14.3667 14.0333 15.4 14.55C15.8833 14.8 16.2707 15.1623 16.562 15.637C16.854 16.1123 17 16.6333 17 17.2V19C17 19.2833 16.904 19.5207 16.712 19.712C16.5207 19.904 16.2833 20 16 20H2ZM3 18H15V17.2C15 17.0167 14.9543 16.85 14.863 16.7C14.771 16.55 14.65 16.4333 14.5 16.35C13.6 15.9 12.6917 15.5623 11.775 15.337C10.8583 15.1123 9.93333 15 9 15C8.06667 15 7.14167 15.1123 6.225 15.337C5.30833 15.5623 4.4 15.9 3.5 16.35C3.35 16.4333 3.22933 16.55 3.138 16.7C3.046 16.85 3 17.0167 3 17.2V18ZM9 10C9.55 10 10.021 9.804 10.413 9.412C10.8043 9.02067 11 8.55 11 8C11 7.45 10.8043 6.97933 10.413 6.588C10.021 6.196 9.55 6 9 6C8.45 6 7.97933 6.196 7.588 6.588C7.196 6.97933 7 7.45 7 8C7 8.55 7.196 9.02067 7.588 9.412C7.97933 9.804 8.45 10 9 10Z"
+              fill="black"
+            />
+          </g>
+        </svg>
+      </div>
+
+      <p class="text-[18px]">Mitglieder hinzufügen</p>
+    </div>
+  </div>
+</section>
+
+<section
+  *ngIf="showAddMembersPopup"
+  class="member-list-popup flex flex-col gap-[20px]"
+>
+  <div class="flex items-center justify-between w-full">
+    <h2 class="text-[24px] font-bold">Leute hinzufügen</h2>
+
+    <div
+      (click)="closePopup($event)"
+      class="flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_105708_9092"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="24"
+          height="24"
+        >
+          <rect width="24" height="24" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_105708_9092)">
+          <path
+            d="M12 13.4L7.09999 18.3C6.91665 18.4833 6.68332 18.575 6.39999 18.575C6.11665 18.575 5.88332 18.4833 5.69999 18.3C5.51665 18.1167 5.42499 17.8833 5.42499 17.6C5.42499 17.3167 5.51665 17.0833 5.69999 16.9L10.6 12L5.69999 7.09999C5.51665 6.91665 5.42499 6.68332 5.42499 6.39999C5.42499 6.11665 5.51665 5.88332 5.69999 5.69999C5.88332 5.51665 6.11665 5.42499 6.39999 5.42499C6.68332 5.42499 6.91665 5.51665 7.09999 5.69999L12 10.6L16.9 5.69999C17.0833 5.51665 17.3167 5.42499 17.6 5.42499C17.8833 5.42499 18.1167 5.51665 18.3 5.69999C18.4833 5.88332 18.575 6.11665 18.575 6.39999C18.575 6.68332 18.4833 6.91665 18.3 7.09999L13.4 12L18.3 16.9C18.4833 17.0833 18.575 17.3167 18.575 17.6C18.575 17.8833 18.4833 18.1167 18.3 18.3C18.1167 18.4833 17.8833 18.575 17.6 18.575C17.3167 18.575 17.0833 18.4833 16.9 18.3L12 13.4Z"
+            fill="black"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="primary-svg-text flex items-center gap-[15px]">
+    <svg
+      width="24"
+      height="25"
+      viewBox="0 0 24 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <mask
+        id="mask0_105708_17999"
+        style="mask-type: alpha"
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="24"
+        height="25"
+      >
+        <rect y="0.5" width="24" height="24" fill="#D9D9D9" />
+      </mask>
+      <g mask="url(#mask0_105708_17999)">
+        <path
+          d="M7.24995 20.5C6.93328 20.5 6.67495 20.375 6.47495 20.125C6.27495 19.875 6.21662 19.6 6.29995 19.3L6.99995 16.5H4.77495C4.44162 16.5 4.17495 16.371 3.97495 16.113C3.77495 15.8543 3.71661 15.5667 3.79995 15.25C3.84995 15.0167 3.96662 14.8333 4.14995 14.7C4.33328 14.5667 4.54162 14.5 4.77495 14.5H7.49995L8.49995 10.5H5.77495C5.44161 10.5 5.17495 10.371 4.97495 10.113C4.77495 9.85433 4.71662 9.56667 4.79995 9.25C4.84995 9.01667 4.96662 8.83333 5.14995 8.7C5.33328 8.56667 5.54162 8.5 5.77495 8.5H8.99995L9.82495 5.225C9.87495 5.00833 9.98328 4.83333 10.1499 4.7C10.3166 4.56667 10.5166 4.5 10.7499 4.5C11.0666 4.5 11.3249 4.625 11.5249 4.875C11.7249 5.125 11.7833 5.4 11.6999 5.7L10.9999 8.5H14.9999L15.8249 5.225C15.8749 5.00833 15.9833 4.83333 16.1499 4.7C16.3166 4.56667 16.5166 4.5 16.7499 4.5C17.0666 4.5 17.3249 4.625 17.5249 4.875C17.7249 5.125 17.7833 5.4 17.6999 5.7L16.9999 8.5H19.2249C19.5583 8.5 19.8249 8.629 20.0249 8.887C20.2249 9.14567 20.2833 9.43333 20.1999 9.75C20.15 9.98333 20.0333 10.1667 19.8499 10.3C19.6666 10.4333 19.4583 10.5 19.2249 10.5H16.4999L15.4999 14.5H18.2249C18.5583 14.5 18.8249 14.629 19.0249 14.887C19.2249 15.1457 19.2833 15.4333 19.1999 15.75C19.1499 15.9833 19.0333 16.1667 18.8499 16.3C18.6666 16.4333 18.4583 16.5 18.2249 16.5H14.9999L14.1749 19.775C14.1249 19.9917 14.0166 20.1667 13.8499 20.3C13.6833 20.4333 13.4833 20.5 13.2499 20.5C12.9333 20.5 12.6749 20.375 12.4749 20.125C12.2749 19.875 12.2166 19.6 12.2999 19.3L12.9999 16.5H8.99995L8.17495 19.775C8.12495 19.9917 8.01661 20.1667 7.84995 20.3C7.68328 20.4333 7.48328 20.5 7.24995 20.5ZM9.49995 14.5H13.4999L14.4999 10.5H10.4999L9.49995 14.5Z"
+          fill="#797EF3"
+        />
+      </g>
+    </svg>
+
+    <p>Entwicklerteam</p>
+  </div>
+
+  <div class="popup-input-container">
+    <input type="text" placeholder="Name eingeben" />
+  </div>
+
+  <div class="flex justify-end">
+    <button class="bg-disable hover:bg-disable">Hinzufügen</button>
+  </div>
+</section>

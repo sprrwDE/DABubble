@@ -268,7 +268,18 @@
       >
         @for (user of user.allUsers; track $index) {
         <div class="contact-item" (click)="openDialog(user)">
-          <img src="{{ user.image }}" alt="" />
+          <div class="relative">
+            <img src="{{ user.image }}" alt="" />
+
+            <div
+              [ngClass]="{
+                'bg-online': user.status === 'online',
+                'bg-disable': user.status === 'offline'
+              }"
+              class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+            ></div>
+          </div>
+
           <p>{{ user.name }}</p>
         </div>
         }

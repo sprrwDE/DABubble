@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ChannelDetailsService } from '../../shared/services/channel-details.service';
+import { PopupService } from '../popup.service';
 
 @Component({
   selector: 'app-channel-details-popup',
@@ -12,28 +12,26 @@ import { ChannelDetailsService } from '../../shared/services/channel-details.ser
 export class ChannelDetailsPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  constructor(public channelDetailsService: ChannelDetailsService) {}
+  constructor(public popupService: PopupService) {}
 
   get editChannelName() {
-    return this.channelDetailsService.editChannelName;
+    return this.popupService.editChannelName;
   }
 
   set editChannelName(value: boolean) {
-    this.channelDetailsService.editChannelName = value;
+    this.popupService.editChannelName = value;
   }
 
   get editChannelDescription() {
-    return this.channelDetailsService.editChannelDescription;
+    return this.popupService.editChannelDescription;
   }
 
   set editChannelDescription(value: boolean) {
-    this.channelDetailsService.editChannelDescription = value;
+    this.popupService.editChannelDescription = value;
   }
 
   closePopup() {
-    this.channelDetailsService.resetEditStates();
-
-    console.log(this.editChannelName, this.editChannelDescription);
+    this.popupService.resetEditStates();
 
     this.closePopupEvent.emit();
   }

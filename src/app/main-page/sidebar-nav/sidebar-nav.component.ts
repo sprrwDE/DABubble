@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
+import { PopupService } from '../../popup/popup.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -21,7 +22,7 @@ export class SidebarNavComponent {
     corner: string;
   }>();
 
-  constructor(public user: UserService) {}
+  constructor(public user: UserService, public popupService: PopupService) {}
 
   toggleChannels() {
     this.showChannels = !this.showChannels;
@@ -36,6 +37,8 @@ export class SidebarNavComponent {
   }
 
   openPopup(popupType: string, popupCorner: string) {
+    this.popupService.showCreateChannelAddPeoplePopup = false;
+    this.popupService.showCreateChannelAddPeopleInput = false;
     this.openPopupEvent.emit({ type: popupType, corner: popupCorner });
   }
 }

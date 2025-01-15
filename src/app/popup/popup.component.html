@@ -6,6 +6,7 @@
     'rounded-tr-[0px]': popupCorner === 'tr',
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]': popupType === 'create-channel',
     'top-[100%] left-[0] max-w-[870px] min-w-[870px] cursor-default': popupType === 'channel-details',
+    'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] cursor-default': popupType === 'member-list',
   }"
 >
   <app-create-channel-popup
@@ -17,6 +18,11 @@
     *ngIf="popupType === 'channel-details'"
     (closePopupEvent)="closePopup()"
   ></app-channel-details-popup>
+
+  <app-member-list-popup
+    *ngIf="popupType === 'member-list'"
+    (closePopupEvent)="closePopup()"
+  ></app-member-list-popup>
 </div>
 
 <!-- popup background -->

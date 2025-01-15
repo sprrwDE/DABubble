@@ -1,4 +1,4 @@
-.channel-details-popup {
+.member-list-popup {
   color: black;
 
   svg,
@@ -12,6 +12,13 @@
       path {
         @apply fill-primary;
       }
+    }
+  }
+
+  .primary-svg-text {
+    svg,
+    path {
+      fill: rgb(68, 77, 242);
     }
   }
 }
