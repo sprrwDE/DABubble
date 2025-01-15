@@ -8,6 +8,11 @@ import { User } from '../models/user.model';
 export class UserService {
   allUsers: User[] = []
   db: FirebaseService;
+  loggedInUser: {} = {
+    email: "",
+    id: "",
+  }
+  isOnline: boolean = false;
 
   constructor(private fb: FirebaseService) {
     this.db = fb;
@@ -24,7 +29,6 @@ export class UserService {
   }
 
   ngOnInit() {
-
   }
 
   // test

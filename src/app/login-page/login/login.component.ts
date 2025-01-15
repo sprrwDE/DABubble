@@ -6,6 +6,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../shared/services/user.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder) {
+  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder, private user: UserService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -27,10 +28,18 @@ export class LoginComponent implements OnInit {
     this.auth.onAuthStateChanged((user: User | null) => {
       if (user) {
         console.log('Logged in user:', user.displayName, user.email);
+        console.log("hier: ", user)
+        this.user.loggedInUser = {email: user.email, id: user.uid}
+        this.user.isOnline = true
       } else {
+        this.user.isOnline = false
         console.log('No user is logged in');
       }
     });
+  }
+
+  test() {
+    console.log(this.user.loggedInUser)
   }
 
   ngOnInit(): void {
