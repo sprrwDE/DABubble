@@ -32,9 +32,7 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.contactForm.valid) {
-      console.log('Form data:', this.contactForm.value);
       this.registerUser()
-
     } else {
       console.error('Form is invalid');
     }
@@ -47,7 +45,6 @@ export class RegisterComponent {
   async registerUser() {
     try {
       const userCredential = await this.authService.register(this.contactForm.value.email, this.contactForm.value.password);
-      console.log('Anmeldung erfolgreich:', userCredential.user);
       const user = new User({
         id: userCredential.user?.uid,
         email: userCredential.user?.email || '',
@@ -55,7 +52,6 @@ export class RegisterComponent {
         image: '/imgs/avatar/default-avatar.png',
         status: 'offline',
       })
-      console.log(user)
       this.addUserToFirebase(user)
       this.routeId(user.id)
     } catch (error) {
@@ -72,7 +68,6 @@ export class RegisterComponent {
     try {
       const docRef = doc(this.firestore, `users/${user.id}`); // Benutzerdefinierte ID
       await setDoc(docRef, user);
-      console.log('Dokument mit benutzerdefinierter ID erfolgreich gespeichert:', user.id);
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }

@@ -27,19 +27,12 @@ export class LoginComponent implements OnInit {
 
     this.auth.onAuthStateChanged((user: User | null) => {
       if (user) {
-        console.log('Logged in user:', user.displayName, user.email);
-        console.log("hier: ", user)
         this.user.loggedInUser = {email: user.email, id: user.uid}
         this.user.isOnline = true
       } else {
         this.user.isOnline = false
-        console.log('No user is logged in');
       }
     });
-  }
-
-  test() {
-    console.log(this.user.loggedInUser)
   }
 
   ngOnInit(): void {
@@ -50,7 +43,6 @@ export class LoginComponent implements OnInit {
     const provider = new GoogleAuthProvider();
     signInWithPopup(this.auth, provider)
       .then((result) => {
-        console.log('User signed in:', result.user);
         this.updateFirebase(result.user)
         this.goToMainPage()
       })
