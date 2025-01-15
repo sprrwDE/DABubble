@@ -1,0 +1,10 @@
+section {
+  color: black;
+
+  .text-container {
+    @apply flex justify-center items-center px-[45px] py-[10px] rounded-[100px];
+    p {
+      @apply text-[24px] font-bold;
+    }
+  }
+}

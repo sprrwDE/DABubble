@@ -1,12 +1,21 @@
 <div
-  class="p-[40px] rounded-[30px] transition-svg-text box-shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
+  (click)="$event.stopPropagation()"
+  class="p-[40px] rounded-[30px] cursor-default transition-svg-text box-shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
   [ngClass]="{
     'scale-0': !popupOpen,
     'rounded-tl-[0px]': popupCorner === 'tl',
     'rounded-tr-[0px]': popupCorner === 'tr',
-    'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]': popupType === 'create-channel',
-    'top-[100%] left-[0] max-w-[870px] min-w-[870px] cursor-default': popupType === 'channel-details',
-    'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] cursor-default': popupType === 'member-list',
+    'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
+      popupType === 'create-channel',
+    'top-[100%] left-[0] max-w-[870px] min-w-[870px] ':
+      popupType === 'channel-details',
+    'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] ':
+      popupType === 'member-list',
+    'top-[calc(100%+20px)] right-[0px]':
+      popupType === 'profile-menu' || popupType === 'user-profile'
+      ,
+    'max-w-[500px] min-w-[500px]':
+      popupType === 'user-profile',
   }"
 >
   <app-create-channel-popup
@@ -23,6 +32,16 @@
     *ngIf="popupType === 'member-list'"
     (closePopupEvent)="closePopup()"
   ></app-member-list-popup>
+
+  <app-profile-menu-popup
+    *ngIf="popupType === 'profile-menu'"
+    (closePopupEvent)="closePopup()"
+  ></app-profile-menu-popup>
+
+  <app-user-profile-popup
+    *ngIf="popupType === 'user-profile'"
+    (closePopupEvent)="closePopup()"
+  ></app-user-profile-popup>
 </div>
 
 <!-- popup background -->

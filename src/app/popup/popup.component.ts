@@ -4,6 +4,8 @@ import { CreateChannelPopupComponent } from './create-channel-popup/create-chann
 import { ChannelDetailsPopupComponent } from './channel-details-popup/channel-details-popup.component';
 import { MemberListPopupComponent } from './member-list-popup/member-list-popup.component';
 import { PopupService } from './popup.service';
+import { UserProfilePopupComponent } from './user-profile-popup/user-profile-popup.component';
+import { ProfileMenuPopupComponent } from './profile-menu-popup/profile-menu-popup.component';
 
 @Component({
   selector: 'app-popup',
@@ -14,6 +16,8 @@ import { PopupService } from './popup.service';
     CreateChannelPopupComponent,
     ChannelDetailsPopupComponent,
     MemberListPopupComponent,
+    UserProfilePopupComponent,
+    ProfileMenuPopupComponent,
   ],
   templateUrl: './popup.component.html',
   styleUrl: './popup.component.scss',

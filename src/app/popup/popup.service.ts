@@ -12,6 +12,8 @@ export class PopupService {
   showCreateChannelAddPeoplePopup = false;
   showCreateChannelAddPeopleInput = false;
 
+  openUserProfilePopup = false;
+
   resetEditStates() {
     this.editChannelName = false;
     this.editChannelDescription = false;

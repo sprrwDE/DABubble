@@ -1,0 +1,94 @@
+<section class="flex flex-col gap-[38px]">
+  <div class="flex justify-between items-center w-full">
+    <h2 class="text-[24px] font-bold">Profil</h2>
+
+    <div
+      (click)="closePopup()"
+      class="hover-primary-bg rounded-full p-[5px] transition-svg-text"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_105201_6560"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="24"
+          height="24"
+        >
+          <rect width="24" height="24" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_105201_6560)">
+          <path
+            d="M12 13.4L7.10005 18.3C6.91672 18.4833 6.68338 18.575 6.40005 18.575C6.11672 18.575 5.88338 18.4833 5.70005 18.3C5.51672 18.1167 5.42505 17.8833 5.42505 17.6C5.42505 17.3167 5.51672 17.0833 5.70005 16.9L10.6 12L5.70005 7.09999C5.51672 6.91665 5.42505 6.68332 5.42505 6.39999C5.42505 6.11665 5.51672 5.88332 5.70005 5.69999C5.88338 5.51665 6.11672 5.42499 6.40005 5.42499C6.68338 5.42499 6.91672 5.51665 7.10005 5.69999L12 10.6L16.9 5.69999C17.0834 5.51665 17.3167 5.42499 17.6 5.42499C17.8834 5.42499 18.1167 5.51665 18.3 5.69999C18.4834 5.88332 18.575 6.11665 18.575 6.39999C18.575 6.68332 18.4834 6.91665 18.3 7.09999L13.4 12L18.3 16.9C18.4834 17.0833 18.575 17.3167 18.575 17.6C18.575 17.8833 18.4834 18.1167 18.3 18.3C18.1167 18.4833 17.8834 18.575 17.6 18.575C17.3167 18.575 17.0834 18.4833 16.9 18.3L12 13.4Z"
+            fill="black"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center w-full">
+    <img
+      class="h-[215px] w-[215px] rounded-full"
+      src="imgs/avatar1.png"
+      alt=""
+    />
+  </div>
+
+  <div class="flex flex-col gap-[15px]">
+    <div class="flex justify-between items-center w-full">
+      <p class="text-[32px] font-bold">Frederik Beck</p>
+
+      <p class="text-[18px] text-hover cursor-pointer hover:font-bold">
+        Bearbeiten
+      </p>
+    </div>
+
+    <div class="flex items-stzart gap-[15px]">
+      <div class="h-[16px] w-[16px] bg-online rounded-full"></div>
+
+      <p>Aktive</p>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-[10px]">
+    <div class="flex items-center gap-[20px]">
+      <svg
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_163_231"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="30"
+          height="30"
+        >
+          <rect width="30" height="30" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_163_231)">
+          <path
+            d="M5 25C4.3125 25 3.72417 24.7554 3.235 24.2663C2.745 23.7763 2.5 23.1875 2.5 22.5V7.5C2.5 6.8125 2.745 6.22417 3.235 5.735C3.72417 5.245 4.3125 5 5 5H25C25.6875 5 26.2763 5.245 26.7663 5.735C27.2554 6.22417 27.5 6.8125 27.5 7.5V22.5C27.5 23.1875 27.2554 23.7763 26.7663 24.2663C26.2763 24.7554 25.6875 25 25 25H5ZM25 10L15.6562 15.8438C15.5521 15.9062 15.4425 15.9529 15.3275 15.9837C15.2133 16.0154 15.1042 16.0312 15 16.0312C14.8958 16.0312 14.7867 16.0154 14.6725 15.9837C14.5575 15.9529 14.4479 15.9062 14.3438 15.8438L5 10V22.5H25V10ZM15 13.75L25 7.5H5L15 13.75ZM5 10.3125V8.46875V8.5V8.48375V10.3125Z"
+            fill="black"
+          />
+        </g>
+      </svg>
+
+      <p class="text-[20px] font-bold">E-Mail-Adresse</p>
+    </div>
+
+    <p class="text-[18px] pl-[35px] text-primary">fred.beck&#64;email.com</p>
+  </div>
+</section>

@@ -12,7 +12,8 @@
   />
 
   <div
-    class="profile-container hover:cursor-pointer hover:text-primary transition-all duration-150 min-w-[450px] flex justify-end gap-4 max-h-full items-center"
+    (click)="profileMenuPopupOpen = true"
+    class="profile-container relative hover:cursor-pointer hover:text-primary transition-all duration-150 min-w-[450px] flex justify-end gap-4 max-h-full items-center"
   >
     <p class="text-[32px] font-bold">Frederik Beck</p>
 
@@ -47,5 +48,19 @@
         />
       </g>
     </svg>
+
+    <app-popup
+      [popupCorner]="'tr'"
+      [popupOpen]="profileMenuPopupOpen"
+      [popupType]="'profile-menu'"
+      (closePopupEvent)="profileMenuPopupOpen = false"
+    ></app-popup>
+
+    <app-popup
+      [popupCorner]="'tr'"
+      [popupOpen]="openUserProfilePopup"
+      [popupType]="'user-profile'"
+      (closePopupEvent)="openUserProfilePopup = false"
+    ></app-popup>
   </div>
 </header>
