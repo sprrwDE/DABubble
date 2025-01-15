@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   allUsers: User[] = []
-  db
+  db: FirebaseService;
 
   constructor(private fb: FirebaseService) {
     this.db = fb;
@@ -28,7 +28,6 @@ export class UserService {
   }
 
   // test
-
   updateStatus(id:string) {
     setTimeout(() => {
       this.db.updateSingleDoc('users', id, 'online')
