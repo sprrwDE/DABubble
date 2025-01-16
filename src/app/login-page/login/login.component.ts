@@ -6,6 +6,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../shared/services/user.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder) {
+  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder, private user: UserService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -26,9 +27,10 @@ export class LoginComponent implements OnInit {
 
     this.auth.onAuthStateChanged((user: User | null) => {
       if (user) {
-        console.log('Logged in user:', user.displayName, user.email);
+        this.user.loggedInUser = {email: user.email, id: user.uid}
+        this.user.isOnline = true
       } else {
-        console.log('No user is logged in');
+        this.user.isOnline = false
       }
     });
   }
@@ -41,7 +43,6 @@ export class LoginComponent implements OnInit {
     const provider = new GoogleAuthProvider();
     signInWithPopup(this.auth, provider)
       .then((result) => {
-        console.log('User signed in:', result.user);
         this.updateFirebase(result.user)
         this.goToMainPage()
       })
