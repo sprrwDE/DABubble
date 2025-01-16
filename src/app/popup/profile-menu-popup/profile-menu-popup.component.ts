@@ -13,5 +13,6 @@ export class ProfileMenuPopupComponent {
 
   openUserProfilePopup() {
     this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
   }
 }

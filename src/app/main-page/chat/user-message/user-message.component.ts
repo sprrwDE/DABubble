@@ -1,6 +1,7 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { PanelService } from '../../../shared/services/panel.service';
+import { PopupService } from '../../../popup/popup.service';
 
 @Component({
   selector: 'app-user-message',
@@ -20,7 +21,37 @@ export class UserMessageComponent {
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<string> = [];
 
-  constructor(private panelService: PanelService) {}
+  editMessagePopupOpen: boolean = false;
+
+  constructor(
+    private panelService: PanelService,
+    private popupService: PopupService
+  ) {}
+
+  get editingUserProfile() {
+    return this.popupService.editingUserProfile;
+  }
+
+  set editingUserProfile(value: boolean) {
+    this.popupService.editingUserProfile = value;
+  }
+
+  get openUserProfilePopup() {
+    return this.popupService.openUserProfilePopup;
+  }
+
+  set openUserProfilePopup(value: boolean) {
+    this.popupService.openUserProfilePopup = value;
+  }
+
+  openProfilePopup() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  toggleEditMessagePopup() {
+    this.editMessagePopupOpen = !this.editMessagePopupOpen;
+  }
 
   openReplyPanel() {
     this.panelService.openReplyPanel();
@@ -34,5 +65,9 @@ export class UserMessageComponent {
       this.isContact,
       this.numberOfAnswers
     );
+  }
+
+  onMouseLeave() {
+    this.editMessagePopupOpen = false;
   }
 }

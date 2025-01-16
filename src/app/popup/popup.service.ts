@@ -13,6 +13,7 @@ export class PopupService {
   showCreateChannelAddPeopleInput = false;
 
   openUserProfilePopup = false;
+  editingUserProfile = false;
 
   resetEditStates() {
     this.editChannelName = false;

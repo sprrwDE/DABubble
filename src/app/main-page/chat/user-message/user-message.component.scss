@@ -47,7 +47,7 @@
 }
 
 .reaction-item {
-  @apply rounded-full cursor-pointer flex items-center justify-center p-[8px] hover:scale-110 box-content;
+  @apply rounded-full cursor-pointer flex items-center justify-center p-[8px]  box-content;
 
   &:hover {
     @apply bg-bg;
