@@ -1,20 +1,47 @@
-import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { NgIf, NgClass } from '@angular/common';
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { PopupService } from '../popup.service';
+import { ChannelService } from '../../shared/services/channel.service';
+import { Channel } from '../../shared/models/channel.model';
+import { User } from '../../shared/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-member-list-popup',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, NgClass],
   templateUrl: './member-list-popup.component.html',
   styleUrl: './member-list-popup.component.scss',
 })
-export class MemberListPopupComponent {
+export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  constructor(public popupService: PopupService) {}
+  channelData: Channel | null = null;
+  userList: User[] = [];
+  private subscription!: Subscription;
+
+  constructor(public popupService: PopupService, private channelService: ChannelService) {}
+
+  ngOnInit() {
+    // Hardcode dummy data -> channel id übergeben -> alle channel fetchen in main page
+    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
+
+    this.subscription = this.channelService.getChannel().subscribe((data) => {
+      if (data) {
+        this.channelData = data;
+        this.userList = data.users;
+        console.log('User Liste in Channel:', this.userList);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.channelService.unsubscribeChannel();
+  }
 
   get showAddMembersPopup() {
+    console.log(this.popupService.showAddMembersPopup)
     return this.popupService.showAddMembersPopup;
   }
 

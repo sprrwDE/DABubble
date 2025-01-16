@@ -6,7 +6,6 @@ import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { NgClass, NgIf } from '@angular/common';
 import { SingleUserComponent } from './single-user/single-user.component';
 import { User } from '../shared/models/user.model';
-import { UserService } from '../shared/services/user.service';
 import { PanelService } from '../shared/services/panel.service';
 import { PopupComponent } from '../popup/popup.component';
 @Component({
@@ -26,7 +25,7 @@ import { PopupComponent } from '../popup/popup.component';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  constructor(private user: UserService, public panelService: PanelService) {
+  constructor(public panelService: PanelService) {
     // console.log(user.arr)
   }
 
