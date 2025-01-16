@@ -39,9 +39,7 @@
 
   <div class="flex flex-col gap-[15px]">
     <div class="flex flex-col gap-[13px]">
-
-      
-<!--             <div
+      <!--             <div
               [ngClass]="{
                 'bg-online': user.status === 'online',
                 'bg-disable': user.status === 'offline'
@@ -49,8 +47,8 @@
               class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
             ></div> -->
 
-          <!-- Testing -->
-          <!-- @if (user.status === "online") {
+      <!-- Testing -->
+      <!-- @if (user.status === "online") {
           <svg
             class="absolute bottom-0 left-[56px] border-white border-2 rounded-full"
             width="12"
@@ -83,11 +81,6 @@
           </svg>
           } -->
 
-
-
-
-
-
       @for (user of userList; track $index) {
       <div
         class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
@@ -95,7 +88,7 @@
         <div class="relative">
           <img
             class="w-[50px] h-[50px] rounded-full"
-            src="{{user.image}}"
+            src="{{ user.image }}"
             alt=""
           />
 
@@ -107,7 +100,8 @@
 
         <p>{{ user.name }} <span *ngIf="true">(Du)</span></p>
       </div>
-    }
+      }
+    </div>
 
     <div
       (click)="showAddMembersSection($event)"
@@ -144,6 +138,7 @@
       <p class="text-[18px]">Mitglieder hinzufügen</p>
     </div>
   </div>
+</section>
 
 <section
   *ngIf="showAddMembersPopup"
