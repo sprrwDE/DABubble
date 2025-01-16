@@ -12,7 +12,6 @@ export class UserService {
     email: "",
     id: "",
   }
-  isOnline: boolean = false;
 
   constructor(private fb: FirebaseService) {
     this.db = fb;

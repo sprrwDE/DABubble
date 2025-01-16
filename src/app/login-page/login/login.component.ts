@@ -28,9 +28,7 @@ export class LoginComponent implements OnInit {
     this.auth.onAuthStateChanged((user: User | null) => {
       if (user) {
         this.user.loggedInUser = {email: user.email, id: user.uid}
-        this.user.isOnline = true
       } else {
-        this.user.isOnline = false
       }
     });
   }
