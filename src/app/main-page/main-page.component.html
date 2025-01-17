@@ -8,7 +8,7 @@
         'w-px': !openSidebar,
         'w-full': openSidebar
       }"
-      (showUserChange)="openUserDetails($event)"
+      (showUserChange)="openContactProfile($event)"
       (openPopupEvent)="openPopup($event)"
     ></app-sidebar-nav>
 
@@ -65,9 +65,11 @@
     [popupType]="popupType"
     (closePopupEvent)="popupOpen = false"
   ></app-popup>
-</section>
 
-@if(selectedUser) {
-<app-single-user [userData]="selectedUser" (closeEvent)="selectedUser = null">
-</app-single-user>
-}
+  <app-popup
+    [popupOpen]="contactProfilePopupOpen"
+    [popupType]="'contact-profile'"
+    [userData]="selectedUser"
+    (closePopupEvent)="contactProfilePopupOpen = false"
+  ></app-popup>
+</section>

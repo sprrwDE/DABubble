@@ -4,7 +4,6 @@ import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { NgClass, NgIf } from '@angular/common';
-import { SingleUserComponent } from './single-user/single-user.component';
 import { User } from '../shared/models/user.model';
 import { PanelService } from '../shared/services/panel.service';
 import { PopupComponent } from '../popup/popup.component';
@@ -18,7 +17,7 @@ import { PopupComponent } from '../popup/popup.component';
     HeaderBarComponent,
     NgClass,
     NgIf,
-    SingleUserComponent,
+
     PopupComponent,
   ],
   templateUrl: './main-page.component.html',
@@ -30,8 +29,9 @@ export class MainPageComponent {
   }
 
   openSidebar = true;
-  showUser = false;
-  selectedUser: User | null = null;
+
+  selectedUser: User = new User();
+  public contactProfilePopupOpen = false;
 
   public popupOpen = false;
   public popupType: string = '';
@@ -41,10 +41,10 @@ export class MainPageComponent {
     this.openSidebar = !this.openSidebar;
   }
 
-  openUserDetails(user: User | null) {
+  openContactProfile(user: User | any) {
     if (user) {
       this.selectedUser = user;
-      this.showUser = true;
+      this.contactProfilePopupOpen = true;
     }
   }
 
