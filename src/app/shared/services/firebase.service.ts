@@ -51,11 +51,14 @@ export class FirebaseService {
         const data = docSnap.data();
         console.log('Document data:', data);
         this.fetchedSingleSubject.next(data); 
+        return data; // Return the fetched data
       } else {
         console.log('No such document!');
+        return null;
       }
     } catch (error) {
       console.error('Error fetching document:', error);
+      throw error; // Propagate the error
     }
   }
 
@@ -107,6 +110,15 @@ export class FirebaseService {
     }
   }
 
+  async updateStateUser(id: string, state: string) {
+    try {
+      const docRef = doc(this.firestore, `users/${id}`);
+      await setDoc(docRef, { status: state }, { merge: true });
+    } catch (error) {
+      console.error("Fehler beim Aktualisieren des Status:", error);
+    }
+  }
+  
   async changeProfileImage(id: string, image: string) {
     try {
       const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID

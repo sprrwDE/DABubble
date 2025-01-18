@@ -6,7 +6,7 @@
             verwendest.</p>
     </div>
 
-    <form class=" w-full" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <form class="w-full" [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="flex flex-col gap-2 pb-4 w-full">
             <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center  w-full">
                 <img src="imgs/icons/mail.svg" alt="">
@@ -27,7 +27,7 @@
 
             <div class="h-6 ">
                 <small class="text-error "
-                    *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched">
+                    *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched || failed">
                     *Falsches Passwort oder E-Mail.
                 </small>
             </div>

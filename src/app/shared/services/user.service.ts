@@ -9,10 +9,7 @@ import { Observable } from 'rxjs';
 export class UserService {
   allUsers: User[] = []
   fetchedCollection$: Observable<any[]>;
-  loggedInUser: {} = {
-    email: "",
-    id: "",
-  }
+  loggedInUser: any;
 
   constructor(private fb: FirebaseService) {
       this.fetchedCollection$ = this.fb.fetchedCollection$;
