@@ -6,18 +6,29 @@ import {
   collection,
   doc,
   setDoc,
-  getDocs,
   onSnapshot,
+  DocumentData,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
+  private fetchedCollectionSubject = new BehaviorSubject<DocumentData[]>([]);
+  fetchedCollection$ = this.fetchedCollectionSubject.asObservable();
+
+  private fetchedSingleSubject = new BehaviorSubject<DocumentData>({});
+  fetchedSingleData$ = this.fetchedSingleSubject.asObservable();
+
   constructor(private firestore: Firestore) {}
 
-  async getCollection(col: string): Promise<any[]> {
+  /*   
+
+ALT
+
+async getCollection(col: string): Promise<any[]> {
     try {
       const querySnapshot = await getDocs(collection(this.firestore, col));
       const dataArr = querySnapshot.docs.map((doc) => ({
@@ -29,6 +40,26 @@ export class FirebaseService {
       console.error('Fehler beim Abrufen der Collection:', error);
       throw error;
     }
+  } */
+
+
+  ////// SNAPSHOT TEST
+  getData(db: string) {
+    try {
+      onSnapshot(collection(this.firestore, db), (list) => {
+        const fetchedData: DocumentData[] = [];
+        list.docs.forEach((element) => {
+          const rawData = {
+            ...element.data(),
+            id: element.id,
+          };
+          fetchedData.push(rawData);
+        });
+        this.fetchedCollectionSubject.next(fetchedData);
+      });
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Daten:', error);
+    }
   }
 
   async getSingleDoc(col: string, id: string) {
@@ -36,24 +67,18 @@ export class FirebaseService {
       const docRef = doc(this.firestore, col, id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
+        const data = docSnap.data();
+        console.log('Document data:', data);
+        this.fetchedSingleSubject.next(data); 
       } else {
         console.log('No such document!');
       }
     } catch (error) {
-      console.log('error', error);
+      console.error('Error fetching document:', error);
     }
   }
 
-  ////// Test
 
-  // Nur für Hilfsfunktion zum Status Updaten in Userservice
-  async updateSingleDoc(col: string, id: string, status: string) {
-    const updateRef = doc(this.firestore, col, id);
-    await updateDoc(updateRef, {
-      status: status,
-    });
-  }
 
   // Subscribe Single Doc
   subscribeToSingleDoc(
@@ -111,5 +136,15 @@ export class FirebaseService {
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
+  }
+
+  ////// UPDATE TEST
+
+  // Nur für Hilfsfunktion zum Status Updaten in Userservice
+  async updateSingleDoc(col: string, id: string, status: string) {
+    const updateRef = doc(this.firestore, col, id);
+    await updateDoc(updateRef, {
+      status: status,
+    });
   }
 }

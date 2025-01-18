@@ -16,16 +16,13 @@ import { Subscription } from 'rxjs';
 export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
+  private subscription!: Subscription;
   channelData: Channel | null = null;
   userList: User[] = [];
-  private subscription!: Subscription;
 
   constructor(public popupService: PopupService, private channelService: ChannelService) {}
 
   ngOnInit() {
-    // Hardcode dummy data -> channel id übergeben -> alle channel fetchen in main page
-    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
-
     this.subscription = this.channelService.getChannel().subscribe((data) => {
       if (data) {
         this.channelData = data;
@@ -33,12 +30,15 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
         console.log('User Liste in Channel:', this.userList);
       }
     });
+
+    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB'); // Channel-Daten holen
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel();
+    this.channelService.unsubscribeChannel(); // Stoppe das Firestore-Listener-Update
   }
+
 
   get showAddMembersPopup() {
     console.log(this.popupService.showAddMembersPopup)

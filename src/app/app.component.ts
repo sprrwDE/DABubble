@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LoginPageComponent } from './login-page/login-page.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
