@@ -4,6 +4,7 @@ import { UserService } from '../../shared/services/user.service';
 import { BehaviorSubject } from 'rxjs';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { PopupService } from '../popup.service';
 
 @Component({
   selector: 'app-contact-profile-popup',
@@ -14,7 +15,6 @@ import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 })
 export class ContactProfilePopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
-  @Input() userData: User = new User();
 
   private unsubscribe?: () => void;
   currentUser: UserService;
@@ -23,9 +23,14 @@ export class ContactProfilePopupComponent {
   constructor(
     public service: FirebaseService,
     private user: UserService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private popupService: PopupService
   ) {
     this.currentUser = user;
+  }
+
+  get contactProfileContent() {
+    return this.popupService.contactProfileContent;
   }
 
   // ngOnInit() {

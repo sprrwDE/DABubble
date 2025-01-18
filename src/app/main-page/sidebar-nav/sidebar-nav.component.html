@@ -273,7 +273,7 @@
         class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
       >
         @for (user of user.allUsers; track $index) {
-        <div class="contact-item" (click)="openDialog(user)">
+        <div class="contact-item">
           <div class="relative">
             <img src="{{ user.image }}" alt="" />
 

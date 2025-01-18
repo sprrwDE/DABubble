@@ -8,7 +8,6 @@
         'w-px': !openSidebar,
         'w-full': openSidebar
       }"
-      (showUserChange)="openContactProfile($event)"
       (openPopupEvent)="openPopup($event)"
     ></app-sidebar-nav>
 
@@ -69,7 +68,6 @@
   <app-popup
     [popupOpen]="contactProfilePopupOpen"
     [popupType]="'contact-profile'"
-    [userData]="selectedUser"
     (closePopupEvent)="contactProfilePopupOpen = false"
   ></app-popup>
 </section>

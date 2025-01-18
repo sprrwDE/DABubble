@@ -30,8 +30,6 @@ export class PopupComponent {
   @Input() popupOpen: boolean = false;
   @Input() popupType: string = '';
 
-  @Input() userData: User = new User();
-
   @Output() closePopupEvent = new EventEmitter<void>();
 
   constructor(public popupService: PopupService) {}

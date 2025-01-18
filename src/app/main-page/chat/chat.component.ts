@@ -16,6 +16,7 @@ import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-chat',

@@ -1,4 +1,3 @@
-
 import { NgIf, NgClass } from '@angular/common';
 import {
   Component,
@@ -45,11 +44,15 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel(); 
+  openContactProfile(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.channelService.unsubscribeChannel();
+  }
 
   get showAddMembersPopup() {
     console.log(this.popupService.showAddMembersPopup);

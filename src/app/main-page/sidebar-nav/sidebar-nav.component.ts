@@ -17,7 +17,6 @@ export class SidebarNavComponent {
   showChannels = true;
   showContacts = true;
   showUser = false;
-  @Output() showUserChange = new EventEmitter<User | null>();
   @Output() openPopupEvent = new EventEmitter<{
     type: string;
     corner: string;
@@ -47,10 +46,6 @@ export class SidebarNavComponent {
 
   toggleContacts() {
     this.showContacts = !this.showContacts;
-  }
-
-  openDialog(user: User) {
-    this.showUserChange.emit(user);
   }
 
   openPopup(popupType: string, popupCorner: string) {

@@ -22,17 +22,23 @@ export class MessageInputComponent {
 
   message: Message = new Message();
 
+  get loggedInUser() {
+    return this.userService.loggedInUser;
+  }
+
   sendMessage() {
     if (this.message.message.trim() === '') {
       console.log('Message is empty');
       return;
     }
     this.message.timestamp = new Date().getTime();
-    this.message.userId = this.userService.loggedInUser.id;
+    this.message.userId = this.loggedInUser.id;
     this.message.replies = [];
 
     this.channelService.sendMessage(this.message.toJSON());
 
     this.message.message = '';
+
+    console.log('Successfully sent message!!');
   }
 }
