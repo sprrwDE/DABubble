@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class UserService {
   allUsers: User[] = [];
   fetchedCollection$: Observable<any[]>;
-  loggedInUser: any;
+  loggedInUser: any = new User();
 
   constructor(private fb: FirebaseService) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
@@ -20,10 +20,18 @@ export class UserService {
     });
   }
 
-  // test
-  updateStatus(id: string) {
-    setTimeout(() => {
-      this.fb.updateSingleDoc('users', id, 'online');
-    }, 5000);
+  private loggedInUserSubject = new BehaviorSubject<any>(null); // Default ist null
+  loggedInUser$ = this.loggedInUserSubject.asObservable(); // Observable zum Abonnieren
+
+  setLoggedInUser(user: any) {
+    this.loggedInUserSubject.next(user); // Aktuellen Wert setzen
   }
+
+
+  // test
+  // updateStatus(id: string) {
+  //   setTimeout(() => {
+  //     this.fb.updateSingleDoc('users', id, 'online');
+  //   }, 15000);
+  // }
 }

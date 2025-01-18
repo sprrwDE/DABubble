@@ -47,14 +47,12 @@ export class LoginComponent implements OnInit {
     this.auth.onAuthStateChanged(async (user: User | null) => {
       if (user) {
         await this.firebaseService.updateStateUser(user.uid, 'online');
-        this.userService.loggedInUser = user;
+        const newUser = await this.firebaseService.getSingleDoc('users', user.uid)
+        this.userService.setLoggedInUser(newUser);
       } else {
         if (this.userService.loggedInUser) {
-          await this.firebaseService.updateStateUser(
-            this.userService.loggedInUser.uid,
-            'offline'
-          );
-          this.userService.loggedInUser = null;
+          await this.firebaseService.updateStateUser(this.userService.loggedInUser.uid, 'offline');
+
         }
       }
     });
@@ -109,6 +107,15 @@ export class LoginComponent implements OnInit {
       }
     } else {
       this.loginForm.markAllAsTouched();
+    }
+  }
+
+  async guestLogin() {
+    const userCredentail = await this.authService.login("gast@gastmail.de", "qweqweqwe")
+    if (userCredentail) {
+      this.goToMainPage();
+    } else {
+      this.failed = true
     }
   }
 
