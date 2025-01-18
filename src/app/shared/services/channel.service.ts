@@ -36,6 +36,8 @@ export class ChannelService {
     public fb: FirebaseService,
     private ngZone: NgZone // public firestore: Firestore
   ) {
+    this.fetchedChannelData$ = this.fb.fetchedSingleData$;
+
     this.getAllChannels();
   }
 
@@ -91,9 +93,9 @@ export class ChannelService {
   private unsubscribe?: () => void;
   fetchedChannelData$: Observable<any>;
 
-  constructor(private fb: FirebaseService) {
-    this.fetchedChannelData$ = this.fb.fetchedSingleData$;
-  }
+  // constructor(private fb: FirebaseService) {
+  //   this.fetchedChannelData$ = this.fb.fetchedSingleData$;
+  // }
 
   // Hole Daten und speichere sie im BehaviorSubject
   fetchChannel(channelId: string): void {

@@ -1,21 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, User, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import {
+  Auth,
+  User,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from '@angular/fire/auth';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { User as AppUser } from '../../shared/models/user.model';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../shared/services/user.service';
 import { loggedIn } from '@angular/fire/auth-guard';
-
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -27,9 +36,9 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private userService: UserService,
+    private userService: UserService
   ) {
-    this.logOutUser()
+    this.logOutUser();
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -37,11 +46,14 @@ export class LoginComponent implements OnInit {
 
     this.auth.onAuthStateChanged(async (user: User | null) => {
       if (user) {
-        await this.firebaseService.updateStateUser(user.uid, "online")
-        this.userService.loggedInUser = user
+        await this.firebaseService.updateStateUser(user.uid, 'online');
+        this.userService.loggedInUser = user;
       } else {
         if (this.userService.loggedInUser) {
-          await this.firebaseService.updateStateUser(this.userService.loggedInUser.uid, "offline");
+          await this.firebaseService.updateStateUser(
+            this.userService.loggedInUser.uid,
+            'offline'
+          );
           this.userService.loggedInUser = null;
         }
       }
@@ -49,16 +61,15 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.logOutUser()
-
+    this.logOutUser();
   }
 
   loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(this.auth, provider)
       .then((result) => {
-        this.updateFirebase(result.user)
-        this.goToMainPage()
+        this.updateFirebase(result.user);
+        this.goToMainPage();
       })
       .catch((error) => {
         console.error('Error during Google sign-in:', error);
@@ -66,7 +77,7 @@ export class LoginComponent implements OnInit {
   }
 
   updateFirebase(user: any) {
-    this.firebaseService.addUser(this.getUserInfosFromGoogle(user))
+    this.firebaseService.addUser(this.getUserInfosFromGoogle(user));
   }
 
   getUserInfosFromGoogle(user: any): AppUser {
@@ -80,30 +91,28 @@ export class LoginComponent implements OnInit {
   }
 
   logOutUser() {
-    this.authService.logout()
+    this.authService.logout();
   }
-
 
   async onLogin() {
     if (this.loginForm.valid) {
       try {
         const { email, password } = this.loginForm.value;
-        const userCredentail = await this.authService.login(email, password)
+        const userCredentail = await this.authService.login(email, password);
         if (userCredentail) {
-          this.goToMainPage()
+          this.goToMainPage();
         } else {
-          this.failed = true
+          this.failed = true;
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     } else {
       this.loginForm.markAllAsTouched();
     }
   }
 
-
   goToMainPage() {
-    this.router.navigate(['/main'])
+    this.router.navigate(['/main']);
   }
 }

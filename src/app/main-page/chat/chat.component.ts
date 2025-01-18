@@ -122,14 +122,14 @@ export class ChatComponent implements AfterViewInit {
   getUserName(userId: string): string {
     return (
       this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.name || ''
+        ?.name || 'Gast'
     );
   }
 
   getUserImage(userId: string): string {
     return (
       this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.image || ''
+        ?.image || 'imgs/avatar1.png'
     );
   }
 
