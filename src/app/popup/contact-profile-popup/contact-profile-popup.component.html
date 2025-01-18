@@ -35,32 +35,32 @@
   </div>
 
   <img
-    src="{{ userData.image }}"
+    src="{{ contactProfileContent.image }}"
     alt="Example"
     class="rounded-full w-[200px] h-[200px]"
   />
 
   <div class="w-full">
-    <h2 class="text-[32px] font-bold">{{ userData.name }}</h2>
+    <h2 class="text-[32px] font-bold">{{ contactProfileContent.name }}</h2>
 
     <div class="flex items-center gap-[15px]">
       <div
         class="h-[16px] w-[16px] rounded-full"
         [ngClass]="{
-          'bg-online': userData.status === 'online',
-          'bg-disable': userData.status === 'offline'
+          'bg-online': contactProfileContent.status === 'online',
+          'bg-disable': contactProfileContent.status === 'offline'
         }"
       ></div>
 
       <p
         [ngClass]="{
-          'text-online': userData.status === 'online',
-          'text-disable': userData.status === 'offline'
+          'text-online': contactProfileContent.status === 'online',
+          'text-disable': contactProfileContent.status === 'offline'
         }"
         class="text-[20px]"
       >
-        <span *ngIf="userData.status === 'online'">Aktive</span>
-        <span *ngIf="userData.status === 'offline'">Offline</span>
+        <span *ngIf="contactProfileContent.status === 'online'">Aktive</span>
+        <span *ngIf="contactProfileContent.status === 'offline'">Offline</span>
       </p>
     </div>
   </div>
@@ -98,7 +98,7 @@
       <a
         class="text-[18px] text-primary"
         href="mailto:thehoffmann@beispiel.de"
-        >{{ userData.email }}</a
+        >{{ contactProfileContent.email }}</a
       >
     </div>
   </div>
