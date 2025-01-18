@@ -13,7 +13,6 @@ export class UserService {
     email: "",
     id: "",
   }
-  isOnline: boolean = false;
 
   constructor(private fb: FirebaseService) {
       this.fetchedCollection$ = this.fb.fetchedCollection$;

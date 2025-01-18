@@ -6,7 +6,7 @@
     'rounded-tl-[0px]': popupCorner === 'tl',
     'rounded-tr-[0px]': popupCorner === 'tr',
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
-      popupType === 'create-channel',
+      popupType === 'create-channel' || popupType === 'contact-profile',
     'top-[100%] left-[0] max-w-[870px] min-w-[870px] ':
       popupType === 'channel-details',
     'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] ':
@@ -15,7 +15,8 @@
       popupType === 'profile-menu' || popupType === 'user-profile'
       ,
     'max-w-[500px] min-w-[500px]':
-      popupType === 'user-profile',
+      popupType === 'user-profile' || popupType === 'contact-profile',
+  
   }"
 >
   <app-create-channel-popup
@@ -42,6 +43,12 @@
     *ngIf="popupType === 'user-profile'"
     (closePopupEvent)="closePopup()"
   ></app-user-profile-popup>
+
+  <app-contact-profile-popup
+    *ngIf="popupType === 'contact-profile'"
+    [userData]="userData"
+    (closePopupEvent)="closePopup()"
+  ></app-contact-profile-popup>
 </div>
 
 <!-- popup background -->

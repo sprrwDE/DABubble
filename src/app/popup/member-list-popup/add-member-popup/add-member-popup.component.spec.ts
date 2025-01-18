@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SingleUserComponent } from './single-user.component';
+import { AddMemberPopupComponent } from './add-member-popup.component';
 
-describe('SingleUserComponent', () => {
-  let component: SingleUserComponent;
-  let fixture: ComponentFixture<SingleUserComponent>;
+describe('AddMemberPopupComponent', () => {
+  let component: AddMemberPopupComponent;
+  let fixture: ComponentFixture<AddMemberPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SingleUserComponent]
+      imports: [AddMemberPopupComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SingleUserComponent);
+    fixture = TestBed.createComponent(AddMemberPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, MinLengthValidator, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Auth, confirmPasswordReset } from '@angular/fire/auth';
 
@@ -25,9 +24,8 @@ export class ChangePasswordComponent implements OnInit {
       password1: ['', [Validators.required, Validators.minLength(6)]],
       password2: ['', [Validators.required, Validators.minLength(6)]],
     }, {
-      validators: this.passwordsMatchValidator // Inline-Validator hier
+      validators: [this.passwordsMatchValidator], // Synchrone Validatoren als Array
     });
-
   }
 
   ngOnInit(): void {
@@ -41,12 +39,13 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
-  passwordsMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password1 = group.get('password1')?.value;
-    const password2 = group.get('password2')?.value;
+  passwordsMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password1 = control.get('password1')?.value;
+    const password2 = control.get('password2')?.value;
 
     return password1 === password2 ? null : { passwordsDontMatch: true };
-  }
+  };
+
 
 
   async resetPassword(): Promise<void> {
@@ -54,12 +53,11 @@ export class ChangePasswordComponent implements OnInit {
       this.changePasswordForm.markAllAsTouched();
       return;
     }
-
-    if (!this.oobCode || !this.newPassword) {
+    const newPassword = this.changePasswordForm.get('password1')?.value;
+    if (!this.oobCode || !newPassword) {
       this.error = 'Bitte geben Sie ein gültiges neues Passwort ein.';
       return;
     }
-    const newPassword = this.changePasswordForm.get('password1')?.value;
 
     try {
       this.notification.emit("Anmelden")

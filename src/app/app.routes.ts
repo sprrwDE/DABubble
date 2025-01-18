@@ -14,10 +14,10 @@ export const routes: Routes = [
   { path: 'main', component: MainPageComponent },
   {
     path: 'login',
-    component: LoginPageComponent, // Die Login-Seite mit <app-login> oder <app-register>
+    component: LoginPageComponent, 
     children: [
-      { path: '', component: LoginComponent }, // Standardmäßig <app-login>
-      { path: 'register', component: RegisterComponent }, // <app-register> bei /login/register
+      { path: '', component: LoginComponent }, 
+      { path: 'register', component: RegisterComponent },
       { path: 'avatar/:userId', component: SelectAvatarComponent },
       { path: 'resetpw', component: ResetPasswordComponent },
       { path: 'changepw', component: ChangePasswordComponent },
