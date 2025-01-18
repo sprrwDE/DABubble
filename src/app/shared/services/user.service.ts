@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { HostListener, Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -40,6 +40,7 @@ export class UserService {
       }
     });
   }
+
 
   private loggedInUserSubject = new BehaviorSubject<any>(null); // Default ist null
   loggedInUser$ = this.loggedInUserSubject.asObservable(); // Observable zum Abonnieren

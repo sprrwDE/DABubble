@@ -28,7 +28,6 @@ export class HeaderBarComponent implements OnInit {
       }else {
         this.UserName = "lädt..."
       }
-
     });
   }
 
