@@ -51,8 +51,14 @@ export class LoginComponent implements OnInit {
         this.userService.setLoggedInUser(newUser);
       } else {
         if (this.userService.loggedInUser) {
-          await this.firebaseService.updateStateUser(this.userService.loggedInUser.uid, 'offline');
-
+          this.userService.loggedInUser$.subscribe((user) => {
+            if (user === null) {
+              console.log("test")
+            } else if (user.id == null) {
+              this.firebaseService.updateStateUser(user.id, 'offline');
+            }
+            console.log("loggedout user: ", user)
+          });
         }
       }
     });
