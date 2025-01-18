@@ -21,10 +21,19 @@ export class AuthService {
     return await createUserWithEmailAndPassword(this.auth, email, password);
   }
 
+
   // Anmeldung
-  async login(email: string, password: string): Promise<UserCredential> {
-    return await signInWithEmailAndPassword(this.auth, email, password);
+  async login(email: string, password: string): Promise<UserCredential | null> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      console.log('Login erfolgreich:', userCredential);
+      return userCredential;
+    } catch (error) {
+      console.error('Login fehlgeschlagen:', error);
+      return null;
+    }
   }
+
 
   // Abmelden
   async logout(): Promise<void> {

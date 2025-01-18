@@ -7,6 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../shared/services/user.service';
+import { loggedIn } from '@angular/fire/auth-guard';
 
 
 @Component({
@@ -18,23 +19,38 @@ import { UserService } from '../../shared/services/user.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  failed: boolean = false;
 
-  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder, private user: UserService) {
+  constructor(
+    private auth: Auth,
+    private firebaseService: FirebaseService,
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder,
+    private userService: UserService,
+  ) {
+    this.logOutUser()
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.auth.onAuthStateChanged((user: User | null) => {
+    this.auth.onAuthStateChanged(async (user: User | null) => {
       if (user) {
-        this.user.loggedInUser = {email: user.email, id: user.uid}
+        await this.firebaseService.updateStateUser(user.uid, "online")
+        this.userService.loggedInUser = user
       } else {
+        if (this.userService.loggedInUser) {
+          await this.firebaseService.updateStateUser(this.userService.loggedInUser.uid, "offline");
+          this.userService.loggedInUser = null;
+        }
       }
     });
   }
 
   ngOnInit(): void {
     this.logOutUser()
+
   }
 
   loginWithGoogle() {
@@ -68,17 +84,22 @@ export class LoginComponent implements OnInit {
   }
 
 
-  onLogin() {
-    if(this.loginForm.invalid) {
+  async onLogin() {
+    if (this.loginForm.valid) {
+      try {
+        const { email, password } = this.loginForm.value;
+        const userCredentail = await this.authService.login(email, password)
+        if (userCredentail) {
+          this.goToMainPage()
+        } else {
+          this.failed = true
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
       this.loginForm.markAllAsTouched();
     }
-
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password)
-      this.goToMainPage()
-    }
-
   }
 
 

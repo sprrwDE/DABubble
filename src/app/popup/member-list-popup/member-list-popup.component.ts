@@ -1,3 +1,4 @@
+
 import { NgIf, NgClass } from '@angular/common';
 import {
   Component,
@@ -23,9 +24,9 @@ import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.com
 export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
+  private subscription!: Subscription;
   channelData: Channel | null = null;
   userList: User[] = [];
-  private subscription!: Subscription;
 
   constructor(
     public popupService: PopupService,
@@ -33,9 +34,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Hardcode dummy data -> channel id übergeben -> alle channel fetchen in main page
-    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
-
     this.subscription = this.channelService.getChannel().subscribe((data) => {
       if (data) {
         this.channelData = data;
@@ -43,12 +41,15 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
         console.log('User Liste in Channel:', this.userList);
       }
     });
+
+    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel();
+    this.channelService.unsubscribeChannel(); 
   }
+
 
   get showAddMembersPopup() {
     console.log(this.popupService.showAddMembersPopup);

@@ -15,6 +15,9 @@ import {
 @Injectable({
   providedIn: 'root',
 })
+@Injectable({
+  providedIn: 'root',
+})
 export class ChannelService {
   firestore = inject(Firestore);
   unsubAllChannels: any;
@@ -86,10 +89,16 @@ export class ChannelService {
   // ///////////////////
   private currentChannelData$ = new BehaviorSubject<Channel | null>(null);
   private unsubscribe?: () => void;
+  fetchedChannelData$: Observable<any>;
 
+  constructor(private fb: FirebaseService) {
+    this.fetchedChannelData$ = this.fb.fetchedSingleData$;
+  }
+
+  // Hole Daten und speichere sie im BehaviorSubject
   fetchChannel(channelId: string): void {
     if (this.unsubscribe) {
-      this.unsubscribe();
+      this.unsubscribe(); // Falls bereits eine Subscription besteht, beende sie.
     }
 
     this.unsubscribe = this.fb.subscribeToSingleDoc(
