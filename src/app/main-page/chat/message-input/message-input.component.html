@@ -4,6 +4,7 @@
 >
   <textarea
     #chatInput
+    [(ngModel)]="message.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
     placeholder="{{
       isReplayInput ? 'Antworten...' : 'Nachricht an #Entwicklerteam'
@@ -74,7 +75,7 @@
       </div>
     </div>
 
-    <div class="main-chat-send-btn">
+    <div (click)="sendMessage()" class="main-chat-send-btn">
       <svg
         width="30"
         height="30"

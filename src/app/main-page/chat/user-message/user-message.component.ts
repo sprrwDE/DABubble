@@ -17,7 +17,7 @@ export class UserMessageComponent {
   @Input() imgUrl: string = '';
   @Input() isContact: boolean = false;
   @Input() isReplay: boolean = false;
-  @Input() lastAnswerTime: string = '';
+  @Input() lastAnswerTime: any = '';
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<string> = [];
 

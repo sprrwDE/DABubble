@@ -137,7 +137,13 @@
         [ngClass]="{ 'h-full': showChannels, 'h-0': !showChannels }"
         class="pl-[5px] flex flex-col gap-[15px] overflow-hidden transition-all duration-300 ease-in-out select-none"
       >
-        <div class="channel-item active-channel">
+        <!-- render -->
+        <div
+          *ngFor="let channel of allChannels"
+          (click)="currentChannelId = channel.id"
+          class="channel-item"
+          [ngClass]="{ 'active-channel': channel.id === currentChannelId }"
+        >
           <svg
             width="24"
             height="25"
@@ -164,7 +170,7 @@
             </g>
           </svg>
 
-          <p>Entwicklerteam</p>
+          <p>{{ channel.name }}</p>
         </div>
 
         <!-- Add Channel btn -->

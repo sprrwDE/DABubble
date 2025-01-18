@@ -3,20 +3,20 @@ import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  allUsers: User[] = []
+  allUsers: User[] = [];
   db: FirebaseService;
-  loggedInUser: {} = {
-    email: "",
-    id: "",
-  }
+  loggedInUser: { id: string; email: any } = {
+    email: '',
+    id: '',
+  };
 
   constructor(private fb: FirebaseService) {
     this.db = fb;
     this.loadUsers();
-   }
+  }
 
   async loadUsers() {
     try {
@@ -27,13 +27,12 @@ export class UserService {
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   // test
-  updateStatus(id:string) {
+  updateStatus(id: string) {
     setTimeout(() => {
-      this.db.updateSingleDoc('users', id, 'online')
+      this.db.updateSingleDoc('users', id, 'online');
     }, 5000);
   }
 }

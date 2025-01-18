@@ -100,71 +100,30 @@
   </header>
 
   <main class="main-chat w-full h-full flex flex-col justify-end">
-    <!-- Hier die messages rein rendern -->
     <div
       #chatContainer
       class="main-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px] mt-[100px]"
     >
-      <div class="main-chat-date">
-        <p>Dienstag, 14 Januar</p>
+      <!-- Hier die messages rein rendern -->
+
+      <div
+        *ngFor="let message of currentChannel?.messages"
+        class="flex flex-col gap-[30px]"
+      >
+        <div class="main-chat-date">
+          <p>{{ formatDate(message.timestamp) }}</p>
+        </div>
+
+        <app-user-message
+          [message]="message.message"
+          [time]="formatTime(message.timestamp)"
+          [name]="getUserName(message.userId)"
+          [imgUrl]="getUserImage(message.userId)"
+          [isContact]="getUserId(message.userId) === loggedInUser.id"
+          [lastAnswerTime]="getLastAnswerTime(message.replies)"
+          [numberOfAnswers]="getNumberOfAnswers(message.replies)"
+        ></app-user-message>
       </div>
-
-      <app-user-message
-        [message]="'Hallo test'"
-        [time]="'11:11 Uhr'"
-        [name]="'A'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [numberOfAnswers]="2"
-      ></app-user-message>
-
-      <app-user-message
-        [message]="'Hallo placeholder'"
-        [time]="'21:11 Uhr'"
-        [name]="'T'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [numberOfAnswers]="0"
-      ></app-user-message>
-
-      <!-- test date -->
-      <div class="main-chat-date">
-        <p>Mittwoch, 15 Januar</p>
-      </div>
-
-      <!-- user test message -->
-      <app-user-message
-        [message]="'Hello World'"
-        [time]="'00:00 Uhr'"
-        [name]="'X'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
-      ></app-user-message>
-
-      <!-- test date -->
-      <div class="main-chat-date">
-        <p>Heute</p>
-      </div>
-
-      <app-user-message
-        [message]="'Placeholder'"
-        [time]="'13:11 Uhr'"
-        [name]="'B'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'11:11 Uhr'"
-        [numberOfAnswers]="0"
-      ></app-user-message>
-
-      <!-- user test message -->
-      <app-user-message
-        [message]="'Placeholder 15'"
-        [time]="'00:00 Uhr'"
-        [name]="'Z'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
-      ></app-user-message>
     </div>
 
     <!-- input -->
