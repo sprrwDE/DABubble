@@ -1,4 +1,4 @@
-import { NgIf, NgClass } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-member-list-popup',
   standalone: true,
-  imports: [NgIf, NgClass],
+  imports: [NgIf],
   templateUrl: './member-list-popup.component.html',
   styleUrl: './member-list-popup.component.scss',
 })
@@ -31,12 +31,12 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB'); // Channel-Daten holen
+    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel(); // Stoppe das Firestore-Listener-Update
+    this.channelService.unsubscribeChannel(); 
   }
 
 

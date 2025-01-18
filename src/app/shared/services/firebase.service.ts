@@ -24,26 +24,7 @@ export class FirebaseService {
 
   constructor(private firestore: Firestore) {}
 
-  /*   
 
-ALT
-
-async getCollection(col: string): Promise<any[]> {
-    try {
-      const querySnapshot = await getDocs(collection(this.firestore, col));
-      const dataArr = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      return dataArr;
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Collection:', error);
-      throw error;
-    }
-  } */
-
-
-  ////// SNAPSHOT TEST
   getData(db: string) {
     try {
       onSnapshot(collection(this.firestore, db), (list) => {
@@ -78,9 +59,6 @@ async getCollection(col: string): Promise<any[]> {
     }
   }
 
-
-
-  // Subscribe Single Doc
   subscribeToSingleDoc(
     col: string,
     id: string,
@@ -93,10 +71,10 @@ async getCollection(col: string): Promise<any[]> {
         if (docSnap.exists()) {
           const data = docSnap.data();
           console.log('Live Document Data:', data);
-          callback(data); // Callback aufrufen und Daten übergeben
+          callback(data); 
         } else {
           console.log('No such document!');
-          callback(null); // Keine Daten vorhanden
+          callback(null); 
         }
       });
 
@@ -106,7 +84,7 @@ async getCollection(col: string): Promise<any[]> {
       return () => {};
     }
   }
-  //////
+
 
   async addUser(userInterface: User) {
     let user: any;
