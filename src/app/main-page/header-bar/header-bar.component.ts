@@ -12,21 +12,20 @@ import { UserService } from '../../shared/services/user.service';
 })
 export class HeaderBarComponent implements OnInit {
   public profileMenuPopupOpen: boolean = false;
-  UserName: string = "";
+  public UserName: string = '';
 
-  constructor(private popupService: PopupService, private userService: UserService) {
-
-  }
-
-
+  constructor(
+    private popupService: PopupService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.userService.loggedInUser$.subscribe((user) => {
       if (user) {
-        console.log("eingeloggter user: ", user)
-        this.UserName = user.name
-      }else {
-        this.UserName = "lädt..."
+        console.log('eingeloggter user: ', user);
+        this.UserName = user.name;
+      } else {
+        this.UserName = 'lädt...';
       }
     });
   }

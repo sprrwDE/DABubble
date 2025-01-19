@@ -4,6 +4,7 @@ import { ChannelService } from '../../../shared/services/channel.service';
 import { Message } from '../../../shared/models/message.model';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
+import { ChatComponent } from '../chat.component';
 
 @Component({
   selector: 'app-message-input',
@@ -14,6 +15,8 @@ import { UserService } from '../../../shared/services/user.service';
 })
 export class MessageInputComponent {
   @Input() isReplayInput: boolean = false;
+
+  @Input() chatComponent!: ChatComponent;
 
   constructor(
     private channelService: ChannelService,
@@ -26,7 +29,7 @@ export class MessageInputComponent {
     return this.userService.loggedInUser;
   }
 
-  sendMessage() {
+  async sendMessage() {
     if (this.message.message.trim() === '') {
       console.log('Message is empty');
       return;
@@ -38,6 +41,8 @@ export class MessageInputComponent {
     this.channelService.sendMessage(this.message.toJSON());
 
     this.message.message = '';
+
+    this.chatComponent.scrollToBottom();
 
     console.log('Successfully sent message!!');
   }

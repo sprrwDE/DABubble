@@ -110,7 +110,10 @@
         *ngFor="let message of currentChannel?.messages"
         class="flex flex-col gap-[30px]"
       >
-        <div class="main-chat-date">
+        <div
+          *ngIf="showDateDivider(message, currentChannel?.messages)"
+          class="main-chat-date"
+        >
           <p>{{ formatDate(message.timestamp) }}</p>
         </div>
 
@@ -127,6 +130,9 @@
     </div>
 
     <!-- input -->
-    <app-message-input class="px-[45px]"></app-message-input>
+    <app-message-input
+      class="px-[45px]"
+      [chatComponent]="this"
+    ></app-message-input>
   </main>
 </section>

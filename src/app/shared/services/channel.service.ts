@@ -11,6 +11,7 @@ import {
   onSnapshot,
   updateDoc,
 } from '@angular/fire/firestore';
+import { Message } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,15 +22,18 @@ import {
 export class ChannelService {
   firestore = inject(Firestore);
   unsubAllChannels: any;
+  unsubMessages: any;
 
-  allChannels: any[] = [];
+  allChannels: Channel[] = [];
   currentChannelId: string = '';
-  currentChannel: any;
+  currentChannel: Channel = new Channel();
+  currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
 
   ngOnDestroy(): void {
     this.unsubAllChannels();
+    this.unsubMessages();
   }
 
   constructor(
@@ -45,27 +49,72 @@ export class ChannelService {
     try {
       this.unsubAllChannels = onSnapshot(
         collection(this.firestore, 'channels'),
-        (items) => {
-          this.allChannels = [];
-
-          items.forEach((item) => {
-            this.allChannels.push({ ...item.data(), id: item.id });
-          });
-
-          console.log(this.allChannels);
-
-          if (!this.currentChannelIdIsInitialized) {
-            this.currentChannelId = this.allChannels[0].id;
-            this.currentChannelIdIsInitialized = true;
-          }
-
-          this.currentChannel = this.allChannels.find(
-            (channel) => channel.id === this.currentChannelId
-          );
-        }
+        (snapshot) => this.handleChannelsSnapshot(snapshot)
       );
     } catch (error) {
       console.error('Error fetching channels:', error);
+    }
+  }
+
+  private handleChannelsSnapshot(snapshot: any) {
+    this.allChannels = [];
+    snapshot.forEach((item: any) => this.processChannel(item));
+  }
+
+  private processChannel(item: any) {
+    const channelData = { ...item.data(), id: item.id, messages: [] };
+    const channel = new Channel(channelData);
+    this.subscribeToChannelMessages(channel, item.id);
+  }
+
+  private subscribeToChannelMessages(channel: Channel, channelId: string) {
+    this.unsubMessages = onSnapshot(
+      collection(this.firestore, `channels/${channelId}/messages`),
+      (snapshot) => this.handleMessagesSnapshot(snapshot, channel)
+    );
+  }
+
+  private handleMessagesSnapshot(snapshot: any, channel: Channel) {
+    const messages = this.createMessages(snapshot);
+    this.updateChannel(channel, messages);
+  }
+
+  private createMessages(snapshot: any): Message[] {
+    const messages: Message[] = [];
+    snapshot.forEach((doc: any) => {
+      messages.push(new Message(doc.data()));
+    });
+    return messages;
+  }
+
+  private updateChannel(channel: Channel, messages: Message[]) {
+    channel.messages = messages.sort((a, b) => a.timestamp - b.timestamp);
+    this.updateChannelInList(channel);
+    this.updateCurrentChannel(channel, messages);
+  }
+
+  private updateChannelInList(channel: Channel) {
+    const index = this.allChannels.findIndex((ch) => ch.id === channel.id);
+    if (index >= 0) {
+      this.allChannels[index] = channel;
+    } else {
+      this.allChannels.push(channel);
+    }
+  }
+
+  private updateCurrentChannel(channel: Channel, messages: Message[]) {
+    this.initializeCurrentChannelIfNeeded();
+
+    if (this.currentChannelId === channel.id) {
+      this.currentChannelMessages = messages;
+      this.currentChannel = channel;
+    }
+  }
+
+  private initializeCurrentChannelIfNeeded() {
+    if (!this.currentChannelIdIsInitialized && this.allChannels.length > 0) {
+      this.currentChannelId = this.allChannels[0].id;
+      this.currentChannelIdIsInitialized = true;
     }
   }
 
@@ -80,13 +129,22 @@ export class ChannelService {
   async sendMessage(data: any) {
     try {
       const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-      await updateDoc(channelRef, {
-        messages: [data, ...(this.currentChannel?.messages || [])],
-      });
+      await addDoc(collection(channelRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
     }
   }
+
+  // async sendMessage(data: any) {
+  //   try {
+  //     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+  //     await updateDoc(channelRef, {
+  //       messages: [data, ...(this.currentChannel?.messages || [])],
+  //     });
+  //   } catch (error) {
+  //     console.error('Fehler beim Erstellen der Nachricht:', error);
+  //   }
+  // }
 
   // ///////////////////
   private currentChannelData$ = new BehaviorSubject<Channel | null>(null);

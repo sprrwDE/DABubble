@@ -17,6 +17,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
+import { Message } from '../../shared/models/message.model';
 
 @Component({
   selector: 'app-chat',
@@ -51,16 +52,16 @@ export class ChatComponent implements AfterViewInit {
     return this.channelService.currentChannelId;
   }
 
+  get currentChannel() {
+    return this.channelService.currentChannel;
+  }
+
   get allChannels() {
     return this.channelService.allChannels;
   }
 
   get loggedInUser() {
     return this.userService.loggedInUser;
-  }
-
-  get currentChannel() {
-    return this.channelService.currentChannel;
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -150,5 +151,17 @@ export class ChatComponent implements AfterViewInit {
   getNumberOfAnswers(replies: any[] | undefined): number {
     if (!replies) return 0;
     return replies.length;
+  }
+
+  showDateDivider(message: Message, messages: Message[] | undefined): boolean {
+    if (!messages) return false;
+
+    const currentDate = new Date(message.timestamp).toDateString();
+    const index = messages.indexOf(message);
+
+    if (index === 0) return true;
+
+    const previousDate = new Date(messages[index - 1].timestamp).toDateString();
+    return currentDate !== previousDate;
   }
 }
