@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserSubject.next(user);
-      console.log("user is:", user)
+      // console.log("user is:", user)
     });
   }
 

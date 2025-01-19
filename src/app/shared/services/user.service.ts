@@ -17,7 +17,7 @@ export class UserService {
     fb.getData('users');
     this.fetchedCollection$.subscribe((data) => {
       this.allUsers = data.map((rawData) => new User({ ...rawData }));
-      console.log('All Users Array', this.allUsers);
+      if(this.allUsers.length > 0) {console.log('ALLE USER GLOBAL', this.allUsers)};
     });
 
     this.auth.onAuthStateChanged(async (firebaseUser: FirebaseUser | null) => {
@@ -29,11 +29,11 @@ export class UserService {
         if (this.loggedInUser) {
           this.loggedInUser$.subscribe((firebaseUser) => {
             if (firebaseUser === null) {
-              console.log('test');
+              // console.log('test');
             } else {
               this.fb.updateStateUser(firebaseUser.id, 'offline');
             }
-            console.log('loggedout user: ', firebaseUser);
+            // console.log('loggedout user: ', firebaseUser);
           });
         }
       }
@@ -46,12 +46,4 @@ export class UserService {
   setLoggedInUser(user: any) {
     this.loggedInUserSubject.next(user); // Aktuellen Wert setzen
   }
-
-
-/*   updateStatus(userId: string, channelId: string) {
-    setTimeout(() => {
-      this.fb.updateSingleDoc('users', userId, 'online');
-      this.fb.updateSingleDoc('channels', channelId, 'online')
-    }, 5000);
-  } */
 }
