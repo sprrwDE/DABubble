@@ -1,10 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { Message } from '../../../shared/models/message.model';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
 import { ChatComponent } from '../chat.component';
+import { Reply } from '../../../shared/models/reply.model';
+import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
 
 @Component({
   selector: 'app-message-input',
@@ -15,8 +17,11 @@ import { ChatComponent } from '../chat.component';
 })
 export class MessageInputComponent {
   @Input() isReplayInput: boolean = false;
-
   @Input() chatComponent!: ChatComponent;
+  @Input() replyPanelComponent!: ReplyPanelComponent;
+
+  @ViewChild('chatInput') chatInput!: ElementRef;
+  @ViewChild('replyInput') replyInput!: ElementRef;
 
   constructor(
     private channelService: ChannelService,
@@ -24,12 +29,17 @@ export class MessageInputComponent {
   ) {}
 
   message: Message = new Message();
+  reply: Reply = new Reply();
 
   get loggedInUser() {
     return this.userService.loggedInUser;
   }
 
-  async sendMessage() {
+  get currentReplyMessageId(): string {
+    return this.channelService.currentReplyMessageId;
+  }
+
+  sendMessage() {
     if (this.message.message.trim() === '') {
       console.log('Message is empty');
       return;
@@ -43,6 +53,26 @@ export class MessageInputComponent {
     this.message.message = '';
 
     this.chatComponent.scrollToBottom();
+
+    console.log('Successfully sent message!!');
+  }
+
+  sendReply() {
+    if (this.reply.message.trim() === '') {
+      console.log('Message is empty');
+      return;
+    }
+    this.reply.timestamp = new Date().getTime();
+    this.reply.userId = this.loggedInUser.id;
+
+    this.channelService.sendReply(
+      this.currentReplyMessageId,
+      this.reply.toJSON()
+    );
+
+    this.reply.message = '';
+
+    this.replyPanelComponent.scrollToBottom();
 
     console.log('Successfully sent message!!');
   }

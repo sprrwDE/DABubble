@@ -102,29 +102,10 @@ export class ChatComponent implements AfterViewInit {
     } catch (err) {}
   }
 
-  formatDate(timestamp: number): string {
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    };
-    return date.toLocaleDateString('de-DE', options);
-  }
-
-  formatTime(timestamp: number): string {
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-    return date.toLocaleTimeString('de-DE', options);
-  }
-
   getUserName(userId: string): string {
     return (
       this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.name || 'Gast'
+        ?.name || 'Placholder'
     );
   }
 
@@ -145,7 +126,9 @@ export class ChatComponent implements AfterViewInit {
   getLastAnswerTime(replies: any[] | undefined): any {
     if (!replies || replies.length === 0) return '';
 
-    return this.formatTime(replies[replies.length - 1].timestamp);
+    return this.channelService.formatTime(
+      replies[replies.length - 1].timestamp
+    );
   }
 
   getNumberOfAnswers(replies: any[] | undefined): number {

@@ -7,13 +7,12 @@ export class Reply {
     this.message = obj?.message || '';
     this.userId = obj?.user || '';
     this.timestamp = obj?.timestamp || null;
-    // this.timestamp = obj?.timestamp ? new Date(obj.timestamp) : new Date();
   }
 
   toJSON() {
     return {
       message: this.message,
-      user: this.userId,
+      userId: this.userId,
       timestamp: this.timestamp,
     };
   }

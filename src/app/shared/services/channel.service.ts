@@ -10,8 +10,10 @@ import {
   doc,
   onSnapshot,
   updateDoc,
+  getDocs,
 } from '@angular/fire/firestore';
 import { Message } from '../models/message.model';
+import { Reply } from '../models/reply.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +32,8 @@ export class ChannelService {
   currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
+
+  currentReplyMessageId: string = '';
 
   ngOnDestroy(): void {
     this.unsubAllChannels();
@@ -70,21 +74,63 @@ export class ChannelService {
   private subscribeToChannelMessages(channel: Channel, channelId: string) {
     this.unsubMessages = onSnapshot(
       collection(this.firestore, `channels/${channelId}/messages`),
-      (snapshot) => this.handleMessagesSnapshot(snapshot, channel)
+      (snapshot) => this.handleMessagesSnapshot(snapshot, channel, channelId)
     );
   }
 
-  private handleMessagesSnapshot(snapshot: any, channel: Channel) {
-    const messages = this.createMessages(snapshot);
+  private handleMessagesSnapshot(
+    snapshot: any,
+    channel: Channel,
+    channelId: string
+  ) {
+    const messages = this.createMessagesFromDocs(snapshot);
+    this.setupRepliesSubscriptions(messages, channelId);
     this.updateChannel(channel, messages);
   }
 
-  private createMessages(snapshot: any): Message[] {
+  private createMessagesFromDocs(snapshot: any): Message[] {
     const messages: Message[] = [];
     snapshot.forEach((doc: any) => {
-      messages.push(new Message(doc.data()));
+      messages.push(this.createMessageFromDoc(doc));
     });
     return messages;
+  }
+
+  private createMessageFromDoc(doc: any): Message {
+    return new Message({
+      ...doc.data(),
+      id: doc.id,
+      replies: [],
+    });
+  }
+
+  private setupRepliesSubscriptions(messages: Message[], channelId: string) {
+    messages.forEach((message) => {
+      this.subscribeToMessageReplies(channelId, message);
+    });
+  }
+
+  private subscribeToMessageReplies(channelId: string, message: Message) {
+    onSnapshot(
+      this.getRepliesCollectionRef(channelId, message.id || ''),
+      (snapshot) => this.handleRepliesSnapshot(snapshot, message)
+    );
+  }
+
+  private getRepliesCollectionRef(channelId: string, messageId: string) {
+    return collection(
+      this.firestore,
+      `channels/${channelId}/messages/${messageId}/replies`
+    );
+  }
+
+  private handleRepliesSnapshot(snapshot: any, message: Message) {
+    message.replies = this.createRepliesFromDocs(snapshot);
+    this.updateCurrentChannel(this.currentChannel, this.currentChannelMessages);
+  }
+
+  private createRepliesFromDocs(snapshot: any): Reply[] {
+    return snapshot.docs.map((doc: any) => new Reply(doc.data()));
   }
 
   private updateChannel(channel: Channel, messages: Message[]) {
@@ -135,6 +181,18 @@ export class ChannelService {
     }
   }
 
+  async sendReply(messageId: string, data: any) {
+    try {
+      const messageRef = doc(
+        this.firestore,
+        `channels/${this.currentChannelId}/messages/${messageId}`
+      );
+      await addDoc(collection(messageRef, 'replies'), data);
+    } catch (error) {
+      console.error('Fehler beim Erstellen der Antwort:', error);
+    }
+  }
+
   // async sendMessage(data: any) {
   //   try {
   //     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -145,6 +203,25 @@ export class ChannelService {
   //     console.error('Fehler beim Erstellen der Nachricht:', error);
   //   }
   // }
+
+  formatDate(timestamp: number): string {
+    const date = new Date(timestamp);
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    };
+    return date.toLocaleDateString('de-DE', options);
+  }
+
+  formatTime(timestamp: number): string {
+    const date = new Date(timestamp);
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return date.toLocaleTimeString('de-DE', options);
+  }
 
   // ///////////////////
   private currentChannelData$ = new BehaviorSubject<Channel | null>(null);

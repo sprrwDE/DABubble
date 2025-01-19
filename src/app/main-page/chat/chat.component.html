@@ -114,12 +114,13 @@
           *ngIf="showDateDivider(message, currentChannel?.messages)"
           class="main-chat-date"
         >
-          <p>{{ formatDate(message.timestamp) }}</p>
+          <p>{{ channelService.formatDate(message.timestamp) }}</p>
         </div>
 
         <app-user-message
           [message]="message.message"
-          [time]="formatTime(message.timestamp)"
+          [messageId]="message?.id"
+          [time]="channelService.formatTime(message.timestamp)"
           [imgUrl]="getUserImage(message.userId)"
           [name]="getUserName(message.userId)"
           [isContact]="getUserId(message.userId) === loggedInUser?.id"
