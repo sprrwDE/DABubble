@@ -17,7 +17,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../shared/services/user.service';
-import { loggedIn } from '@angular/fire/auth-guard';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,6 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private userService: UserService
   ) {
     this.logOutUser();
     this.loginForm = this.fb.group({
@@ -44,20 +42,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.auth.onAuthStateChanged(async (user: User | null) => {
-      if (user) {
-        await this.firebaseService.updateStateUser(user.uid, 'online');
-        this.userService.loggedInUser = user;
-      } else {
-        if (this.userService.loggedInUser) {
-          await this.firebaseService.updateStateUser(
-            this.userService.loggedInUser.uid,
-            'offline'
-          );
-          this.userService.loggedInUser = null;
-        }
-      }
-    });
+
   }
 
   ngOnInit(): void {
@@ -109,6 +94,15 @@ export class LoginComponent implements OnInit {
       }
     } else {
       this.loginForm.markAllAsTouched();
+    }
+  }
+
+  async guestLogin() {
+    const userCredentail = await this.authService.login("gast@gastmail.de", "qweqweqwe")
+    if (userCredentail) {
+      this.goToMainPage();
+    } else {
+      this.failed = true
     }
   }
 

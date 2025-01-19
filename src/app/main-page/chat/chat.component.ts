@@ -17,6 +17,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
+import { Message } from '../../shared/models/message.model';
 
 @Component({
   selector: 'app-chat',
@@ -51,16 +52,16 @@ export class ChatComponent implements AfterViewInit {
     return this.channelService.currentChannelId;
   }
 
+  get currentChannel() {
+    return this.channelService.currentChannel;
+  }
+
   get allChannels() {
     return this.channelService.allChannels;
   }
 
   get loggedInUser() {
     return this.userService.loggedInUser;
-  }
-
-  get currentChannel() {
-    return this.channelService.currentChannel;
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -101,29 +102,10 @@ export class ChatComponent implements AfterViewInit {
     } catch (err) {}
   }
 
-  formatDate(timestamp: number): string {
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    };
-    return date.toLocaleDateString('de-DE', options);
-  }
-
-  formatTime(timestamp: number): string {
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-    return date.toLocaleTimeString('de-DE', options);
-  }
-
   getUserName(userId: string): string {
     return (
       this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.name || 'Gast'
+        ?.name || 'Placholder'
     );
   }
 
@@ -144,11 +126,25 @@ export class ChatComponent implements AfterViewInit {
   getLastAnswerTime(replies: any[] | undefined): any {
     if (!replies || replies.length === 0) return '';
 
-    return this.formatTime(replies[replies.length - 1].timestamp);
+    return this.channelService.formatTime(
+      replies[replies.length - 1].timestamp
+    );
   }
 
   getNumberOfAnswers(replies: any[] | undefined): number {
     if (!replies) return 0;
     return replies.length;
+  }
+
+  showDateDivider(message: Message, messages: Message[] | undefined): boolean {
+    if (!messages) return false;
+
+    const currentDate = new Date(message.timestamp).toDateString();
+    const index = messages.indexOf(message);
+
+    if (index === 0) return true;
+
+    const previousDate = new Date(messages[index - 1].timestamp).toDateString();
+    return currentDate !== previousDate;
   }
 }

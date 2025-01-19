@@ -110,13 +110,17 @@
         *ngFor="let message of currentChannel?.messages"
         class="flex flex-col gap-[30px]"
       >
-        <div class="main-chat-date">
-          <p>{{ formatDate(message.timestamp) }}</p>
+        <div
+          *ngIf="showDateDivider(message, currentChannel?.messages)"
+          class="main-chat-date"
+        >
+          <p>{{ channelService.formatDate(message.timestamp) }}</p>
         </div>
 
         <app-user-message
           [message]="message.message"
-          [time]="formatTime(message.timestamp)"
+          [messageId]="message?.id"
+          [time]="channelService.formatTime(message.timestamp)"
           [imgUrl]="getUserImage(message.userId)"
           [name]="getUserName(message.userId)"
           [isContact]="getUserId(message.userId) === loggedInUser?.id"
@@ -127,6 +131,9 @@
     </div>
 
     <!-- input -->
-    <app-message-input class="px-[45px]"></app-message-input>
+    <app-message-input
+      class="px-[45px]"
+      [chatComponent]="this"
+    ></app-message-input>
   </main>
 </section>

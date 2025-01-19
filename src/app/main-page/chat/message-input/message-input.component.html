@@ -1,14 +1,25 @@
 <div
-  (click)="chatInput.focus()"
+  (click)="
+    isReplayInput
+      ? replyInput.nativeElement.focus()
+      : chatInput.nativeElement.focus()
+  "
   class="main-chat-input-container p-[20px] mt-[20px] pb-[15px] h-[145px] rounded-[20px] hover:border-primary transition-svg-text border-lines border-[1px] flex flex-col w-full items-center justify-between"
 >
   <textarea
     #chatInput
+    *ngIf="!isReplayInput"
     [(ngModel)]="message.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
-    placeholder="{{
-      isReplayInput ? 'Antworten...' : 'Nachricht an #Entwicklerteam'
-    }}"
+    placeholder="Nachricht an #Entwicklerteam"
+  ></textarea>
+
+  <textarea
+    #replyInput
+    *ngIf="isReplayInput"
+    [(ngModel)]="reply.message"
+    class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
+    placeholder="Antworten..."
   ></textarea>
 
   <!-- icons -->
@@ -75,7 +86,10 @@
       </div>
     </div>
 
-    <div (click)="sendMessage()" class="main-chat-send-btn">
+    <div
+      (click)="isReplayInput ? sendReply() : sendMessage()"
+      class="main-chat-send-btn"
+    >
       <svg
         width="30"
         height="30"

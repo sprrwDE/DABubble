@@ -6,6 +6,7 @@ export class Message {
   likes: number;
   timestamp: number;
   replies: Reply[];
+  id?: string;
 
   constructor(obj?: any) {
     this.message = obj?.message || '';
@@ -16,6 +17,7 @@ export class Message {
     this.replies = obj?.replies
       ? obj.replies.map((rep: any) => new Reply(rep))
       : [];
+    this.id = obj?.id || '';
   }
 
   toJSON() {
