@@ -24,7 +24,6 @@ export class FirebaseService {
 
   constructor(private firestore: Firestore) {}
 
-
   getData(db: string) {
     try {
       onSnapshot(collection(this.firestore, db), (list) => {
@@ -51,14 +50,14 @@ export class FirebaseService {
         const data = docSnap.data();
         console.log('Document data:', data);
         this.fetchedSingleSubject.next(data); 
-        return data; // Return the fetched data
+        return data; 
       } else {
         console.log('No such document!');
         return null;
       }
     } catch (error) {
       console.error('Error fetching document:', error);
-      throw error; // Propagate the error
+      throw error; 
     }
   }
 
@@ -87,7 +86,6 @@ export class FirebaseService {
       return () => {};
     }
   }
-
 
   async addUser(userInterface: User) {
     let user: any;
@@ -128,7 +126,7 @@ export class FirebaseService {
     }
   }
 
-  ////// UPDATE TEST
+
 
   // Nur für Hilfsfunktion zum Status Updaten in Userservice
   async updateSingleDoc(col: string, id: string, status: string) {

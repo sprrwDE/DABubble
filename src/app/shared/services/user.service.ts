@@ -20,10 +20,11 @@ export class UserService {
     });
   }
 
-  // test
-  updateStatus(id: string) {
+
+/*   updateStatus(userId: string, channelId: string) {
     setTimeout(() => {
-      this.fb.updateSingleDoc('users', id, 'online');
+      this.fb.updateSingleDoc('users', userId, 'online');
+      this.fb.updateSingleDoc('channels', channelId, 'online')
     }, 5000);
-  }
+  } */
 }
