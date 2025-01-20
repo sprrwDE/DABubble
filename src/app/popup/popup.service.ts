@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from '../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,9 @@ export class PopupService {
 
   openUserProfilePopup = false;
   editingUserProfile = false;
+
+  contactProfileContent: User = new User();
+  contactProfilePopupOpen = false;
 
   resetEditStates() {
     this.editChannelName = false;

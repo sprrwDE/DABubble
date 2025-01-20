@@ -1,4 +1,3 @@
-
 import { NgIf, NgClass } from '@angular/common';
 import {
   Component,
@@ -11,8 +10,9 @@ import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.component';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-member-list-popup',
@@ -24,35 +24,26 @@ import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.com
 export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
+  channelData$: BehaviorSubject<Channel | null>;
   private subscription!: Subscription;
   channelData: Channel | null = null;
   userList: User[] = [];
+  userIds: string[] = [];
+  currentChannelUsers: User[] = [];
 
   constructor(
     public popupService: PopupService,
-    private channelService: ChannelService
-  ) {}
-
-  ngOnInit() {
-    this.subscription = this.channelService.getChannel().subscribe((data) => {
-      if (data) {
-        this.channelData = data;
-        this.userList = data.users;
-        console.log('User Liste in Channel:', this.userList);
-      }
-    });
-
-    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
+    private channelService: ChannelService,
+    private userService: UserService
+  ) {
+    this.channelData$ = channelService.currentChannelData$;
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel(); 
+  get allUsers() {
+    return this.userService.allUsers;
   }
-
 
   get showAddMembersPopup() {
-    console.log(this.popupService.showAddMembersPopup);
     return this.popupService.showAddMembersPopup;
   }
 
@@ -60,8 +51,40 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     this.popupService.showAddMembersPopup = value;
   }
 
-  closePopup(event: Event) {
-    event.stopPropagation();
+  get currentChannelId() {
+    return this.channelService.currentChannelId;
+  }
+
+  get loggedInUser() {
+    return this.userService.loggedInUser;
+  }
+
+  ngOnInit() {
+    this.subscription = combineLatest([
+      this.userService.fetchedCollection$,
+      this.channelData$ 
+    ]).subscribe(([allUsers, channel]) => {
+      if (channel) {
+        this.userIds = channel.users;
+        this.userList = allUsers.filter(user => this.userIds.includes(user.id));
+        console.log('USER IM CHANNEL:', this.currentChannelUsers);
+      }
+    });
+
+    this.channelService.fetchChannel(this.currentChannelId);
+  }
+
+  openContactProfile(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.channelService.unsubscribeChannel();
+  }
+
+  closePopup() {
     this.closePopupEvent.emit();
   }
 

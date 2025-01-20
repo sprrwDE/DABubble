@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ReplyPanelComponent } from '../../main-page/reply-panel/reply-panel.component';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +13,18 @@ export class PanelService {
   isContact: boolean = false;
   numberOfAnswers: number = 0;
 
+  replyPanelComponent!: ReplyPanelComponent;
+
   openReplyPanel() {
     this.isReplyPanelOpen = true;
   }
 
   closeReplyPanel() {
     this.isReplyPanelOpen = false;
+  }
+
+  scrollToBottom() {
+    this.replyPanelComponent.scrollToBottom();
   }
 
   renderReplyPanel(

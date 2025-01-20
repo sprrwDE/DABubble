@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-animation-screen',
@@ -10,6 +11,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnimationScreenComponent implements OnInit {
   animation: boolean = false; // AUF TRUE STELLEN FÜR DIE ANIMATION
+
+
+  constructor(public global: GlobalVariablesService){
+  }
 
   ngOnInit(): void {}
 }

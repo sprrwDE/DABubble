@@ -47,16 +47,20 @@
 
     <div class="flex items-center gap-[15px]">
       <div
+        *ngIf="channelUsers.length > 0"
         class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
         (click)="openMemberListPopup('member-list', 'tr', false)"
       >
         <div class="flex items-center">
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
+          <img
+            *ngFor="let user of channelUsers"
+            class="group-members-avatar"
+            src="{{ user.image || 'imgs/avatar1.png' }}"
+            alt=""
+          />
         </div>
 
-        <p class="text-[20px] font-semibold">3</p>
+        <p class="text-[20px] font-semibold">{{ channelUsers.length }}</p>
 
         <app-popup
           [popupCorner]="memberListPopupCorner"
@@ -100,74 +104,40 @@
   </header>
 
   <main class="main-chat w-full h-full flex flex-col justify-end">
-    <!-- Hier die messages rein rendern -->
     <div
       #chatContainer
       class="main-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px] mt-[100px]"
     >
-      <div class="main-chat-date">
-        <p>Dienstag, 14 Januar</p>
+      <!-- Hier die messages rein rendern -->
+
+      <div
+        *ngFor="let message of currentChannel?.messages"
+        class="flex flex-col gap-[30px]"
+      >
+        <div
+          *ngIf="showDateDivider(message, currentChannel?.messages)"
+          class="main-chat-date"
+        >
+          <p>{{ channelService.formatDate(message.timestamp) }}</p>
+        </div>
+
+        <app-user-message
+          [message]="message.message"
+          [messageId]="message?.id"
+          [time]="channelService.formatTime(message.timestamp)"
+          [imgUrl]="getUserImage(message.userId)"
+          [name]="getUserName(message.userId)"
+          [isContact]="getUserId(message.userId) === loggedInUser?.id"
+          [lastAnswerTime]="getLastAnswerTime(message.replies)"
+          [numberOfAnswers]="getNumberOfAnswers(message.replies)"
+        ></app-user-message>
       </div>
-
-      <app-user-message
-        [message]="'Hallo test'"
-        [time]="'11:11 Uhr'"
-        [name]="'A'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [numberOfAnswers]="2"
-      ></app-user-message>
-
-      <app-user-message
-        [message]="'Hallo placeholder'"
-        [time]="'21:11 Uhr'"
-        [name]="'T'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [numberOfAnswers]="0"
-      ></app-user-message>
-
-      <!-- test date -->
-      <div class="main-chat-date">
-        <p>Mittwoch, 15 Januar</p>
-      </div>
-
-      <!-- user test message -->
-      <app-user-message
-        [message]="'Hello World'"
-        [time]="'00:00 Uhr'"
-        [name]="'X'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
-      ></app-user-message>
-
-      <!-- test date -->
-      <div class="main-chat-date">
-        <p>Heute</p>
-      </div>
-
-      <app-user-message
-        [message]="'Placeholder'"
-        [time]="'13:11 Uhr'"
-        [name]="'B'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'11:11 Uhr'"
-        [numberOfAnswers]="0"
-      ></app-user-message>
-
-      <!-- user test message -->
-      <app-user-message
-        [message]="'Placeholder 15'"
-        [time]="'00:00 Uhr'"
-        [name]="'Z'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
-      ></app-user-message>
     </div>
 
     <!-- input -->
-    <app-message-input class="px-[45px]"></app-message-input>
+    <app-message-input
+      class="px-[45px]"
+      [chatComponent]="this"
+    ></app-message-input>
   </main>
 </section>

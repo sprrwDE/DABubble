@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -7,6 +7,9 @@ import { NgClass, NgIf } from '@angular/common';
 import { User } from '../shared/models/user.model';
 import { PanelService } from '../shared/services/panel.service';
 import { PopupComponent } from '../popup/popup.component';
+import { PopupService } from '../popup/popup.service';
+import { UserService } from '../shared/services/user.service';
+import { FirebaseService } from '../shared/services/firebase.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -24,28 +27,57 @@ import { PopupComponent } from '../popup/popup.component';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  constructor(public panelService: PanelService) {
+  afkDelay: number = 3000;
+  timeoutId: any;
+
+
+  constructor(
+    public panelService: PanelService,
+    public popupService: PopupService,
+    private userService: UserService,
+    private fb: FirebaseService,
+  ) {
     // console.log(user.arr)
   }
+
+
+
+  @HostListener('mousemove', ['$event'])
+  afkMode() {
+    this.updateUserStatus("online")
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => {
+      this.updateUserStatus("abwesend")
+    }, this.afkDelay);
+  }
+
+  updateUserStatus(status: string) {
+    this.userService.loggedInUser$.subscribe((user) => {
+      if (user && user.id) {
+        this.fb.updateStateUser(user.id, status);
+      }
+    });
+  }
+
 
   openSidebar = true;
 
   selectedUser: User = new User();
-  public contactProfilePopupOpen = false;
 
   public popupOpen = false;
   public popupType: string = '';
   public popupCorner: string = '';
 
-  toggleSidebar() {
-    this.openSidebar = !this.openSidebar;
+  get contactProfilePopupOpen() {
+    return this.popupService.contactProfilePopupOpen;
   }
 
-  openContactProfile(user: User | any) {
-    if (user) {
-      this.selectedUser = user;
-      this.contactProfilePopupOpen = true;
-    }
+  set contactProfilePopupOpen(value: boolean) {
+    this.popupService.contactProfilePopupOpen = value;
+  }
+
+  toggleSidebar() {
+    this.openSidebar = !this.openSidebar;
   }
 
   openPopup(event: { type: string; corner: string }) {

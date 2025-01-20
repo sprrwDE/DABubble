@@ -8,9 +8,12 @@ import {
   setDoc,
   onSnapshot,
   DocumentData,
+  query,
+  orderBy,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { BehaviorSubject } from 'rxjs';
+// import { Message } from '../models/newmodels/message.model.new';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +26,6 @@ export class FirebaseService {
   fetchedSingleData$ = this.fetchedSingleSubject.asObservable();
 
   constructor(private firestore: Firestore) {}
-
 
   getData(db: string) {
     try {
@@ -50,12 +52,15 @@ export class FirebaseService {
       if (docSnap.exists()) {
         const data = docSnap.data();
         console.log('Document data:', data);
-        this.fetchedSingleSubject.next(data); 
+        this.fetchedSingleSubject.next(data);
+        return data;
       } else {
         console.log('No such document!');
+        return null;
       }
     } catch (error) {
       console.error('Error fetching document:', error);
+      throw error;
     }
   }
 
@@ -71,10 +76,10 @@ export class FirebaseService {
         if (docSnap.exists()) {
           const data = docSnap.data();
           console.log('Live Document Data:', data);
-          callback(data); 
+          callback(data);
         } else {
           console.log('No such document!');
-          callback(null); 
+          callback(null);
         }
       });
 
@@ -84,7 +89,6 @@ export class FirebaseService {
       return () => {};
     }
   }
-
 
   async addUser(userInterface: User) {
     let user: any;
@@ -107,6 +111,15 @@ export class FirebaseService {
     }
   }
 
+  async updateStateUser(id: string, state: string) {
+    try {
+      const docRef = doc(this.firestore, `users/${id}`);
+      await setDoc(docRef, { status: state }, { merge: true });
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren des Status:', error);
+    }
+  }
+
   async changeProfileImage(id: string, image: string) {
     try {
       const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
@@ -116,13 +129,13 @@ export class FirebaseService {
     }
   }
 
-  ////// UPDATE TEST
+  /// TEST
+  // subscribeToMessages(channelId: string, callback: (messages: Message[]) => void) {
+  //   const messagesRef = collection(this.firestore, `channels/${channelId}/messages`);
+  //   const messagesQuery = query(messagesRef, orderBy("timestamp", "asc")); // Sortiere nach Zeitstempel
 
-  // Nur für Hilfsfunktion zum Status Updaten in Userservice
-  async updateSingleDoc(col: string, id: string, status: string) {
-    const updateRef = doc(this.firestore, col, id);
-    await updateDoc(updateRef, {
-      status: status,
-    });
-  }
+  //   return onSnapshot(messagesQuery, (snapshot) => {
+  //     const messages: Message[] = snapshot.docs.map(doc => new Message({ id: doc.id, ...doc.data() }));
+  //     callback(messages);
+  //   });}
 }

@@ -12,7 +12,7 @@ export class User {
     this.status = obj ? obj.status : '';
     this.id = obj ? obj.id : '';
 
-    this.trackMouseStatus()
+    // this.trackMouseStatus()
  }
 
  toJSON() {
@@ -25,9 +25,9 @@ export class User {
    };
  }
 
- trackMouseStatus() {
-  setInterval(() => {
-    console.log('mouse moved')
-  }, 15000);
- }
+//  trackMouseStatus() {
+//   setInterval(() => {
+//     console.log('mouse moved')
+//   }, 15000);
+//  }
 }

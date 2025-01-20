@@ -2,6 +2,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { PanelService } from '../../../shared/services/panel.service';
 import { PopupService } from '../../../popup/popup.service';
+import { ChannelService } from '../../../shared/services/channel.service';
 
 @Component({
   selector: 'app-user-message',
@@ -17,15 +18,17 @@ export class UserMessageComponent {
   @Input() imgUrl: string = '';
   @Input() isContact: boolean = false;
   @Input() isReplay: boolean = false;
-  @Input() lastAnswerTime: string = '';
+  @Input() lastAnswerTime: any = '';
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<string> = [];
+  @Input() messageId: any;
 
   editMessagePopupOpen: boolean = false;
 
   constructor(
     private panelService: PanelService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private channelService: ChannelService
   ) {}
 
   get editingUserProfile() {
@@ -44,6 +47,14 @@ export class UserMessageComponent {
     this.popupService.openUserProfilePopup = value;
   }
 
+  get currentReplyMessageId() {
+    return this.channelService.currentReplyMessageId;
+  }
+
+  set currentReplyMessageId(value: string) {
+    this.channelService.currentReplyMessageId = value;
+  }
+
   openProfilePopup() {
     this.popupService.openUserProfilePopup = true;
     this.popupService.editingUserProfile = false;
@@ -54,7 +65,9 @@ export class UserMessageComponent {
   }
 
   openReplyPanel() {
+    this.currentReplyMessageId = this.messageId;
     this.panelService.openReplyPanel();
+    this.panelService.scrollToBottom();
 
     // Hier muss dann statt der message die ID des chats (replay chats) übergeben werden
     this.panelService.renderReplyPanel(

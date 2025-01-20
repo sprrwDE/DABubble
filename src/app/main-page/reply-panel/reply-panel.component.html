@@ -94,22 +94,12 @@
       </div>
 
       <app-user-message
-        [message]="'Die Nachricht hier rein rendern'"
-        [time]="'11:11 Uhr'"
-        [name]="'Name hier rein rendern'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [isReplay]="true"
-      ></app-user-message>
-
-      <!-- user test message -->
-      <app-user-message
-        [message]="'Die Nachricht hier rein rendern'"
-        [time]="'00:00 Uhr'"
-        [name]="'Name hier rein rendern'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
+        *ngFor="let reply of getRepliesForMessage(currentReplyMessageId)"
+        [message]="reply.message"
+        [time]="channelService.formatTime(reply.timestamp)"
+        [name]="getUserName(reply.userId)"
+        [imgUrl]="getImgUrl(reply.userId)"
+        [isContact]="getIsContact(reply.userId)"
         [isReplay]="true"
       ></app-user-message>
     </div>
@@ -118,6 +108,7 @@
     <app-message-input
       [isReplayInput]="true"
       class="px-[15px]"
+      [replyPanelComponent]="this"
     ></app-message-input>
   </main>
 </section>

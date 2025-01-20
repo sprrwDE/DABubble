@@ -1,24 +1,42 @@
-<!-- Login animation  -->
-<app-animation-screen></app-animation-screen>
+@if(!global.isMobile()) {
+<div class="flex justify-end w-full pr-2">
+    <div class="flex flex-col gap-4 text-end pt-4">
+        <span class="">Neu bei DABubble?</span>
+        <a href="" [routerLink]="['/login/register']" class="  text-center py-1 px-2 btn-3 text-primary">Konto
+            erstellen</a>
+    </div>
+</div>
+}
 
-<!-- Blue notification box -->
-<app-blue-notification-box [message]="notificationMessage" [visible]="notificationVisible"></app-blue-notification-box>
+<div class="flex items-center justify-center flex-col w-screen">
+    <!-- Login animation  -->
+    <app-animation-screen class="flex w-full"></app-animation-screen>
 
-<section class="w-full h-screen flex flex-col justify-between p-5">
-    <div class="flex justify-end">
+    <!-- Blue notification box -->
+    <app-blue-notification-box [message]="notificationMessage"
+        [visible]="notificationVisible"></app-blue-notification-box>
 
+    <section class="w-full flex flex-col justify-between p-4">
 
-        <div class="flex flex-col gap-4 text-right">
-            <span class="">Neu bei DABubble?</span>
-            <a href="" [routerLink]="['/login/register']" class="btn-3 text-primary">Konto erstellen</a>
+        <!-- login-page inhalt -->
+        <div class="flex justify-center items-center">
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
         </div>
-    </div>
 
-    <div class="flex justify-center items-center h-screen">
-        <router-outlet (activate)="onActivate($event)"></router-outlet>
-    </div>
-    <div class="flex justify-center gap-6">
-        <a [routerLink]="'/impressum'" href="" class="text-primary btn-3">Impressum</a>
-        <a [routerLink]="'/datenschutzerklaerung'" href="" class="text-primary btn-3">Datenschutz</a>
-    </div>
-</section>
+
+        @if(global.isMobile()) {
+        <div class="flex justify-center">
+            <div class="flex flex-col gap-4 text-end pt-4">
+                <span class="">Neu bei DABubble?</span>
+                <a href="" [routerLink]="['/login/register']"
+                    class="white-btn rounded-full text-center py-1 font-bold px-2 md:btn-3 text-primary">Konto
+                    erstellen</a>
+            </div>
+        </div>
+        }
+    </section>
+</div>
+<div class="hidden md:flex justify-center gap-6">
+    <a [routerLink]="'/impressum'" href="" class="text-primary btn-3">Impressum</a>
+    <a [routerLink]="'/datenschutzerklaerung'" href="" class="text-primary btn-3">Datenschutz</a>
+</div>

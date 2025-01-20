@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import {
   Component,
   ViewChild,
@@ -7,11 +7,18 @@ import {
   EventEmitter,
   Output,
   Input,
+  OnInit,
 } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
+import { ChannelService } from '../../shared/services/channel.service';
+import { UserService } from '../../shared/services/user.service';
+import { FormsModule } from '@angular/forms';
+import { User } from '../../shared/models/user.model';
+import { Message } from '../../shared/models/message.model';
+import { publishFacade } from '@angular/compiler';
 
 @Component({
   selector: 'app-chat',
@@ -21,6 +28,8 @@ import { PopupService } from '../../popup/popup.service';
     UserMessageComponent,
     MessageInputComponent,
     PopupComponent,
+    FormsModule,
+    NgFor,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
@@ -34,7 +43,38 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
 
-  constructor(public popupService: PopupService) {}
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
+  constructor(
+    public popupService: PopupService,
+    public channelService: ChannelService,
+    public userService: UserService
+  ) {}
+
+  get currentChannelId() {
+    return this.channelService.currentChannelId;
+  }
+
+  get currentChannel() {
+    return this.channelService.currentChannel;
+  }
+
+  get allChannels() {
+    return this.channelService.allChannels;
+  }
+
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
+  get loggedInUser() {
+    return this.userService.loggedInUser;
+  }
+
+  get channelUsers() {
+    const userIds = this.channelService.currentChannel?.users;
+    return this.allUsers.filter((user) => userIds.includes(user.id));
+  }
 
   openChannelDetailsPopup(type: string, corner: string) {
     this.channelDetailsPopupOpen = true;
@@ -61,16 +101,59 @@ export class ChatComponent implements AfterViewInit {
     this.memberListPopupOpen = false;
   }
 
-  @ViewChild('chatContainer') private chatContainer!: ElementRef;
-
   ngAfterViewInit() {
     this.scrollToBottom();
   }
 
-  scrollToBottom(): void {
-    try {
-      this.chatContainer.nativeElement.scrollTop =
-        this.chatContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+  scrollToBottom() {
+    this.chatContainer.nativeElement.scrollTop =
+      this.chatContainer.nativeElement.scrollHeight + 100;
+  }
+
+  getUserName(userId: string): string {
+    return (
+      this.allUsers.find((user: User) => user.id === userId)?.name ||
+      'Placholder'
+    );
+  }
+
+  getUserImage(userId: string): string {
+    return (
+      this.allUsers.find((user: User) => user.id === userId)?.image ||
+      'imgs/avatar1.png'
+    );
+  }
+
+  getUserId(userId: string): string {
+    return this.allUsers.find((user: User) => user.id === userId)?.id || '';
+  }
+
+  getLastAnswerTime(replies: any[] | undefined): any {
+    if (!replies || replies.length === 0) return '';
+
+    return this.channelService.formatTime(
+      replies[replies.length - 1].timestamp
+    );
+  }
+
+  getNumberOfAnswers(replies: any[] | undefined): number {
+    if (!replies) return 0;
+    return replies.length;
+  }
+
+  showDateDivider(message: Message, messages: Message[] | undefined): boolean {
+    if (!messages) return false;
+
+    const currentDate = new Date(message.timestamp).toDateString();
+    const index = messages.indexOf(message);
+
+    if (index === 0) return true;
+
+    const previousDate = new Date(messages[index - 1].timestamp).toDateString();
+    return currentDate !== previousDate;
+  }
+
+  ngOnInit() {
+    this.channelService.chatComponent = this;
   }
 }
