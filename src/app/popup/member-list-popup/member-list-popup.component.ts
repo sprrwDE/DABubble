@@ -12,6 +12,7 @@ import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
 import { Subscription } from 'rxjs';
 import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.component';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-member-list-popup',
@@ -26,22 +27,47 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
   channelData: Channel | null = null;
   userList: User[] = [];
+  userIds: string[] = [];
 
   constructor(
     public popupService: PopupService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private userService: UserService
   ) {}
+
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
+  get showAddMembersPopup() {
+    return this.popupService.showAddMembersPopup;
+  }
+
+  set showAddMembersPopup(value: boolean) {
+    this.popupService.showAddMembersPopup = value;
+  }
+
+  get currentChannelId() {
+    return this.channelService.currentChannelId;
+  }
+
+  get loggedInUser() {
+    return this.userService.loggedInUser;
+  }
 
   ngOnInit() {
     this.subscription = this.channelService.getChannel().subscribe((data) => {
       if (data) {
         this.channelData = data;
-        this.userList = data.users;
-        console.log('User Liste in Channel:', this.userList);
+        this.userIds = this.channelData.users;
+
+        this.userList = this.allUsers.filter((user) =>
+          this.userIds.includes(user.id)
+        );
       }
     });
 
-    this.channelService.fetchChannel('Ks8hNpn38fEiwcDmRxOB');
+    this.channelService.fetchChannel(this.currentChannelId);
   }
 
   openContactProfile(user: User) {
@@ -54,17 +80,7 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     this.channelService.unsubscribeChannel();
   }
 
-  get showAddMembersPopup() {
-    console.log(this.popupService.showAddMembersPopup);
-    return this.popupService.showAddMembersPopup;
-  }
-
-  set showAddMembersPopup(value: boolean) {
-    this.popupService.showAddMembersPopup = value;
-  }
-
-  closePopup(event: Event) {
-    event.stopPropagation();
+  closePopup() {
     this.closePopupEvent.emit();
   }
 

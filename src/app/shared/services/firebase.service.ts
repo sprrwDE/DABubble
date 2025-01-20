@@ -8,10 +8,12 @@ import {
   setDoc,
   onSnapshot,
   DocumentData,
-  query, orderBy
+  query,
+  orderBy,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { BehaviorSubject } from 'rxjs';
+// import { Message } from '../models/newmodels/message.model.new';
 
 @Injectable({
   providedIn: 'root',
@@ -50,15 +52,15 @@ export class FirebaseService {
       if (docSnap.exists()) {
         const data = docSnap.data();
         console.log('Document data:', data);
-        this.fetchedSingleSubject.next(data); 
-        return data; 
+        this.fetchedSingleSubject.next(data);
+        return data;
       } else {
         console.log('No such document!');
         return null;
       }
     } catch (error) {
       console.error('Error fetching document:', error);
-      throw error; 
+      throw error;
     }
   }
 
@@ -74,10 +76,10 @@ export class FirebaseService {
         if (docSnap.exists()) {
           const data = docSnap.data();
           console.log('Live Document Data:', data);
-          callback(data); 
+          callback(data);
         } else {
           console.log('No such document!');
-          callback(null); 
+          callback(null);
         }
       });
 
@@ -114,10 +116,10 @@ export class FirebaseService {
       const docRef = doc(this.firestore, `users/${id}`);
       await setDoc(docRef, { status: state }, { merge: true });
     } catch (error) {
-      console.error("Fehler beim Aktualisieren des Status:", error);
+      console.error('Fehler beim Aktualisieren des Status:', error);
     }
   }
-  
+
   async changeProfileImage(id: string, image: string) {
     try {
       const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
@@ -127,15 +129,13 @@ export class FirebaseService {
     }
   }
 
+  /// TEST
+  // subscribeToMessages(channelId: string, callback: (messages: Message[]) => void) {
+  //   const messagesRef = collection(this.firestore, `channels/${channelId}/messages`);
+  //   const messagesQuery = query(messagesRef, orderBy("timestamp", "asc")); // Sortiere nach Zeitstempel
 
-//   /// TEST
-//   subscribeToMessages(channelId: string, callback: (messages: Message[]) => void) {
-//     const messagesRef = collection(this.firestore, `channels/${channelId}/messages`);
-//     const messagesQuery = query(messagesRef, orderBy("timestamp", "asc")); // Sortiere nach Zeitstempel
-  
-//     return onSnapshot(messagesQuery, (snapshot) => {
-//       const messages: Message[] = snapshot.docs.map(doc => new Message({ id: doc.id, ...doc.data() }));
-//       callback(messages);
-//     });}
-
+  //   return onSnapshot(messagesQuery, (snapshot) => {
+  //     const messages: Message[] = snapshot.docs.map(doc => new Message({ id: doc.id, ...doc.data() }));
+  //     callback(messages);
+  //   });}
 }

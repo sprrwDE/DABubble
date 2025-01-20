@@ -47,16 +47,20 @@
 
     <div class="flex items-center gap-[15px]">
       <div
+        *ngIf="channelUsers.length > 0"
         class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
         (click)="openMemberListPopup('member-list', 'tr', false)"
       >
         <div class="flex items-center">
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
-          <img class="group-members-avatar" src="imgs/avatar1.png" alt="" />
+          <img
+            *ngFor="let user of channelUsers"
+            class="group-members-avatar"
+            src="{{ user.image || 'imgs/avatar1.png' }}"
+            alt=""
+          />
         </div>
 
-        <p class="text-[20px] font-semibold">3</p>
+        <p class="text-[20px] font-semibold">{{ channelUsers.length }}</p>
 
         <app-popup
           [popupCorner]="memberListPopupCorner"

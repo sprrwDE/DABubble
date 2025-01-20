@@ -18,6 +18,7 @@ import { UserService } from '../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
 import { Message } from '../../shared/models/message.model';
+import { publishFacade } from '@angular/compiler';
 
 @Component({
   selector: 'app-chat',
@@ -42,6 +43,8 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
 
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
   constructor(
     public popupService: PopupService,
     public channelService: ChannelService,
@@ -60,8 +63,17 @@ export class ChatComponent implements AfterViewInit {
     return this.channelService.allChannels;
   }
 
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
   get loggedInUser() {
     return this.userService.loggedInUser;
+  }
+
+  get channelUsers() {
+    const userIds = this.channelService.currentChannel?.users;
+    return this.allUsers.filter((user) => userIds.includes(user.id));
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -89,38 +101,31 @@ export class ChatComponent implements AfterViewInit {
     this.memberListPopupOpen = false;
   }
 
-  @ViewChild('chatContainer') private chatContainer!: ElementRef;
-
   ngAfterViewInit() {
     this.scrollToBottom();
   }
 
-  scrollToBottom(): void {
-    try {
-      this.chatContainer.nativeElement.scrollTop =
-        this.chatContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+  scrollToBottom() {
+    this.chatContainer.nativeElement.scrollTop =
+      this.chatContainer.nativeElement.scrollHeight + 100;
   }
 
   getUserName(userId: string): string {
     return (
-      this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.name || 'Placholder'
+      this.allUsers.find((user: User) => user.id === userId)?.name ||
+      'Placholder'
     );
   }
 
   getUserImage(userId: string): string {
     return (
-      this.currentChannel?.users?.find((user: any) => user.id === userId)
-        ?.image || 'imgs/avatar1.png'
+      this.allUsers.find((user: User) => user.id === userId)?.image ||
+      'imgs/avatar1.png'
     );
   }
 
   getUserId(userId: string): string {
-    return (
-      this.currentChannel?.users?.find((user: any) => user.id === userId)?.id ||
-      ''
-    );
+    return this.allUsers.find((user: User) => user.id === userId)?.id || '';
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -146,5 +151,9 @@ export class ChatComponent implements AfterViewInit {
 
     const previousDate = new Date(messages[index - 1].timestamp).toDateString();
     return currentDate !== previousDate;
+  }
+
+  ngOnInit() {
+    this.channelService.chatComponent = this;
   }
 }
