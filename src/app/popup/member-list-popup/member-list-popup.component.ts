@@ -10,7 +10,7 @@ import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.component';
 import { UserService } from '../../shared/services/user.service';
 
@@ -24,16 +24,20 @@ import { UserService } from '../../shared/services/user.service';
 export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
+  channelData$: BehaviorSubject<Channel | null>;
   private subscription!: Subscription;
   channelData: Channel | null = null;
   userList: User[] = [];
   userIds: string[] = [];
+  currentChannelUsers: User[] = [];
 
   constructor(
     public popupService: PopupService,
     private channelService: ChannelService,
     private userService: UserService
-  ) {}
+  ) {
+    this.channelData$ = channelService.currentChannelData$;
+  }
 
   get allUsers() {
     return this.userService.allUsers;
@@ -56,14 +60,14 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.channelService.getChannel().subscribe((data) => {
-      if (data) {
-        this.channelData = data;
-        this.userIds = this.channelData.users;
-
-        this.userList = this.allUsers.filter((user) =>
-          this.userIds.includes(user.id)
-        );
+    this.subscription = combineLatest([
+      this.userService.fetchedCollection$,
+      this.channelData$ 
+    ]).subscribe(([allUsers, channel]) => {
+      if (channel) {
+        this.userIds = channel.users;
+        this.userList = allUsers.filter(user => this.userIds.includes(user.id));
+        console.log('USER IM CHANNEL:', this.currentChannelUsers);
       }
     });
 

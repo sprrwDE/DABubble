@@ -17,7 +17,9 @@ export class UserService {
     fb.getData('users');
     this.fetchedCollection$.subscribe((data) => {
       this.allUsers = data.map((rawData) => new User({ ...rawData }));
-      if(this.allUsers.length > 0) {console.log('ALLE USER GLOBAL', this.allUsers)};
+      /* if (this.allUsers.length > 0) {
+        console.log('ALLE USER GLOBAL', this.allUsers);
+      } */
     });
 
     // state listener for logged in user ( logged in / logged out )

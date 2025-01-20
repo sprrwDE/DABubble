@@ -15,6 +15,7 @@ import {
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
 import { ChatComponent } from '../../main-page/chat/chat.component';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +32,13 @@ export class ChannelService {
   currentChannelId: string = '';
   currentChannel: Channel = new Channel();
   currentChannelMessages: Message[] = [];
-
+  
   currentChannelIdIsInitialized = false;
+
+  currentChannelUserIds:string[] = []
+  currentChannelUsers: User[] = [];
+  private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
+
 
   currentReplyMessageId: string = '';
 
@@ -48,7 +54,6 @@ export class ChannelService {
     private ngZone: NgZone // public firestore: Firestore
   ) {
     this.fetchedChannelData$ = this.fb.fetchedSingleData$;
-
     this.getAllChannels();
   }
 
@@ -72,6 +77,7 @@ export class ChannelService {
     const channelData = { ...item.data(), id: item.id, messages: [] };
     const channel = new Channel(channelData);
     this.subscribeToChannelMessages(channel, item.id);
+
   }
 
   private subscribeToChannelMessages(channel: Channel, channelId: string) {
@@ -157,6 +163,8 @@ export class ChannelService {
     if (this.currentChannelId === channel.id) {
       this.currentChannelMessages = messages;
       this.currentChannel = channel;
+      /// wird sehr oft aufgerufen alles
+      // console.log('currentChannel', this.currentChannel.id, this.currentChannel)
     }
 
     this.chatComponent.scrollToBottom();
@@ -217,8 +225,10 @@ export class ChannelService {
     return date.toLocaleTimeString('de-DE', options);
   }
 
+  
+  /// Ist das alt?
   // ///////////////////
-  private currentChannelData$ = new BehaviorSubject<Channel | null>(null);
+  public currentChannelData$ = new BehaviorSubject<Channel | null>(null);
   private unsubscribe?: () => void;
   fetchedChannelData$: Observable<any>;
 
@@ -226,12 +236,13 @@ export class ChannelService {
   //   this.fetchedChannelData$ = this.fb.fetchedSingleData$;
   // }
 
-  // Hole Daten und speichere sie im BehaviorSubject
+  // Holt Daten und speichere sie im BehaviorSubject
   fetchChannel(channelId: string): void {
     if (this.unsubscribe) {
-      this.unsubscribe(); // Falls bereits eine Subscription besteht, beende sie.
+      this.unsubscribe(); 
     }
 
+    // Ruft Funktion im Firebase Service auf
     this.unsubscribe = this.fb.subscribeToSingleDoc(
       'channels',
       channelId,
@@ -253,4 +264,33 @@ export class ChannelService {
       this.unsubscribe = undefined;
     }
   }
+
+
+  //// Subscribed einen channel onsnapshot -> für memberlist popup
+
+    subscribeToChannelById(channelId: string) {
+      // console.log(`Lade Channel mit ID: ${channelId}`);
+  
+      const channelRef = doc(this.firestore, `channels/${channelId}`);
+  
+      this.unsubscribeChannel = onSnapshot(channelRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data() as Partial<Channel>;
+          this.currentChannel = new Channel({
+            id: docSnap.id,
+            name: data.name || 'Unbekannt',
+            users: data.users ?? [],
+          });
+  
+          this.currentChannelUserIds = this.currentChannel.users;
+          if(this.currentChannelUserIds.length > 0) {console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);}
+  
+          // 🔥 `BehaviorSubject` aktualisieren, damit `combineLatest()` triggert
+          this.channelUserIdsSubject.next(this.currentChannelUserIds);
+        } else {
+          console.warn('Channel nicht gefunden.');
+        }
+      });
+    }
 }
+
