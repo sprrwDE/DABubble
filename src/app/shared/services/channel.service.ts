@@ -14,6 +14,7 @@ import {
 } from '@angular/fire/firestore';
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
+import { ChatComponent } from '../../main-page/chat/chat.component';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,8 @@ export class ChannelService {
   currentChannelIdIsInitialized = false;
 
   currentReplyMessageId: string = '';
+
+  chatComponent!: ChatComponent;
 
   ngOnDestroy(): void {
     this.unsubAllChannels();
@@ -155,6 +158,8 @@ export class ChannelService {
       this.currentChannelMessages = messages;
       this.currentChannel = channel;
     }
+
+    this.chatComponent.scrollToBottom();
   }
 
   private initializeCurrentChannelIfNeeded() {
@@ -192,17 +197,6 @@ export class ChannelService {
       console.error('Fehler beim Erstellen der Antwort:', error);
     }
   }
-
-  // async sendMessage(data: any) {
-  //   try {
-  //     const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-  //     await updateDoc(channelRef, {
-  //       messages: [data, ...(this.currentChannel?.messages || [])],
-  //     });
-  //   } catch (error) {
-  //     console.error('Fehler beim Erstellen der Nachricht:', error);
-  //   }
-  // }
 
   formatDate(timestamp: number): string {
     const date = new Date(timestamp);

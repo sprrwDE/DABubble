@@ -6,7 +6,7 @@
     <h2 class="text-[24px] font-bold">Mitglieder</h2>
 
     <div
-      (click)="closePopup($event)"
+      (click)="$event.stopPropagation(); closePopup()"
       class="flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
     >
       <svg
@@ -49,7 +49,7 @@
         <div class="relative">
           <img
             class="w-[50px] h-[50px] rounded-full"
-            src="{{ user.image }}"
+            src="{{ user.image || 'imgs/avatar1.png' }}"
             alt=""
           />
 
@@ -64,8 +64,8 @@
 
         <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
         <p>
-          {{ user.name }}
-          <span *ngIf="true">(Du)</span>
+          {{ user.name || "NoName" }}
+          <span *ngIf="user.id === loggedInUser.id">(Du)</span>
           <!-- beispiel:
             <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
           -->
@@ -114,4 +114,7 @@
 </section>
 
 <!-- Dies ist das zweite Popup, um ein Mitglied hinzuzufügen -->
-<app-add-member-popup *ngIf="showAddMembersPopup"></app-add-member-popup>
+<app-add-member-popup
+  (closePopupEvent)="closePopup()"
+  *ngIf="showAddMembersPopup"
+></app-add-member-popup>

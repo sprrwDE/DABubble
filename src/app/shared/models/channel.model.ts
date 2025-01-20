@@ -1,16 +1,15 @@
-import { User } from './user.model';
 import { Message } from './message.model';
 
 export class Channel {
   id!: string;
   name: string;
-  users: User[];
+  users: string[];
   messages: Message[];
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
     this.name = obj?.name || '';
-    this.users = obj?.users ? obj.users.map((user: any) => new User(user)) : [];
+    this.users = obj?.users || [];
     this.messages = obj?.messages
       ? obj.messages.map((msg: any) => new Message(msg))
       : [];
@@ -20,7 +19,7 @@ export class Channel {
     return {
       id: this.id,
       name: this.name,
-      users: this.users.map((user) => user.toJSON()),
+      users: this.users,
       messages: this.messages.map((msg) => msg.toJSON()),
     };
   }

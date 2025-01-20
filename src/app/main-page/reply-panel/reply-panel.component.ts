@@ -5,6 +5,7 @@ import { UserMessageComponent } from '../chat/user-message/user-message.componen
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { CommonModule } from '@angular/common';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-reply-panel',
@@ -22,6 +23,10 @@ export class ReplyPanelComponent {
     public userService: UserService
   ) {}
 
+  ngOnInit() {
+    this.panelService.replyPanelComponent = this;
+  }
+
   get currentChannelMessages() {
     return this.channelService.currentChannelMessages;
   }
@@ -34,16 +39,20 @@ export class ReplyPanelComponent {
     return this.channelService.currentReplyMessageId;
   }
 
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
   getUserName(userId: string) {
     return (
-      this.currentChannel.users.find((user) => user.id === userId)?.name ||
+      this.allUsers.find((user: User) => user.id === userId)?.name ||
       'NAN = Not A NAME'
     );
   }
 
   getImgUrl(userId: string) {
     return (
-      this.currentChannel.users.find((user) => user.id === userId)?.image ||
+      this.allUsers.find((user: User) => user.id === userId)?.image ||
       'imgs/avatar1.png'
     );
   }

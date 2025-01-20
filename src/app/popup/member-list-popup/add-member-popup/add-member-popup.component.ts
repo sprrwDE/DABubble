@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { PopupService } from '../../popup.service';
 import { FormsModule } from '@angular/forms';
 
@@ -10,14 +10,16 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './add-member-popup.component.scss',
 })
 export class AddMemberPopupComponent {
+  @Output() closePopupEvent = new EventEmitter<void>();
+
   memberName: string = ''; // Variable für den Namen des Mitglieds
   memberImage: string = ''; // Variable für das Bild des Mitglieds
   memberStatus: string = 'offline'; // Status des Mitglieds (online/offline)
 
-  constructor(private popupService: PopupService) {}
+  constructor() {}
 
   closePopup() {
-    this.popupService.showAddMembersPopup = false; // Popup schließen
+    this.closePopupEvent.emit();
   }
 
   addMember() {
