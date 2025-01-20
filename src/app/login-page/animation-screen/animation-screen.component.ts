@@ -10,11 +10,10 @@ import { GlobalVariablesService } from '../../shared/services/global-variables.s
   styleUrl: './animation-screen.component.scss',
 })
 export class AnimationScreenComponent implements OnInit {
-  animation: boolean = true; // AUF TRUE STELLEN FÜR DIE ANIMATION
-  isMobile!: boolean;
+  animation: boolean = false; // AUF TRUE STELLEN FÜR DIE ANIMATION
 
-  constructor(private global: GlobalVariablesService){
-    this.isMobile = this.global.isMobile
+
+  constructor(public global: GlobalVariablesService){
   }
 
   ngOnInit(): void {}

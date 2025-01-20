@@ -80,13 +80,13 @@
   0% {
     opacity: 1;
     transform: translateX(50vw);
-    transform: translateY(50vh);
+    transform: translateY(40vh);
   }
 
   90% {
     opacity: 1;
     transform: translateX(50vw);
-    transform: translateY(50vh);
+    transform: translateY(40vh);
   }
 
   100% {
@@ -95,8 +95,38 @@
   }
 }
 
+@keyframes animateToPositionWindow {
+  0% {
+    opacity: 1;
+    transform: translateX(50vw);
+    transform: translateY(50vh);
+    padding-left: 40%;
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateX(50vw);
+    transform: translateY(50vh);
+    padding-left: 40%;
+
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0); /* Zurücksetzen der Translation */
+    padding-left: 0%; /* Weicher Übergang nach links */
+  }
+}
+
+
 .mobile-reposition {
   animation: animateToPosition 4s ease-in forwards;
+  justify-content: center;
+}
+
+.window-reposition {
+  animation: animateToPositionWindow 4s ease-in forwards;
+  justify-content: start;
 }
 
 @keyframes changeColor {

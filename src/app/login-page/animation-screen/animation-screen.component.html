@@ -1,8 +1,9 @@
 @if (animation) {
 <section class="flex justify-center items-center fixed top-0 left-0 w-screen h-screen background-Opacity">
 </section>
-<div [ngClass]="isMobile? 'window-reposition': 'mobile-reposition'"
-    class="flex justify-center items-center cursor-pointer z-10 pt-8 h-fit pb-6 reposition  w-full">
+<div [ngClass]="global.isMobile()?  'mobile-reposition':'window-reposition'"
+    class="flex items-center  cursor-pointer z-10 pt-8 h-fit pb-6 reposition  w-full">
+
     <img src="imgs/Logo.svg" alt="Logo" class="logo ">
     <div class="relative overflow-hidden">
         <svg class="logo-name text-white" width="157" height="24" viewBox="0 0 157 24" fill="none"
