@@ -1,4 +1,4 @@
-import { HostListener, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,6 +20,7 @@ export class UserService {
       if(this.allUsers.length > 0) {console.log('ALLE USER GLOBAL', this.allUsers)};
     });
 
+    // state listener for logged in user ( logged in / logged out )
     this.auth.onAuthStateChanged(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         await this.fb.updateStateUser(firebaseUser.uid, 'online');

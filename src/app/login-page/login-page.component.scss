@@ -7,3 +7,13 @@
         border-radius: 9999px;
     }
 }
+
+a, p, input, button, span {
+    font-size: 18px;
+}
+
+@media (min-width: 768px) {
+    a, p, input, button, span {
+        font-size: 20px;
+    }
+}

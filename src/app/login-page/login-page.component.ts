@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { AnimationScreenComponent } from "./animation-screen/animation-screen.component";
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { BlueNotificationBoxComponent } from '../shared/blue-notification-box/blue-notification-box.component';
