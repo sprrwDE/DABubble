@@ -6,6 +6,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../shared/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reply-panel',
@@ -17,6 +18,8 @@ import { User } from '../../shared/models/user.model';
 export class ReplyPanelComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   public loggedInUser: any;
+
+  unsubscribeLoggedInUser!: Subscription;
 
   constructor(
     public panelService: PanelService,
@@ -48,6 +51,7 @@ export class ReplyPanelComponent {
     return this.userService.allUsers;
   }
 
+
   getUserName(userId: string) {
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name ||
@@ -62,8 +66,25 @@ export class ReplyPanelComponent {
     );
   }
 
-  getIsContact(userId: string) {
-    return this.loggedInUser.id === userId;
+  checkIfContact(userId: string): boolean {
+    let loggedInUserId = this.loggedInUser.id;
+
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        loggedInUserId = user.id
+      }
+    });
+
+    // this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //  (user: User) => {
+    //     if (user) {
+    //       loggedInUserId = user.id;
+    //     }
+    //   }
+    // ); 
+
+    return loggedInUserId !== userId;
   }
 
   getRepliesForMessage(messageId: string) {
@@ -78,5 +99,9 @@ export class ReplyPanelComponent {
       top: this.chatContainer.nativeElement.scrollHeight,
       behavior: 'smooth',
     });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeLoggedInUser.unsubscribe();
   }
 }

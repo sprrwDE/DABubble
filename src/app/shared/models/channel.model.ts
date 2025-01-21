@@ -3,13 +3,17 @@ import { Message } from './message.model';
 export class Channel {
   id!: string;
   name: string;
+  description: string;
   users: string[];
-  messages: Message[];
+  channelCreatorId: string;
+  messages?: Message[];
 
   constructor(obj?: any) {
     this.id = obj?.id || '';
     this.name = obj?.name || '';
+    this.description = obj?.description || '';
     this.users = obj?.users || [];
+    this.channelCreatorId = obj?.createdBy || '';
     this.messages = obj?.messages
       ? obj.messages.map((msg: any) => new Message(msg))
       : [];
@@ -17,10 +21,10 @@ export class Channel {
 
   toJSON() {
     return {
-      id: this.id,
       name: this.name,
+      description: this.description,
       users: this.users,
-      messages: this.messages.map((msg) => msg.toJSON()),
+      createdBy: this.channelCreatorId,
     };
   }
 }

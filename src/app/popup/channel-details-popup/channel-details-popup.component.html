@@ -27,7 +27,9 @@
         </g>
       </svg>
 
-      <h2 class="text-[24px] font-bold">Entwicklerteam</h2>
+      <h2 class="text-[24px] font-bold">
+        {{ currentChannel.name || "lädt..." }}
+      </h2>
     </div>
 
     <div
@@ -118,7 +120,11 @@
         </g>
       </svg>
 
-      <input #channelName type="text" placeholder="Entwicklerteam" />
+      <input
+        #channelName
+        type="text"
+        placeholder="{{ currentChannel.name || 'Channel-Name' }}"
+      />
     </div>
 
     <div *ngIf="!editChannelName" class="flex items-center gap-[10px]">
@@ -148,7 +154,7 @@
         </g>
       </svg>
 
-      <p>Entwicklerteam</p>
+      <p>{{ currentChannel.name || "lädt..." }}</p>
     </div>
   </div>
 
@@ -185,11 +191,12 @@
       <input #channelDescription type="text" placeholder="Dein Text hier" />
     </div>
 
-    <div *ngIf="!editChannelDescription" class="flex items-center gap-[10px]">
+    <div
+      *ngIf="!editChannelDescription"
+      class="max-h-[140px] overflow-y-auto overflow-x-hidden pr-[10px] flex gap-[10px]"
+    >
       <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vero, non.
-        Adipisci repellendus at culpa aperiam iure maxime nulla ut rem
-        architecto quis tempora nemo, cum beatae alias commodi rerum expedita.
+        {{ currentChannel.description || "lädt..." }}
       </p>
     </div>
 
@@ -198,7 +205,9 @@
     <div class="flex flex-col gap-[20px]">
       <p class="text-[18px] font-bold">Erstellt von</p>
 
-      <p class="text-[24px] text-hover">Noah Braun</p>
+      <p class="text-[24px] text-hover">
+        {{ getCurrentChannelCreatorName() || "lädt..." }}
+      </p>
     </div>
   </div>
 

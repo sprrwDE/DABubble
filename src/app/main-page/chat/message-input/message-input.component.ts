@@ -7,6 +7,8 @@ import { UserService } from '../../../shared/services/user.service';
 import { ChatComponent } from '../chat.component';
 import { Reply } from '../../../shared/models/reply.model';
 import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
+import { User } from '../../../shared/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-message-input',
@@ -15,7 +17,7 @@ import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent implements OnInit{
+export class MessageInputComponent implements OnInit {
   @Input() isReplayInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
@@ -23,21 +25,21 @@ export class MessageInputComponent implements OnInit{
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
 
-  public loggedInUser:any;
+  public loggedInUser: any;
+  unsubLoggedInUser!: Subscription;
 
   constructor(
     private channelService: ChannelService,
     private userService: UserService
   ) {
- effect(() => {
-      const user = this.userService.loggedInUser();
-      this.loggedInUser = user
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
     });
 
   }
 
   ngOnInit(): void {
-   
+
   }
 
   message: Message = new Message();
@@ -56,14 +58,18 @@ export class MessageInputComponent implements OnInit{
     }
     this.message.timestamp = new Date().getTime();
     this.message.userId = this.loggedInUser.id;
-    this.message.replies = [];
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       this.message.userId = user.id;
+    //     }
+    //   }
+    // );
 
     this.channelService.sendMessage(this.message.toJSON());
 
     this.message.message = '';
-
     this.chatComponent.scrollToBottom();
-
     console.log('Successfully sent message!!');
   }
 
@@ -75,6 +81,15 @@ export class MessageInputComponent implements OnInit{
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
 
+
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       this.reply.userId = user.id;
+    //     }
+    //   }
+    // );
+
     this.channelService.sendReply(
       this.currentReplyMessageId,
       this.reply.toJSON()
@@ -85,5 +100,11 @@ export class MessageInputComponent implements OnInit{
     this.replyPanelComponent.scrollToBottom();
 
     console.log('Successfully sent message!!');
+  }
+
+  ngOnDestroy() {
+    if (this.unsubLoggedInUser) {
+      this.unsubLoggedInUser.unsubscribe();
+    }
   }
 }

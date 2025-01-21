@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -17,7 +17,9 @@ export class UserService {
     fb.getData('users');
     this.fetchedCollection$.subscribe((data) => {
       this.allUsers = data.map((rawData) => new User({ ...rawData }));
-      if(this.allUsers.length > 0) {console.log('ALLE USER GLOBAL', this.allUsers)};
+      /* if (this.allUsers.length > 0) {
+        console.log('ALLE USER GLOBAL', this.allUsers);
+      } */
     });
 
     // state listener for logged in user ( logged in / logged out )
@@ -38,5 +40,32 @@ export class UserService {
 
   setLoggedInUser(user: any) {
     this.loggedInUser.set(user); // Aktuellen Wert setzen
+  }
+
+  sortUsers(): User[] {
+    let user = this.loggedInUser()
+    let loggedInUserId = '';
+
+    if (user) {
+      loggedInUserId = user.id;
+    } else {
+      loggedInUserId = '';
+    }
+
+
+    return this.allUsers.sort((a, b) => {
+      // Logged in user kommt zuerst
+      if (a.id === loggedInUserId) return -1;
+      if (b.id === loggedInUserId) return 1;
+
+      // Prüfe ob name existiert
+      const nameA = a.name || '';
+      const nameB = b.name || '';
+
+      // Alphabetische Sortierung für alle anderen
+      if (nameA.toLowerCase() < nameB.toLowerCase()) return -1;
+      if (nameA.toLowerCase() > nameB.toLowerCase()) return 1;
+      return 0;
+    });
   }
 }

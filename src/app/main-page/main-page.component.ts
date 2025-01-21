@@ -31,12 +31,11 @@ export class MainPageComponent {
   timeoutId: any;
   loggedInUser: any;
 
-
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
     private userService: UserService,
-    private fb: FirebaseService,
+    private fb: FirebaseService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -44,23 +43,22 @@ export class MainPageComponent {
 
   }
 
+  // @HostListener('mousemove', ['$event'])
+  // afkMode() {
+  //   this.updateUserStatus('online');
+  //   clearTimeout(this.timeoutId);
+  //   this.timeoutId = setTimeout(() => {
+  //     this.updateUserStatus('abwesend');
+  //   }, this.afkDelay);
+  // }
 
-
-  @HostListener('mousemove', ['$event'])
-  afkMode() {
-    this.updateUserStatus("online")
-    clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.updateUserStatus("abwesend")
-    }, this.afkDelay);
-  }
-
-  updateUserStatus(status: string) {
-    if (this.loggedInUser && this.loggedInUser) {
-      this.fb.updateStateUser(this.loggedInUser.id, status);
-    }
-  }
-
+  // updateUserStatus(status: string) {
+  //   this.userService.loggedInUser$.subscribe((user) => {
+  //     if (user && user.id) {
+  //       this.fb.updateStateUser(user.id, status);
+  //     }
+  //   });
+  // }
 
   openSidebar = true;
 

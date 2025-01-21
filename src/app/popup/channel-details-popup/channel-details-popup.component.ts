@@ -1,6 +1,8 @@
 import { NgClass, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { PopupService } from '../popup.service';
+import { ChannelService } from '../../shared/services/channel.service';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-channel-details-popup',
@@ -12,7 +14,11 @@ import { PopupService } from '../popup.service';
 export class ChannelDetailsPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  constructor(public popupService: PopupService) {}
+  constructor(
+    public popupService: PopupService,
+    public channelService: ChannelService,
+    public userService: UserService
+  ) {}
 
   get editChannelName() {
     return this.popupService.editChannelName;
@@ -28,6 +34,24 @@ export class ChannelDetailsPopupComponent {
 
   set editChannelDescription(value: boolean) {
     this.popupService.editChannelDescription = value;
+  }
+
+  get currentChannel() {
+    return this.channelService.currentChannel;
+  }
+
+  get currentChannelCreatedId() {
+    return this.channelService.currentChannel.channelCreatorId;
+  }
+
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
+  public getCurrentChannelCreatorName() {
+    return this.allUsers.find(
+      (user) => user.id === this.currentChannelCreatedId
+    )?.name;
   }
 
   closePopup() {

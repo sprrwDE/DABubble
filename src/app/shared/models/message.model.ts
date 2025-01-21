@@ -5,14 +5,13 @@ export class Message {
   userId: string;
   likes: number;
   timestamp: number;
-  replies: Reply[];
+  replies?: Reply[];
   id?: string;
 
   constructor(obj?: any) {
     this.message = obj?.message || '';
-    this.userId = obj?.user || '';
+    this.userId = obj?.userId || '';
     this.likes = obj?.likes || 0;
-    // this.timestamp = obj?.timestamp ? new Date(obj.timestamp) : new Date();
     this.timestamp = obj?.timestamp || null;
     this.replies = obj?.replies
       ? obj.replies.map((rep: any) => new Reply(rep))
@@ -26,7 +25,6 @@ export class Message {
       userId: this.userId,
       likes: this.likes,
       timestamp: this.timestamp,
-      replies: this.replies.map((rep) => rep.toJSON()),
     };
   }
 }
