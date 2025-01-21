@@ -49,4 +49,28 @@ export class UserService {
   setLoggedInUser(user: any) {
     this.loggedInUserSubject.next(user); // Aktuellen Wert setzen
   }
+
+  sortUsers(): User[] {
+    let loggedInUserId = '';
+    this.loggedInUser$.subscribe((user) => {
+      if (user) {
+        loggedInUserId = user.id;
+      }
+    });
+
+    return this.allUsers.sort((a, b) => {
+      // Logged in user kommt zuerst
+      if (a.id === loggedInUserId) return -1;
+      if (b.id === loggedInUserId) return 1;
+
+      // Prüfe ob name existiert
+      const nameA = a.name || '';
+      const nameB = b.name || '';
+
+      // Alphabetische Sortierung für alle anderen
+      if (nameA.toLowerCase() < nameB.toLowerCase()) return -1;
+      if (nameA.toLowerCase() > nameB.toLowerCase()) return 1;
+      return 0;
+    });
+  }
 }

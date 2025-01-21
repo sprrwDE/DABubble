@@ -13,6 +13,7 @@ import { UserService } from '../../shared/services/user.service';
 export class HeaderBarComponent implements OnInit {
   public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
+  public userImage: string = '';
 
   constructor(
     private popupService: PopupService,
@@ -24,8 +25,10 @@ export class HeaderBarComponent implements OnInit {
       if (user) {
         console.log('eingeloggter user: ', user);
         this.UserName = user.name;
+        this.userImage = user.image;
       } else {
         this.UserName = 'lädt...';
+        this.userImage = 'imgs/avatar/profile.svg';
       }
     });
   }

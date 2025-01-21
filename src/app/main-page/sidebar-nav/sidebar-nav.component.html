@@ -272,10 +272,10 @@
         [ngClass]="{ 'h-full': showContacts, 'h-0': !showContacts }"
         class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
       >
-        @for (user of user.allUsers; track $index) {
+        @for (user of userService.sortUsers(); track $index) {
         <div class="contact-item">
           <div class="relative">
-            <img src="{{ user.image }}" alt="" />
+            <img src="{{ user.image || 'imgs/avatar/profile.svg' }}" alt="" />
 
             <div
               [ngClass]="{
@@ -286,7 +286,10 @@
             ></div>
           </div>
 
-          <p>{{ user.name }}</p>
+          <p>
+            {{ user.name || "lädt..." }}
+            <span *ngIf="checkLoggedInUserId(user.id)">(Du)</span>
+          </p>
 
           <!-- Testing -->
           <!-- @if (user.status === "online") {

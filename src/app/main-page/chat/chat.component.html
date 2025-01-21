@@ -1,8 +1,6 @@
-<section
-  class="flex w-full h-full pb-[32px] rounded-[30px] bg-white relative overflow-hidden"
->
+<section class="flex w-full h-full pb-[32px] rounded-[30px] bg-white relative">
   <header
-    class="z-10 bg-white flex justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+    class="z-10 bg-white flex rounded-t-[30px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
   >
     <div
       (click)="openChannelDetailsPopup('channel-details', 'tl')"
@@ -21,7 +19,9 @@
         />
       </svg>
 
-      <h2 class="text-[24px] font-bold">Entwicklerteam</h2>
+      <h2 class="text-[24px] font-bold">
+        {{ currentChannel.name || "lädt..." }}
+      </h2>
 
       <svg
         class="px-[8px] box-content"
@@ -127,7 +127,7 @@
           [time]="channelService.formatTime(message.timestamp)"
           [imgUrl]="getUserImage(message.userId)"
           [name]="getUserName(message.userId)"
-          [isContact]="getUserId(message.userId) === loggedInUser?.id"
+          [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
         ></app-user-message>

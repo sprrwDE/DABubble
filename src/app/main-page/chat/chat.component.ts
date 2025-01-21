@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
 import { Message } from '../../shared/models/message.model';
 import { publishFacade } from '@angular/compiler';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -42,6 +43,8 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
+
+  unsubLoggedInUser!: Subscription;
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
@@ -124,8 +127,18 @@ export class ChatComponent implements AfterViewInit {
     );
   }
 
-  getUserId(userId: string): string {
-    return this.allUsers.find((user: User) => user.id === userId)?.id || '';
+  checkIfContact(userId: string): boolean {
+    let loggedInUserId = this.loggedInUser.id;
+
+    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+      (user: User) => {
+        if (user) {
+          loggedInUserId = user.id;
+        }
+      }
+    );
+
+    return loggedInUserId !== userId;
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -155,5 +168,9 @@ export class ChatComponent implements AfterViewInit {
 
   ngOnInit() {
     this.channelService.chatComponent = this;
+  }
+
+  ngOnDestroy() {
+    this.unsubLoggedInUser.unsubscribe();
   }
 }

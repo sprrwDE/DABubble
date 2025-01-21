@@ -33,7 +33,7 @@
         </g>
       </svg>
 
-      <p class="text-primary">Entwicklerteam</p>
+      <p class="text-primary">{{ currentChannel.name || "lädt..." }}</p>
     </div>
 
     <div
@@ -99,7 +99,7 @@
         [time]="channelService.formatTime(reply.timestamp)"
         [name]="getUserName(reply.userId)"
         [imgUrl]="getImgUrl(reply.userId)"
-        [isContact]="getIsContact(reply.userId)"
+        [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
       ></app-user-message>
     </div>

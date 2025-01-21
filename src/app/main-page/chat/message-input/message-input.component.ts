@@ -7,6 +7,8 @@ import { UserService } from '../../../shared/services/user.service';
 import { ChatComponent } from '../chat.component';
 import { Reply } from '../../../shared/models/reply.model';
 import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
+import { User } from '../../../shared/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-message-input',
@@ -22,6 +24,8 @@ export class MessageInputComponent {
 
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
+
+  unsubLoggedInUser!: Subscription;
 
   constructor(
     private channelService: ChannelService,
@@ -46,14 +50,18 @@ export class MessageInputComponent {
     }
     this.message.timestamp = new Date().getTime();
     this.message.userId = this.loggedInUser.id;
-    this.message.replies = [];
+    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+      (user: User) => {
+        if (user) {
+          this.message.userId = user.id;
+        }
+      }
+    );
 
     this.channelService.sendMessage(this.message.toJSON());
 
     this.message.message = '';
-
     this.chatComponent.scrollToBottom();
-
     console.log('Successfully sent message!!');
   }
 
@@ -64,6 +72,13 @@ export class MessageInputComponent {
     }
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
+    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+      (user: User) => {
+        if (user) {
+          this.reply.userId = user.id;
+        }
+      }
+    );
 
     this.channelService.sendReply(
       this.currentReplyMessageId,
@@ -75,5 +90,11 @@ export class MessageInputComponent {
     this.replyPanelComponent.scrollToBottom();
 
     console.log('Successfully sent message!!');
+  }
+
+  ngOnDestroy() {
+    if (this.unsubLoggedInUser) {
+      this.unsubLoggedInUser.unsubscribe();
+    }
   }
 }

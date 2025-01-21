@@ -5,7 +5,7 @@ export class Reply {
 
   constructor(obj?: any) {
     this.message = obj?.message || '';
-    this.userId = obj?.user || '';
+    this.userId = obj?.userId || '';
     this.timestamp = obj?.timestamp || null;
   }
 

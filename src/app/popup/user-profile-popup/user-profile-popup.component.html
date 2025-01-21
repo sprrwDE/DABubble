@@ -40,14 +40,14 @@
   <div class="flex justify-center items-center w-full">
     <img
       class="h-[215px] w-[215px] rounded-full"
-      src="imgs/avatar1.png"
+      src="{{ returnUserData('image') }}"
       alt=""
     />
   </div>
 
   <div *ngIf="!editingUserProfile" class="flex flex-col gap-[15px]">
     <div class="flex justify-between items-center w-full">
-      <p class="text-[32px] font-bold">Frederik Beck</p>
+      <p class="text-[32px] font-bold">{{ returnUserData("name") }}</p>
 
       <p
         (click)="editingUserProfile = true"
@@ -60,7 +60,7 @@
     <div class="flex items-center gap-[15px]">
       <div class="h-[16px] w-[16px] bg-online rounded-full"></div>
 
-      <p>Aktive</p>
+      <p>{{ returnUserData("status") }}</p>
     </div>
   </div>
 
@@ -95,7 +95,9 @@
       <p class="text-[20px] font-bold">E-Mail-Adresse</p>
     </div>
 
-    <p class="text-[18px] pl-[35px] text-primary">fred.beck&#64;email.com</p>
+    <p class="text-[18px] pl-[35px] text-primary">
+      {{ returnUserData("email") }}
+    </p>
   </div>
 
   <div *ngIf="editingUserProfile" class="flex flex-col gap-[10px]">
@@ -130,7 +132,11 @@
     </div>
 
     <div (click)="changeNameInput.focus()" class="popup-input-container">
-      <input type="text" #changeNameInput placeholder="Frederik Beck" />
+      <input
+        type="text"
+        #changeNameInput
+        placeholder="{{ returnUserData('name') }}"
+      />
     </div>
   </div>
 
