@@ -273,7 +273,7 @@
         class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
       >
         @for (user of userService.sortUsers(); track $index) {
-        <div class="contact-item" (click)="test.setUserToAdd('oSObCbLUAeUkjpYhMLpxW8NeETD2')">
+        <div class="contact-item" (click)="test.setUserToAdd(user.id)">
           <div class="relative">
             <img src="{{ user.image || 'imgs/avatar/profile.svg' }}" alt="" />
 

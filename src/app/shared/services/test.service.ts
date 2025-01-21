@@ -54,7 +54,7 @@ export class TestService implements OnDestroy {
         this.currentChannelUsers = allUsers.filter(user => userIds.includes(user.id));
         this.possibleUserList = allUsers.filter(user => !userIds.includes(user.id))
         // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
-        if(this.possibleUserList.length > 0) {console.log('USER TO ADD:', this.possibleUserList);}
+        if(this.possibleUserList.length > 0) {console.log('POSSIBLE USER LIST:', this.possibleUserList);}
       }
     );
   }
@@ -81,17 +81,26 @@ export class TestService implements OnDestroy {
 
 
   setUserToAdd(userToPush: string) {
-    console.log('POSSIBLE USER LIST', this.possibleUserList)
-    console.log(userToPush);
+    console.log('POSSIBLE USER LIST (vorher)', this.possibleUserList);
+    console.log('USER TO ADD LIST', this.userToAdd);
+    console.log('Ausgewählter User:', userToPush);
   
+    // User in possibleUserList suchen
     const push: User | undefined = this.possibleUserList.find(user => user.id === userToPush);
-    
+  
     if (push) { 
-      this.userToAdd.push(push);
       console.log('ADDED USER:', push);
-      console.log('USER TO ADD', this.userToAdd);
+      this.userToAdd.push(push);
+  
+      // User aus possibleUserList entfernen
+      this.possibleUserList = this.possibleUserList.filter(user => user.id !== userToPush);
+  
+      // 🔥 Timeout, um sicherzustellen, dass possibleUserList wirklich aktualisiert wurde
+      setTimeout(() => {
+        console.log('NEW POSSIBLE USERS', this.possibleUserList);
+      }, 0);
     } else {
-      console.warn(`User mit ID ${userToPush} nicht gefunden.`);
+      console.warn(`⚠️ User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`, this.possibleUserList);
     }
   }
 
