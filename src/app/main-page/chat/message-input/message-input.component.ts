@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { Message } from '../../../shared/models/message.model';
@@ -15,7 +15,7 @@ import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {
+export class MessageInputComponent implements OnInit{
   @Input() isReplayInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
@@ -23,17 +23,27 @@ export class MessageInputComponent {
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
 
+  public loggedInUser:any;
+
   constructor(
     private channelService: ChannelService,
     private userService: UserService
-  ) {}
+  ) {
+ effect(() => {
+      const user = this.userService.loggedInUser();
+      this.loggedInUser = user
+    });
+
+  }
+
+  ngOnInit(): void {
+   
+  }
 
   message: Message = new Message();
   reply: Reply = new Reply();
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
+
 
   get currentReplyMessageId(): string {
     return this.channelService.currentReplyMessageId;

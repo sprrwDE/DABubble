@@ -5,6 +5,7 @@ import {
   Output,
   OnInit,
   OnDestroy,
+  effect,
 } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
@@ -28,12 +29,17 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   channelData: Channel | null = null;
   userList: User[] = [];
   userIds: string[] = [];
+  loggedInUser:any;
 
   constructor(
     public popupService: PopupService,
     private channelService: ChannelService,
     private userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+  }
 
   get allUsers() {
     return this.userService.allUsers;
@@ -51,9 +57,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     return this.channelService.currentChannelId;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   ngOnInit() {
     this.subscription = this.channelService.getChannel().subscribe((data) => {

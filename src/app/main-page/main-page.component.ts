@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, effect, HostListener } from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -29,6 +29,7 @@ import { FirebaseService } from '../shared/services/firebase.service';
 export class MainPageComponent {
   afkDelay: number = 3000;
   timeoutId: any;
+  loggedInUser: any;
 
 
   constructor(
@@ -37,7 +38,10 @@ export class MainPageComponent {
     private userService: UserService,
     private fb: FirebaseService,
   ) {
-    // console.log(user.arr)
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+
   }
 
 
@@ -52,11 +56,9 @@ export class MainPageComponent {
   }
 
   updateUserStatus(status: string) {
-    this.userService.loggedInUser$.subscribe((user) => {
-      if (user && user.id) {
-        this.fb.updateStateUser(user.id, status);
-      }
-    });
+    if (this.loggedInUser && this.loggedInUser) {
+      this.fb.updateStateUser(this.loggedInUser.id, status);
+    }
   }
 
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, effect } from '@angular/core';
 import { PanelService } from '../../shared/services/panel.service';
 import { MessageInputComponent } from '../chat/message-input/message-input.component';
 import { UserMessageComponent } from '../chat/user-message/user-message.component';
@@ -16,12 +16,17 @@ import { User } from '../../shared/models/user.model';
 })
 export class ReplyPanelComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  public loggedInUser: any;
 
   constructor(
     public panelService: PanelService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+  }
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
@@ -58,7 +63,7 @@ export class ReplyPanelComponent {
   }
 
   getIsContact(userId: string) {
-    return this.userService.loggedInUser.id === userId;
+    return this.loggedInUser.id === userId;
   }
 
   getRepliesForMessage(messageId: string) {

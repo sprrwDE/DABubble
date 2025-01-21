@@ -8,6 +8,7 @@ import {
   Output,
   Input,
   OnInit,
+  effect,
 } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
@@ -42,6 +43,7 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
+  loggedInUser:any;
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
@@ -49,7 +51,11 @@ export class ChatComponent implements AfterViewInit {
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+  }
 
   get currentChannelId() {
     return this.channelService.currentChannelId;
@@ -67,9 +73,6 @@ export class ChatComponent implements AfterViewInit {
     return this.userService.allUsers;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   get channelUsers() {
     const userIds = this.channelService.currentChannel?.users;
