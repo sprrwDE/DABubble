@@ -1,10 +1,10 @@
 import { CommonModule, NgClass, NgFor } from '@angular/common';
 import { Component, effect, EventEmitter, Output } from '@angular/core';
-import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
 import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
+import { TestService } from '../../shared/services/test.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -29,7 +29,8 @@ export class SidebarNavComponent {
     public user: UserService,
     public popupService: PopupService,
     public channelService: ChannelService,
-    public userService: UserService
+    public userService: UserService,
+    public test: TestService
   ) {
     // effect(() => {
     

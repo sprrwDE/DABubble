@@ -263,7 +263,7 @@ export class ChannelService {
     }
   }
 
-  //// Subscribed einen channel onsnapshot -> für memberlist popup
+/*   //// Subscribed einen channel onsnapshot -> für memberlist popup
 
   subscribeToChannelById(channelId: string) {
     // console.log(`Lade Channel mit ID: ${channelId}`);
@@ -290,5 +290,5 @@ export class ChannelService {
         console.warn('Channel nicht gefunden.');
       }
     });
-  }
+  } */
 }

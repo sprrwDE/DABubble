@@ -10,6 +10,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { PopupService } from '../popup/popup.service';
 import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
+import { TestService } from '../shared/services/test.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -35,7 +36,8 @@ export class MainPageComponent {
     public panelService: PanelService,
     public popupService: PopupService,
     private userService: UserService,
-    private fb: FirebaseService
+    private fb: FirebaseService,
+    private test: TestService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();

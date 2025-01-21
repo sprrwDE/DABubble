@@ -45,3 +45,8 @@
   </div>
 
 </section>
+
+<app-add-user-to-channel-popup
+*ngIf="popupType === 'add-user-to-channel'"
+(closePopupEvent)="closePopup()"
+></app-add-user-to-channel-popup>
