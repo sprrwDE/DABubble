@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, effect } from '@angular/core';
 import { PanelService } from '../../shared/services/panel.service';
 import { MessageInputComponent } from '../chat/message-input/message-input.component';
 import { UserMessageComponent } from '../chat/user-message/user-message.component';
@@ -6,6 +6,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../shared/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reply-panel',
@@ -16,12 +17,19 @@ import { User } from '../../shared/models/user.model';
 })
 export class ReplyPanelComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  public loggedInUser: any;
+
+  unsubscribeLoggedInUser!: Subscription;
 
   constructor(
     public panelService: PanelService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+  }
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
@@ -43,6 +51,7 @@ export class ReplyPanelComponent {
     return this.userService.allUsers;
   }
 
+
   getUserName(userId: string) {
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name ||
@@ -57,8 +66,25 @@ export class ReplyPanelComponent {
     );
   }
 
-  getIsContact(userId: string) {
-    return this.userService.loggedInUser.id === userId;
+  checkIfContact(userId: string): boolean {
+    let loggedInUserId = this.loggedInUser.id;
+
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        loggedInUserId = user.id
+      }
+    });
+
+    // this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //  (user: User) => {
+    //     if (user) {
+    //       loggedInUserId = user.id;
+    //     }
+    //   }
+    // ); 
+
+    return loggedInUserId !== userId;
   }
 
   getRepliesForMessage(messageId: string) {
@@ -74,4 +100,8 @@ export class ReplyPanelComponent {
       behavior: 'smooth',
     });
   }
+
+  // ngOnDestroy() {
+  //   this.unsubscribeLoggedInUser.unsubscribe();
+  // }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { UserService } from '../../shared/services/user.service';
@@ -10,22 +10,24 @@ import { UserService } from '../../shared/services/user.service';
   templateUrl: './header-bar.component.html',
   styleUrl: './header-bar.component.scss',
 })
-export class HeaderBarComponent implements OnInit {
+export class HeaderBarComponent {
   public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
+  public userImage: string = '';
 
   constructor(
     private popupService: PopupService,
     private userService: UserService
-  ) {}
-
-  ngOnInit(): void {
-    this.userService.loggedInUser$.subscribe((user) => {
+  ) {
+    effect(() => {
+      const user = this.userService.loggedInUser();
       if (user) {
         console.log('eingeloggter user: ', user);
         this.UserName = user.name;
+        this.userImage = user.image;
       } else {
         this.UserName = 'lädt...';
+        this.userImage = 'imgs/avatar/profile.svg';
       }
     });
   }

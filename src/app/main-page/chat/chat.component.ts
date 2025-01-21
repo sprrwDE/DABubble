@@ -8,6 +8,7 @@ import {
   Output,
   Input,
   OnInit,
+  effect,
 } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
@@ -19,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
 import { Message } from '../../shared/models/message.model';
 import { publishFacade } from '@angular/compiler';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -42,6 +44,9 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
+  loggedInUser:any;
+
+  unsubLoggedInUser!: Subscription;
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
@@ -49,7 +54,11 @@ export class ChatComponent implements AfterViewInit {
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+  }
 
   get currentChannelId() {
     return this.channelService.currentChannelId;
@@ -67,9 +76,6 @@ export class ChatComponent implements AfterViewInit {
     return this.userService.allUsers;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   get channelUsers() {
     const userIds = this.channelService.currentChannel?.users;
@@ -124,8 +130,23 @@ export class ChatComponent implements AfterViewInit {
     );
   }
 
-  getUserId(userId: string): string {
-    return this.allUsers.find((user: User) => user.id === userId)?.id || '';
+  checkIfContact(userId: string): boolean {
+    if(this.loggedInUser) {
+      let loggedInUserId = this.loggedInUser.id;
+       return loggedInUserId !== userId;
+    } else {
+      return false
+    }
+    
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       loggedInUserId = user.id;
+    //     }
+    //   }
+    // );
+
+   
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -156,4 +177,5 @@ export class ChatComponent implements AfterViewInit {
   ngOnInit() {
     this.channelService.chatComponent = this;
   }
+
 }

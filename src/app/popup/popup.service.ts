@@ -19,6 +19,8 @@ export class PopupService {
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
 
+  addUserToChannelPopup = false;
+
   resetEditStates() {
     this.editChannelName = false;
     this.editChannelDescription = false;

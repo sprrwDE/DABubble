@@ -1,16 +1,18 @@
-@if(!global.isMobile()) {
-<div class="flex justify-end w-full pr-2">
-    <div class="flex flex-col gap-4 text-end pt-4">
-        <span class="">Neu bei DABubble?</span>
-        <a href="" [routerLink]="['/login/register']" class="  text-center py-1 px-2 btn-3 text-primary">Konto
-            erstellen</a>
-    </div>
-</div>
-}
+<div class="flex items-center justify-center flex-col ">
+    <div class="flex justify-between w-full">
+        <!-- Login animation  -->
+        <app-animation-screen class="flex self-start pl-4 w-full md:h-px"></app-animation-screen>
 
-<div class="flex items-center justify-center flex-col w-screen">
-    <!-- Login animation  -->
-    <app-animation-screen class="flex w-full"></app-animation-screen>
+        @if(!global.isMobile()) {
+        <div class="flex self-end  justify-endw-1/2 pr-2">
+            <div class="flex flex-col gap-4 text-end pt-4">
+                <span class="text-nowrap">Neu bei DABubble?</span>
+                <a href="" [routerLink]="['/login/register']" class="  text-center py-1 px-2 btn-3 text-primary">Konto
+                    erstellen</a>
+            </div>
+        </div>
+        }
+    </div>
 
     <!-- Blue notification box -->
     <app-blue-notification-box [message]="notificationMessage"

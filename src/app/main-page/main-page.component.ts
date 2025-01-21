@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, effect, HostListener } from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -29,36 +29,36 @@ import { FirebaseService } from '../shared/services/firebase.service';
 export class MainPageComponent {
   afkDelay: number = 3000;
   timeoutId: any;
-
+  loggedInUser: any;
 
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
     private userService: UserService,
-    private fb: FirebaseService,
+    private fb: FirebaseService
   ) {
-    // console.log(user.arr)
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+
   }
 
+  // @HostListener('mousemove', ['$event'])
+  // afkMode() {
+  //   this.updateUserStatus('online');
+  //   clearTimeout(this.timeoutId);
+  //   this.timeoutId = setTimeout(() => {
+  //     this.updateUserStatus('abwesend');
+  //   }, this.afkDelay);
+  // }
 
-
-  @HostListener('mousemove', ['$event'])
-  afkMode() {
-    this.updateUserStatus("online")
-    clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.updateUserStatus("abwesend")
-    }, this.afkDelay);
-  }
-
-  updateUserStatus(status: string) {
-    this.userService.loggedInUser$.subscribe((user) => {
-      if (user && user.id) {
-        this.fb.updateStateUser(user.id, status);
-      }
-    });
-  }
-
+  // updateUserStatus(status: string) {
+  //   this.userService.loggedInUser$.subscribe((user) => {
+  //     if (user && user.id) {
+  //       this.fb.updateStateUser(user.id, status);
+  //     }
+  //   });
+  // }
 
   openSidebar = true;
 

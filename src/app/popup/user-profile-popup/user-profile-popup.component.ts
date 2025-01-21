@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { NgIf } from '@angular/common';
+import { User } from '../../shared/models/user.model';
+import { UserService } from '../../shared/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile-popup',
@@ -10,7 +13,23 @@ import { NgIf } from '@angular/common';
   styleUrl: './user-profile-popup.component.scss',
 })
 export class UserProfilePopupComponent {
-  constructor(private popupService: PopupService) {}
+  public loggedInUserData: User = new User();
+
+  unsubscribeLoggedInUser!: Subscription;
+
+  constructor(
+    private popupService: PopupService,
+    private userService: UserService,
+  ) {
+
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        this.loggedInUserData = user // Stelle sicher, dass `user.id` ein String ist
+      }
+    });
+
+  }
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
@@ -23,4 +42,20 @@ export class UserProfilePopupComponent {
   closePopup() {
     this.popupService.openUserProfilePopup = false;
   }
+
+  returnUserData(property: keyof User, fallbackValue: string = 'lädt...') {
+    if (
+      !this.loggedInUserData?.[property] ||
+      this.loggedInUserData[property] === '' ||
+      this.loggedInUserData[property] === undefined ||
+      this.loggedInUserData[property] === null
+    ) {
+      if (property === 'image') {
+        return 'imgs/avatar/profile.svg';
+      }
+      return fallbackValue;
+    }
+    return this.loggedInUserData[property];
+  }
+
 }
