@@ -101,7 +101,7 @@ export class ReplyPanelComponent {
     });
   }
 
-  ngOnDestroy() {
-    this.unsubscribeLoggedInUser.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.unsubscribeLoggedInUser.unsubscribe();
+  // }
 }
