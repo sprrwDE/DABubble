@@ -26,7 +26,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
 
   channelData$: BehaviorSubject<Channel | null>;
   private subscription!: Subscription;
-  channelData: Channel | null = null;
   userList: User[] = [];
   userIds: string[] = [];
   currentChannelUsers: User[] = [];
