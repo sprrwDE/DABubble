@@ -131,8 +131,13 @@ export class ChatComponent implements AfterViewInit {
   }
 
   checkIfContact(userId: string): boolean {
-    let loggedInUserId = this.loggedInUser.id;
-
+    if(this.loggedInUser) {
+      let loggedInUserId = this.loggedInUser.id;
+       return loggedInUserId !== userId;
+    } else {
+      return false
+    }
+    
     // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
     //   (user: User) => {
     //     if (user) {
@@ -141,7 +146,7 @@ export class ChatComponent implements AfterViewInit {
     //   }
     // );
 
-    return loggedInUserId !== userId;
+   
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -173,7 +178,4 @@ export class ChatComponent implements AfterViewInit {
     this.channelService.chatComponent = this;
   }
 
-  ngOnDestroy() {
-    this.unsubLoggedInUser.unsubscribe();
-  }
 }

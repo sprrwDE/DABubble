@@ -58,7 +58,4 @@ export class UserProfilePopupComponent {
     return this.loggedInUserData[property];
   }
 
-  ngOnDestroy() {
-    this.unsubscribeLoggedInUser.unsubscribe();
-  }
 }
