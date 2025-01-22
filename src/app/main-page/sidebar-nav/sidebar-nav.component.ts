@@ -23,7 +23,7 @@ export class SidebarNavComponent {
     corner: string;
   }>();
   unsubLoggedInUser!: Subscription;
-  private isLoggedInUser = false;
+  public isLoggedInUser = false;
 
   constructor(
     public user: UserService,

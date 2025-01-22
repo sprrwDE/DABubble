@@ -64,6 +64,7 @@ export class TestService implements OnDestroy {
   NEXT STEPS:
   In Dom Aus "possibleUserList" einen Loop erschaffen, track index
   (click)="setUserToAdd(possibleUserList[index].id)"
+  man soll im input feld user wieder entfernen können 
 
   in setUserToAdd funktion aufrufen welche userToAdd.forEach(user) user.id in Channel Pusht
 
@@ -101,6 +102,33 @@ export class TestService implements OnDestroy {
       }, 0);
     } else {
       console.warn(`⚠️ User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`, this.possibleUserList);
+    }
+  }
+
+  removeUserToAdd(userToRemove: string) {
+    console.log('USER TO ADD LIST (vorher)', this.userToAdd);
+    console.log('POSSIBLE USER LIST (vorher)', this.possibleUserList);
+    console.log('Zu entfernender User:', userToRemove);
+  
+    // User in userToAdd suchen
+    const remove: User | undefined = this.userToAdd.find(user => user.id === userToRemove);
+  
+    if (remove) { 
+      console.log('ENTFERNTER USER:', remove);
+  
+      // User aus userToAdd entfernen
+      this.userToAdd = this.userToAdd.filter(user => user.id !== userToRemove);
+  
+      // User zurück zu possibleUserList hinzufügen
+      this.possibleUserList.push(remove);
+  
+      // 🔥 Timeout, um sicherzustellen, dass die Listen wirklich aktualisiert wurden
+      setTimeout(() => {
+        console.log('NEUE USER TO ADD LIST:', this.userToAdd);
+        console.log('NEUE POSSIBLE USERS LIST:', this.possibleUserList);
+      }, 0);
+    } else {
+      console.warn(`⚠️ User mit ID ${userToRemove} nicht gefunden. \nAktuelle UserToAdd-Liste:`, this.userToAdd);
     }
   }
 
