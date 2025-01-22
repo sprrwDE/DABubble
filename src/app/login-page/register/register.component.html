@@ -1,11 +1,10 @@
-<form class="bg-white rounded-3xl flex flex-col justify-center items-center w-2/3 p-12 shadow-lg m-auto"
+<form class="bg-white rounded-3xl flex flex-col justify-center items-center md:w-2/3 p-4 md:p-12 shadow-lg m-auto"
     [formGroup]="contactForm" (submit)="onSubmit()">
 
     <div class="w-full">
         <!-- Überschrift und Beschreibung -->
-        <div class="flex flex-col justify-center items-center gap-8 pb-8">
+        <div class="flex flex-col justify-center items-center gap-2 md:gap-8 pb-4 md:pb-8">
             <div class="flex items-center justify-between w-full">
-
                 <div class="text-black hover:text-primary cursor-pointer hover:bg-bg rounded-[100%] flex justify-center items-center size-6"
                     [routerLink]="['/login']">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
@@ -21,10 +20,10 @@
                     </svg>
                 </div>
 
-                <h1 class="text-5xl font-bold text-primary text-center">Konto erstellen</h1>
+                <h1 class="font-bold text-primary text-center">Konto erstellen</h1>
                 <div class="size-6 invisible"></div>
             </div>
-            <p class="text-center text-xl">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.
+            <p class="text-center ">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.
             </p>
         </div>
 
