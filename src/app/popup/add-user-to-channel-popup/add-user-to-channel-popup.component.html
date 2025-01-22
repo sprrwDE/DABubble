@@ -1,8 +1,11 @@
     
     @if(display) {
-      <div class="add-user-to-channel">
+      <div class="add-user-to-channel absolute bg-white">
         @for (user of test.possibleUserList; track $index) {
-          <div (click)="test.setUserToAdd(user.id)">{{user.name}}</div>
+          <div (click)="test.setUserToAdd(user.id)" class="flex">
+            <img src="{{ user.image}}" class="w-[50px] h-[50px] rounded-full">
+            {{user.name}}
+          </div>
         }
         <button (click)="closePopup()">Schließen</button>
       </div>

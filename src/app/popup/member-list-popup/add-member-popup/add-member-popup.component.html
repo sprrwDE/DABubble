@@ -43,13 +43,17 @@
     @if(test.userToAdd.length == 0) {
     <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
 
-    } @else { @for (item of test.userToAdd; track $index) {
-    <input
-      type="text"
-      placeholder="Name eingeben"
-      [(ngModel)]="test.userToAdd[$index].name"
-    />
-    } }
+    } @else { 
+
+      @for (item of test.userToAdd; track $index) {
+        <input
+          type="text"
+          placeholder="Name eingeben"
+          [(ngModel)]="test.userToAdd[$index].name"
+          (click)="test.removeUserToAdd(test.userToAdd[$index].id)"
+        />
+    } 
+  }
   </div>
 
 
