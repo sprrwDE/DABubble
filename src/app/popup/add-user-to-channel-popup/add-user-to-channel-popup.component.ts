@@ -2,10 +2,12 @@ import {
   Component,
   EventEmitter,
   Output,
+  Input
 } from '@angular/core';
-import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
+/// DUMMY
+import { TestService } from '../../shared/services/test.service';
 
 @Component({
   selector: 'app-add-user-to-channel-popup',
@@ -16,23 +18,16 @@ import { UserService } from '../../shared/services/user.service';
 })
 export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
+  @Input() display: boolean = false; // `@Input()` damit der Wert von außen gesteuert werden kann
 
-  constructor(
-    public popupService: PopupService,
-  ) {
-      console.log('Popup Service Status beim Laden:', this.popupService.addUserToChannelPopup);
-  }
-
-  get showAddUserToChannelPopup() {
-    return this.popupService.addUserToChannelPopup;
-  }
+  constructor(public test: TestService) {}
 
   set showAddUserToChannelPopup(value: boolean) {
-    this.popupService.addUserToChannelPopup = value;
+    this.display = value; 
   }
 
   closePopup() {
+    this.display = false; 
     this.closePopupEvent.emit();
   }
-
 }

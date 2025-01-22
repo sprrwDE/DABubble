@@ -65,7 +65,7 @@ export class TestService implements OnDestroy {
   In Dom Aus "possibleUserList" einen Loop erschaffen, track index
   (click)="setUserToAdd(possibleUserList[index].id)"
 
-  in setUserToAdd funktion aufrufen welche user in Channel Pusht
+  in setUserToAdd funktion aufrufen welche userToAdd.forEach(user) user.id in Channel Pusht
 
   Aus Sidebar Nav Component Click Handler entfernen
 

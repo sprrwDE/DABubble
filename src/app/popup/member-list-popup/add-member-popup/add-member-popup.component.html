@@ -34,9 +34,25 @@
     </div>
   </div>
 
-  <div class="popup-input-container" (click)="showAddUserToChannelSection($event)">
+
+  <!-- Dummy -->
+  <div
+    class="popup-input-container"
+    (click)="showAddUserToChannelSection($event)"
+  >
+    @if(test.userToAdd.length == 0) {
     <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
+
+    } @else { @for (item of test.userToAdd; track $index) {
+    <input
+      type="text"
+      placeholder="Name eingeben"
+      [(ngModel)]="test.userToAdd[$index].name"
+    />
+    } }
   </div>
+
+
 
   <div class="flex justify-end">
     <button (click)="addMember()" class="bg-disable hover:bg-disable">
@@ -44,9 +60,10 @@
     </button>
   </div>
 
+  <app-add-user-to-channel-popup
+    [display]="showUserPopup"
+    (closePopupEvent)="closeUserPopup()"
+  >
+    >
+  </app-add-user-to-channel-popup>
 </section>
-
-<app-add-user-to-channel-popup
-*ngIf="popupType === 'add-user-to-channel'"
-(closePopupEvent)="closePopup()"
-></app-add-user-to-channel-popup>
