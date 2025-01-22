@@ -1,7 +1,7 @@
-<div class="bg-white rounded-3xl flex flex-col justify-center items-center w-fit p-12 shadow-lg m-auto">
+<div class="bg-white rounded-3xl flex flex-col justify-center items-center w-fit p-4 md:p-12 shadow-lg m-auto">
 
-    <div class="flex justify-center items-center gap-8 pb-8 text-center">
-        <div class="text-black hover:text-primary cursor-pointer hover:bg-bg rounded-[100%] flex justify-center items-center size-6"
+    <div class="flex justify-between items-center pb-8 w-full text-center">
+        <div class="text-black hover:text-primary cursor-pointer w-1/8 hover:bg-bg rounded-[100%] flex justify-center items-center size-6"
             [routerLink]="['/login/register']">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_182_258" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24"
@@ -15,20 +15,24 @@
             </svg>
         </div>
 
-        <h1 class="text-5xl font-bold text-primary truncate">Wähle deinen Avatar</h1>
+        <h1 class="text-5xl font-bold text-primary text-center w-6/8 md:truncate">Wähle deinen Avatar</h1>
+        <div class="w-1/8"></div>
     </div>
 
     <img class="size-40 hover:bg-[rgb(230,230,230)] rounded-[100%] p-1" [src]="currentAvatar" alt="Avatar">
 
-    <h2 class="text-3xl font-bold pt-8 pb-4">Frederik Beck</h2>
-    <div class="text-left w-full">
+    <h2 class="text-3xl font-bold pt-8 pb-4">{{userName}}</h2> <!-- AKTUELLEN NAMEN NOCH EINSTELLENN !!!!!!!-->
+    <div class="text-left w-full flex justify-center flex-col">
         <span class="text-xl">Aus der Liste wählen</span>
-        <div class="flex gap-4 mt-8 justify-center">
-            <img (click)="selectAvatar(index)" class="cursor-pointer hover:bg-[rgb(230,230,230)] rounded-[100%] p-1" *ngFor="let avatar of avatars; let index = index" [src]="avatar" alt="Avatar">
+        <div class="flex gap-2 md:gap-2 mt-2 md:mt-8 justify-center w-fit m-auto">
+            <!-- for schleife hier !!! -->
+            <img (click)="selectAvatar(index)"
+                class="cursor-pointer size-12 md:size-16 hover:bg-[rgb(230,230,230)] rounded-[100%] p-1"
+                *ngFor="let avatar of avatars; let index = index" [src]="avatar" alt="Avatar">
         </div>
     </div>
 
-    
+
 
 
     <div class="w-full flex justify-end pt-8">

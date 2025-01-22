@@ -25,19 +25,32 @@ export class SelectAvatarComponent implements OnInit {
   ]
 
   userId!: string;
+  userName: any;
 
   constructor(private route: ActivatedRoute, private firebaseService: FirebaseService, private routerLink: Router) {
 
   }
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('userId') || '';
-    console.log('empfagne user id: ', this.userId)
+    this.getUsersName()
   }
 
   selectAvatar(index: number) {
     this.currentAvatar = this.avatars[index]
-
   }
+
+  async getUsersName() {
+    const userName = await this.firebaseService.getSingleDoc("users", this.userId);
+
+    // Überprüfen, ob der Rückgabewert nicht null oder undefined ist
+    if (userName && userName["name"]) {
+      this.userName = userName["name"];
+    } else {
+      console.warn('Benutzer nicht gefunden oder keine Eigenschaft "name" vorhanden.');
+      this.userName = 'Unbekannt'; // Fallback-Wert
+    }
+  }
+
 
   confirmAvatar() {
     this.firebaseService.changeProfileImage(this.userId, this.currentAvatar)
@@ -45,10 +58,7 @@ export class SelectAvatarComponent implements OnInit {
     setTimeout(() => {
       this.routerLink.navigate(['/login'])
     }, 2500);
-
   }
-
-  // this.notification.emit(`<img src="imgs/icons/send.svg" alt="">`)
 
   showNotification() {
     this.notification.emit("Konto erfolgreich erstellt!")
