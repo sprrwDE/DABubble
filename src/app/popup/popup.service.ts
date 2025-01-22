@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../shared/models/user.model';
+import { CreateChannelPopupComponent } from './create-channel-popup/create-channel-popup.component';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,13 @@ export class PopupService {
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
 
+  channelDetailsPopup!: CreateChannelPopupComponent;
+
   resetEditStates() {
+    this.channelDetailsPopup.channel.name = '';
+    this.channelDetailsPopup.channel.description = '';
+    this.channelDetailsPopup.channel.users = [];
+
     this.editChannelName = false;
     this.editChannelDescription = false;
   }

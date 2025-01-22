@@ -25,7 +25,9 @@ export class CreateChannelPopupComponent {
   constructor(
     public popupService: PopupService,
     public userService: UserService
-  ) {}
+  ) {
+    this.popupService.channelDetailsPopup = this;
+  }
 
   get showCreateChannelAddPeoplePopup() {
     return this.popupService.showCreateChannelAddPeoplePopup;
@@ -60,7 +62,6 @@ export class CreateChannelPopupComponent {
   }
 
   closePopup() {
-    this.channel = new Channel();
     this.closePopupEvent.emit();
   }
 
