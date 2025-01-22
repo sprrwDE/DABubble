@@ -41,7 +41,7 @@
     (click)="showAddUserToChannelSection($event)"
   >
     @if(test.userToAdd.length == 0) {
-    <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
+    <input type="text" placeholder="Name eingeben" />
 
     } @else { 
 
@@ -59,7 +59,7 @@
 
 
   <div class="flex justify-end">
-    <button (click)="addMember()" class="bg-disable hover:bg-disable">
+    <button (click)="test.pushMembersToChannel(test.currentChannelId)" class="bg-disable hover:bg-disable">
       Hinzufügen
     </button>
   </div>

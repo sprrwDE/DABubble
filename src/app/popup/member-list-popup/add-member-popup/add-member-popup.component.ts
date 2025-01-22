@@ -16,9 +16,9 @@ import { CommonModule } from '@angular/common';
 export class AddMemberPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  memberName: string = ''; // Variable für den Namen des Mitglieds
+/*   memberName: string = ''; // Variable für den Namen des Mitglieds
   memberImage: string = ''; // Variable für das Bild des Mitglieds
-  memberStatus: string = 'offline'; // Status des Mitglieds (online/offline)
+  memberStatus: string = 'offline'; // Status des Mitglieds (online/offline) */
 
   showUserPopup: boolean = false; 
 
@@ -28,7 +28,7 @@ export class AddMemberPopupComponent {
     this.closePopupEvent.emit();
   }
 
-  addMember() {
+/*   addMember() {
 
     console.log(
       'Mitglied hinzugefügt:',
@@ -37,7 +37,7 @@ export class AddMemberPopupComponent {
       this.memberStatus
     );
     this.closePopup(); 
-  }
+  } */
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
