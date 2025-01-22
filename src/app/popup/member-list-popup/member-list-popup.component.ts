@@ -5,6 +5,7 @@ import {
   Output,
   OnInit,
   OnDestroy,
+  effect,
 } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
@@ -26,9 +27,9 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
 
   channelData$: BehaviorSubject<Channel | null>;
   private subscription!: Subscription;
-  channelData: Channel | null = null;
   userList: User[] = [];
   userIds: string[] = [];
+  loggedInUser:any;
   currentChannelUsers: User[] = [];
 
   constructor(
@@ -36,6 +37,9 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     private channelService: ChannelService,
     private userService: UserService
   ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
     this.channelData$ = channelService.currentChannelData$;
   }
 
@@ -55,9 +59,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     return this.channelService.currentChannelId;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   ngOnInit() {
     this.subscription = combineLatest([

@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="popup-input-container">
+  <div class="popup-input-container" (click)="showAddUserToChannelSection($event)">
     <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
   </div>
 
@@ -43,4 +43,10 @@
       Hinzufügen
     </button>
   </div>
+
 </section>
+
+<app-add-user-to-channel-popup
+*ngIf="popupType === 'add-user-to-channel'"
+(closePopupEvent)="closePopup()"
+></app-add-user-to-channel-popup>

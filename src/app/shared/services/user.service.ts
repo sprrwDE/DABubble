@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -10,16 +10,16 @@ import { Auth, User as FirebaseUser } from '@angular/fire/auth';
 export class UserService {
   allUsers: User[] = [];
   fetchedCollection$: Observable<any[]>;
-  loggedInUser: any = new User();
+  loggedInUser = signal<User | null>(null); // Initialwert: null
 
   constructor(private fb: FirebaseService, private auth: Auth) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
     fb.getData('users');
     this.fetchedCollection$.subscribe((data) => {
       this.allUsers = data.map((rawData) => new User({ ...rawData }));
-      /* if (this.allUsers.length > 0) {
+/*       if (this.allUsers.length > 0) {
         console.log('ALLE USER GLOBAL', this.allUsers);
-      } */
+      }  */
     });
 
     // state listener for logged in user ( logged in / logged out )
@@ -29,34 +29,29 @@ export class UserService {
         const newUser = await this.fb.getSingleDoc('users', firebaseUser.uid);
         this.setLoggedInUser(newUser);
       } else {
-        if (this.loggedInUser) {
-          this.loggedInUser$.subscribe((firebaseUser) => {
-            if (firebaseUser === null) {
-              // console.log('test');
-            } else {
-              this.fb.updateStateUser(firebaseUser.id, 'offline');
-            }
-            // console.log('loggedout user: ', firebaseUser);
-          });
+        if (this.loggedInUser()) {
+          this.fb.updateStateUser(this.loggedInUser()!.id, 'offline');
         }
+        this.setLoggedInUser(null);
       }
     });
   }
 
-  private loggedInUserSubject = new BehaviorSubject<any>(null); // Default ist null
-  loggedInUser$ = this.loggedInUserSubject.asObservable(); // Observable zum Abonnieren
 
   setLoggedInUser(user: any) {
-    this.loggedInUserSubject.next(user); // Aktuellen Wert setzen
+    this.loggedInUser.set(user); // Aktuellen Wert setzen
   }
 
   sortUsers(): User[] {
+    let user = this.loggedInUser()
     let loggedInUserId = '';
-    this.loggedInUser$.subscribe((user) => {
-      if (user) {
-        loggedInUserId = user.id;
-      }
-    });
+
+    if (user) {
+      loggedInUserId = user.id;
+    } else {
+      loggedInUserId = '';
+    }
+
 
     return this.allUsers.sort((a, b) => {
       // Logged in user kommt zuerst

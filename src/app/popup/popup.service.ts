@@ -20,6 +20,8 @@ export class PopupService {
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
 
+  addUserToChannelPopup = false;
+
   channelDetailsPopup!: CreateChannelPopupComponent;
 
   resetEditStates() {

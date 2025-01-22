@@ -6,8 +6,8 @@ import { MemberListPopupComponent } from './member-list-popup/member-list-popup.
 import { PopupService } from './popup.service';
 import { UserProfilePopupComponent } from './user-profile-popup/user-profile-popup.component';
 import { ProfileMenuPopupComponent } from './profile-menu-popup/profile-menu-popup.component';
-import { User } from '../shared/models/user.model';
 import { ContactProfilePopupComponent } from './contact-profile-popup/contact-profile-popup.component';
+import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-user-to-channel-popup.component';
 
 @Component({
   selector: 'app-popup',
@@ -21,6 +21,7 @@ import { ContactProfilePopupComponent } from './contact-profile-popup/contact-pr
     UserProfilePopupComponent,
     ProfileMenuPopupComponent,
     ContactProfilePopupComponent,
+    AddUserToChannelPopupComponent
   ],
   templateUrl: './popup.component.html',
   styleUrl: './popup.component.scss',

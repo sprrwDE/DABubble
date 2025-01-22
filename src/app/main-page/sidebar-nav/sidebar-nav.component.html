@@ -273,7 +273,7 @@
         class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
       >
         @for (user of userService.sortUsers(); track $index) {
-        <div class="contact-item">
+        <div class="contact-item" (click)="test.setUserToAdd(user.id)">
           <div class="relative">
             <img src="{{ user.image || 'imgs/avatar/profile.svg' }}" alt="" />
 
@@ -291,39 +291,6 @@
             <span *ngIf="checkLoggedInUserId(user.id)">(Du)</span>
           </p>
 
-          <!-- Testing -->
-          <!-- @if (user.status === "online") {
-          <svg
-            class="absolute bottom-0 left-[56px] border-white border-2 rounded-full"
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#92C83E" />
-          </svg>
-          } @else if (user.status === "abwesend") {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#ffc93b" />
-          </svg>
-          } @else {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#686868" />
-          </svg>
-          } -->
         </div>
         }
       </div>

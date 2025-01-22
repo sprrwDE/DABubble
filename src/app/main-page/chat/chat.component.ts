@@ -8,6 +8,7 @@ import {
   Output,
   Input,
   OnInit,
+  effect,
 } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
@@ -43,6 +44,7 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
+  loggedInUser:any;
 
   unsubLoggedInUser!: Subscription;
 
@@ -52,7 +54,11 @@ export class ChatComponent implements AfterViewInit {
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+  }
 
   get currentChannelId() {
     return this.channelService.currentChannelId;
@@ -70,9 +76,6 @@ export class ChatComponent implements AfterViewInit {
     return this.userService.allUsers;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   get channelUsers() {
     const userIds = this.channelService.currentChannel?.users;
@@ -128,17 +131,22 @@ export class ChatComponent implements AfterViewInit {
   }
 
   checkIfContact(userId: string): boolean {
-    let loggedInUserId = this.loggedInUser.id;
+    if(this.loggedInUser) {
+      let loggedInUserId = this.loggedInUser.id;
+       return loggedInUserId !== userId;
+    } else {
+      return false
+    }
+    
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       loggedInUserId = user.id;
+    //     }
+    //   }
+    // );
 
-    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user: User) => {
-        if (user) {
-          loggedInUserId = user.id;
-        }
-      }
-    );
-
-    return loggedInUserId !== userId;
+   
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -170,7 +178,4 @@ export class ChatComponent implements AfterViewInit {
     this.channelService.chatComponent = this;
   }
 
-  ngOnDestroy() {
-    this.unsubLoggedInUser.unsubscribe();
-  }
 }

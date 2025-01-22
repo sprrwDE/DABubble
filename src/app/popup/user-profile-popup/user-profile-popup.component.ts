@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { NgIf } from '@angular/common';
 import { User } from '../../shared/models/user.model';
@@ -19,15 +19,16 @@ export class UserProfilePopupComponent {
 
   constructor(
     private popupService: PopupService,
-    private userService: UserService
+    private userService: UserService,
   ) {
-    this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user) => {
-        if (user) {
-          this.loggedInUserData = user;
-        }
+
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        this.loggedInUserData = user // Stelle sicher, dass `user.id` ein String ist
       }
-    );
+    });
+
   }
 
   get editingUserProfile() {
@@ -57,7 +58,4 @@ export class UserProfilePopupComponent {
     return this.loggedInUserData[property];
   }
 
-  ngOnDestroy() {
-    this.unsubscribeLoggedInUser.unsubscribe();
-  }
 }

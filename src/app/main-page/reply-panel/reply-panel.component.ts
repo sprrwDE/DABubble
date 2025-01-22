@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, effect } from '@angular/core';
 import { PanelService } from '../../shared/services/panel.service';
 import { MessageInputComponent } from '../chat/message-input/message-input.component';
 import { UserMessageComponent } from '../chat/user-message/user-message.component';
@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 })
 export class ReplyPanelComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  public loggedInUser: any;
 
   unsubscribeLoggedInUser!: Subscription;
 
@@ -24,7 +25,11 @@ export class ReplyPanelComponent {
     public panelService: PanelService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+  }
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
@@ -46,9 +51,6 @@ export class ReplyPanelComponent {
     return this.userService.allUsers;
   }
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
 
   getUserName(userId: string) {
     return (
@@ -67,13 +69,20 @@ export class ReplyPanelComponent {
   checkIfContact(userId: string): boolean {
     let loggedInUserId = this.loggedInUser.id;
 
-    this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user: User) => {
-        if (user) {
-          loggedInUserId = user.id;
-        }
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        loggedInUserId = user.id
       }
-    );
+    });
+
+    // this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //  (user: User) => {
+    //     if (user) {
+    //       loggedInUserId = user.id;
+    //     }
+    //   }
+    // ); 
 
     return loggedInUserId !== userId;
   }
@@ -92,7 +101,7 @@ export class ReplyPanelComponent {
     });
   }
 
-  ngOnDestroy() {
-    this.unsubscribeLoggedInUser.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.unsubscribeLoggedInUser.unsubscribe();
+  // }
 }

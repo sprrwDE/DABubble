@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Output } from '@angular/core';
 import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { Channel } from '../../shared/models/channel.model';
@@ -72,16 +72,25 @@ export class CreateChannelPopupComponent {
       this.userIds.forEach((userId) => this.channel.users.push(userId));
     }
 
-    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user) => {
-        this.channel.channelCreatorId = user.id;
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user) => {
+    //     this.channel.channelCreatorId = user.id;
+    //   }
+    // );
+
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        this.channel.channelCreatorId = user.id
       }
-    );
+    });
+
+
 
     console.log(this.channel);
   }
 
-  ngOnDestroy() {
-    this.unsubLoggedInUser.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.unsubLoggedInUser.unsubscribe();
+  // }
 }

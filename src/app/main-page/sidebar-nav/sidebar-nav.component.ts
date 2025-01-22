@@ -1,10 +1,10 @@
 import { CommonModule, NgClass, NgFor } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { User } from '../../shared/models/user.model';
+import { Component, effect, EventEmitter, Output } from '@angular/core';
 import { UserService } from '../../shared/services/user.service';
 import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
+import { TestService } from '../../shared/services/test.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -23,13 +23,24 @@ export class SidebarNavComponent {
     corner: string;
   }>();
   unsubLoggedInUser!: Subscription;
+  private isLoggedInUser = false;
 
   constructor(
     public user: UserService,
     public popupService: PopupService,
     public channelService: ChannelService,
-    public userService: UserService
-  ) {}
+    public userService: UserService,
+    public test: TestService
+  ) {
+    // effect(() => {
+    
+    //   const user = this.userService.loggedInUser();
+    //   if (user) {
+    //     this.channel.channelCreatorId = user.id;
+    //     this.isLoggedInUser = user.id === this.userIdToCheck; // userIdToCheck sollte übergeben werden oder als Property definiert sein
+    //   }
+    // });
+  }
 
   get allChannels() {
     return this.channelService.allChannels;
@@ -58,15 +69,8 @@ export class SidebarNavComponent {
   }
 
   checkLoggedInUserId(userId: string): boolean {
-    let isLoggedInUser = false;
-    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user) => {
-        if (user) {
-          isLoggedInUser = user.id === userId;
-        }
-      }
-    );
-    return isLoggedInUser;
+    // Hier wird der bereits ermittelte Wert zurückgegeben
+    return this.isLoggedInUser;
   }
 
   ngOnDestroy() {

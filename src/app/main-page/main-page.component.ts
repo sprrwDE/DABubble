@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, effect, HostListener } from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -10,6 +10,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { PopupService } from '../popup/popup.service';
 import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
+import { TestService } from '../shared/services/test.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -29,14 +30,19 @@ import { FirebaseService } from '../shared/services/firebase.service';
 export class MainPageComponent {
   afkDelay: number = 3000;
   timeoutId: any;
+  loggedInUser: any;
 
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
     private userService: UserService,
-    private fb: FirebaseService
+    private fb: FirebaseService,
+    private test: TestService
   ) {
-    // console.log(user.arr)
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    })
+
   }
 
   // @HostListener('mousemove', ['$event'])

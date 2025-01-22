@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { Message } from '../../../shared/models/message.model';
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {
+export class MessageInputComponent implements OnInit {
   @Input() isReplayInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
@@ -25,19 +25,27 @@ export class MessageInputComponent {
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
 
+  public loggedInUser: any;
   unsubLoggedInUser!: Subscription;
 
   constructor(
     private channelService: ChannelService,
     private userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+
+  }
+
+  ngOnInit(): void {
+
+  }
 
   message: Message = new Message();
   reply: Reply = new Reply();
 
-  get loggedInUser() {
-    return this.userService.loggedInUser;
-  }
+
 
   get currentReplyMessageId(): string {
     return this.channelService.currentReplyMessageId;
@@ -50,13 +58,13 @@ export class MessageInputComponent {
     }
     this.message.timestamp = new Date().getTime();
     this.message.userId = this.loggedInUser.id;
-    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user: User) => {
-        if (user) {
-          this.message.userId = user.id;
-        }
-      }
-    );
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       this.message.userId = user.id;
+    //     }
+    //   }
+    // );
 
     this.channelService.sendMessage(this.message.toJSON());
 
@@ -72,13 +80,15 @@ export class MessageInputComponent {
     }
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
-    this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-      (user: User) => {
-        if (user) {
-          this.reply.userId = user.id;
-        }
-      }
-    );
+
+
+    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
+    //   (user: User) => {
+    //     if (user) {
+    //       this.reply.userId = user.id;
+    //     }
+    //   }
+    // );
 
     this.channelService.sendReply(
       this.currentReplyMessageId,

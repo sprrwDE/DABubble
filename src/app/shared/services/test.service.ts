@@ -12,11 +12,12 @@ import { Message } from '../models/newmodels/message.model.new';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TestService implements OnInit, OnDestroy {
+export class TestService implements OnDestroy {
   private firestore: Firestore = inject(Firestore); // Direkt Firestore injizieren
   allChannels: Channel[] = [];
   messages: Message[] = [];
@@ -28,25 +29,83 @@ export class TestService implements OnInit, OnDestroy {
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
 
+  /// Hier
+  private allUsersSubject = new BehaviorSubject<User[]>([]);
+  allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung  
+  possibleUserList:  User[] = []
+  userToAdd: User[] = []
+
   private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
 
-  constructor(private userservice: UserService) {
+  constructor(private userservice: UserService, ) {
+
+    this.userservice.fetchedCollection$.subscribe((users) => {  
+      this.allUsersSubject.next(users);
+      // console.log('ALL USER OBSERVER', this.allUsers$)
+    });
+  
+
+    console.log('TEST SERVICE INIT - CHANNEL DEVSPACE')
     this.loadChannels();
     this.subscribeToChannelById('kfhSXceP8dnTktHLz8hH'); // Channel-ID festlegen
 
-    // 🔥 Echtzeit-Update: Wenn sich `allUsers` oder `currentChannelUserIds` ändert, aktualisieren wir `currentChannelUsers`
     combineLatest([this.userservice.fetchedCollection$, this.channelUserIdsSubject]).subscribe(
       ([allUsers, userIds]) => {
         this.currentChannelUsers = allUsers.filter(user => userIds.includes(user.id));
-        if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
+        this.possibleUserList = allUsers.filter(user => !userIds.includes(user.id))
+        // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
+        if(this.possibleUserList.length > 0) {console.log('POSSIBLE USER LIST:', this.possibleUserList);}
       }
     );
   }
 
-  ngOnInit(): void {
-    console.log(this.userservice.allUsers);
+  /* 
+  
+  NEXT STEPS:
+  In Dom Aus "possibleUserList" einen Loop erschaffen, track index
+  (click)="setUserToAdd(possibleUserList[index].id)"
+
+  in setUserToAdd funktion aufrufen welche user in Channel Pusht
+
+  Aus Sidebar Nav Component Click Handler entfernen
+
+  Synchen rxjs
+
+  Außerdem:
+
+  ...User(DU) immer oben anzeigen zb in Sidebar nav
+  ...User Detail Synchen
+
+
+  */
+
+
+  setUserToAdd(userToPush: string) {
+    console.log('POSSIBLE USER LIST (vorher)', this.possibleUserList);
+    console.log('USER TO ADD LIST', this.userToAdd);
+    console.log('Ausgewählter User:', userToPush);
+  
+    // User in possibleUserList suchen
+    const push: User | undefined = this.possibleUserList.find(user => user.id === userToPush);
+  
+    if (push) { 
+      console.log('ADDED USER:', push);
+      this.userToAdd.push(push);
+  
+      // User aus possibleUserList entfernen
+      this.possibleUserList = this.possibleUserList.filter(user => user.id !== userToPush);
+  
+      // 🔥 Timeout, um sicherzustellen, dass possibleUserList wirklich aktualisiert wurde
+      setTimeout(() => {
+        console.log('NEW POSSIBLE USERS', this.possibleUserList);
+      }, 0);
+    } else {
+      console.warn(`⚠️ User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`, this.possibleUserList);
+    }
   }
 
+
+  
   loadChannels() {
     const channelsRef = collection(this.firestore, 'channels');
     // Dummydata
@@ -61,7 +120,7 @@ export class TestService implements OnInit, OnDestroy {
         });
       });
 
-      console.log('ALLE CHANNEL:', this.allChannels);
+      // console.log('ALLE CHANNEL:', this.allChannels);
 
       this.subscribeToMessages(currentChannelID);
     });
@@ -116,7 +175,7 @@ export class TestService implements OnInit, OnDestroy {
         });
       });
 
-      console.log('NACHRICHTEN IN CHANNEL:', channelId, this.messages);
+      // console.log('NACHRICHTEN IN CHANNEL:', channelId, this.messages);
     });
   }
 
