@@ -21,7 +21,7 @@ export class HeaderBarComponent {
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
-      if (user) {
+      if (user && user !== undefined && user !== null) {
         console.log('eingeloggter user: ', user);
         this.UserName = user.name;
         this.userImage = user.image;
