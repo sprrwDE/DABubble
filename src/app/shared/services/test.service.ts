@@ -91,7 +91,13 @@ export class TestService implements OnDestroy {
 
   */
 
+
+
+  
   //// HIER
+
+  /// POSSIBLE USER LIST NACH INPUT FILTERN UND NEUES ARRAY MAPPEN -> setUserToAdd anpassen
+
   setUserToAdd(userToPush: string) {
     const push: User | undefined = this.possibleUserList.find(
       (user) => user.id === userToPush
@@ -147,7 +153,8 @@ export class TestService implements OnDestroy {
 
 
 
-  
+
+
   loadChannels() {
     const channelsRef = collection(this.firestore, 'channels');
     // Dummydata
