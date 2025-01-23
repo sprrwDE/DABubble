@@ -5,6 +5,7 @@ import { Channel } from '../../shared/models/channel.model';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
+import { ChannelService } from '../../shared/services/channel.service';
 
 @Component({
   selector: 'app-create-channel-popup',
@@ -23,7 +24,8 @@ export class CreateChannelPopupComponent {
 
   constructor(
     public popupService: PopupService,
-    public userService: UserService
+    public userService: UserService,
+    public channelService: ChannelService
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
@@ -85,12 +87,7 @@ export class CreateChannelPopupComponent {
     } else {
       this.userIds.forEach((userId) => this.channel.users.push(userId));
     }
-
-    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-    //   (user) => {
-    //     this.channel.channelCreatorId = user.id;
-    //   }
-    // );
+    this.channelService.addChannel(this.channel.toJSON());
 
     console.log(this.channel);
   }

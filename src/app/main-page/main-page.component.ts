@@ -41,8 +41,7 @@ export class MainPageComponent {
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
-    })
-
+    });
   }
 
   // @HostListener('mousemove', ['$event'])
