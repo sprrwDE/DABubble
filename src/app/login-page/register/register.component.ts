@@ -57,7 +57,7 @@ export class RegisterComponent {
         id: userCredential.user?.uid,
         email: userCredential.user?.email || '',
         name: this.contactForm.value.name,
-        image: 'imgs/avatar/profile.svg',
+        image: '/imgs/avatar/profile.svg',
         status: 'offline',
       });
       this.addUserToFirebase(user);
