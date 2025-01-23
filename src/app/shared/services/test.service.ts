@@ -6,6 +6,9 @@ import {
   query,
   orderBy,
   doc,
+  addDoc,
+  updateDoc,
+  arrayUnion,
 } from '@angular/fire/firestore';
 import { Channel } from '../models/newmodels/channel.model.new';
 import { Message } from '../models/newmodels/message.model.new';
@@ -13,6 +16,7 @@ import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Observable } from 'rxjs';
+import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -25,38 +29,45 @@ export class TestService implements OnDestroy {
   private unsubscribeChannel: any;
   private unsubscribeMessages: any;
   selectedChannel: Channel | null = null;
+  /// DUMMY
+  currentChannelId: string = 'Ks8hNpn38fEiwcDmRxOB';
 
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
 
   /// Hier
   private allUsersSubject = new BehaviorSubject<User[]>([]);
-  allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung  
-  possibleUserList:  User[] = []
-  userToAdd: User[] = []
+  allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung
+  possibleUserList: User[] = [];
+  userToAdd: User[] = [];
 
   private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
 
-  constructor(private userservice: UserService, ) {
-
-    this.userservice.fetchedCollection$.subscribe((users) => {  
+  constructor(private userservice: UserService) {
+    this.userservice.fetchedCollection$.subscribe((users) => {
       this.allUsersSubject.next(users);
       // console.log('ALL USER OBSERVER', this.allUsers$)
     });
-  
 
-    console.log('TEST SERVICE INIT - CHANNEL DEVSPACE')
+    console.log('TEST SERVICE INIT - CHANNEL DEVSPACE');
     this.loadChannels();
-    this.subscribeToChannelById('kfhSXceP8dnTktHLz8hH'); // Channel-ID festlegen
+    this.subscribeToChannelById(this.currentChannelId); // Channel-ID festlegen
 
-    combineLatest([this.userservice.fetchedCollection$, this.channelUserIdsSubject]).subscribe(
-      ([allUsers, userIds]) => {
-        this.currentChannelUsers = allUsers.filter(user => userIds.includes(user.id));
-        this.possibleUserList = allUsers.filter(user => !userIds.includes(user.id))
-        // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
-        if(this.possibleUserList.length > 0) {console.log('POSSIBLE USER LIST:', this.possibleUserList);}
+    combineLatest([
+      this.userservice.fetchedCollection$,
+      this.channelUserIdsSubject,
+    ]).subscribe(([allUsers, userIds]) => {
+      this.currentChannelUsers = allUsers.filter((user) =>
+        userIds.includes(user.id)
+      );
+      this.possibleUserList = allUsers.filter(
+        (user) => !userIds.includes(user.id)
+      );
+      // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
+      if (this.possibleUserList.length > 0) {
+        console.log('POSSIBLE USER LIST:', this.possibleUserList);
       }
-    );
+    });
   }
 
   /* 
@@ -64,8 +75,9 @@ export class TestService implements OnDestroy {
   NEXT STEPS:
   In Dom Aus "possibleUserList" einen Loop erschaffen, track index
   (click)="setUserToAdd(possibleUserList[index].id)"
+  man soll im input feld user wieder entfernen können 
 
-  in setUserToAdd funktion aufrufen welche user in Channel Pusht
+  in setUserToAdd funktion aufrufen welche userToAdd.forEach(user) user.id in Channel Pusht
 
   Aus Sidebar Nav Component Click Handler entfernen
 
@@ -79,37 +91,66 @@ export class TestService implements OnDestroy {
 
   */
 
-
+  //// HIER
   setUserToAdd(userToPush: string) {
-    console.log('POSSIBLE USER LIST (vorher)', this.possibleUserList);
-    console.log('USER TO ADD LIST', this.userToAdd);
-    console.log('Ausgewählter User:', userToPush);
-  
-    // User in possibleUserList suchen
-    const push: User | undefined = this.possibleUserList.find(user => user.id === userToPush);
-  
-    if (push) { 
-      console.log('ADDED USER:', push);
+    const push: User | undefined = this.possibleUserList.find(
+      (user) => user.id === userToPush
+    );
+
+    if (push) {
       this.userToAdd.push(push);
-  
-      // User aus possibleUserList entfernen
-      this.possibleUserList = this.possibleUserList.filter(user => user.id !== userToPush);
-  
-      // 🔥 Timeout, um sicherzustellen, dass possibleUserList wirklich aktualisiert wurde
-      setTimeout(() => {
-        console.log('NEW POSSIBLE USERS', this.possibleUserList);
-      }, 0);
+      this.possibleUserList = this.possibleUserList.filter(
+        (user) => user.id !== userToPush
+      );
     } else {
-      console.warn(`⚠️ User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`, this.possibleUserList);
+      console.warn(
+        `User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`,
+        this.possibleUserList
+      );
     }
   }
+
+  removeUserToAdd(userToRemove: string) {
+    const remove: User | undefined = this.userToAdd.find(
+      (user) => user.id === userToRemove
+    );
+    if (remove) {
+      this.userToAdd = this.userToAdd.filter(
+        (user) => user.id !== userToRemove
+      );
+      this.possibleUserList.push(remove);
+    } else {
+      console.warn(
+        `User mit ID ${userToRemove} nicht gefunden. \nAktuelle UserToAdd-Liste:`,
+        this.userToAdd
+      );
+    }
+  }
+
+  pushMembersToChannel(channelId: string) {
+    const arrayToPush = this.userToAdd.map((user) => user.id); // Extrahiert nur die IDs
+    const channelRef = doc(this.firestore, 'channels', channelId);
+
+    updateDoc(channelRef, {
+      users: arrayUnion(...arrayToPush), // Fügt alle IDs in die users-Liste hinzu
+    })
+      .then(() => console.log(`User-IDs ${arrayToPush} hinzugefügt`))
+      .catch((error) =>
+        console.error('Fehler beim Hinzufügen der User-IDs:', error)
+      );
+
+
+      //// Hier input clearen
+  }
+
+  //// ENDE
+
 
 
   
   loadChannels() {
     const channelsRef = collection(this.firestore, 'channels');
     // Dummydata
-    const currentChannelID = 'kfhSXceP8dnTktHLz8hH';
     this.unsubscribeAllChannels = onSnapshot(channelsRef, (snapshot) => {
       this.allChannels = snapshot.docs.map((doc) => {
         const data = doc.data() as Partial<Channel>;
@@ -122,7 +163,7 @@ export class TestService implements OnDestroy {
 
       // console.log('ALLE CHANNEL:', this.allChannels);
 
-      this.subscribeToMessages(currentChannelID);
+      this.subscribeToMessages(this.currentChannelId);
     });
   }
 
@@ -141,7 +182,9 @@ export class TestService implements OnDestroy {
         });
 
         this.currentChannelUserIds = this.selectedChannel.users;
-        if(this.currentChannelUserIds.length > 0) {console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);}
+        if (this.currentChannelUserIds.length > 0) {
+          console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);
+        }
 
         // 🔥 `BehaviorSubject` aktualisieren, damit `combineLatest()` triggert
         this.channelUserIdsSubject.next(this.currentChannelUserIds);
@@ -183,7 +226,7 @@ export class TestService implements OnDestroy {
     if (this.unsubscribeAllChannels) this.unsubscribeAllChannels();
     if (this.unsubscribeMessages) this.unsubscribeMessages();
     if (this.unsubscribeChannel) {
-      this.unsubscribeChannel(); 
+      this.unsubscribeChannel();
       // console.log('Listener für Channel entfernt');
     }
   }

@@ -1,6 +1,14 @@
-    <div class="add-user-to-channel">
-      <h2>Benutzer zum Channel hinzufügen</h2>
-      <!-- Inhalt des Popups -->
-      <button (click)="closePopup()">Schließen</button>
-    </div>
+    
+    @if(display) {
+      <div class="add-user-to-channel absolute bg-white">
+        @for (user of test.possibleUserList; track $index) {
+          <div (click)="test.setUserToAdd(user.id)" class="flex">
+            <img src="{{ user.image}}" class="w-[50px] h-[50px] rounded-full">
+            {{user.name}}
+          </div>
+        }
+        <button (click)="closePopup()">Schließen</button>
+      </div>
+    }
+
   
