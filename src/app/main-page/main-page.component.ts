@@ -3,7 +3,7 @@ import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { User } from '../shared/models/user.model';
 import { PanelService } from '../shared/services/panel.service';
 import { PopupComponent } from '../popup/popup.component';
@@ -21,7 +21,7 @@ import { TestService } from '../shared/services/test.service';
     HeaderBarComponent,
     NgClass,
     NgIf,
-
+    CommonModule,
     PopupComponent,
   ],
   templateUrl: './main-page.component.html',
@@ -35,7 +35,7 @@ export class MainPageComponent {
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
-    private userService: UserService,
+    public userService: UserService,
     private fb: FirebaseService,
     private test: TestService
   ) {
@@ -43,6 +43,10 @@ export class MainPageComponent {
       this.loggedInUser = this.userService.loggedInUser();
     })
 
+
+  }
+  get allUsers() {
+    return this.userService.allUsers;
   }
 
   // @HostListener('mousemove', ['$event'])
