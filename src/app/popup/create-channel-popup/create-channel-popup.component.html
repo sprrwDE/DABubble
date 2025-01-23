@@ -193,7 +193,10 @@
       'h-[60px]': showCreateChannelAddPeopleInput
     }"
   >
-    <div class="popup-input-container">
+    <div
+      class="popup-input-container"
+      (click)="createChannelAddPeopleInput.focus()"
+    >
       <input
         type="text"
         #createChannelAddPeopleInput

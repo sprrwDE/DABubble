@@ -18,7 +18,6 @@ export class CreateChannelPopupComponent {
 
   public channel: Channel = new Channel();
   userIds: string[] = [];
-  showErrorText = false;
 
   unsubLoggedInUser!: Subscription;
 
@@ -26,7 +25,22 @@ export class CreateChannelPopupComponent {
     public popupService: PopupService,
     public userService: UserService
   ) {
+    effect(() => {
+      const user = this.userService.loggedInUser();
+      if (user) {
+        this.channel.channelCreatorId = user.id;
+      }
+    });
+
     this.popupService.channelDetailsPopup = this;
+  }
+
+  get showErrorText() {
+    return this.popupService.showCreateChannelPopupErrorText;
+  }
+
+  set showErrorText(value: boolean) {
+    this.popupService.showCreateChannelPopupErrorText = value;
   }
 
   get showCreateChannelAddPeoplePopup() {
@@ -77,15 +91,6 @@ export class CreateChannelPopupComponent {
     //     this.channel.channelCreatorId = user.id;
     //   }
     // );
-
-    effect(() => {
-      const user = this.userService.loggedInUser();
-      if (user) {
-        this.channel.channelCreatorId = user.id
-      }
-    });
-
-
 
     console.log(this.channel);
   }
