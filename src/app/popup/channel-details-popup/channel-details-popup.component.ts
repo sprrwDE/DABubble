@@ -49,6 +49,8 @@ export class ChannelDetailsPopupComponent {
   }
 
   public getCurrentChannelCreatorName() {
+    console.log(this.currentChannelCreatedId);
+
     return this.allUsers.find(
       (user) => user.id === this.currentChannelCreatedId
     )?.name;

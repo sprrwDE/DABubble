@@ -65,7 +65,7 @@
         <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
         <p>
           {{ user.name || "NoName" }}
-          <span *ngIf="user.id === loggedInUser.id">(Du)</span>
+          <span *ngIf="user.id === loggedInUser?.id">(Du)</span>
           <!-- beispiel:
             <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
           -->

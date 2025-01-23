@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Channel } from '../models/channel.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -29,14 +29,15 @@ export class ChannelService {
   unsubMessages: any;
 
   allChannels: Channel[] = [];
+  sendCurrentChannel = signal<Channel | null>(null);
   currentChannelId: string = '';
   currentChannel: Channel = new Channel();
   currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
 
-  currentChannelUserIds: string[] = [];
-  currentChannelUsers: User[] = [];
+  // currentChannelUserIds: string[] = [];
+  // currentChannelUsers: User[] = [];
   private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
 
   currentReplyMessageId: string = '';
@@ -161,6 +162,9 @@ export class ChannelService {
     if (this.currentChannelId === channel.id) {
       this.currentChannelMessages = messages;
       this.currentChannel = channel;
+
+      this.sendCurrentChannel.set(this.currentChannel);
+
       /// wird sehr oft aufgerufen alles
       // console.log('currentChannel', this.currentChannel.id, this.currentChannel)
     }
@@ -263,7 +267,7 @@ export class ChannelService {
     }
   }
 
-/*   //// Subscribed einen channel onsnapshot -> für memberlist popup
+  /*   //// Subscribed einen channel onsnapshot -> für memberlist popup
 
   subscribeToChannelById(channelId: string) {
     // console.log(`Lade Channel mit ID: ${channelId}`);

@@ -34,8 +34,24 @@
     </div>
   </div>
 
-  <div class="popup-input-container" (click)="showAddUserToChannelSection($event)">
+  <div
+    class="popup-input-container relative"
+    (click)="showAddUserToChannelSection($event)"
+  >
     <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
+
+    <div
+      (click)="$event.stopPropagation()"
+      [ngClass]="{
+        'scale-0': !showAddUserToChannelPopup,
+        'scale-100 ': showAddUserToChannelPopup
+      }"
+      class="px-[20px] py-[21px] border-lines absolute top-[80%] left-[20px] transition-svg-text border-[1px] bg-white rounded-tl-none rounded-[20px] shadow-[0px_2px_10px_0px_#00000014]"
+    >
+      <!-- rendern der user -->
+      <p>User1</p>
+      <p>User2</p>
+    </div>
   </div>
 
   <div class="flex justify-end">
@@ -43,10 +59,4 @@
       Hinzufügen
     </button>
   </div>
-
 </section>
-
-<app-add-user-to-channel-popup
-*ngIf="popupType === 'add-user-to-channel'"
-(closePopupEvent)="closePopup()"
-></app-add-user-to-channel-popup>

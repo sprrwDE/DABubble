@@ -21,7 +21,7 @@ import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-
     UserProfilePopupComponent,
     ProfileMenuPopupComponent,
     ContactProfilePopupComponent,
-    AddUserToChannelPopupComponent
+    AddUserToChannelPopupComponent,
   ],
   templateUrl: './popup.component.html',
   styleUrl: './popup.component.scss',

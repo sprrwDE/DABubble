@@ -29,7 +29,7 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
   userList: User[] = [];
   userIds: string[] = [];
-  loggedInUser:any;
+  loggedInUser: any;
   currentChannelUsers: User[] = [];
 
   constructor(
@@ -39,7 +39,7 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
-    })
+    });
     this.channelData$ = channelService.currentChannelData$;
   }
 
@@ -58,20 +58,23 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   get currentChannelId() {
     return this.channelService.currentChannelId;
   }
-
+  get currentChannel() {
+    return this.channelService.currentChannel;
+  }
 
   ngOnInit() {
     this.subscription = combineLatest([
       this.userService.fetchedCollection$,
-      this.channelData$ 
+      this.channelData$,
     ]).subscribe(([allUsers, channel]) => {
       if (channel) {
         this.userIds = channel.users;
-        this.userList = allUsers.filter(user => this.userIds.includes(user.id));
+        this.userList = allUsers.filter((user) =>
+          this.userIds.includes(user.id)
+        );
         console.log('USER IM CHANNEL:', this.currentChannelUsers);
       }
     });
-
     this.channelService.fetchChannel(this.currentChannelId);
   }
 

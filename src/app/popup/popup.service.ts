@@ -25,9 +25,11 @@ export class PopupService {
   channelDetailsPopup!: CreateChannelPopupComponent;
 
   resetEditStates() {
-    this.channelDetailsPopup.channel.name = '';
-    this.channelDetailsPopup.channel.description = '';
-    this.channelDetailsPopup.channel.users = [];
+    if (this.channelDetailsPopup) {
+      this.channelDetailsPopup.channel.name = '';
+      this.channelDetailsPopup.channel.description = '';
+      this.channelDetailsPopup.channel.users = [];
+    }
 
     this.editChannelName = false;
     this.editChannelDescription = false;

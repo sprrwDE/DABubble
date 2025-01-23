@@ -51,7 +51,6 @@ export class ReplyPanelComponent {
     return this.userService.allUsers;
   }
 
-
   getUserName(userId: string) {
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name ||
@@ -67,14 +66,14 @@ export class ReplyPanelComponent {
   }
 
   checkIfContact(userId: string): boolean {
-    let loggedInUserId = this.loggedInUser.id;
+    let loggedInUserId = this.loggedInUser;
 
-    effect(() => {
-      const user = this.userService.loggedInUser();
-      if (user) {
-        loggedInUserId = user.id
-      }
-    });
+    // // effect(() => {
+    // //   const user = this.userService.loggedInUser();
+    // //   if (user) {
+    // //     loggedInUserId = user.id
+    // //   }
+    // // });
 
     // this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
     //  (user: User) => {
@@ -82,7 +81,7 @@ export class ReplyPanelComponent {
     //       loggedInUserId = user.id;
     //     }
     //   }
-    // ); 
+    // );
 
     return loggedInUserId !== userId;
   }

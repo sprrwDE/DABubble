@@ -12,11 +12,9 @@
     'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] ':
       popupType === 'member-list',
     'top-[calc(100%+20px)] right-[0px]':
-      popupType === 'profile-menu' || popupType === 'user-profile'
-      ,
+      popupType === 'profile-menu' || popupType === 'user-profile',
     'max-w-[500px] min-w-[500px]':
       popupType === 'user-profile' || popupType === 'contact-profile',
-  
   }"
 >
   <app-create-channel-popup
@@ -50,14 +48,10 @@
   ></app-contact-profile-popup>
 
   <app-add-user-to-channel-popup
-*ngIf="popupType === 'add-user-to-channel'"
-(closePopupEvent)="closePopup()"
-></app-add-user-to-channel-popup>
-
+    *ngIf="popupType === 'add-user-to-channel'"
+    (closePopupEvent)="closePopup()"
+  ></app-add-user-to-channel-popup>
 </div>
-
-
-
 
 <!-- popup background -->
 
