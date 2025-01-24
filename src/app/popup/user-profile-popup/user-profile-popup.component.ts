@@ -26,14 +26,12 @@ export class UserProfilePopupComponent {
     private userService: UserService,
     private firebaseService: FirebaseService
   ) {
-
     effect(() => {
       const user = this.userService.loggedInUser();
       if (user) {
-        this.loggedInUserData = user // Stelle sicher, dass `user.id` ein String ist
+        this.loggedInUserData = user; // Stelle sicher, dass `user.id` ein String ist
       }
     });
-
   }
 
   get editingUserProfile() {
@@ -64,8 +62,14 @@ export class UserProfilePopupComponent {
   }
 
   pushData() {
-    this.editingUserProfile = false
-    this.firebaseService.updateUserName(this.loggedInUserData.id, this.nameInput)
+    if (this.nameInput.trim() != '') {
+      this.editingUserProfile = false;
+      this.firebaseService.updateUserName(
+        this.loggedInUserData.id,
+        this.nameInput.trim()
+      );
+    } else {
+      return;
+    }
   }
-
 }
