@@ -43,7 +43,11 @@ export class AddMemberPopupComponent {
   getNameInput(event: Event) {
     let name = this.nameInput
     this.test.filterArrayForNameInput(name)
-    this.showAddUserToChannelSection(event);
+    if(this.nameInput != '') {
+      this.showAddUserToChannelSection(event);
+    } else {
+      this.showUserPopup = false;
+    }
   }
 
   setUser(userId: string) {

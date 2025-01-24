@@ -1,5 +1,5 @@
     
-    @if(display) {
+    @if(display && test.filteredUsers.length !== 0) {
       <div class="add-user-to-channel absolute bg-white">
         @for (user of test.filteredUsers; track $index) {
           <div (click)="test.setUserToAdd(user.id)" class="flex">
