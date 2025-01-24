@@ -115,7 +115,9 @@ export class TestService implements OnDestroy {
       this.filteredUsers = this.filteredUsers.filter(
         (user) => user.id !== userToPush
       );
-      // console.log(this.userToAdd)
+      this.possibleUserList = this.possibleUserList.filter(
+        (user) => user.id !== userToPush
+      )
     } else {
       console.warn(
         `User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`,
