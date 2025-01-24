@@ -44,7 +44,7 @@
 
     @if(test.userToAdd.length > 0) { @for (user of test.userToAdd; track $index)
     {
-    <textarea [ngModel]="user.name" readonly></textarea>
+    <textarea [ngModel]="user.name" readonly (click)="test.removeUserToAdd(user.id)"></textarea>
     } }
   </div>
 

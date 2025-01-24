@@ -77,22 +77,10 @@ export class TestService implements OnDestroy {
   /* 
   
   NEXT STEPS:
-  In Dom Aus "possibleUserList" einen Loop erschaffen, track index
-  (click)="setUserToAdd(possibleUserList[index].id)"
-  man soll im input feld user wieder entfernen können 
-  Listen clearen
-
-  Statt mehrere inputs array in string umwandeln oder mit klassen new User() und beim pushen string wieder in array umwandeln
-
-  in setUserToAdd funktion aufrufen welche userToAdd.forEach(user) user.id in Channel Pusht
-
+ 
+  input value in andere component übergeben und subscriben
   Aus Sidebar Nav Component Click Handler entfernen
 
-  Synchen rxjs
-
-  Außerdem:
-
-  ...User(DU) immer oben anzeigen zb in Sidebar nav
   ...User Detail Synchen
 
 
@@ -112,18 +100,22 @@ export class TestService implements OnDestroy {
 
     if (push) {
       this.userToAdd.push(push);
-      this.filteredUsers = this.filteredUsers.filter(
-        (user) => user.id !== userToPush
-      );
-      this.possibleUserList = this.possibleUserList.filter(
-        (user) => user.id !== userToPush
-      )
+      this.preventDuplicate(userToPush)
     } else {
       console.warn(
-        `User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`,
+        `User mit ID ${userToPush} nicht gefunden. Aktuelle PossibleUserList:`,
         this.filteredUsers
       );
     }
+  }
+
+  preventDuplicate(userToPush: string) {
+    this.filteredUsers = this.filteredUsers.filter(
+      (user) => user.id !== userToPush
+    );
+    this.possibleUserList = this.possibleUserList.filter(
+      (user) => user.id !== userToPush
+    )
   }
 
   removeUserToAdd(userToRemove: string) {

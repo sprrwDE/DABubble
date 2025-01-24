@@ -35,7 +35,11 @@ export class AddMemberPopupComponent {
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
-    this.showUserPopup = true;
+    if (this.test.userToAdd.length == 0 && this.nameInput == 'Gast') {
+      return
+    } else {
+      this.showUserPopup = true;
+    }
   }
 
   closeUserPopup() {
@@ -43,14 +47,21 @@ export class AddMemberPopupComponent {
   }
 
   getNameInput(event: Event) {
-    let name = this.nameInput
-    this.test.filterArrayForNameInput(name)
-    if(this.nameInput != '') {
+    let name = this.nameInput.trim().toLowerCase();
+    this.test.filterArrayForNameInput(name);
+  
+    if (this.test.userToAdd.length === 0 && 'gast'.startsWith(name)) {
+      this.showUserPopup = false;
+      return;
+    }
+  
+    if (this.nameInput !== '') {
       this.showAddUserToChannelSection(event);
     } else {
       this.showUserPopup = false;
     }
   }
+  
 
   setUser(userId: string) {
     this.test.setUserToAdd(userId);
