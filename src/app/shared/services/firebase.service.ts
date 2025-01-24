@@ -129,6 +129,15 @@ export class FirebaseService {
     }
   }
 
+  async updateUserName(id: string, input: string) {
+    try {
+      const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
+      await updateDoc(docRef, { name: input });
+    } catch (error) {
+      console.error('Fehler beim Speichern des Dokuments:', error);
+    }
+  }
+
   /// TEST
   // subscribeToMessages(channelId: string, callback: (messages: Message[]) => void) {
   //   const messagesRef = collection(this.firestore, `channels/${channelId}/messages`);

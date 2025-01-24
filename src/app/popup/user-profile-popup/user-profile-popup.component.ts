@@ -4,11 +4,13 @@ import { NgIf } from '@angular/common';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { FirebaseService } from '../../shared/services/firebase.service';
 
 @Component({
   selector: 'app-user-profile-popup',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, FormsModule],
   templateUrl: './user-profile-popup.component.html',
   styleUrl: './user-profile-popup.component.scss',
 })
@@ -17,9 +19,12 @@ export class UserProfilePopupComponent {
 
   unsubscribeLoggedInUser!: Subscription;
 
+  nameInput: string = '';
+
   constructor(
     private popupService: PopupService,
     private userService: UserService,
+    private firebaseService: FirebaseService
   ) {
 
     effect(() => {
@@ -56,6 +61,11 @@ export class UserProfilePopupComponent {
       return fallbackValue;
     }
     return this.loggedInUserData[property];
+  }
+
+  pushData() {
+    this.editingUserProfile = false
+    this.firebaseService.updateUserName(this.loggedInUserData.id, this.nameInput)
   }
 
 }

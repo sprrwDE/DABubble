@@ -49,9 +49,11 @@
     <div class="flex justify-between items-center w-full">
       <p class="text-[32px] font-bold">{{ returnUserData("name") }}</p>
 
+      <!-- Gast ID Hardcode verbirgt bearbeiten für Gastaccount -->
       <p
         (click)="editingUserProfile = true"
         class="text-[18px] text-hover cursor-pointer hover:font-bold"
+        *ngIf="loggedInUserData.id !='jishYferh4Q5QSlMIdjKGzL2mpc2'" 
       >
         Bearbeiten
       </p>
@@ -131,13 +133,18 @@
       <p class="text-[20px] font-bold">Vollständiger Name</p>
     </div>
 
-    <div (click)="changeNameInput.focus()" class="popup-input-container">
-      <input
-        type="text"
-        #changeNameInput
-        placeholder="{{ returnUserData('name') }}"
-      />
-    </div>
+    <form #userForm="ngForm">
+      <div (click)="changeNameInput.focus()" class="popup-input-container">
+        <input
+          type="text"
+          #changeNameInput
+          placeholder="{{ returnUserData('name') }}"
+          [(ngModel)]="nameInput"
+          name="nameInput"
+          required
+        />
+      </div>
+    </form>
   </div>
 
   <div
@@ -148,6 +155,6 @@
       Abbrechen
     </button>
 
-    <button (click)="editingUserProfile = false">Speichern</button>
+    <button (click)="pushData()">Speichern</button>
   </div>
 </section>
