@@ -13,7 +13,7 @@ export class Channel {
     this.name = obj?.name || '';
     this.description = obj?.description || '';
     this.users = obj?.users || [];
-    this.channelCreatorId = obj?.createdBy || '';
+    this.channelCreatorId = obj?.channelCreatorId || '';
     this.messages = obj?.messages
       ? obj.messages.map((msg: any) => new Message(msg))
       : [];

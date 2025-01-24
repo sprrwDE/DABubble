@@ -23,10 +23,6 @@ export class PanelService {
     this.isReplyPanelOpen = false;
   }
 
-  scrollToBottom() {
-    this.replyPanelComponent.scrollToBottom();
-  }
-
   renderReplyPanel(
     message: string,
     name: string,

@@ -21,6 +21,7 @@ import { User } from '../../shared/models/user.model';
 import { Message } from '../../shared/models/message.model';
 import { publishFacade } from '@angular/compiler';
 import { Subscription } from 'rxjs';
+import { Channel } from '../../shared/models/channel.model';
 
 @Component({
   selector: 'app-chat',
@@ -36,7 +37,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
-export class ChatComponent implements AfterViewInit {
+export class ChatComponent {
   public channelDetailsPopupOpen: boolean = false;
   public channelDetailsPopupType: string = '';
   public channelDetailsPopupCorner: string = '';
@@ -44,7 +45,11 @@ export class ChatComponent implements AfterViewInit {
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
-  loggedInUser:any;
+  loggedInUser: any;
+
+  scroll: boolean = true;
+
+  currentChannel: Channel = new Channel();
 
   unsubLoggedInUser!: Subscription;
 
@@ -56,16 +61,16 @@ export class ChatComponent implements AfterViewInit {
     public userService: UserService
   ) {
     effect(() => {
+      if (this.channelService.currentChannel()) {
+        this.currentChannel = this.channelService.currentChannel();
+      } else {
+        this.currentChannel = new Channel();
+      }
+    });
+
+    effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
-    })
-  }
-
-  get currentChannelId() {
-    return this.channelService.currentChannelId;
-  }
-
-  get currentChannel() {
-    return this.channelService.currentChannel;
+    });
   }
 
   get allChannels() {
@@ -76,10 +81,9 @@ export class ChatComponent implements AfterViewInit {
     return this.userService.allUsers;
   }
 
-
   get channelUsers() {
-    const userIds = this.channelService.currentChannel?.users;
-    return this.allUsers.filter((user) => userIds.includes(user.id));
+    const userIds = this.currentChannel?.users;
+    return this.allUsers.filter((user) => userIds?.includes(user.id));
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -107,23 +111,36 @@ export class ChatComponent implements AfterViewInit {
     this.memberListPopupOpen = false;
   }
 
-  ngAfterViewInit() {
-    this.scrollToBottom();
+  scrollToBottom() {
+    if (this.chatContainer) {
+      this.chatContainer.nativeElement.scrollTo({
+        top: this.chatContainer.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }
 
-  scrollToBottom() {
-    this.chatContainer.nativeElement.scrollTop =
-      this.chatContainer.nativeElement.scrollHeight + 100;
+  checkScrollToBottom(message: Message) {
+    if (
+      this.scroll &&
+      this.currentChannel?.messages?.[
+        this.currentChannel?.messages?.length - 1
+      ] === message
+    ) {
+      this.scrollToBottom();
+      this.scroll = false;
+    }
   }
 
   getUserName(userId: string): string {
     return (
-      this.allUsers.find((user: User) => user.id === userId)?.name ||
-      'Placholder'
+      this.allUsers.find((user: User) => user.id === userId)?.name || 'lädt...'
     );
   }
 
-  getUserImage(userId: string): string {
+  getUserImage(userId: string, message: Message): string {
+    this.checkScrollToBottom(message);
+
     return (
       this.allUsers.find((user: User) => user.id === userId)?.image ||
       'imgs/avatar1.png'
@@ -131,22 +148,12 @@ export class ChatComponent implements AfterViewInit {
   }
 
   checkIfContact(userId: string): boolean {
-    if(this.loggedInUser) {
+    if (this.loggedInUser) {
       let loggedInUserId = this.loggedInUser.id;
-       return loggedInUserId !== userId;
+      return loggedInUserId !== userId;
     } else {
-      return false
+      return false;
     }
-    
-    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-    //   (user: User) => {
-    //     if (user) {
-    //       loggedInUserId = user.id;
-    //     }
-    //   }
-    // );
-
-   
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -177,5 +184,4 @@ export class ChatComponent implements AfterViewInit {
   ngOnInit() {
     this.channelService.chatComponent = this;
   }
-
 }

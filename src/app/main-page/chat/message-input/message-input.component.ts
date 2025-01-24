@@ -1,4 +1,11 @@
-import { Component, Input, ViewChild, ElementRef, OnInit, effect } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { Message } from '../../../shared/models/message.model';
@@ -35,17 +42,12 @@ export class MessageInputComponent implements OnInit {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
-
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   message: Message = new Message();
   reply: Reply = new Reply();
-
-
 
   get currentReplyMessageId(): string {
     return this.channelService.currentReplyMessageId;
@@ -58,18 +60,11 @@ export class MessageInputComponent implements OnInit {
     }
     this.message.timestamp = new Date().getTime();
     this.message.userId = this.loggedInUser.id;
-    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-    //   (user: User) => {
-    //     if (user) {
-    //       this.message.userId = user.id;
-    //     }
-    //   }
-    // );
 
     this.channelService.sendMessage(this.message.toJSON());
 
     this.message.message = '';
-    this.chatComponent.scrollToBottom();
+    this.chatComponent.scroll = true;
     console.log('Successfully sent message!!');
   }
 
@@ -80,7 +75,6 @@ export class MessageInputComponent implements OnInit {
     }
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
-
 
     // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
     //   (user: User) => {
@@ -96,8 +90,6 @@ export class MessageInputComponent implements OnInit {
     );
 
     this.reply.message = '';
-
-    this.replyPanelComponent.scrollToBottom();
 
     console.log('Successfully sent message!!');
   }

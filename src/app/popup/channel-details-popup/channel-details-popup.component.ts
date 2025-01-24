@@ -1,8 +1,9 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
+import { Channel } from '../../shared/models/channel.model';
 
 @Component({
   selector: 'app-channel-details-popup',
@@ -14,11 +15,18 @@ import { UserService } from '../../shared/services/user.service';
 export class ChannelDetailsPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
+  currentChannel: Channel = new Channel();
+
   constructor(
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService
-  ) {}
+  ) {
+    // Effect reagiert auf Änderungen des Signals
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
+  }
 
   get editChannelName() {
     return this.popupService.editChannelName;
@@ -36,23 +44,13 @@ export class ChannelDetailsPopupComponent {
     this.popupService.editChannelDescription = value;
   }
 
-  get currentChannel() {
-    return this.channelService.currentChannel;
-  }
-
-  get currentChannelCreatedId() {
-    return this.channelService.currentChannel.channelCreatorId;
-  }
-
   get allUsers() {
     return this.userService.allUsers;
   }
 
   public getCurrentChannelCreatorName() {
-    console.log(this.currentChannelCreatedId);
-
     return this.allUsers.find(
-      (user) => user.id === this.currentChannelCreatedId
+      (user) => user.id === this.currentChannel.channelCreatorId
     )?.name;
   }
 

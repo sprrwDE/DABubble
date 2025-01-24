@@ -52,6 +52,7 @@ export class ReplyPanelComponent {
   }
 
   getUserName(userId: string) {
+    this.scrollToBottom();
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name ||
       'NAN = Not A NAME'

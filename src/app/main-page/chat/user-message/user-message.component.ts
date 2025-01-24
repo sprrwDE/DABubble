@@ -67,7 +67,6 @@ export class UserMessageComponent {
   openReplyPanel() {
     this.currentReplyMessageId = this.messageId;
     this.panelService.openReplyPanel();
-    this.panelService.scrollToBottom();
 
     // Hier muss dann statt der message die ID des chats (replay chats) übergeben werden
     this.panelService.renderReplyPanel(

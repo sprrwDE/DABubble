@@ -5,6 +5,8 @@ import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
 import { TestService } from '../../shared/services/test.service';
+import { User } from '../../shared/models/user.model';
+import { Channel } from '../../shared/models/channel.model';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -22,8 +24,9 @@ export class SidebarNavComponent {
     type: string;
     corner: string;
   }>();
-  unsubLoggedInUser!: Subscription;
-  public isLoggedInUser = false;
+
+  public loggedInUser: any;
+  public currentChannel: Channel = new Channel();
 
   constructor(
     public user: UserService,
@@ -32,26 +35,17 @@ export class SidebarNavComponent {
     public userService: UserService,
     public test: TestService
   ) {
-    // effect(() => {
-    
-    //   const user = this.userService.loggedInUser();
-    //   if (user) {
-    //     this.channel.channelCreatorId = user.id;
-    //     this.isLoggedInUser = user.id === this.userIdToCheck; // userIdToCheck sollte übergeben werden oder als Property definiert sein
-    //   }
-    // });
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
   }
 
   get allChannels() {
     return this.channelService.allChannels;
-  }
-
-  get currentChannelId() {
-    return this.channelService.currentChannelId;
-  }
-
-  set currentChannelId(value: string) {
-    this.channelService.currentChannelId = value;
   }
 
   toggleChannels() {
@@ -68,14 +62,9 @@ export class SidebarNavComponent {
     this.openPopupEvent.emit({ type: popupType, corner: popupCorner });
   }
 
-  checkLoggedInUserId(userId: string): boolean {
-    // Hier wird der bereits ermittelte Wert zurückgegeben
-    return this.isLoggedInUser;
-  }
+  setCurrentChannel(channel: Channel) {
+    this.channelService.currentChannel.set(channel);
 
-  ngOnDestroy() {
-    if (this.unsubLoggedInUser) {
-      this.unsubLoggedInUser.unsubscribe();
-    }
+    this.channelService.chatComponent.scroll = true;
   }
 }

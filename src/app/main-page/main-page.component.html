@@ -1,48 +1,82 @@
 <section class="relative">
-
   <div>
-    @for (user of userService.allUsers; track user) {
-    <div class="size-72 fixed top-0 hidden" style=" background-image: url({{user.image}});">
-    </div>
-    }
-
+    <!-- @for (user of userService.allUsers; track user) { -->
+    <div
+      *ngFor="let user of allUsers"
+      class="size-72 fixed top-0 hidden"
+      style=" background-image: url('{{ user.image }}');"
+    ></div>
+    <!-- } -->
   </div>
   <app-header-bar></app-header-bar>
 
   <div class="h-[calc(100vh-102px)] flex flex-row p-4">
-    <app-sidebar-nav class="w-[350px] duration-300 max-w-[350px] overflow-hidden" [ngClass]="{
+    <app-sidebar-nav
+      class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
+      [ngClass]="{
         'w-px': !openSidebar,
         'w-full': openSidebar
-      }" (openPopupEvent)="openPopup($event)"></app-sidebar-nav>
+      }"
+      (openPopupEvent)="openPopup($event)"
+    ></app-sidebar-nav>
 
     <app-chat class="w-full"></app-chat>
 
-    <app-reply-panel class="w-[450px] duration-300 max-w-[450px] overflow-hidden" [ngClass]="{
+    <app-reply-panel
+      class="w-[450px] duration-300 max-w-[450px] overflow-hidden"
+      [ngClass]="{
         'w-px': !panelService.isReplyPanelOpen,
         'w-full': panelService.isReplyPanelOpen
-      }"></app-reply-panel>
+      }"
+    ></app-reply-panel>
   </div>
 
   <div
     class="z-[9] open-sidebar-btn hover:cursor-pointer select-none flex gap-2 shadow-[-4px_-4px_7px_0px_#00000033] rounded-l-[30px] p-2 py-6 bg-white absolute top-[50%] left-0"
-    (click)="toggleSidebar()">
+    (click)="toggleSidebar()"
+  >
     <p *ngIf="openSidebar" class="flex items-center">
       Workspace-Menü schließen
     </p>
     <p *ngIf="!openSidebar" class="flex items-center">Workspace-Menü öffnen</p>
 
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="8" y="8" width="16" height="16" rx="1" stroke="black" stroke-width="2" />
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x="8"
+        y="8"
+        width="16"
+        height="16"
+        rx="1"
+        stroke="black"
+        stroke-width="2"
+      />
       <path d="M13.7144 8V24" stroke="black" stroke-width="2" />
-      <path d="M19.4283 18.2856L17.4961 16.3535C17.3009 16.1582 17.3009 15.8416 17.4961 15.6464L19.4283 13.7142"
-        stroke="black" stroke-width="2" stroke-linecap="round" />
+      <path
+        d="M19.4283 18.2856L17.4961 16.3535C17.3009 16.1582 17.3009 15.8416 17.4961 15.6464L19.4283 13.7142"
+        stroke="black"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
     </svg>
   </div>
 
   <!-- popup -->
-  <app-popup [popupCorner]="popupCorner" [popupOpen]="popupOpen" [popupType]="popupType"
-    (closePopupEvent)="popupOpen = false"></app-popup>
+  <app-popup
+    [popupCorner]="popupCorner"
+    [popupOpen]="popupOpen"
+    [popupType]="popupType"
+    (closePopupEvent)="popupOpen = false"
+  ></app-popup>
 
-  <app-popup [popupOpen]="contactProfilePopupOpen" [popupType]="'contact-profile'"
-    (closePopupEvent)="contactProfilePopupOpen = false"></app-popup>
+  <app-popup
+    [popupOpen]="contactProfilePopupOpen"
+    [popupType]="'contact-profile'"
+    (closePopupEvent)="contactProfilePopupOpen = false"
+  ></app-popup>
 </section>

@@ -29,9 +29,8 @@ export class ChannelService {
   unsubMessages: any;
 
   allChannels: Channel[] = [];
-  sendCurrentChannel = signal<Channel | null>(null);
   currentChannelId: string = '';
-  currentChannel: Channel = new Channel();
+  currentChannel = signal<Channel>(new Channel());
   currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
@@ -156,20 +155,16 @@ export class ChannelService {
     }
   }
 
-  private updateCurrentChannel(channel: Channel, messages: Message[]) {
+  private updateCurrentChannel(channel: any, messages: Message[]) {
     this.initializeCurrentChannelIfNeeded();
 
     if (this.currentChannelId === channel.id) {
       this.currentChannelMessages = messages;
-      this.currentChannel = channel;
-
-      this.sendCurrentChannel.set(this.currentChannel);
+      this.currentChannel.set(channel);
 
       /// wird sehr oft aufgerufen alles
       // console.log('currentChannel', this.currentChannel.id, this.currentChannel)
     }
-
-    this.chatComponent.scrollToBottom();
   }
 
   private initializeCurrentChannelIfNeeded() {
