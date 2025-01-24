@@ -28,7 +28,9 @@ export class AddMemberPopupComponent {
 
   addMembers(id: string) {
     this.test.pushMembersToChannel(id);
-    this.closePopup();
+    // this.closePopup();
+    this.clearInputAndClosePopup()
+    this.test.userToAdd = [];
   }
 
   showAddUserToChannelSection(event: Event) {
