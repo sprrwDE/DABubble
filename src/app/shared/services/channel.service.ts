@@ -162,8 +162,6 @@ export class ChannelService {
       this.currentChannelMessages = messages;
       this.currentChannel.set(channel);
 
-      /// wird sehr oft aufgerufen alles
-      // console.log('currentChannel', this.currentChannel.id, this.currentChannel)
     }
   }
 

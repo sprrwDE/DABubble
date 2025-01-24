@@ -35,11 +35,15 @@ export class TestService implements OnDestroy {
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
 
+
+
+
   /// Hier
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung
   possibleUserList: User[] = [];
   userToAdd: User[] = [];
+  filteredUsers: User[] = []
 
   private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
 
@@ -64,9 +68,9 @@ export class TestService implements OnDestroy {
         (user) => !userIds.includes(user.id)
       );
       // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
-      if (this.possibleUserList.length > 0) {
+/*       if (this.possibleUserList.length > 0) {
         console.log('POSSIBLE USER LIST:', this.possibleUserList);
-      }
+      } */
     });
   }
 
@@ -76,6 +80,9 @@ export class TestService implements OnDestroy {
   In Dom Aus "possibleUserList" einen Loop erschaffen, track index
   (click)="setUserToAdd(possibleUserList[index].id)"
   man soll im input feld user wieder entfernen können 
+  Listen clearen
+
+  Statt mehrere inputs array in string umwandeln oder mit klassen new User() und beim pushen string wieder in array umwandeln
 
   in setUserToAdd funktion aufrufen welche userToAdd.forEach(user) user.id in Channel Pusht
 
@@ -93,25 +100,26 @@ export class TestService implements OnDestroy {
 
 
 
-  
+
   //// HIER
 
   /// POSSIBLE USER LIST NACH INPUT FILTERN UND NEUES ARRAY MAPPEN -> setUserToAdd anpassen
 
   setUserToAdd(userToPush: string) {
-    const push: User | undefined = this.possibleUserList.find(
+    const push: User | undefined = this.filteredUsers.find(
       (user) => user.id === userToPush
     );
 
     if (push) {
       this.userToAdd.push(push);
-      this.possibleUserList = this.possibleUserList.filter(
+      this.filteredUsers = this.filteredUsers.filter(
         (user) => user.id !== userToPush
       );
+      // console.log(this.userToAdd)
     } else {
       console.warn(
         `User mit ID ${userToPush} nicht gefunden. \nAktuelle PossibleUserList:`,
-        this.possibleUserList
+        this.filteredUsers
       );
     }
   }
@@ -145,15 +153,17 @@ export class TestService implements OnDestroy {
         console.error('Fehler beim Hinzufügen der User-IDs:', error)
       );
 
-
       //// Hier input clearen
   }
 
+  filterArrayForNameInput(name: string) {
+    this.filteredUsers = this.possibleUserList.filter(user =>
+      user.name.toLowerCase().includes(name.toLowerCase())
+    );
+    // console.log('Filtered User List', this.filteredUsers)
+  }
+
   //// ENDE
-
-
-
-
 
   loadChannels() {
     const channelsRef = collection(this.firestore, 'channels');
@@ -189,11 +199,10 @@ export class TestService implements OnDestroy {
         });
 
         this.currentChannelUserIds = this.selectedChannel.users;
-        if (this.currentChannelUserIds.length > 0) {
+/*         if (this.currentChannelUserIds.length > 0) {
           console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);
-        }
+        } */
 
-        // 🔥 `BehaviorSubject` aktualisieren, damit `combineLatest()` triggert
         this.channelUserIdsSubject.next(this.currentChannelUserIds);
       } else {
         console.warn('Channel nicht gefunden.');

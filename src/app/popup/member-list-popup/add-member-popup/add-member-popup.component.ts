@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
 //// DUMMY
 import { TestService } from '../../../shared/services/test.service';
+import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-add-member-popup',
@@ -21,23 +22,14 @@ export class AddMemberPopupComponent {
   memberStatus: string = 'offline'; // Status des Mitglieds (online/offline) */
 
   showUserPopup: boolean = false;
+  nameInput: string = '';
 
   constructor(public popupService: PopupService, public test: TestService) {}
 
-  closePopup() {
-    this.closePopupEvent.emit();
+  addMembers(id: string) {
+    this.test.pushMembersToChannel(id);
+    this.closePopup();
   }
-
-  /*   addMember() {
-
-    console.log(
-      'Mitglied hinzugefügt:',
-      this.memberName,
-      this.memberImage,
-      this.memberStatus
-    );
-    this.closePopup(); 
-  } */
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
@@ -47,4 +39,26 @@ export class AddMemberPopupComponent {
   closeUserPopup() {
     this.showUserPopup = false;
   }
-}
+
+  getNameInput(event: Event) {
+    let name = this.nameInput
+    this.test.filterArrayForNameInput(name)
+    this.showAddUserToChannelSection(event);
+  }
+
+  setUser(userId: string) {
+    this.test.setUserToAdd(userId);
+    this.nameInput = ''; 
+  }
+
+  clearInputAndClosePopup() {
+    this.nameInput = ''; 
+    this.showUserPopup = false; 
+    this.closePopupEvent.emit();
+  }
+
+  closePopup() {
+    this.closePopupEvent.emit();
+  }
+
+ }

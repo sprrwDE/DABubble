@@ -18,12 +18,17 @@ import { TestService } from '../../shared/services/test.service';
 })
 export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
-  @Input() display: boolean = false; // `@Input()` damit der Wert von außen gesteuert werden kann
+  @Input() display: boolean = false;
 
   constructor(public test: TestService) {}
 
   set showAddUserToChannelPopup(value: boolean) {
     this.display = value; 
+  }
+
+  addUserToChannel(userId: string) {
+    this.test.setUserToAdd(userId);
+    this.closePopup();
   }
 
   closePopup() {
