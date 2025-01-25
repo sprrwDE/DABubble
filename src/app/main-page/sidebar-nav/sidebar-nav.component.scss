@@ -20,7 +20,7 @@
   @apply hover:bg-bg hover:cursor-pointer px-[20px] py-[4px] rounded-[35px] w-full flex items-center gap-[10px] transition-all duration-100;
 
   img {
-    @apply h-[50px] w-[50px] rounded-full;
+    @apply h-[50px] w-[50px] min-h-[50px] min-w-[50px] rounded-full;
   }
 
   p {
@@ -45,5 +45,11 @@
       @apply stroke-primary;
     }
     @apply bg-bg;
+  }
+}
+
+.searchInput-container {
+  &:has(input:focus) {
+    @apply border-[3px] border-primary;
   }
 }

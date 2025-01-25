@@ -7,6 +7,8 @@ import { UserService } from '../../shared/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../shared/models/user.model';
 import { Subscription } from 'rxjs';
+import { Channel } from '../../shared/models/channel.model';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-reply-panel',
@@ -18,16 +20,25 @@ import { Subscription } from 'rxjs';
 export class ReplyPanelComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   public loggedInUser: any;
-
-  unsubscribeLoggedInUser!: Subscription;
+  public currentChannel: Channel = new Channel();
+  public isMobile: boolean = false;
 
   constructor(
     public panelService: PanelService,
     public channelService: ChannelService,
-    public userService: UserService
+    public userService: UserService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
+    });
+
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
   }
 
@@ -37,10 +48,6 @@ export class ReplyPanelComponent {
 
   get currentChannelMessages() {
     return this.channelService.currentChannelMessages;
-  }
-
-  get currentChannel() {
-    return this.channelService.currentChannel;
   }
 
   get currentReplyMessageId() {
@@ -68,21 +75,6 @@ export class ReplyPanelComponent {
 
   checkIfContact(userId: string): boolean {
     let loggedInUserId = this.loggedInUser;
-
-    // // effect(() => {
-    // //   const user = this.userService.loggedInUser();
-    // //   if (user) {
-    // //     loggedInUserId = user.id
-    // //   }
-    // // });
-
-    // this.unsubscribeLoggedInUser = this.userService.loggedInUser$.subscribe(
-    //  (user: User) => {
-    //     if (user) {
-    //       loggedInUserId = user.id;
-    //     }
-    //   }
-    // );
 
     return loggedInUserId !== userId;
   }

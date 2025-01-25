@@ -5,3 +5,9 @@
     }
   }
 }
+
+.searchInput-container {
+  &:has(input:focus) {
+    @apply border-[3px] border-primary;
+  }
+}

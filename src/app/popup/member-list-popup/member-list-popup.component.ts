@@ -25,12 +25,13 @@ import { UserService } from '../../shared/services/user.service';
 export class MemberListPopupComponent implements OnInit, OnDestroy {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  channelData$: BehaviorSubject<Channel | null>;
-  private subscription!: Subscription;
+  // channelData$: BehaviorSubject<Channel | null>;
+  // private subscription!: Subscription;
   userList: User[] = [];
   userIds: string[] = [];
   loggedInUser: any;
   currentChannelUsers: User[] = [];
+  currentChannel: Channel = new Channel();
 
   constructor(
     public popupService: PopupService,
@@ -40,7 +41,15 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
-    this.channelData$ = channelService.currentChannelData$;
+
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+      this.userList = this.allUsers.filter((user) =>
+        this.currentChannel.users.includes(user.id)
+      );
+    });
+
+    // this.channelData$ = channelService.currentChannelData$;
   }
 
   get allUsers() {
@@ -58,24 +67,21 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   get currentChannelId() {
     return this.channelService.currentChannelId;
   }
-  get currentChannel() {
-    return this.channelService.currentChannel;
-  }
 
   ngOnInit() {
-    this.subscription = combineLatest([
-      this.userService.fetchedCollection$,
-      this.channelData$,
-    ]).subscribe(([allUsers, channel]) => {
-      if (channel) {
-        this.userIds = channel.users;
-        this.userList = allUsers.filter((user) =>
-          this.userIds.includes(user.id)
-        );
-        console.log('USER IM CHANNEL:', this.currentChannelUsers);
-      }
-    });
-    this.channelService.fetchChannel(this.currentChannelId);
+    //   this.subscription = combineLatest([
+    //     this.userService.fetchedCollection$,
+    //     this.channelData$,
+    //   ]).subscribe(([allUsers, channel]) => {
+    //     if (channel) {
+    //       this.userIds = channel.users;
+    // this.userList = allUsers.filter((user) =>
+    //   this.userIds.includes(user.id)
+    // );
+    //       console.log('USER IM CHANNEL:', this.currentChannelUsers);
+    //     }
+    //   });
+    //   this.channelService.fetchChannel(this.currentChannelId);
   }
 
   openContactProfile(user: User) {
@@ -84,8 +90,8 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.channelService.unsubscribeChannel();
+    // this.subscription.unsubscribe();
+    // this.channelService.unsubscribeChannel();
   }
 
   closePopup() {
