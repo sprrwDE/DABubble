@@ -9,8 +9,11 @@
   <app-header-bar></app-header-bar>
 
   <div
-    class="h-[calc(100vh-102px)] flex flex-row p-4"
-    [ngClass]="{ 'p-[0]': isMobile }"
+    class="flex flex-row p-4"
+    [ngClass]="{
+      'p-[0] h-[calc(100vh-80px)]': isMobile,
+      'h-[calc(100vh-102px)]': !isMobile
+    }"
   >
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
