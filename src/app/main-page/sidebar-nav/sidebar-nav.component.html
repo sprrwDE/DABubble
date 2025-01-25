@@ -193,7 +193,7 @@
           *ngFor="let channel of allChannels"
           (click)="setCurrentChannel(channel)"
           class="channel-item"
-          [ngClass]="{ 'active-channel': channel.id === currentChannel?.id }"
+          [ngClass]="{ 'active-channel': channel.id === currentChannel.id }"
         >
           <svg
             width="24"
