@@ -11,6 +11,7 @@ export class UserService {
   allUsers: User[] = [];
   fetchedCollection$: Observable<any[]>;
   loggedInUser = signal<User | null>(null); // Initialwert: null
+  isLoggedIn = signal(false); // Signal für den Login-Status
 
   constructor(private fb: FirebaseService, private auth: Auth) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
@@ -25,11 +26,13 @@ export class UserService {
     // state listener for logged in user ( logged in / logged out )
     this.auth.onAuthStateChanged(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
+        this.isLoggedIn.set(true); // Login-Status aktualisieren
         await this.fb.updateStateUser(firebaseUser.uid, 'online');
         const newUser = await this.fb.getSingleDoc('users', firebaseUser.uid);
         this.setLoggedInUser(newUser);
       } else {
         if (this.loggedInUser()) {
+          this.isLoggedIn.set(false); // Login-Status aktualisieren
           this.fb.updateStateUser(this.loggedInUser()!.id, 'offline');
         }
         this.setLoggedInUser(null);
