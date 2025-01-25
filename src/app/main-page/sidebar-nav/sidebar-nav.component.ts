@@ -1,11 +1,9 @@
-import { CommonModule, NgClass, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, effect, EventEmitter, Output } from '@angular/core';
 import { UserService } from '../../shared/services/user.service';
 import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
-import { Subscription } from 'rxjs';
 import { TestService } from '../../shared/services/test.service';
-import { User } from '../../shared/models/user.model';
 import { Channel } from '../../shared/models/channel.model';
 
 @Component({

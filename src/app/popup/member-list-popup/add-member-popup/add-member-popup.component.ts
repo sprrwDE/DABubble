@@ -46,6 +46,7 @@ export class AddMemberPopupComponent {
     this.showUserPopup = false;
   }
 
+  /// ASD wird dennoch angezeigt
   getNameInput(event: Event) {
     let name = this.nameInput.trim().toLowerCase();
     this.test.filterArrayForNameInput(name);
@@ -61,7 +62,6 @@ export class AddMemberPopupComponent {
       this.showUserPopup = false;
     }
   }
-  
 
   setUser(userId: string) {
     this.test.setUserToAdd(userId);

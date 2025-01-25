@@ -1,15 +1,26 @@
     
     @if(display && test.filteredUsers.length !== 0) {
-      <div class="add-user-to-channel absolute bg-white">
+      <div class="p-[20px_25px_20px_25px] gap-[15px] rounded-[0px_20px_20px_20px] border border-[#ADB0D9] shadow-[0px_2px_10px_0px_#00000014] opacity-100 bg-white">
         @for (user of test.filteredUsers; track $index) {
           @if(user.id != 'jishYferh4Q5QSlMIdjKGzL2mpc2') {
-            <div (click)="test.setUserToAdd(user.id)" class="flex">
-              <img src="{{ user.image}}" class="w-[50px] h-[50px] rounded-full">
-              {{user.name}}
-            </div>
+
+            <div class="contact-item" (click)="test.setUserToAdd(user.id)"> 
+              <div class="relative " >
+                <img src="{{ user.image || 'imgs/avatar/profile.svg' }}" alt="" />
+                <div
+                  [ngClass]="{
+                    'bg-online': user.status === 'online',
+                    'bg-disable': user.status === 'offline'
+                  }"
+                  class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+                ></div>
+              </div>
+              <p>
+                {{ user.name || "lädt..." }}
+              </p>
+            </div>  
           }
         }
-        <button (click)="closePopup()">Schließen</button>
       </div>
     }
 
