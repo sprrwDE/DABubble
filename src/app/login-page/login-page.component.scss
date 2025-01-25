@@ -13,7 +13,7 @@ p,
 input,
 button,
 span {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 @media (min-width: 768px) {
@@ -21,6 +21,6 @@ span {
   input,
   button,
   span {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 }

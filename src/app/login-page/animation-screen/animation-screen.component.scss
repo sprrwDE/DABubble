@@ -108,7 +108,6 @@
     transform: translateX(50vw);
     transform: translateY(40vh);
     padding-left: 40%;
-
   }
 
   100% {
@@ -117,7 +116,6 @@
     padding-left: 0%; /* Weicher Übergang nach links */
   }
 }
-
 
 .mobile-reposition {
   animation: animateToPosition 4s ease-in forwards;
