@@ -11,6 +11,7 @@ import { PopupService } from '../popup/popup.service';
 import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
 import { TestService } from '../shared/services/test.service';
+import { GlobalVariablesService } from '../shared/services/global-variables.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -31,16 +32,23 @@ export class MainPageComponent {
   afkDelay: number = 3000;
   timeoutId: any;
   loggedInUser: any;
+  public isMobile: boolean = false;
+  public showChannelChat: boolean = false;
 
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
     public userService: UserService,
     private fb: FirebaseService,
-    private test: TestService
+    private test: TestService,
+    private globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
   }
   get allUsers() {

@@ -52,8 +52,9 @@
         (click)="openMemberListPopup('member-list', 'tr', false)"
       >
         <div class="flex items-center">
+          <!-- Es werden nur 3 Bilder gerendert da die restlichen user in einem popup angezeigt werden -->
           <img
-            *ngFor="let user of channelUsers"
+            *ngFor="let user of channelUsers.slice(0, 3)"
             class="group-members-avatar"
             src="{{ user.image || 'imgs/avatar1.png' }}"
             alt=""

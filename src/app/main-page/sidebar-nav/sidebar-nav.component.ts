@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { TestService } from '../../shared/services/test.service';
 import { User } from '../../shared/models/user.model';
 import { Channel } from '../../shared/models/channel.model';
+import { PanelService } from '../../shared/services/panel.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -27,13 +29,16 @@ export class SidebarNavComponent {
 
   public loggedInUser: any;
   public currentChannel: Channel = new Channel();
+  public isMobile: boolean = false;
 
   constructor(
     public user: UserService,
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService,
-    public test: TestService
+    public test: TestService,
+    public panelService: PanelService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -41,6 +46,10 @@ export class SidebarNavComponent {
 
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
   }
 
@@ -63,8 +72,9 @@ export class SidebarNavComponent {
   }
 
   setCurrentChannel(channel: Channel) {
-    this.channelService.currentChannel.set(channel);
+    this.panelService.closeReplyPanel();
 
+    this.channelService.currentChannel.set(channel);
     this.channelService.chatComponent.scroll = true;
   }
 }

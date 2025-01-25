@@ -1,12 +1,14 @@
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { UserService } from '../../shared/services/user.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header-bar',
   standalone: true,
-  imports: [PopupComponent],
+  imports: [PopupComponent, CommonModule],
   templateUrl: './header-bar.component.html',
   styleUrl: './header-bar.component.scss',
 })
@@ -14,10 +16,12 @@ export class HeaderBarComponent {
   public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
   public userImage: string = '';
+  public isMobile: boolean = false;
 
   constructor(
     private popupService: PopupService,
-    private userService: UserService
+    private userService: UserService,
+    private globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
@@ -29,6 +33,10 @@ export class HeaderBarComponent {
         this.UserName = 'lädt...';
         this.userImage = 'imgs/avatar/profile.svg';
       }
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
   }
 
