@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './animation-screen.component.scss',
 })
 export class AnimationScreenComponent implements OnInit {
-  animation: boolean = true; // AUF TRUE STELLEN FÜR DIE ANIMATION
+  animation: boolean = false; // AUF TRUE STELLEN FÜR DIE ANIMATION
 
 
   constructor(public global: GlobalVariablesService){
