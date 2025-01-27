@@ -6,7 +6,6 @@ import {
   query,
   orderBy,
   doc,
-  addDoc,
   updateDoc,
   arrayUnion,
 } from '@angular/fire/firestore';
@@ -15,8 +14,6 @@ import { Message } from '../models/newmodels/message.model.new';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { Observable } from 'rxjs';
-import { user } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -30,10 +27,12 @@ export class TestService implements OnDestroy {
   private unsubscribeMessages: any;
   selectedChannel: Channel | null = null;
   /// DUMMY
-  currentChannelId: string = '';
+  currentChannelId: string = 'Ks8hNpn38fEiwcDmRxOB';
 
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
+
+  isCreatingNewChannel: boolean = false;
 
 
 
@@ -53,7 +52,7 @@ export class TestService implements OnDestroy {
     });
 
     this.loadChannels();
-    if(this.currentChannelId) this.subscribeToChannelById(this.currentChannelId); 
+    this.subscribeToChannelById(this.currentChannelId); 
 
     combineLatest([
       this.userservice.fetchedCollection$,
@@ -153,6 +152,7 @@ export class TestService implements OnDestroy {
   }
 
   filterArrayForNameInput(name: string) {
+    console.log('blaaa', this.isCreatingNewChannel)
     this.filteredUsers = this.possibleUserList.filter(user =>
       user.name.toLowerCase().includes(name.toLowerCase())
     );
@@ -176,7 +176,7 @@ export class TestService implements OnDestroy {
 
       // console.log('ALLE CHANNEL:', this.allChannels);
 
-      if(this.currentChannelId) this.subscribeToMessages(this.currentChannelId);
+      this.subscribeToMessages(this.currentChannelId);
     });
   }
 

@@ -34,6 +34,7 @@ export class AddMemberPopupComponent {
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
+    this.test.isCreatingNewChannel = false;
     if (this.test.userToAdd.length == 0 && this.nameInput == 'Gast') {
       return
     } else {

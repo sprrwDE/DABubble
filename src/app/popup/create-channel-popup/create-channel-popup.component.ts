@@ -109,10 +109,8 @@ export class CreateChannelPopupComponent {
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
-    console.log('Eingegebener Name:', this.nameInput);  // Debugging
-    
+    this.test.isCreatingNewChannel = true;
     this.test.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
-    console.log('Gefilterte Nutzer:', this.test.filteredUsers); // Debugging
   
     if (this.test.filteredUsers.length > 0) {
       console.log('Popup wird angezeigt');
