@@ -41,6 +41,7 @@
       [(ngModel)]="nameInput"
       (input)="getNameInput($event)"
       class="relative"
+      (click)="getNameInput($event)"
     />
 
     <div class="flex flex-wrap gap-2 mt-2">
@@ -51,7 +52,7 @@
             <img class="h-[24px] w-[24px] rounded-full" src="{{ user.image || 'imgs/avatar/profile.svg' }}">
             <span class="truncate">{{ user.name }}</span>
           </div>
-            <span (click)="test.removeUserToAdd(user.id)">
+            <span class="cursor-pointer" (click)="test.removeUserToAdd(user.id)">
               ✕
             </span>
           </div>

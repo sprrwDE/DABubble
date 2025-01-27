@@ -2,7 +2,6 @@
     @if(display && test.filteredUsers.length !== 0) {
       <div class="p-[20px_25px_20px_25px] gap-[15px] rounded-[0px_20px_20px_20px] border border-[#ADB0D9] shadow-[0px_2px_10px_0px_#00000014] opacity-100 bg-white">
         @for (user of test.filteredUsers; track $index) {
-          @if(user.id != 'jishYferh4Q5QSlMIdjKGzL2mpc2') {
 
             <div class="contact-item" (click)="test.setUserToAdd(user.id)"> 
               <div class="relative " >
@@ -20,8 +19,5 @@
               </p>
             </div>  
           }
-        }
       </div>
     }
-
-  

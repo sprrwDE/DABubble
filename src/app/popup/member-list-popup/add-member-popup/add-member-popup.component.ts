@@ -46,13 +46,12 @@ export class AddMemberPopupComponent {
     this.showUserPopup = false;
   }
 
-  /// ASD wird dennoch angezeigt
   getNameInput(event: Event) {
     let name = this.nameInput.trim().toLowerCase();
     this.test.filterArrayForNameInput(name);
   
-    if (this.test.userToAdd.length === 0 && 'gast'.startsWith(name)) {
-      this.showUserPopup = false;
+    if (this.test.userToAdd.length === 0) {
+      this.showUserPopup = true;
       return;
     }
   
