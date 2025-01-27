@@ -46,6 +46,11 @@ export class AddMemberPopupComponent {
     this.showUserPopup = false;
   }
 
+  addMemberToExistingChannel(event: Event) {
+    this.test.isCreatingNewChannel = false;
+    this.getNameInput(event)
+  }
+
   getNameInput(event: Event) {
     let name = this.nameInput.trim().toLowerCase();
     this.test.filterArrayForNameInput(name);
