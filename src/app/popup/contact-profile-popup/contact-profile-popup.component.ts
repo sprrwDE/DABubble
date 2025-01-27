@@ -1,10 +1,21 @@
-import { Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  Input,
+  NgZone,
+  Output,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
 import { BehaviorSubject } from 'rxjs';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
+import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChat } from '../../shared/models/direct-chat.model';
 
 @Component({
   selector: 'app-contact-profile-popup',
@@ -15,18 +26,27 @@ import { PopupService } from '../popup.service';
 })
 export class ContactProfilePopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
+  @ViewChild('allUsersContainer') allUsersContainer!: ElementRef;
 
   private unsubscribe?: () => void;
   currentUser: UserService;
   // currentUserData$ = new BehaviorSubject<any>(null);
 
+  loggedInUser: any;
+
   constructor(
     public service: FirebaseService,
     private user: UserService,
     private ngZone: NgZone,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private directChatService: DirectChatService,
+    private userService: UserService
   ) {
     this.currentUser = user;
+
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
   }
 
   get contactProfileContent() {
@@ -57,5 +77,40 @@ export class ContactProfilePopupComponent {
 
   closePopup() {
     this.closePopupEvent.emit();
+  }
+
+  setCurrentDirectChat(user: User) {
+    const directChat = this.directChatService.allDirectChats.find(
+      (directChat) => {
+        if (
+          directChat.userIds.includes(user.id) &&
+          directChat.userIds.includes(this.loggedInUser.id)
+        ) {
+          this.directChatService.currentDirectChat.set(directChat);
+          return true;
+        }
+        return false;
+      }
+    );
+
+    if (!directChat) {
+      this.directChatService.currentDirectChat.set(new DirectChat());
+    }
+
+    this.directChatService.currentDirectChatUser.set(user);
+    this.directChatService.isDirectChat = true;
+
+    this.closePopup();
+
+    this.popupService.memberListPopup.closePopup();
+
+    // Scroll zum ausgewählten Benutzer in der Sidebar
+    setTimeout(() => {
+      const sidebarContainer = document.querySelector('#all-users');
+      const activeElement = sidebarContainer?.querySelector('.active-contact');
+      if (activeElement) {
+        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
   }
 }

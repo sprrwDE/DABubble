@@ -1,0 +1,7 @@
+.group-members-avatar {
+  @apply w-[40px] h-[40px] rounded-full border-2 border-white;
+}
+
+.group-members-avatar:not(:first-child) {
+  @apply ml-[-15px];
+}

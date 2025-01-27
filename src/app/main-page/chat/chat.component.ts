@@ -22,6 +22,9 @@ import { Message } from '../../shared/models/message.model';
 import { publishFacade } from '@angular/compiler';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
+import { ChatHeaderComponent } from './chat-header/chat-header.component';
+import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChat } from '../../shared/models/direct-chat.model';
 
 @Component({
   selector: 'app-chat',
@@ -33,6 +36,7 @@ import { Channel } from '../../shared/models/channel.model';
     PopupComponent,
     FormsModule,
     NgFor,
+    ChatHeaderComponent,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
@@ -50,15 +54,16 @@ export class ChatComponent {
   scroll: boolean = true;
 
   currentChannel: Channel = new Channel();
-
-  unsubLoggedInUser!: Subscription;
+  currentDirectChat: DirectChat = new DirectChat();
+  currentDirectChatUser: User = new User();
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   constructor(
     public popupService: PopupService,
     public channelService: ChannelService,
-    public userService: UserService
+    public userService: UserService,
+    public directChatService: DirectChatService
   ) {
     effect(() => {
       if (this.channelService.currentChannel()) {
@@ -71,6 +76,15 @@ export class ChatComponent {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
+
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
+
+    effect(() => {
+      this.currentDirectChatUser =
+        this.directChatService.currentDirectChatUser();
+    });
   }
 
   get allChannels() {
@@ -81,34 +95,43 @@ export class ChatComponent {
     return this.userService.allUsers;
   }
 
+  get isDirectChat() {
+    return this.directChatService.isDirectChat;
+  }
+
   get channelUsers() {
     const userIds = this.currentChannel?.users;
     return this.allUsers.filter((user) => userIds?.includes(user.id));
   }
 
-  openChannelDetailsPopup(type: string, corner: string) {
-    this.channelDetailsPopupOpen = true;
-    this.channelDetailsPopupType = type;
-    this.channelDetailsPopupCorner = corner;
-  }
+  // openChannelDetailsPopup(type: string, corner: string) {
+  //   this.channelDetailsPopupOpen = true;
+  //   this.channelDetailsPopupType = type;
+  //   this.channelDetailsPopupCorner = corner;
+  // }
 
-  closeChannelDetailsPopup() {
-    this.channelDetailsPopupOpen = false;
-  }
+  // closeChannelDetailsPopup() {
+  //   this.channelDetailsPopupOpen = false;
+  // }
 
-  openMemberListPopup(
-    type: string,
-    corner: string,
-    showAddMembersPopup: boolean = false
-  ) {
-    this.memberListPopupOpen = true;
-    this.memberListPopupType = type;
-    this.memberListPopupCorner = corner;
-    this.popupService.showAddMembersPopup = showAddMembersPopup;
-  }
+  // openMemberListPopup(
+  //   type: string,
+  //   corner: string,
+  //   showAddMembersPopup: boolean = false
+  // ) {
+  //   this.memberListPopupOpen = true;
+  //   this.memberListPopupType = type;
+  //   this.memberListPopupCorner = corner;
+  //   this.popupService.showAddMembersPopup = showAddMembersPopup;
+  // }
 
-  closeMemberListPopup() {
-    this.memberListPopupOpen = false;
+  // closeMemberListPopup() {
+  //   this.memberListPopupOpen = false;
+  // }
+
+  openContactProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
   }
 
   scrollToBottom() {

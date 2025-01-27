@@ -16,6 +16,8 @@ import { Reply } from '../../../shared/models/reply.model';
 import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
 import { User } from '../../../shared/models/user.model';
 import { Subscription } from 'rxjs';
+import { DirectChatService } from '../../../shared/direct-chat.service';
+import { DirectChat } from '../../../shared/models/direct-chat.model';
 
 @Component({
   selector: 'app-message-input',
@@ -28,6 +30,7 @@ export class MessageInputComponent implements OnInit {
   @Input() isReplayInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
+  @Input() isDirectChat: boolean = false;
 
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
@@ -35,12 +38,25 @@ export class MessageInputComponent implements OnInit {
   public loggedInUser: any;
   unsubLoggedInUser!: Subscription;
 
+  currentDirectChat: DirectChat = new DirectChat();
+  currentDirectChatUser: User = new User();
+
   constructor(
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    private directChatService: DirectChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
+    });
+
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
+
+    effect(() => {
+      this.currentDirectChatUser =
+        this.directChatService.currentDirectChatUser();
     });
   }
 
@@ -49,11 +65,13 @@ export class MessageInputComponent implements OnInit {
   message: Message = new Message();
   reply: Reply = new Reply();
 
+  directChat: DirectChat = new DirectChat();
+
   get currentReplyMessageId(): string {
     return this.channelService.currentReplyMessageId;
   }
 
-  sendMessage() {
+  async sendMessage() {
     if (this.message.message.trim() === '') {
       console.log('Message is empty');
       return;
@@ -61,7 +79,40 @@ export class MessageInputComponent implements OnInit {
     this.message.timestamp = new Date().getTime();
     this.message.userId = this.loggedInUser.id;
 
-    this.channelService.sendMessage(this.message.toJSON());
+    console.log(this.currentDirectChat);
+
+    if (this.isDirectChat) {
+      const isSelfChat = this.loggedInUser.id === this.currentDirectChatUser.id;
+      const userIdCount = this.currentDirectChat.userIds.filter(
+        (id) => id === this.loggedInUser.id
+      ).length;
+
+      if (
+        (!isSelfChat &&
+          (!this.currentDirectChat.userIds.includes(this.loggedInUser.id) ||
+            !this.currentDirectChat.userIds.includes(
+              this.currentDirectChatUser.id
+            ))) ||
+        (isSelfChat && userIdCount !== 2)
+      ) {
+        this.directChat.userIds = [
+          this.loggedInUser.id,
+          this.currentDirectChatUser.id,
+        ];
+
+        const chatId = await this.directChatService.addDirectChat(
+          this.directChat.toJSON()
+        );
+        if (chatId) {
+          this.directChat.id = chatId;
+          this.directChatService.currentDirectChat.set(this.directChat);
+          this.directChatService.currentDirectChatId = chatId;
+        }
+      }
+      this.directChatService.sendMessage(this.message.toJSON());
+    } else {
+      this.channelService.sendMessage(this.message.toJSON());
+    }
 
     this.message.message = '';
     this.chatComponent.scroll = true;

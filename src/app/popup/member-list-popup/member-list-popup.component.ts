@@ -38,6 +38,7 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     private channelService: ChannelService,
     private userService: UserService
   ) {
+    this.popupService.memberListPopup = this;
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
