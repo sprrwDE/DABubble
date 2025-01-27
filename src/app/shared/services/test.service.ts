@@ -41,6 +41,7 @@ export class TestService implements OnDestroy {
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung
   possibleUserList: User[] = [];
+  allUsers: User[] = [];
   userToAdd: User[] = [];
   filteredUsers: User[] = []
 
@@ -59,12 +60,8 @@ export class TestService implements OnDestroy {
       this.channelUserIdsSubject,
     ]).subscribe(([allUsers, userIds]) => {
       
-      if (!this.currentChannelId) {
-        console.log('Kein Channel vorhanden, setze alle Nutzer in possibleUserList.');
-        this.possibleUserList = allUsers;
+        this.allUsers = allUsers;
         this.currentChannelUsers = []; // Kein Channel -> keine zugewiesenen User
-      } else {
-        console.log(`Aktueller Channel: ${this.currentChannelId}`);
         
         this.currentChannelUsers = allUsers.filter((user) =>
           userIds.includes(user.id)
@@ -73,7 +70,7 @@ export class TestService implements OnDestroy {
         this.possibleUserList = allUsers.filter(
           (user) => !userIds.includes(user.id)
         );
-      }
+      
     });
     
   }
@@ -120,6 +117,11 @@ export class TestService implements OnDestroy {
   }
 
   removeUserToAdd(userToRemove: string) {
+    console.log('New Channel?', this.isCreatingNewChannel)
+    console.log(this.possibleUserList, 'possible')
+    if(!this.isCreatingNewChannel) {
+
+    }
     const remove: User | undefined = this.userToAdd.find(
       (user) => user.id === userToRemove
     );
@@ -128,6 +130,8 @@ export class TestService implements OnDestroy {
         (user) => user.id !== userToRemove
       );
       this.possibleUserList.push(remove);
+      this.filteredUsers = this.possibleUserList;
+      console.log(this.possibleUserList, 'possible')
     } else {
       console.warn(
         `User mit ID ${userToRemove} nicht gefunden. \nAktuelle UserToAdd-Liste:`,
@@ -135,6 +139,9 @@ export class TestService implements OnDestroy {
       );
     }
   }
+
+
+  /// input clearen wichtig
 
   pushMembersToChannel(channelId: string) {
     const arrayToPush = this.userToAdd.map((user) => user.id); // Extrahiert nur die IDs
@@ -152,14 +159,30 @@ export class TestService implements OnDestroy {
   }
 
   filterArrayForNameInput(name: string) {
-    console.log('blaaa', this.isCreatingNewChannel)
-    this.filteredUsers = this.possibleUserList.filter(user =>
-      user.name.toLowerCase().includes(name.toLowerCase())
-    );
-    // console.log('Filtered User List', this.filteredUsers)
+    console.log('New Channel?', this.isCreatingNewChannel)
+    if(!this.isCreatingNewChannel) {
+      this.filteredUsers = this.possibleUserList.filter(user =>
+        user.name.toLowerCase().includes(name.toLowerCase())
+      );
+    } else {
+      this.possibleUserList = this.allUsers; 
+      this.filteredUsers = this.possibleUserList.filter(user => 
+          user.name.toLowerCase().includes(name.toLowerCase())
+      );
   }
+}
+
+  
 
   //// ENDE
+
+
+
+
+
+
+
+
 
   loadChannels() {
     const channelsRef = collection(this.firestore, 'channels');

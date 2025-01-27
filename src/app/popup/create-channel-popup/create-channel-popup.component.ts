@@ -107,6 +107,11 @@ export class CreateChannelPopupComponent {
     this.display = value; 
   }
 
+  addMemberToNewChannel(event: Event) {
+    this.test.isCreatingNewChannel = true;
+    this.showAddUserToChannelSection(event)
+  }
+
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
     this.test.isCreatingNewChannel = true;
