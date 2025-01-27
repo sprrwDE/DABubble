@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { Channel } from '../../shared/models/channel.model';
@@ -6,26 +6,32 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
+import { AddUserToChannelPopupComponent } from "../add-user-to-channel-popup/add-user-to-channel-popup.component";
+import { TestService } from '../../shared/services/test.service';
 
 @Component({
   selector: 'app-create-channel-popup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddUserToChannelPopupComponent],
   templateUrl: './create-channel-popup.component.html',
   styleUrl: './create-channel-popup.component.scss',
 })
 export class CreateChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
-
+  @Input() display: boolean = false;
   public channel: Channel = new Channel();
   userIds: string[] = [];
 
   unsubLoggedInUser!: Subscription;
 
+  showUserPopup: boolean = false;
+  nameInput: string = '';
+
   constructor(
     public popupService: PopupService,
     public userService: UserService,
-    public channelService: ChannelService
+    public channelService: ChannelService,
+    public test: TestService
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
@@ -79,6 +85,7 @@ export class CreateChannelPopupComponent {
 
   closePopup() {
     this.closePopupEvent.emit();
+    this.showUserPopup = false;
   }
 
   createChannel() {
@@ -91,6 +98,32 @@ export class CreateChannelPopupComponent {
 
     console.log(this.channel);
   }
+
+  showAddMembersSection(event: Event) {
+    event.stopPropagation();
+  }
+
+  set showAddUserToChannelPopup(value: boolean) {
+    this.display = value; 
+  }
+
+  showAddUserToChannelSection(event: Event) {
+    event.stopPropagation();
+    console.log('Eingegebener Name:', this.nameInput);  // Debugging
+    
+    this.test.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
+    console.log('Gefilterte Nutzer:', this.test.filteredUsers); // Debugging
+  
+    if (this.test.filteredUsers.length > 0) {
+      console.log('Popup wird angezeigt');
+      this.showUserPopup = true;
+    } else {
+      console.log('Popup bleibt versteckt');
+      this.showUserPopup = false;
+    }
+  }
+  
+
 
   // ngOnDestroy() {
   //   this.unsubLoggedInUser.unsubscribe();

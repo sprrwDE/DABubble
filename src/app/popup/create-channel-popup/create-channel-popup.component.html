@@ -201,10 +201,19 @@
         type="text"
         #createChannelAddPeopleInput
         placeholder="Name eingeben"
+        [ngClass]="nameInput"
+        (click)="showAddUserToChannelSection($event)"
       />
     </div>
   </div>
 
+  <!-- hier -->
+
+  <app-add-user-to-channel-popup
+  [display]="showUserPopup"
+  class="absolute left-[40px] w-[280px]"
+>
+</app-add-user-to-channel-popup>
   <div class="flex justify-end">
     <button (click)="createChannel()">Erstellen</button>
   </div>

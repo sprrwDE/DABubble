@@ -30,7 +30,7 @@ export class TestService implements OnDestroy {
   private unsubscribeMessages: any;
   selectedChannel: Channel | null = null;
   /// DUMMY
-  currentChannelId: string = 'Ks8hNpn38fEiwcDmRxOB';
+  currentChannelId: string = '';
 
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
@@ -50,28 +50,33 @@ export class TestService implements OnDestroy {
   constructor(private userservice: UserService) {
     this.userservice.fetchedCollection$.subscribe((users) => {
       this.allUsersSubject.next(users);
-      // console.log('ALL USER OBSERVER', this.allUsers$)
     });
 
-    console.log('TEST SERVICE INIT - CHANNEL DEVSPACE');
     this.loadChannels();
-    this.subscribeToChannelById(this.currentChannelId); // Channel-ID festlegen
+    if(this.currentChannelId) this.subscribeToChannelById(this.currentChannelId); 
 
     combineLatest([
       this.userservice.fetchedCollection$,
       this.channelUserIdsSubject,
     ]).subscribe(([allUsers, userIds]) => {
-      this.currentChannelUsers = allUsers.filter((user) =>
-        userIds.includes(user.id)
-      );
-      this.possibleUserList = allUsers.filter(
-        (user) => !userIds.includes(user.id)
-      );
-      // if(this.currentChannelUsers.length > 0) {console.log('USER IM CHANNEL:', this.currentChannelUsers);}
-/*       if (this.possibleUserList.length > 0) {
-        console.log('POSSIBLE USER LIST:', this.possibleUserList);
-      } */
+      
+      if (!this.currentChannelId) {
+        console.log('Kein Channel vorhanden, setze alle Nutzer in possibleUserList.');
+        this.possibleUserList = allUsers;
+        this.currentChannelUsers = []; // Kein Channel -> keine zugewiesenen User
+      } else {
+        console.log(`Aktueller Channel: ${this.currentChannelId}`);
+        
+        this.currentChannelUsers = allUsers.filter((user) =>
+          userIds.includes(user.id)
+        );
+        
+        this.possibleUserList = allUsers.filter(
+          (user) => !userIds.includes(user.id)
+        );
+      }
     });
+    
   }
 
   /* 
@@ -85,9 +90,6 @@ export class TestService implements OnDestroy {
 
 
   */
-
-
-
 
   //// HIER
 
@@ -174,7 +176,7 @@ export class TestService implements OnDestroy {
 
       // console.log('ALLE CHANNEL:', this.allChannels);
 
-      this.subscribeToMessages(this.currentChannelId);
+      if(this.currentChannelId) this.subscribeToMessages(this.currentChannelId);
     });
   }
 

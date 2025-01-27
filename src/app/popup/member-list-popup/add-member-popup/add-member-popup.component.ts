@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
 //// DUMMY
 import { TestService } from '../../../shared/services/test.service';
-import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-add-member-popup',

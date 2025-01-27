@@ -97,6 +97,7 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
 
   closePopup() {
     this.closePopupEvent.emit();
+    this.showAddMembersPopup = false;
   }
 
   showAddMembersSection(event: Event) {
