@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
-import { AddUserToChannelPopupComponent } from "../add-user-to-channel-popup/add-user-to-channel-popup.component";
+import { AddUserToChannelPopupComponent } from '../add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { AddUserService } from '../../shared/services/add-user.service';
 
 @Component({
@@ -92,13 +92,15 @@ export class CreateChannelPopupComponent {
     if (!this.showCreateChannelAddPeopleInput) {
       this.allUsers.forEach((user) => this.channel.users.push(user.id));
     } else {
-      this.addUserService.userToAdd.forEach((user) => this.channel.users.push(user.id));
+      this.addUserService.userToAdd.forEach((user) =>
+        this.channel.users.push(user.id)
+      );
     }
     this.channelService.addChannel(this.channel.toJSON());
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
     console.log(this.channel);
-    this.closePopup()
+    this.closePopup();
   }
 
   showAddMembersSection(event: Event) {
@@ -106,16 +108,16 @@ export class CreateChannelPopupComponent {
   }
 
   set showAddUserToChannelPopup(value: boolean) {
-    this.display = value; 
+    this.display = value;
   }
-
-  
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
     this.addUserService.isCreatingNewChannel = true;
-    this.addUserService.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
-  
+    this.addUserService.filterArrayForNameInput(
+      this.nameInput.trim().toLowerCase()
+    );
+
     if (this.addUserService.filteredUsers.length > 0) {
       console.log('Popup wird angezeigt');
       this.showUserPopup = true;
@@ -124,8 +126,6 @@ export class CreateChannelPopupComponent {
       this.showUserPopup = false;
     }
   }
-  
-
 
   // ngOnDestroy() {
   //   this.unsubLoggedInUser.unsubscribe();
