@@ -4,7 +4,7 @@ import { PopupService } from '../../popup.service';
 import { FormsModule } from '@angular/forms';
 import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
 //// DUMMY
-import { TestService } from '../../../shared/services/test.service';
+import { AddUserService } from '../../../shared/services/add-user.service';
 
 @Component({
   selector: 'app-add-member-popup',
@@ -23,19 +23,19 @@ export class AddMemberPopupComponent {
   showUserPopup: boolean = false;
   nameInput: string = '';
 
-  constructor(public popupService: PopupService, public test: TestService) {}
+  constructor(public popupService: PopupService, public addUserService: AddUserService) {}
 
   addMembers(id: string) {
-    this.test.pushMembersToChannel(id);
+    this.addUserService.pushMembersToChannel(id);
     // this.closePopup();
     this.clearInputAndClosePopup()
-    this.test.userToAdd = [];
+    this.addUserService.userToAdd = [];
   }
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
-    this.test.isCreatingNewChannel = false;
-    if (this.test.userToAdd.length == 0 && this.nameInput == 'Gast') {
+    this.addUserService.isCreatingNewChannel = false;
+    if (this.addUserService.userToAdd.length == 0 && this.nameInput == 'Gast') {
       return
     } else {
       this.showUserPopup = true;
@@ -47,15 +47,15 @@ export class AddMemberPopupComponent {
   }
 
   addMemberToExistingChannel(event: Event) {
-    this.test.isCreatingNewChannel = false;
+    this.addUserService.isCreatingNewChannel = false;
     this.getNameInput(event)
   }
 
   getNameInput(event: Event) {
     let name = this.nameInput.trim().toLowerCase();
-    this.test.filterArrayForNameInput(name);
+    this.addUserService.filterArrayForNameInput(name);
   
-    if (this.test.userToAdd.length === 0) {
+    if (this.addUserService.userToAdd.length === 0) {
       this.showUserPopup = true;
       return;
     }
@@ -68,7 +68,7 @@ export class AddMemberPopupComponent {
   }
 
   setUser(userId: string) {
-    this.test.setUserToAdd(userId);
+    this.addUserService.setUserToAdd(userId);
     this.nameInput = ''; 
   }
 

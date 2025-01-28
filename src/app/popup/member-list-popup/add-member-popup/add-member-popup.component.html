@@ -46,8 +46,8 @@
 
     <!-- Pills -->
     <div class="flex flex-wrap gap-2 mt-2">
-      @if (test.userToAdd.length > 0) { @for (user of test.userToAdd; track
-      $index) {
+      @if (addUserService.userToAdd.length > 0) { @for (user of
+      addUserService.userToAdd; track $index) {
       <div
         class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
       >
@@ -58,7 +58,10 @@
           />
           <span class="truncate">{{ user.name }}</span>
         </div>
-        <span class="cursor-pointer" (click)="test.removeUserToAdd(user.id)">
+        <span
+          class="cursor-pointer"
+          (click)="addUserService.removeUserToAdd(user.id)"
+        >
           ✕
         </span>
       </div>
@@ -68,7 +71,7 @@
 
   <div class="flex justify-end">
     <button
-      (click)="addMembers(test.currentChannelId)"
+      (click)="addMembers(addUserService.currentChannelId)"
       class="bg-disable hover:bg-disable"
     >
       Hinzufügen

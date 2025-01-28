@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Channel } from '../models/channel.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -8,14 +8,11 @@ import {
   addDoc,
   collection,
   doc,
-  onSnapshot,
-  updateDoc,
-  getDocs,
+  onSnapshot
 } from '@angular/fire/firestore';
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
 import { ChatComponent } from '../../main-page/chat/chat.component';
-import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +34,7 @@ export class ChannelService {
 
   // currentChannelUserIds: string[] = [];
   // currentChannelUsers: User[] = [];
-  private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
+  private currentChannelIdSubject = new BehaviorSubject<string | null>(null);
 
   currentReplyMessageId: string = '';
 
@@ -65,6 +62,7 @@ export class ChannelService {
     } catch (error) {
       console.error('Error fetching channels:', error);
     }
+    
   }
 
   private handleChannelsSnapshot(snapshot: any) {
@@ -220,6 +218,13 @@ export class ChannelService {
     return date.toLocaleTimeString('de-DE', options);
   }
 
+
+
+
+
+
+
+
   /// Ist das alt?
   // Glaube schon
   // ///////////////////
@@ -276,7 +281,7 @@ export class ChannelService {
           users: data.users ?? [],
         });
 
-        this.currentChannelUserIds = this.currentChannel.users;
+        this.currentinitIds = this.currentChannel.users;
         if (this.currentChannelUserIds.length > 0) {
           console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);
         }
@@ -288,4 +293,5 @@ export class ChannelService {
       }
     });
   } */
+
 }
