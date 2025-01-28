@@ -157,7 +157,7 @@ export class AddUserService implements OnDestroy {
       );
       console.log('filtered users', this.filteredUsers)
     } else {
-      this.possibleUserList = this.allUsers;
+      if(this.userToAdd.length == 0) this.possibleUserList = this.allUsers;
       this.filteredUsers = this.possibleUserList.filter((user) =>
         user.name.toLowerCase().includes(name.toLowerCase())
       );

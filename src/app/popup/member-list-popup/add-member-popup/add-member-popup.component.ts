@@ -16,10 +16,6 @@ import { AddUserService } from '../../../shared/services/add-user.service';
 export class AddMemberPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  /*   memberName: string = ''; // Variable für den Namen des Mitglieds
-  memberImage: string = ''; // Variable für das Bild des Mitglieds
-  memberStatus: string = 'offline'; // Status des Mitglieds (online/offline) */
-
   showUserPopup: boolean = false;
   nameInput: string = '';
 
@@ -27,7 +23,6 @@ export class AddMemberPopupComponent {
 
   addMembers(id: string) {
     this.addUserService.pushMembersToChannel(id);
-    // this.closePopup();
     this.clearInputAndClosePopup()
     this.addUserService.userToAdd = [];
   }
