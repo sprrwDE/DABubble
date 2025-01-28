@@ -96,7 +96,9 @@ export class CreateChannelPopupComponent {
     }
     this.channelService.addChannel(this.channel.toJSON());
     this.addUserService.userToAdd = [];
+    this.addUserService.possibleUserList = [];
     console.log(this.channel);
+    this.closePopup()
   }
 
   showAddMembersSection(event: Event) {
