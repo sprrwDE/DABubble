@@ -15,12 +15,11 @@ export class UserService {
 
   constructor(private fb: FirebaseService, private auth: Auth) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
+    
     fb.getData('users');
+
     this.fetchedCollection$.subscribe((data) => {
       this.allUsers = data.map((rawData) => new User({ ...rawData }));
-/*       if (this.allUsers.length > 0) {
-        console.log('ALLE USER GLOBAL', this.allUsers);
-      }  */
     });
 
     // state listener for logged in user ( logged in / logged out )

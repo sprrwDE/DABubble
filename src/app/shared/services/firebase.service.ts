@@ -8,12 +8,9 @@ import {
   setDoc,
   onSnapshot,
   DocumentData,
-  query,
-  orderBy,
 } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
 import { BehaviorSubject } from 'rxjs';
-// import { Message } from '../models/newmodels/message.model.new';
 
 @Injectable({
   providedIn: 'root',
@@ -138,13 +135,4 @@ export class FirebaseService {
     }
   }
 
-  /// TEST
-  // subscribeToMessages(channelId: string, callback: (messages: Message[]) => void) {
-  //   const messagesRef = collection(this.firestore, `channels/${channelId}/messages`);
-  //   const messagesQuery = query(messagesRef, orderBy("timestamp", "asc")); // Sortiere nach Zeitstempel
-
-  //   return onSnapshot(messagesQuery, (snapshot) => {
-  //     const messages: Message[] = snapshot.docs.map(doc => new Message({ id: doc.id, ...doc.data() }));
-  //     callback(messages);
-  //   });}
 }

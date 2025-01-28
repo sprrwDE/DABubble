@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject, effect } from '@angular/core';
 import {
   Firestore,
   onSnapshot,
@@ -54,6 +54,14 @@ export class AddUserService implements OnDestroy {
       this.allUsersSubject.next(users);
     });
 
+/*     effect(() => {
+      onst channelId = this.channelService.currentChannelId();
+      console.log('📌 Empfangene Channel-ID:', channelId);
+      
+      if (channelId) {
+        this.subscribeToChannelById(channelId);
+      }
+    }); */
 
 
     this.subscribeToChannelById(this.currentChannelId);

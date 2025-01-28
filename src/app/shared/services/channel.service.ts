@@ -8,7 +8,7 @@ import {
   addDoc,
   collection,
   doc,
-  onSnapshot
+  onSnapshot,
 } from '@angular/fire/firestore';
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
@@ -27,6 +27,8 @@ export class ChannelService {
 
   allChannels: Channel[] = [];
   currentChannelId: string = '';
+  // currentChannelId = signal<string | null>(null); // ✅ Signal statt normalem String
+
   currentChannel = signal<Channel>(new Channel());
   currentChannelMessages: Message[] = [];
 
@@ -51,6 +53,8 @@ export class ChannelService {
   ) {
     this.fetchedChannelData$ = this.fb.fetchedSingleData$;
     this.getAllChannels();
+    this.initializeCurrentChannelIfNeeded();
+    console.log(this.currentChannelId);
   }
 
   getAllChannels() {
@@ -59,10 +63,10 @@ export class ChannelService {
         collection(this.firestore, 'channels'),
         (snapshot) => this.handleChannelsSnapshot(snapshot)
       );
+      this.initializeCurrentChannelIfNeeded();
     } catch (error) {
       console.error('Error fetching channels:', error);
     }
-    
   }
 
   private handleChannelsSnapshot(snapshot: any) {
@@ -159,13 +163,13 @@ export class ChannelService {
     if (this.currentChannelId === channel.id) {
       this.currentChannelMessages = messages;
       this.currentChannel.set(channel);
-
     }
   }
 
   private initializeCurrentChannelIfNeeded() {
     if (!this.currentChannelIdIsInitialized && this.allChannels.length > 0) {
       this.currentChannelId = this.allChannels[0].id;
+      // this.currentChannelId.set(this.allChannels[0].id);
       this.currentChannelIdIsInitialized = true;
     }
   }
@@ -181,6 +185,12 @@ export class ChannelService {
   async sendMessage(data: any) {
     try {
       const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+/* const channelId = this.currentChannelId(); // ✅ Holt den aktuellen Wert
+      if (!channelId) {
+        throw new Error('Kein Channel!');
+      }
+      const channelRef = doc(this.firestore, 'channels', channelId); */
+
       await addDoc(collection(channelRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
@@ -217,13 +227,6 @@ export class ChannelService {
     };
     return date.toLocaleTimeString('de-DE', options);
   }
-
-
-
-
-
-
-
 
   /// Ist das alt?
   // Glaube schon
@@ -293,5 +296,4 @@ export class ChannelService {
       }
     });
   } */
-
 }
