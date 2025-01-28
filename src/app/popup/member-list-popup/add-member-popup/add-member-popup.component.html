@@ -46,22 +46,25 @@
 
     <!-- Pills -->
     <div class="flex flex-wrap gap-2 mt-2">
-      @if (test.userToAdd.length > 0) {
-        @for (user of test.userToAdd; track $index) {
-          <div class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100">
-            <div class="flex items-center gap-4">
-            <img class="h-[24px] w-[24px] rounded-full" src="{{ user.image || 'imgs/avatar/profile.svg' }}">
-            <span class="truncate">{{ user.name }}</span>
-          </div>
-            <span class="cursor-pointer" (click)="test.removeUserToAdd(user.id)">
-              ✕
-            </span>
-          </div>
-        }
-      }
+      @if (test.userToAdd.length > 0) { @for (user of test.userToAdd; track
+      $index) {
+      <div
+        class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
+      >
+        <div class="flex items-center gap-4">
+          <img
+            class="h-[24px] w-[24px] rounded-full"
+            src="{{ user.image || 'imgs/avatar/profile.svg' }}"
+          />
+          <span class="truncate">{{ user.name }}</span>
+        </div>
+        <span class="cursor-pointer" (click)="test.removeUserToAdd(user.id)">
+          ✕
+        </span>
+      </div>
+      } }
     </div>
   </div>
-
 
   <div class="flex justify-end">
     <button
@@ -70,13 +73,11 @@
     >
       Hinzufügen
     </button>
-    <app-add-user-to-channel-popup
+    <!-- <app-add-user-to-channel-popup
   [display]="showUserPopup"
   (closePopupEvent)="clearInputAndClosePopup()"
   class="absolute left-[40px] w-[280px]"
 >
-</app-add-user-to-channel-popup>
+</app-add-user-to-channel-popup> -->
   </div>
 </section>
-
-

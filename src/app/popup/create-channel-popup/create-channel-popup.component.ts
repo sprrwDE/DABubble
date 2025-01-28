@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
-import { AddUserToChannelPopupComponent } from "../add-user-to-channel-popup/add-user-to-channel-popup.component";
+import { AddUserToChannelPopupComponent } from '../add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { TestService } from '../../shared/services/test.service';
 
 @Component({
@@ -104,19 +104,19 @@ export class CreateChannelPopupComponent {
   }
 
   set showAddUserToChannelPopup(value: boolean) {
-    this.display = value; 
+    this.display = value;
   }
 
   addMemberToNewChannel(event: Event) {
     this.test.isCreatingNewChannel = true;
-    this.showAddUserToChannelSection(event)
+    this.showAddUserToChannelSection(event);
   }
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
     this.test.isCreatingNewChannel = true;
     this.test.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
-  
+
     if (this.test.filteredUsers.length > 0) {
       console.log('Popup wird angezeigt');
       this.showUserPopup = true;
@@ -125,8 +125,6 @@ export class CreateChannelPopupComponent {
       this.showUserPopup = false;
     }
   }
-  
-
 
   // ngOnDestroy() {
   //   this.unsubLoggedInUser.unsubscribe();
