@@ -5,8 +5,6 @@ import {
   Input
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChannelService } from '../../shared/services/channel.service';
-import { UserService } from '../../shared/services/user.service';
 /// DUMMY
 import { AddUserService } from '../../shared/services/add-user.service';
 

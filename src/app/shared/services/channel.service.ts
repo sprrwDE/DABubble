@@ -27,7 +27,6 @@ export class ChannelService {
 
   allChannels: Channel[] = [];
   currentChannelId: string = '';
-  // currentChannelId = signal<string | null>(null); // ✅ Signal statt normalem String
 
   currentChannel = signal<Channel>(new Channel());
   currentChannelMessages: Message[] = [];
@@ -51,7 +50,6 @@ export class ChannelService {
     public fb: FirebaseService,
     private ngZone: NgZone // public firestore: Firestore
   ) {
-    this.fetchedChannelData$ = this.fb.fetchedSingleData$;
     this.getAllChannels();
     this.initializeCurrentChannelIfNeeded();
     console.log(this.currentChannelId);
@@ -169,7 +167,6 @@ export class ChannelService {
   private initializeCurrentChannelIfNeeded() {
     if (!this.currentChannelIdIsInitialized && this.allChannels.length > 0) {
       this.currentChannelId = this.allChannels[0].id;
-      // this.currentChannelId.set(this.allChannels[0].id);
       this.currentChannelIdIsInitialized = true;
     }
   }
@@ -185,12 +182,6 @@ export class ChannelService {
   async sendMessage(data: any) {
     try {
       const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
-/* const channelId = this.currentChannelId(); // ✅ Holt den aktuellen Wert
-      if (!channelId) {
-        throw new Error('Kein Channel!');
-      }
-      const channelRef = doc(this.firestore, 'channels', channelId); */
-
       await addDoc(collection(channelRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
@@ -228,72 +219,4 @@ export class ChannelService {
     return date.toLocaleTimeString('de-DE', options);
   }
 
-  /// Ist das alt?
-  // Glaube schon
-  // ///////////////////
-  public currentChannelData$ = new BehaviorSubject<Channel | null>(null);
-  private unsubscribe?: () => void;
-  fetchedChannelData$: Observable<any>;
-
-  // constructor(private fb: FirebaseService) {
-  //   this.fetchedChannelData$ = this.fb.fetchedSingleData$;
-  // }
-
-  // Holt Daten und speichere sie im BehaviorSubject
-  fetchChannel(channelId: string): void {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
-
-    // Ruft Funktion im Firebase Service auf
-    this.unsubscribe = this.fb.subscribeToSingleDoc(
-      'channels',
-      channelId,
-      (data) => {
-        this.ngZone.run(() => {
-          this.currentChannelData$.next(new Channel(data));
-        });
-      }
-    );
-  }
-
-  getChannel(): Observable<Channel | null> {
-    return this.currentChannelData$.asObservable();
-  }
-
-  unsubscribeChannel(): void {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-      this.unsubscribe = undefined;
-    }
-  }
-
-  /*   //// Subscribed einen channel onsnapshot -> für memberlist popup
-
-  subscribeToChannelById(channelId: string) {
-    // console.log(`Lade Channel mit ID: ${channelId}`);
-
-    const channelRef = doc(this.firestore, `channels/${channelId}`);
-
-    this.unsubscribeChannel = onSnapshot(channelRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data() as Partial<Channel>;
-        this.currentChannel = new Channel({
-          id: docSnap.id,
-          name: data.name || 'Unbekannt',
-          users: data.users ?? [],
-        });
-
-        this.currentinitIds = this.currentChannel.users;
-        if (this.currentChannelUserIds.length > 0) {
-          console.log('USERIDS IN CHANNEL:', this.currentChannelUserIds);
-        }
-
-        // 🔥 `BehaviorSubject` aktualisieren, damit `combineLatest()` triggert
-        this.channelUserIdsSubject.next(this.currentChannelUserIds);
-      } else {
-        console.warn('Channel nicht gefunden.');
-      }
-    });
-  } */
 }

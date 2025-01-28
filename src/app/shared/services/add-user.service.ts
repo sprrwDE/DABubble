@@ -22,9 +22,8 @@ export class AddUserService implements OnDestroy {
   messages: Message[] = [];
   private unsubscribeChannel: any;
   selectedChannel: Channel | null = null;
-  
+
   // Hier
-  currentChannelId:string = 'Ks8hNpn38fEiwcDmRxOB'
 
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
@@ -34,11 +33,9 @@ export class AddUserService implements OnDestroy {
   /// Hier
   private allUsersSubject = new BehaviorSubject<User[]>([]);
   allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung
-  
-  
-  
-  
-  
+
+  currentChannel: Channel = new Channel();
+
   possibleUserList: User[] = [];
   allUsers: User[] = [];
   userToAdd: User[] = [];
@@ -54,18 +51,13 @@ export class AddUserService implements OnDestroy {
       this.allUsersSubject.next(users);
     });
 
-/*     effect(() => {
-      onst channelId = this.channelService.currentChannelId();
-      console.log('📌 Empfangene Channel-ID:', channelId);
-      
-      if (channelId) {
-        this.subscribeToChannelById(channelId);
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+
+      if (this.currentChannel) {
+        this.subscribeToChannelById(this.currentChannel.id);
       }
-    }); */
-
-
-    this.subscribeToChannelById(this.currentChannelId);
-
+    });
 
     combineLatest([
       this.userservice.fetchedCollection$,
@@ -163,19 +155,15 @@ export class AddUserService implements OnDestroy {
       this.filteredUsers = this.possibleUserList.filter((user) =>
         user.name.toLowerCase().includes(name.toLowerCase())
       );
+      console.log('filtered users', this.filteredUsers)
     } else {
       this.possibleUserList = this.allUsers;
       this.filteredUsers = this.possibleUserList.filter((user) =>
         user.name.toLowerCase().includes(name.toLowerCase())
       );
+      console.log('filtered users', this.filteredUsers)
     }
   }
-
-
-
-
-
-  
 
   subscribeToChannelById(channelId: string) {
     console.log(`Lade Channel mit ID: ${channelId}`);
@@ -192,6 +180,7 @@ export class AddUserService implements OnDestroy {
         });
 
         this.currentChannelUserIds = this.selectedChannel.users;
+        console.log('current channel user ids', this.currentChannelUserIds)
 
         this.channelUserIdsSubject.next(this.currentChannelUserIds);
       } else {
