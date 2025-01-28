@@ -10,7 +10,7 @@ import {
 import { UserService } from '../../shared/services/user.service';
 import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
-import { TestService } from '../../shared/services/add-user.service';
+import { AddUserService } from '../../shared/services/add-user.service';
 import { Channel } from '../../shared/models/channel.model';
 import { PanelService } from '../../shared/services/panel.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
@@ -47,7 +47,7 @@ export class SidebarNavComponent {
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService,
-    public test: TestService,
+    public addUserService: AddUserService,
     public panelService: PanelService,
     public globalVariablesService: GlobalVariablesService,
     public directChatService: DirectChatService
