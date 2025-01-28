@@ -194,7 +194,7 @@
     }"
   >
     <div
-      class="popup-input-container relative overflow-visible"
+      class="popup-input-container relative overflow-visible flex items-center"
       (click)="createChannelAddPeopleInput.focus()"
     >
       <input
@@ -212,7 +212,7 @@
             <div class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100">
               <div class="flex items-center gap-4">
               <img class="h-[24px] w-[24px] rounded-full" src="{{ user.image || 'imgs/avatar/profile.svg' }}">
-              <span class="truncate">{{ user.name }}</span>
+              <span class="truncate min-w-0">{{ user.name }}</span>
             </div>
               <span class="cursor-pointer" (click)="addUserService.removeUserToAdd(user.id)">
                 ✕
