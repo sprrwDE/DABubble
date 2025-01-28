@@ -95,7 +95,7 @@ export class CreateChannelPopupComponent {
       this.addUserService.userToAdd.forEach((user) => this.channel.users.push(user.id));
     }
     this.channelService.addChannel(this.channel.toJSON());
-
+    this.addUserService.userToAdd = [];
     console.log(this.channel);
   }
 
