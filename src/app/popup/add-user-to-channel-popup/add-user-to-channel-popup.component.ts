@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 /// DUMMY
-import { TestService } from '../../shared/services/test.service';
+import { AddUserService } from '../../shared/services/add-user.service';
 
 @Component({
   selector: 'app-add-user-to-channel-popup',
@@ -21,14 +21,14 @@ export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
   @Input() display: boolean = false;
 
-  constructor(public test: TestService) {}
+  constructor(public addUserService: AddUserService) {}
 
   set showAddUserToChannelPopup(value: boolean) {
     this.display = value; 
   }
 
   addUserToChannel(userId: string) {
-    this.test.setUserToAdd(userId);
+    this.addUserService.setUserToAdd(userId);
     this.closePopup();
   }
 

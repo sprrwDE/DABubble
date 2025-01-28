@@ -10,7 +10,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { PopupService } from '../popup/popup.service';
 import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
-import { TestService } from '../shared/services/test.service';
+import { AddUserService } from '../shared/services/add-user.service';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 @Component({
   selector: 'app-main-page',
@@ -40,7 +40,7 @@ export class MainPageComponent {
     public popupService: PopupService,
     public userService: UserService,
     private fb: FirebaseService,
-    private test: TestService,
+    private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {

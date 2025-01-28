@@ -194,7 +194,7 @@
     }"
   >
     <div
-      class="popup-input-container"
+      class="popup-input-container relative overflow-visible"
       (click)="createChannelAddPeopleInput.focus()"
     >
       <input
@@ -202,18 +202,19 @@
         #createChannelAddPeopleInput
         placeholder="Name eingeben"
         [ngClass]="nameInput"
-        (click)="addMemberToNewChannel($event)"
+        (click)="showAddUserToChannelSection($event)"
+        class="flex"
       />
 
       <div class="flex flex-wrap gap-2 mt-2">
-        @if (test.userToAdd.length > 0) {
-          @for (user of test.userToAdd; track $index) {
+        @if (addUserService.userToAdd.length > 0) {
+          @for (user of addUserService.userToAdd; track $index) {
             <div class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100">
               <div class="flex items-center gap-4">
               <img class="h-[24px] w-[24px] rounded-full" src="{{ user.image || 'imgs/avatar/profile.svg' }}">
               <span class="truncate">{{ user.name }}</span>
             </div>
-              <span class="cursor-pointer" (click)="test.removeUserToAdd(user.id)">
+              <span class="cursor-pointer" (click)="addUserService.removeUserToAdd(user.id)">
                 ✕
               </span>
             </div>

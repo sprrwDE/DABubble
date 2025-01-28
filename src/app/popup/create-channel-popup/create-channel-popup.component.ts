@@ -7,7 +7,7 @@ import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
 import { AddUserToChannelPopupComponent } from "../add-user-to-channel-popup/add-user-to-channel-popup.component";
-import { TestService } from '../../shared/services/test.service';
+import { AddUserService } from '../../shared/services/add-user.service';
 
 @Component({
   selector: 'app-create-channel-popup',
@@ -31,7 +31,7 @@ export class CreateChannelPopupComponent {
     public popupService: PopupService,
     public userService: UserService,
     public channelService: ChannelService,
-    public test: TestService
+    public addUserService: AddUserService
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
@@ -107,17 +107,14 @@ export class CreateChannelPopupComponent {
     this.display = value; 
   }
 
-  addMemberToNewChannel(event: Event) {
-    this.test.isCreatingNewChannel = true;
-    this.showAddUserToChannelSection(event)
-  }
+  
 
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
-    this.test.isCreatingNewChannel = true;
-    this.test.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
+    this.addUserService.isCreatingNewChannel = true;
+    this.addUserService.filterArrayForNameInput(this.nameInput.trim().toLowerCase());
   
-    if (this.test.filteredUsers.length > 0) {
+    if (this.addUserService.filteredUsers.length > 0) {
       console.log('Popup wird angezeigt');
       this.showUserPopup = true;
     } else {
