@@ -12,20 +12,20 @@ import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'main', component: MainPageComponent,},  //  canActivate: [authGuard] <<<<< das hier hinter MainPageComponent, packen für guard aktivieren
+  { path: 'main', component: MainPageComponent }, //  canActivate: [authGuard] <<<<< das hier hinter MainPageComponent, packen für guard aktivieren
 
   {
     path: 'login',
-    component: LoginPageComponent, 
+    component: LoginPageComponent,
     children: [
-      { path: '', component: LoginComponent }, 
+      { path: '', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'avatar/:userId', component: SelectAvatarComponent },
       { path: 'resetpw', component: ResetPasswordComponent },
       { path: 'changepw', component: ChangePasswordComponent },
     ],
   },
-  { path: 'impressum', component: ImprintComponent},
-  { path: 'datenschutzerklaerung', component: DataProtectionComponent},
-  { path: 'login/register', component: RegisterComponent},
+  { path: 'impressum', component: ImprintComponent },
+  { path: 'datenschutzerklaerung', component: DataProtectionComponent },
+  { path: 'login/register', component: RegisterComponent },
 ];

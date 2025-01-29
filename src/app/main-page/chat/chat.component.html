@@ -23,8 +23,10 @@
           [message]="message.message"
           [messageId]="message?.id"
           [time]="channelService.formatTime(message.timestamp)"
-          [imgUrl]="getUserImage(message.userId, message)"
-          [name]="getUserName(message.userId)"
+          [imgUrl]="getUserImage(message.userId)"
+          [name]="
+            getUserName(message.userId, message, currentChannel.messages || [])
+          "
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
@@ -104,8 +106,14 @@
           [message]="message.message"
           [messageId]="message?.id"
           [time]="channelService.formatTime(message.timestamp)"
-          [imgUrl]="getUserImage(message.userId, message)"
-          [name]="getUserName(message.userId)"
+          [imgUrl]="getUserImage(message.userId)"
+          [name]="
+            getUserName(
+              message.userId,
+              message,
+              currentDirectChat.messages || []
+            )
+          "
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
@@ -151,7 +159,7 @@
     <app-message-input
       class="px-[45px]"
       [chatComponent]="this"
-      [isDirectChat]="isDirectChat"
+      [isDirectChatComponent]="isDirectChat"
     ></app-message-input>
   </main>
 </section>

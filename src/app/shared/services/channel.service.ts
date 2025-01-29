@@ -132,7 +132,9 @@ export class ChannelService {
   }
 
   private handleRepliesSnapshot(snapshot: any, message: Message) {
-    message.replies = this.createRepliesFromDocs(snapshot);
+    message.replies = this.createRepliesFromDocs(snapshot).sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
     this.updateCurrentChannel(this.currentChannel, this.currentChannelMessages);
   }
 
@@ -218,5 +220,4 @@ export class ChannelService {
     };
     return date.toLocaleTimeString('de-DE', options);
   }
-
 }

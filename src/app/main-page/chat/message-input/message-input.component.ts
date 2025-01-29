@@ -30,7 +30,7 @@ export class MessageInputComponent implements OnInit {
   @Input() isReplayInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
-  @Input() isDirectChat: boolean = false;
+  @Input() isDirectChatComponent: boolean = false;
 
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
@@ -71,6 +71,10 @@ export class MessageInputComponent implements OnInit {
     return this.channelService.currentReplyMessageId;
   }
 
+  get isDirectChat(): boolean {
+    return this.directChatService.isDirectChat;
+  }
+
   async sendMessage() {
     if (this.message.message.trim() === '') {
       console.log('Message is empty');
@@ -81,7 +85,7 @@ export class MessageInputComponent implements OnInit {
 
     console.log(this.currentDirectChat);
 
-    if (this.isDirectChat) {
+    if (this.isDirectChatComponent) {
       const isSelfChat = this.loggedInUser.id === this.currentDirectChatUser.id;
       const userIdCount = this.currentDirectChat.userIds.filter(
         (id) => id === this.loggedInUser.id
@@ -127,18 +131,17 @@ export class MessageInputComponent implements OnInit {
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
 
-    // this.unsubLoggedInUser = this.userService.loggedInUser$.subscribe(
-    //   (user: User) => {
-    //     if (user) {
-    //       this.reply.userId = user.id;
-    //     }
-    //   }
-    // );
-
-    this.channelService.sendReply(
-      this.currentReplyMessageId,
-      this.reply.toJSON()
-    );
+    if (this.isDirectChat) {
+      this.directChatService.sendReply(
+        this.currentReplyMessageId,
+        this.reply.toJSON()
+      );
+    } else {
+      this.channelService.sendReply(
+        this.currentReplyMessageId,
+        this.reply.toJSON()
+      );
+    }
 
     this.reply.message = '';
 

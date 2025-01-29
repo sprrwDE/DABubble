@@ -12,6 +12,7 @@ export class PanelService {
   imgUrl: string = '';
   isContact: boolean = false;
   numberOfAnswers: number = 0;
+  scroll: boolean = true;
 
   replyPanelComponent!: ReplyPanelComponent;
 

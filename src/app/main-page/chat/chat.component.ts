@@ -143,27 +143,24 @@ export class ChatComponent {
     }
   }
 
-  checkScrollToBottom(message: Message) {
-    if (
-      this.scroll &&
-      this.currentChannel?.messages?.[
-        this.currentChannel?.messages?.length - 1
-      ] === message
-    ) {
-      this.scrollToBottom();
-      this.scroll = false;
+  checkScrollToBottom(message: Message, messages: Message[]) {
+    if (this.scroll && messages?.[messages.length - 1] === message) {
+      setTimeout(() => {
+        this.scrollToBottom();
+        this.scroll = false;
+      }, 100);
     }
   }
 
-  getUserName(userId: string): string {
+  getUserName(userId: string, message: Message, messages: Message[]): string {
+    this.checkScrollToBottom(message, messages);
+
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name || 'lädt...'
     );
   }
 
-  getUserImage(userId: string, message: Message): string {
-    this.checkScrollToBottom(message);
-
+  getUserImage(userId: string): string {
     return (
       this.allUsers.find((user: User) => user.id === userId)?.image ||
       'imgs/avatar1.png'

@@ -10,6 +10,7 @@ import { Unsubscribe } from 'firebase/firestore';
 import { DirectChat } from './models/direct-chat.model';
 import { Message } from './models/message.model';
 import { User } from './models/user.model';
+import { Reply } from './models/reply.model';
 
 @Injectable({
   providedIn: 'root',
@@ -72,6 +73,7 @@ export class DirectChatService {
 
   private handleMessagesSnapshot(snapshot: any, directChat: DirectChat) {
     const messages = this.createMessagesFromDocs(snapshot);
+    this.setupRepliesSubscriptions(messages, directChat.id || '');
     this.updateDirectChat(directChat, messages);
   }
 
@@ -87,7 +89,42 @@ export class DirectChatService {
     return new Message({
       ...doc.data(),
       id: doc.id,
+      replies: [],
     });
+  }
+
+  private setupRepliesSubscriptions(messages: Message[], directChatId: string) {
+    messages.forEach((message) => {
+      this.subscribeToMessageReplies(directChatId, message);
+    });
+  }
+
+  private subscribeToMessageReplies(directChatId: string, message: Message) {
+    onSnapshot(
+      this.getRepliesCollectionRef(directChatId, message.id || ''),
+      (snapshot) => this.handleRepliesSnapshot(snapshot, message)
+    );
+  }
+
+  private getRepliesCollectionRef(directChatId: string, messageId: string) {
+    return collection(
+      this.firestore,
+      `direct-chats/${directChatId}/messages/${messageId}/replies`
+    );
+  }
+
+  private handleRepliesSnapshot(snapshot: any, message: Message) {
+    message.replies = this.createRepliesFromDocs(snapshot).sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
+    this.updateCurrentDirectChat(
+      this.currentDirectChat,
+      this.currentDirectChatMessages
+    );
+  }
+
+  private createRepliesFromDocs(snapshot: any): Reply[] {
+    return snapshot.docs.map((doc: any) => new Reply(doc.data()));
   }
 
   private updateDirectChat(directChat: DirectChat, messages: Message[]) {
@@ -152,6 +189,18 @@ export class DirectChatService {
       await addDoc(collection(directChatRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
+    }
+  }
+
+  async sendReply(messageId: string, data: any) {
+    try {
+      const messageRef = doc(
+        this.firestore,
+        `direct-chats/${this.currentDirectChatId}/messages/${messageId}`
+      );
+      await addDoc(collection(messageRef, 'replies'), data);
+    } catch (error) {
+      console.error('Fehler beim Erstellen der Antwort:', error);
     }
   }
 

@@ -6,6 +6,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { DirectChatService } from '../../shared/direct-chat.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
+import { PanelService } from '../../shared/services/panel.service';
 
 @Component({
   selector: 'app-profile-menu-popup',
@@ -20,12 +21,14 @@ export class ProfileMenuPopupComponent {
     public authService: AuthService,
     public router: Router,
     public directChatService: DirectChatService,
-    public channelService: ChannelService
+    public channelService: ChannelService,
+    public panelService: PanelService
   ) {}
 
   logout() {
     this.directChatService.currentDirectChatUser.set(new User());
     this.channelService.currentChannel.set(new Channel());
+    this.panelService.closeReplyPanel();
     this.directChatService.isDirectChat = false;
 
     this.router.navigate(['/login']);

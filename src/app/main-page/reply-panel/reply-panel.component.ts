@@ -9,6 +9,10 @@ import { User } from '../../shared/models/user.model';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
+import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChat } from '../../shared/models/direct-chat.model';
+import { Message } from '../../shared/models/message.model';
+import { Reply } from '../../shared/models/reply.model';
 
 @Component({
   selector: 'app-reply-panel',
@@ -22,12 +26,15 @@ export class ReplyPanelComponent {
   public loggedInUser: any;
   public currentChannel: Channel = new Channel();
   public isMobile: boolean = false;
+  public currentDirectChatUser: User = new User();
+  public currentDirectChat: DirectChat = new DirectChat();
 
   constructor(
     public panelService: PanelService,
     public channelService: ChannelService,
     public userService: UserService,
-    public globalVariablesService: GlobalVariablesService
+    public globalVariablesService: GlobalVariablesService,
+    public directChatService: DirectChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -40,10 +47,23 @@ export class ReplyPanelComponent {
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
     });
+
+    effect(() => {
+      this.currentDirectChatUser =
+        this.directChatService.currentDirectChatUser();
+    });
+
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
   }
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
+  }
+
+  get isDirectChat() {
+    return this.directChatService.isDirectChat;
   }
 
   get currentChannelMessages() {
@@ -58,8 +78,33 @@ export class ReplyPanelComponent {
     return this.userService.allUsers;
   }
 
-  getUserName(userId: string) {
-    this.scrollToBottom();
+  get scroll() {
+    return this.panelService.scroll;
+  }
+
+  set scroll(value: boolean) {
+    this.panelService.scroll = value;
+  }
+
+  scrollToBottom() {
+    this.chatContainer.nativeElement.scrollTo({
+      top: this.chatContainer.nativeElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
+
+  checkScrollToBottom(reply: Reply, replies: Reply[]) {
+    if (this.scroll && replies?.[replies.length - 1] === reply) {
+      setTimeout(() => {
+        this.scrollToBottom();
+        this.scroll = false;
+      }, 100);
+    }
+  }
+
+  getUserName(userId: string, reply: Reply, replies: Reply[]) {
+    this.checkScrollToBottom(reply, replies);
+
     return (
       this.allUsers.find((user: User) => user.id === userId)?.name ||
       'NAN = Not A NAME'
@@ -74,7 +119,7 @@ export class ReplyPanelComponent {
   }
 
   checkIfContact(userId: string): boolean {
-    let loggedInUserId = this.loggedInUser;
+    let loggedInUserId = this.loggedInUser.id;
 
     return loggedInUserId !== userId;
   }
@@ -86,11 +131,12 @@ export class ReplyPanelComponent {
     );
   }
 
-  scrollToBottom() {
-    this.chatContainer.nativeElement.scrollTo({
-      top: this.chatContainer.nativeElement.scrollHeight,
-      behavior: 'smooth',
-    });
+  getDirectChatRepliesForMessage(messageId: string) {
+    return (
+      this.currentDirectChat?.messages?.find(
+        (message) => message.id === messageId
+      )?.replies || []
+    );
   }
 
   // ngOnDestroy() {

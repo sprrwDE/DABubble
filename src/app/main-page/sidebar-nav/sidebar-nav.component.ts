@@ -90,7 +90,6 @@ export class SidebarNavComponent {
 
   setCurrentChannel(channel: Channel) {
     this.panelService.closeReplyPanel();
-
     this.channelService.currentChannel.set(channel);
 
     this.directChatService.isDirectChat = false;
@@ -99,6 +98,8 @@ export class SidebarNavComponent {
   }
 
   setCurrentDirectChat(user: User) {
+    this.panelService.closeReplyPanel();
+    this.channelService.chatComponent.scroll = true;
     this.channelService.currentChannel.set(new Channel());
 
     let directChat: DirectChat | undefined;

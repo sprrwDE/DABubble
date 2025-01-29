@@ -9,6 +9,7 @@
       <h2 class="text-[24px] font-bold">Thread</h2>
 
       <svg
+        *ngIf="!isDirectChat"
         width="16"
         height="16"
         viewBox="0 0 16 16"
@@ -34,7 +35,12 @@
         </g>
       </svg>
 
-      <p class="text-primary">{{ currentChannel.name || "lädt..." }}</p>
+      <p *ngIf="!isDirectChat" class="text-primary">
+        {{ currentChannel.name || "lädt..." }}
+      </p>
+      <p *ngIf="isDirectChat" class="text-primary">
+        {{ " @ " + currentDirectChatUser.name || "lädt..." }}
+      </p>
     </div>
 
     <div
@@ -94,15 +100,41 @@
         </p>
       </div>
 
+      @if(!isDirectChat) {
       <app-user-message
         *ngFor="let reply of getRepliesForMessage(currentReplyMessageId)"
         [message]="reply.message"
         [time]="channelService.formatTime(reply.timestamp)"
-        [name]="getUserName(reply.userId)"
+        [name]="
+          getUserName(
+            reply.userId,
+            reply,
+            getRepliesForMessage(currentReplyMessageId)
+          )
+        "
         [imgUrl]="getImgUrl(reply.userId)"
         [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
       ></app-user-message>
+      } @if(isDirectChat) {
+      <app-user-message
+        *ngFor="
+          let reply of getDirectChatRepliesForMessage(currentReplyMessageId)
+        "
+        [message]="reply.message"
+        [time]="channelService.formatTime(reply.timestamp)"
+        [name]="
+          getUserName(
+            reply.userId,
+            reply,
+            getDirectChatRepliesForMessage(currentReplyMessageId)
+          )
+        "
+        [imgUrl]="getImgUrl(reply.userId)"
+        [isContact]="checkIfContact(reply.userId)"
+        [isReplay]="true"
+      ></app-user-message>
+      }
     </div>
 
     <!-- input -->
