@@ -12,8 +12,7 @@
     <img
       src="imgs/logo-with-text.svg"
       alt="Logo"
-      class="max-h-full"
-      [ngClass]="{ 'max-h-[45px]': isMobile }"
+      [ngClass]="{ 'max-h-[45px]': isMobile, 'max-h-full': !isMobile }"
     />
   </div>
 

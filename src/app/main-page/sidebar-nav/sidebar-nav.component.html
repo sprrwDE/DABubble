@@ -81,11 +81,18 @@
 
   <div
     class="h-full overflow-hidden flex flex-col"
-    [ngClass]="{ 'gap-[15px]': isMobile, 'gap-[30px]': !isMobile }"
+    [ngClass]="{ 'gap-[15px]': isMobile, 'gap-[25px]': !isMobile }"
   >
     <!-- Channels Container -->
 
-    <div class="flex flex-col">
+    <div
+      class="flex flex-col"
+      [ngClass]="{
+      ' max-h-[40%]': showChannels,
+      'h-[unset]': !showChannels,
+  
+    }"
+    >
       <div
         [ngClass]="{ 'pb-[0px] ': !showChannels, 'pb-[25px]': showChannels }"
         class="flex items-center w-full justify-between transition-all duration-500 ease-in-out"
@@ -183,10 +190,9 @@
         [ngClass]="{
           'h-full': showChannels,
           'h-0': !showChannels,
-          'max-h-[300px]': !isMobile,
-          'max-h-[120px]': isMobile
+      
         }"
-        class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out select-none"
+        class="pl-[5px] max-h-[100%] flex flex-col gap-[10px] overflow-x-hidden overflow-y-auto transition-all duration-300 ease-in-out select-none"
       >
         <!-- render -->
         <div
@@ -261,7 +267,7 @@
 
     <!-- Direct Messages Container -->
 
-    <div class="flex flex-col h-full overflow-hidden">
+    <div class="flex flex-col overflow-hidden h-[100%]">
       <div
         [ngClass]="{ 'pb-[0px] ': !showContacts, 'pb-[25px]': showContacts }"
         class="flex items-center w-full justify-between transition-all duration-500 ease-in-out"
