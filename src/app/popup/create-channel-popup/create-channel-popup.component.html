@@ -194,7 +194,7 @@
     }"
   >
     <div
-      class="popup-input-container relative overflow-visible flex items-center"
+      class="popup-input-container overflow-visible flex items-center"
       (click)="createChannelAddPeopleInput.focus()"
     >
       <input
@@ -204,8 +204,10 @@
         [ngClass]="nameInput"
         (click)="showAddUserToChannelSection($event)"
         class="flex"
+        class="relative"
       />
 
+      <!-- Pills -->
       <div class="flex flex-wrap gap-2 mt-2">
         @if (addUserService.userToAdd.length > 0) { @for (user of
         addUserService.userToAdd; track $index) {
@@ -229,15 +231,16 @@
         } }
       </div>
     </div>
-  </div>
-
-  <!-- hier -->
-
-  <app-add-user-to-channel-popup
+    <app-add-user-to-channel-popup
     [display]="showUserPopup"
     class="absolute left-[40px] w-[280px]"
   >
   </app-add-user-to-channel-popup>
+  </div>
+
+
+
+
   <div class="flex justify-end">
     <button (click)="createChannel()">Erstellen</button>
   </div>

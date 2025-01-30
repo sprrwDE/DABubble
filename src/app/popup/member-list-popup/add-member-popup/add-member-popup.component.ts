@@ -76,5 +76,4 @@ export class AddMemberPopupComponent {
   closePopup() {
     this.closePopupEvent.emit();
   }
-
  }

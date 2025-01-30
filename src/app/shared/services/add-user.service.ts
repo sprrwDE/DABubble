@@ -147,6 +147,7 @@ export class AddUserService implements OnDestroy {
       );
 
     //// Hier input clearen!!
+    //// Bei Schließen Add User List Clearen
   }
 
   filterArrayForNameInput(name: string) {
