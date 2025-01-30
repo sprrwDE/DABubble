@@ -232,15 +232,14 @@
         } }
       </div>
     </div>
+
     <app-add-user-to-channel-popup
-    [display]="showUserPopup"
-    class="absolute left-[40px] w-[400px] mt-[20px]"
-  >
-  </app-add-user-to-channel-popup>
+      [display]="showUserPopup"
+      class="absolute left-[40px] w-[400px] mt-[20px]"
+      (closePopupEvent)="handleUserPopupClose($event)"
+    >
+    </app-add-user-to-channel-popup>
   </div>
-
-
-
 
   <div class="flex justify-end">
     <button (click)="createChannel()">Erstellen</button>

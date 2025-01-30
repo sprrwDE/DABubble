@@ -79,7 +79,7 @@
 
     <app-add-user-to-channel-popup
       [display]="showUserPopup"
-      (closePopupEvent)="clearInputAndClosePopup()"
+      (closePopupEvent)="handleUserPopupClose($event)"
       class="absolute left-[40px] w-[280px]"
     >
     </app-add-user-to-channel-popup>

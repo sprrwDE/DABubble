@@ -16,7 +16,7 @@ import { AddUserService } from '../../shared/services/add-user.service';
   styleUrl: './add-user-to-channel-popup.component.scss'
 })
 export class AddUserToChannelPopupComponent {
-  @Output() closePopupEvent = new EventEmitter<void>();
+  @Output() closePopupEvent = new EventEmitter<boolean>(); 
   @Input() display: boolean = false;
 
   constructor(public addUserService: AddUserService, private elRef: ElementRef) {}
@@ -32,17 +32,21 @@ export class AddUserToChannelPopupComponent {
 
   closePopup() {
     this.display = false; 
-    this.addUserService.userToAdd = [];
-    this.closePopupEvent.emit();
+    this.closePopupEvent.emit(false);
   }
 
-  /*
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: Event) {
-    if (this.display && this.elRef.nativeElement && !this.elRef.nativeElement.contains(event.target)) {
+    const target = event.target as HTMLElement;
+
+    // Wenn das Ziel-Element ein Input-Feld ist, Popup nicht schließen
+    if (target.tagName.toLowerCase() === 'input' || this.elRef.nativeElement.contains(target)) {
+      return;
+    }
+
+    if (this.display) {
       this.closePopup();
     }
   } 
-  */
 
 }
