@@ -83,11 +83,6 @@ export class CreateChannelPopupComponent {
     }
   }
 
-  closePopup() {
-    this.closePopupEvent.emit();
-    this.showUserPopup = false;
-  }
-
   createChannel() {
     if (!this.showCreateChannelAddPeopleInput) {
       this.allUsers.forEach((user) => this.channel.users.push(user.id));
@@ -109,7 +104,6 @@ export class CreateChannelPopupComponent {
   }
 
   getNameInput(event: Event) {
-    console.log('typppppeee');
     let name = this.nameInput.trim().toLowerCase();
     this.addUserService.filterArrayForNameInput(name);
 
@@ -142,23 +136,29 @@ export class CreateChannelPopupComponent {
     );
 
     if (this.addUserService.filteredUsers.length > 0) {
-      console.log('test', this.showUserPopup);
       this.showUserPopup = true;
-      console.log('Popup wird angezeigt', this.showUserPopup);
     } else {
-      console.log('Popup bleibt versteckt');
       this.showUserPopup = false;
     }
   }
 
-  // ✅ Event auf Input-Elementen verhindern
   preventClose(event: Event) {
     event.stopPropagation();
+  }
+
+  closePopup() {
+    this.closePopupEvent.emit();
+    this.showUserPopup = false;
   }
 
   handleUserPopupClose(event: boolean) {
     this.showUserPopup = event;
   }
+
+  handleClearInput() {
+    this.nameInput = ''; // Input leeren, wenn das Event ausgelöst wird
+  }
+  
 
   // ngOnDestroy() {
   //   this.unsubLoggedInUser.unsubscribe();

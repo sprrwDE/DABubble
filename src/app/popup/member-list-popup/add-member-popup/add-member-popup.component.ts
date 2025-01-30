@@ -73,7 +73,15 @@ export class AddMemberPopupComponent {
     this.closePopupEvent.emit();
   }
 
+  handleClearInput() {
+    this.nameInput = ''; 
+  }
+
   closePopup() {
     this.closePopupEvent.emit();
+  }
+
+  handleUserPopupClose(event: boolean) {
+    this.showUserPopup = event;
   }
  }

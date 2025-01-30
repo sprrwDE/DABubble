@@ -17,6 +17,7 @@ import { AddUserService } from '../../shared/services/add-user.service';
 })
 export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<boolean>(); 
+  @Output() clearInputEvent = new EventEmitter<void>();
   @Input() display: boolean = false;
 
   constructor(public addUserService: AddUserService, private elRef: ElementRef) {}
@@ -33,13 +34,13 @@ export class AddUserToChannelPopupComponent {
   closePopup() {
     this.display = false; 
     this.closePopupEvent.emit(false);
+    this.clearInputEvent.emit();
   }
 
   @HostListener('document:mousedown', ['$event'])
   onClickOutside(event: Event) {
     const target = event.target as HTMLElement;
 
-    // Wenn das Ziel-Element ein Input-Feld ist, Popup nicht schließen
     if (target.tagName.toLowerCase() === 'input' || this.elRef.nativeElement.contains(target)) {
       return;
     }
