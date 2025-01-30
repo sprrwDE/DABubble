@@ -2,10 +2,10 @@ import {
   Component,
   EventEmitter,
   Output,
-  Input
+  Input,
+  ElementRef, HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/// DUMMY
 import { AddUserService } from '../../shared/services/add-user.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
   @Input() display: boolean = false;
 
-  constructor(public addUserService: AddUserService) {}
+  constructor(public addUserService: AddUserService, private elRef: ElementRef) {}
 
   set showAddUserToChannelPopup(value: boolean) {
     this.display = value; 
@@ -32,6 +32,17 @@ export class AddUserToChannelPopupComponent {
 
   closePopup() {
     this.display = false; 
+    this.addUserService.userToAdd = [];
     this.closePopupEvent.emit();
   }
+
+  /*
+  @HostListener('document:mousedown', ['$event'])
+  onClickOutside(event: Event) {
+    if (this.display && this.elRef.nativeElement && !this.elRef.nativeElement.contains(event.target)) {
+      this.closePopup();
+    }
+  } 
+  */
+
 }

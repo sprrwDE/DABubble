@@ -202,9 +202,10 @@
         #createChannelAddPeopleInput
         placeholder="Name eingeben"
         [ngClass]="nameInput"
+        [(ngModel)]="nameInput"
+        (input)="addMemberToNewChannel($event)"
         (click)="showAddUserToChannelSection($event)"
-        class="flex"
-        class="relative"
+        class="flex relative"
       />
 
       <!-- Pills -->

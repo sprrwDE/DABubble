@@ -39,8 +39,8 @@
       type="text"
       placeholder="Name eingeben"
       [(ngModel)]="nameInput"
-      (input)="addMemberToExistingChannel($event)"
       class="relative"
+      (input)="addMemberToExistingChannel($event)"
       (click)="addMemberToExistingChannel($event)"
     />
 
@@ -76,7 +76,7 @@
     >
       Hinzufügen
     </button>
-    
+
     <app-add-user-to-channel-popup
       [display]="showUserPopup"
       (closePopupEvent)="clearInputAndClosePopup()"
