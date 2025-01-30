@@ -180,7 +180,8 @@
       <div
         [ngClass]="{ 'opacity-0': !showCreateChannelAddPeopleInput }"
         class="h-[12px] w-[12px] bg-primary rounded-full border-[3px] border-white box-content"
-      ></div>
+      (clearInputEvent)="handleClearInput()">
+      </div>
     </div>
 
     <p>Bestimmte Leute hinzufügen</p>
