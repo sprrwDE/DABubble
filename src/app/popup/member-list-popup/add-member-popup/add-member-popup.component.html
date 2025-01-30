@@ -34,13 +34,16 @@
     </div>
   </div>
 
-  <div class="popup-input-container relative overflow-visible">
+  <div
+    (click)="input.focus()"
+    class="popup-input-container relative overflow-visible"
+  >
     <input
+      #input
       type="text"
       placeholder="Name eingeben"
       [(ngModel)]="nameInput"
       class="relative"
-
       (input)="addMemberToExistingChannel($event)"
       (click)="addMemberToExistingChannel($event)"
     />
@@ -78,13 +81,12 @@
       Hinzufügen
     </button>
     <app-add-user-to-channel-popup
-    [display]="showUserPopup"
-    (closePopupEvent)="handleUserPopupClose($event)"
-    (clearInputEvent)="handleClearInput()"
-    class="absolute left-[40px] w-[280px]">
-  >
-</app-add-user-to-channel-popup>
-
+      [display]="showUserPopup"
+      (closePopupEvent)="handleUserPopupClose($event)"
+      (clearInputEvent)="handleClearInput()"
+      class="absolute left-[40px] w-[280px]"
+    >
+      >
+    </app-add-user-to-channel-popup>
   </div>
-
 </section>
