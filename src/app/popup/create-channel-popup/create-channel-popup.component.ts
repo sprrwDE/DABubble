@@ -156,7 +156,7 @@ export class CreateChannelPopupComponent {
   }
 
   handleClearInput() {
-    this.nameInput = ''; // Input leeren, wenn das Event ausgelöst wird
+    this.nameInput = ''; 
   }
   
 
