@@ -37,25 +37,17 @@
   <div
     (click)="input.focus()"
     class="popup-input-container relative overflow-visible"
+    (click)="addMemberToExistingChannel($event)"
   >
-    <input
-      #input
-      type="text"
-      placeholder="Name eingeben"
-      [(ngModel)]="nameInput"
-      class="relative"
-      (input)="addMemberToExistingChannel($event)"
-      (click)="addMemberToExistingChannel($event)"
-    />
 
-    <!-- Pills -->
-    <div class="flex flex-wrap gap-2 mt-2">
-      @if (addUserService.userToAdd.length > 0) { @for (user of
+  @if (addUserService.userToAdd.length > 0) { 
+    <div class="flex flex-wrap gap-2 mt-2 w-[100%]">
+      @for (user of
       addUserService.userToAdd; track $index) {
       <div
-        class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
+        class="flex items-center justify-between w-[100%] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
       >
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 w-[100%]">
           <img
             class="h-[24px] w-[24px] rounded-full"
             src="{{ user.image || 'imgs/avatar/profile.svg' }}"
@@ -69,8 +61,23 @@
           ✕
         </span>
       </div>
-      } }
+      } 
     </div>
+  }
+  
+    <input
+      #input
+      type="text"
+      placeholder="Name eingeben"
+      [(ngModel)]="nameInput"
+      class="relative w-[100%]"
+      (input)="addMemberToExistingChannel($event)"
+    />
+
+        <!-- Pills -->
+         
+
+
   </div>
 
   <div class="flex justify-end">

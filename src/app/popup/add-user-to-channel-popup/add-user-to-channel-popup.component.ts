@@ -29,6 +29,7 @@ export class AddUserToChannelPopupComponent {
   addUserToChannel(userId: string) {
     this.addUserService.setUserToAdd(userId);
     this.closePopup();
+    this.clearInputEvent.emit();
   }
 
   closePopup() {
@@ -49,5 +50,10 @@ export class AddUserToChannelPopupComponent {
       this.closePopup();
     }
   } 
+
+  addUserToList(id: string) {
+    this.addUserService.setUserToAdd(id);
+    this.clearInputEvent.emit();
+  }
 
 }
