@@ -40,7 +40,7 @@ export class UserProfilePopupComponent {
     effect(() => {
       const user = this.userService.loggedInUser();
       if (user) {
-        this.loggedInUserData = user; // Stelle sicher, dass `user.id` ein String ist
+        this.loggedInUserData = user; 
       }
     });
   }
@@ -54,6 +54,7 @@ export class UserProfilePopupComponent {
   }
 
   closePopup() {
+    this.discardChanges()
     this.popupService.openUserProfilePopup = false;
   }
 
@@ -99,6 +100,7 @@ export class UserProfilePopupComponent {
 
   discardChanges() {
     this.nameInput = this.loggedInUserData.name;
-    this.avatarInput = this.loggedInUserData.image
+    this.avatarInput = this.loggedInUserData.image;
+    this.toggleAvatarSelection = false;
   }
 }
