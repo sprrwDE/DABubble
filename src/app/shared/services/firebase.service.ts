@@ -120,6 +120,7 @@ export class FirebaseService {
   async changeProfileImage(id: string, image: string) {
     try {
       const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
+      console.log(image)
       await updateDoc(docRef, { image });
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
