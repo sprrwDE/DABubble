@@ -54,6 +54,9 @@ export class AddUserToChannelPopupComponent {
   addUserToList(id: string) {
     this.addUserService.setUserToAdd(id);
     this.clearInputEvent.emit();
+    if(this.addUserService.filteredUsers.length === 0) {
+      this.closePopup();
+    }
   }
 
 }
