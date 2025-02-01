@@ -24,7 +24,7 @@ export class Channel {
       name: this.name,
       description: this.description,
       users: this.users,
-      createdBy: this.channelCreatorId,
+      channelCreatorId: this.channelCreatorId,
     };
   }
 }

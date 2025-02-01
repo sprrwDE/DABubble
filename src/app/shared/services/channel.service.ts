@@ -1,4 +1,4 @@
-import { inject, Injectable, OnInit, signal } from '@angular/core';
+import { effect, inject, Injectable, OnInit, signal } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Channel } from '../models/channel.model';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -13,6 +13,7 @@ import {
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
 import { ChatComponent } from '../../main-page/chat/chat.component';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class ChannelService {
   currentChannelId: string = '';
 
   currentChannel = signal<Channel>(new Channel());
+  activeChannel = new Channel();
   currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
@@ -41,6 +43,8 @@ export class ChannelService {
 
   chatComponent!: ChatComponent;
 
+  loggedInUser: any;
+
   ngOnDestroy(): void {
     this.unsubAllChannels();
     this.unsubMessages();
@@ -48,10 +52,25 @@ export class ChannelService {
 
   constructor(
     public fb: FirebaseService,
-    private ngZone: NgZone // public firestore: Firestore
+    private ngZone: NgZone,
+    private userService: UserService
   ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+
+      this.allChannels = this.allChannels.filter((channel) =>
+        channel.users.includes(this.loggedInUser?.id)
+      );
+
+      console.log(this.allChannels);
+    });
+
+    effect(() => {
+      this.activeChannel = this.currentChannel();
+    });
+
     this.getAllChannels();
-    this.initializeCurrentChannelIfNeeded();
+    // this.initializeCurrentChannelIfNeeded();
     console.log(this.currentChannelId);
   }
 
@@ -61,7 +80,7 @@ export class ChannelService {
         collection(this.firestore, 'channels'),
         (snapshot) => this.handleChannelsSnapshot(snapshot)
       );
-      this.initializeCurrentChannelIfNeeded();
+      // this.initializeCurrentChannelIfNeeded();
     } catch (error) {
       console.error('Error fetching channels:', error);
     }
@@ -158,7 +177,7 @@ export class ChannelService {
   }
 
   private updateCurrentChannel(channel: any, messages: Message[]) {
-    this.initializeCurrentChannelIfNeeded();
+    // this.initializeCurrentChannelIfNeeded();
 
     if (this.currentChannelId === channel.id) {
       this.currentChannelMessages = messages;
@@ -166,12 +185,20 @@ export class ChannelService {
     }
   }
 
-  private initializeCurrentChannelIfNeeded() {
-    if (!this.currentChannelIdIsInitialized && this.allChannels.length > 0) {
-      this.currentChannelId = this.allChannels[0].id;
-      this.currentChannelIdIsInitialized = true;
-    }
-  }
+  // private initializeCurrentChannelIfNeeded() {
+  //   if (
+  //     !this.currentChannelIdIsInitialized &&
+  //     this.allChannels.length > 0 &&
+  //     this.loggedInUser?.id
+  //   ) {
+  //     this.currentChannelId =
+  //       this.allChannels.find((channel) =>
+  //         channel.users.includes(this.loggedInUser.id)
+  //       )?.id || '';
+
+  //     this.currentChannelIdIsInitialized = true;
+  //   }
+  // }
 
   async addChannel(data: any) {
     try {
@@ -183,7 +210,7 @@ export class ChannelService {
 
   async sendMessage(data: any) {
     try {
-      const channelRef = doc(this.firestore, 'channels', this.currentChannelId);
+      const channelRef = doc(this.firestore, 'channels', this.activeChannel.id);
       await addDoc(collection(channelRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
@@ -194,7 +221,7 @@ export class ChannelService {
     try {
       const messageRef = doc(
         this.firestore,
-        `channels/${this.currentChannelId}/messages/${messageId}`
+        `channels/${this.activeChannel.id}/messages/${messageId}`
       );
       await addDoc(collection(messageRef, 'replies'), data);
     } catch (error) {
@@ -219,5 +246,11 @@ export class ChannelService {
       minute: '2-digit',
     };
     return date.toLocaleTimeString('de-DE', options);
+  }
+
+  filterAllChannels() {
+    return this.allChannels.filter((channel) =>
+      channel.users.includes(this.loggedInUser?.id)
+    );
   }
 }

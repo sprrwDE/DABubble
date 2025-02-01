@@ -15,7 +15,7 @@ export class UserService {
 
   constructor(private fb: FirebaseService, private auth: Auth) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
-    
+
     fb.getData('users');
 
     this.fetchedCollection$.subscribe((data) => {
@@ -39,13 +39,12 @@ export class UserService {
     });
   }
 
-
   setLoggedInUser(user: any) {
     this.loggedInUser.set(user); // Aktuellen Wert setzen
   }
 
   sortUsers(): User[] {
-    let user = this.loggedInUser()
+    let user = this.loggedInUser();
     let loggedInUserId = '';
 
     if (user) {
@@ -53,7 +52,6 @@ export class UserService {
     } else {
       loggedInUserId = '';
     }
-
 
     return this.allUsers.sort((a, b) => {
       // Logged in user kommt zuerst

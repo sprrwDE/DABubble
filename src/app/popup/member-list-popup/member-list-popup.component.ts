@@ -85,11 +85,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     //   this.channelService.fetchChannel(this.currentChannelId);
   }
 
-  openContactProfile(user: User) {
-    this.popupService.contactProfileContent = user;
-    this.popupService.contactProfilePopupOpen = true;
-  }
-
   ngOnDestroy() {
     // this.subscription.unsubscribe();
     // this.channelService.unsubscribeChannel();
@@ -103,5 +98,22 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   showAddMembersSection(event: Event) {
     event.stopPropagation();
     this.showAddMembersPopup = true;
+  }
+
+  openProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+
+    if (this.loggedInUser.id === user.id) this.openUserProfilePopup();
+    else this.openContactProfilePopup(user);
+  }
+
+  openUserProfilePopup() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  openContactProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
   }
 }

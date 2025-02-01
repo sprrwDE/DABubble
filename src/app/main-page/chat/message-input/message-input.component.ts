@@ -76,49 +76,86 @@ export class MessageInputComponent implements OnInit {
   }
 
   async sendMessage() {
-    if (this.message.message.trim() === '') {
-      console.log('Message is empty');
-      return;
-    }
-    this.message.timestamp = new Date().getTime();
-    this.message.userId = this.loggedInUser.id;
-
-    console.log(this.currentDirectChat);
+    console.log(this.channelService.currentChannel());
+    if (this.isMessageEmpty()) return;
+    this.prepareMessage();
 
     if (this.isDirectChatComponent) {
-      const isSelfChat = this.loggedInUser.id === this.currentDirectChatUser.id;
-      const userIdCount = this.currentDirectChat.userIds.filter(
-        (id) => id === this.loggedInUser.id
-      ).length;
-
-      if (
-        (!isSelfChat &&
-          (!this.currentDirectChat.userIds.includes(this.loggedInUser.id) ||
-            !this.currentDirectChat.userIds.includes(
-              this.currentDirectChatUser.id
-            ))) ||
-        (isSelfChat && userIdCount !== 2)
-      ) {
-        this.directChat.userIds = [
-          this.loggedInUser.id,
-          this.currentDirectChatUser.id,
-        ];
-
-        const chatId = await this.directChatService.addDirectChat(
-          this.directChat.toJSON()
-        );
-        if (chatId) {
-          this.directChat.id = chatId;
-          this.directChatService.currentDirectChat.set(this.directChat);
-          this.directChatService.currentDirectChatId = chatId;
-        }
-      }
-      this.directChatService.sendMessage(this.message.toJSON());
+      await this.handleDirectChatMessage();
     } else {
-      this.channelService.sendMessage(this.message.toJSON());
+      await this.handleChannelMessage();
     }
 
+    this.scroll();
+  }
+
+  private isMessageEmpty(): boolean {
+    if (this.message.message.trim() === '') {
+      console.log('Message is empty');
+      return true;
+    }
+    return false;
+  }
+
+  private prepareMessage() {
+    this.message.timestamp = new Date().getTime();
+    this.message.userId = this.loggedInUser.id;
+  }
+
+  private async handleDirectChatMessage() {
+    if (this.shouldCreateNewChat()) {
+      await this.createNewDirectChat();
+    }
+    this.directChatService.sendMessage(this.message.toJSON());
     this.message.message = '';
+  }
+
+  private shouldCreateNewChat(): boolean {
+    const isSelfChat = this.loggedInUser.id === this.currentDirectChatUser.id;
+    const userIdCount = this.currentDirectChat.userIds.filter(
+      (id) => id === this.loggedInUser.id
+    ).length;
+
+    return (
+      (!isSelfChat && !this.hasRequiredUsers()) ||
+      (isSelfChat && userIdCount !== 2)
+    );
+  }
+
+  private hasRequiredUsers(): boolean {
+    return (
+      this.currentDirectChat.userIds.includes(this.loggedInUser.id) &&
+      this.currentDirectChat.userIds.includes(this.currentDirectChatUser.id)
+    );
+  }
+
+  private async createNewDirectChat() {
+    this.directChat.userIds = [
+      this.loggedInUser.id,
+      this.currentDirectChatUser.id,
+    ];
+
+    const chatId = await this.directChatService.addDirectChat(
+      this.directChat.toJSON()
+    );
+
+    if (chatId) {
+      this.updateDirectChat(chatId);
+    }
+  }
+
+  private updateDirectChat(chatId: string) {
+    this.directChat.id = chatId;
+    this.directChatService.currentDirectChat.set(this.directChat);
+    this.directChatService.currentDirectChatId = chatId;
+  }
+
+  private async handleChannelMessage() {
+    this.channelService.sendMessage(this.message.toJSON());
+    this.message.message = '';
+  }
+
+  private scroll() {
     this.chatComponent.scroll = true;
     console.log('Successfully sent message!!');
   }

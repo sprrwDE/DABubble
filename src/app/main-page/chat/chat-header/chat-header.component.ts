@@ -8,6 +8,7 @@ import { User } from '../../../shared/models/user.model';
 import { PopupService } from '../../../popup/popup.service';
 import { DirectChatService } from '../../../shared/direct-chat.service';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -30,6 +31,8 @@ export class ChatHeaderComponent {
 
   @Input() isDirectChat: boolean = false;
 
+  loggedInUser: any;
+
   constructor(
     private channelService: ChannelService,
     private userService: UserService,
@@ -47,11 +50,14 @@ export class ChatHeaderComponent {
       this.currentDirectChatUser =
         this.directChatService.currentDirectChatUser();
     });
+
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
   }
 
-  openContactProfilePopup(user: User) {
-    this.popupService.contactProfileContent = user;
-    this.popupService.contactProfilePopupOpen = true;
+  get contactProfileContent() {
+    return this.popupService.contactProfileContent;
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -74,5 +80,23 @@ export class ChatHeaderComponent {
 
   closeMemberListPopup() {
     this.memberListPopupOpen = false;
+  }
+
+  openProfilePopup() {
+    this.popupService.contactProfileContent = this.currentDirectChatUser;
+
+    if (this.loggedInUser.id === this.contactProfileContent.id)
+      this.openUserProfilePopup();
+    else this.openContactProfilePopup(this.currentDirectChatUser);
+  }
+
+  openUserProfilePopup() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  openContactProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
   }
 }
