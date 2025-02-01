@@ -68,6 +68,7 @@ export class ChatComponent {
     effect(() => {
       if (this.channelService.currentChannel()) {
         this.currentChannel = this.channelService.currentChannel();
+        console.log(this.currentChannel);
       } else {
         this.currentChannel = new Channel();
       }

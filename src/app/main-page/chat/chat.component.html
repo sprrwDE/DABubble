@@ -30,6 +30,7 @@
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
+          [userId]="message.userId"
         ></app-user-message>
       </div>
 
@@ -117,6 +118,7 @@
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
+          [userId]="message.userId"
         ></app-user-message>
       </div>
 

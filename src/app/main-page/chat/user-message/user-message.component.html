@@ -227,6 +227,7 @@
       <p class="text-[14px] text-disable">{{ time }}</p>
 
       <p
+        (click)="openProfilePopup()"
         *ngIf="isContact"
         class="hover-primary transition-svg-text text-[18px] font-bold"
       >

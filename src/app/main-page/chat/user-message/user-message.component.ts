@@ -1,8 +1,10 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { PanelService } from '../../../shared/services/panel.service';
 import { PopupService } from '../../../popup/popup.service';
 import { ChannelService } from '../../../shared/services/channel.service';
+import { UserService } from '../../../shared/services/user.service';
+import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-user-message',
@@ -22,14 +24,22 @@ export class UserMessageComponent {
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<string> = [];
   @Input() messageId: any;
+  @Input() userId: string = '';
+
+  loggedInUser: any;
 
   editMessagePopupOpen: boolean = false;
 
   constructor(
     private panelService: PanelService,
     private popupService: PopupService,
-    private channelService: ChannelService
-  ) {}
+    private channelService: ChannelService,
+    private userService: UserService
+  ) {
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
+    });
+  }
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
@@ -55,9 +65,8 @@ export class UserMessageComponent {
     this.channelService.currentReplyMessageId = value;
   }
 
-  openProfilePopup() {
-    this.popupService.openUserProfilePopup = true;
-    this.popupService.editingUserProfile = false;
+  get allUsers() {
+    return this.userService.allUsers;
   }
 
   toggleEditMessagePopup() {
@@ -65,6 +74,7 @@ export class UserMessageComponent {
   }
 
   openReplyPanel() {
+    console.log(this.userId);
     this.currentReplyMessageId = this.messageId;
     this.panelService.openReplyPanel();
     this.panelService.scroll = true;
@@ -76,11 +86,39 @@ export class UserMessageComponent {
       this.time,
       this.imgUrl,
       this.isContact,
-      this.numberOfAnswers
+      this.numberOfAnswers,
+      this.userId
     );
   }
 
   onMouseLeave() {
     this.editMessagePopupOpen = false;
+  }
+
+  openProfilePopup() {
+    let user = this.getUser(this.userId);
+
+    this.popupService.contactProfileContent = user || new User();
+
+    if (this.loggedInUser.id === this.userId)
+      this.openUserProfilePopupFunction();
+    else this.openContactProfilePopup(user || new User());
+  }
+
+  openUserProfilePopupFunction() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  openContactProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
+  }
+
+  getUser(userId: string) {
+    console.log(this.allUsers);
+    console.log(userId);
+    console.log(this.allUsers.find((user) => user.id === userId));
+    return this.allUsers.find((user) => user.id === userId);
   }
 }

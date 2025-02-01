@@ -16,6 +16,8 @@ import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { DirectChatService } from '../../shared/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
+import { Channel } from '../../shared/models/channel.model';
+import { ChannelService } from '../../shared/services/channel.service';
 
 @Component({
   selector: 'app-contact-profile-popup',
@@ -40,7 +42,8 @@ export class ContactProfilePopupComponent {
     private ngZone: NgZone,
     private popupService: PopupService,
     private directChatService: DirectChatService,
-    private userService: UserService
+    private userService: UserService,
+    private channelService: ChannelService
   ) {
     this.currentUser = user;
 
@@ -80,6 +83,9 @@ export class ContactProfilePopupComponent {
   }
 
   setCurrentDirectChat(user: User) {
+    this.channelService.chatComponent.scroll = true;
+    this.channelService.currentChannel.set(new Channel());
+
     const directChat = this.directChatService.allDirectChats.find(
       (directChat) => {
         if (

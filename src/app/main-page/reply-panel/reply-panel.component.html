@@ -89,6 +89,7 @@
         [isContact]="panelService.isContact"
         [lastAnswerTime]="'00:00 Uhr'"
         [isReplay]="true"
+        [userId]="panelService.userId"
       ></app-user-message>
 
       <div class="relative text-lines mx-[30px] flex items-center gap-[10px]">
@@ -115,6 +116,7 @@
         [imgUrl]="getImgUrl(reply.userId)"
         [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
+        [userId]="reply.userId"
       ></app-user-message>
       } @if(isDirectChat) {
       <app-user-message
@@ -133,6 +135,7 @@
         [imgUrl]="getImgUrl(reply.userId)"
         [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
+        [userId]="reply.userId"
       ></app-user-message>
       }
     </div>
