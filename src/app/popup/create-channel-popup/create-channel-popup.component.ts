@@ -158,7 +158,7 @@ export class CreateChannelPopupComponent {
   handleClearInput() {
     this.nameInput = ''; 
   }
-  
+
 
   // ngOnDestroy() {
   //   this.unsubLoggedInUser.unsubscribe();

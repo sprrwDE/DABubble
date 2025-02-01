@@ -72,4 +72,8 @@ export class UserProfilePopupComponent {
       return;
     }
   }
+
+  showEditProfilePicPopup() {
+    console.log('open')
+  }
 }
