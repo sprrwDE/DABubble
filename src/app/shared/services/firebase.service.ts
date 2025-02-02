@@ -22,7 +22,7 @@ export class FirebaseService {
   private fetchedSingleSubject = new BehaviorSubject<DocumentData>({});
   fetchedSingleData$ = this.fetchedSingleSubject.asObservable();
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   getData(db: string) {
     try {
@@ -83,7 +83,7 @@ export class FirebaseService {
       return unsubscribe;
     } catch (error) {
       console.error('Error setting up listener:', error);
-      return () => {};
+      return () => { };
     }
   }
 
