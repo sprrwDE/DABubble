@@ -11,13 +11,15 @@ import { Subject } from "rxjs";
   styleUrl: './emoji-picker.component.scss'
 })
 export class EmojiPickerComponent {
-  isOpened = false;
+  isOpened = true;
   @Input() emojiInput$: Subject<string> | undefined;
   @ViewChild("container") container: ElementRef<HTMLElement> | undefined;
   constructor() {}
   emojiSelected(event: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     this.emojiInput$?.next(event.emoji.native);
+    const selectedEmoji = event.emoji.native;
+    console.log('Selected Emoji:', selectedEmoji);
   }
   eventHandler = (event: Event) => {
     // Watching for outside clicks
@@ -25,7 +27,7 @@ export class EmojiPickerComponent {
       this.isOpened = false;
       window.removeEventListener("click", this.eventHandler);
     }
-  };
+  };/* 
   toggleEmojiPicker() {
     if (!this.container) {
       return;
@@ -37,5 +39,5 @@ export class EmojiPickerComponent {
       window.removeEventListener("click", this.eventHandler);
     }
   }
-
+ */
 }

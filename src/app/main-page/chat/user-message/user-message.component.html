@@ -103,7 +103,8 @@
       </svg>
     </div>
 
-    <div class="transition-svg-text reaction-item">
+    <!-- HIER EMOJI PICKER VERKNÜPFT -->
+    <div class="transition-svg-text reaction-item" (click)="showEmojiPicker = !showEmojiPicker">
       <svg
         width="24"
         height="24"
@@ -129,6 +130,7 @@
           />
         </g>
       </svg>
+
     </div>
 
     <div
@@ -311,3 +313,5 @@
 
   <img src="{{ imgUrl || '' }}" alt="" />
 </div>
+
+<app-emoji-picker class="" *ngIf="showEmojiPicker" [emojiInput$]="emojiInput$"></app-emoji-picker>
