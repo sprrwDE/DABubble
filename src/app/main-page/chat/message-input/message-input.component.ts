@@ -16,7 +16,7 @@ import { Reply } from '../../../shared/models/reply.model';
 import { ReplyPanelComponent } from '../../reply-panel/reply-panel.component';
 import { User } from '../../../shared/models/user.model';
 import { Subscription } from 'rxjs';
-import { DirectChatService } from '../../../shared/direct-chat.service';
+import { DirectChatService } from '../../../shared/services/direct-chat.service';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
 
 @Component({

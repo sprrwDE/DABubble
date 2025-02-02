@@ -12,6 +12,7 @@ import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
 import { AddUserService } from '../shared/services/add-user.service';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
+import { SearchChatService } from '../shared/services/search-chat.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -41,7 +42,8 @@ export class MainPageComponent {
     public userService: UserService,
     private fb: FirebaseService,
     private addUserService: AddUserService,
-    private globalVariablesService: GlobalVariablesService
+    private globalVariablesService: GlobalVariablesService,
+    private searchChatService: SearchChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -96,5 +98,9 @@ export class MainPageComponent {
     this.popupOpen = true;
     this.popupType = event.type;
     this.popupCorner = event.corner;
+  }
+
+  closePopups() {
+    this.searchChatService.openSearchPopup = false;
   }
 }

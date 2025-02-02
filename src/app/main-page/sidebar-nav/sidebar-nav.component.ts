@@ -14,9 +14,10 @@ import { AddUserService } from '../../shared/services/add-user.service';
 import { Channel } from '../../shared/models/channel.model';
 import { PanelService } from '../../shared/services/panel.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
-import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { User } from '../../shared/models/user.model';
 import { DirectChat } from '../../shared/models/direct-chat.model';
+import { SearchChatService } from '../../shared/services/search-chat.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -50,8 +51,11 @@ export class SidebarNavComponent {
     public addUserService: AddUserService,
     public panelService: PanelService,
     public globalVariablesService: GlobalVariablesService,
-    public directChatService: DirectChatService
+    public directChatService: DirectChatService,
+    public searchChatService: SearchChatService
   ) {
+    this.searchChatService.sidebarNavComponent = this;
+
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
@@ -86,66 +90,5 @@ export class SidebarNavComponent {
     this.popupService.showCreateChannelAddPeoplePopup = false;
     this.popupService.showCreateChannelAddPeopleInput = false;
     this.openPopupEvent.emit({ type: popupType, corner: popupCorner });
-  }
-
-  setCurrentChannel(channel: Channel) {
-    this.panelService.closeReplyPanel();
-    this.channelService.currentChannel.set(channel);
-
-    this.directChatService.isDirectChat = false;
-    this.directChatService.currentDirectChatUser.set(new User());
-    this.channelService.chatComponent.scroll = true;
-  }
-
-  setCurrentDirectChat(user: User) {
-    this.panelService.closeReplyPanel();
-    this.channelService.chatComponent.scroll = true;
-    this.channelService.currentChannel.set(new Channel());
-
-    let directChat: DirectChat | undefined;
-
-    if (this.loggedInUser.id === user.id) {
-      directChat = this.directChatService.allDirectChats.find((chat) => {
-        const selfChatCount = chat.userIds.filter(
-          (id) => id === this.loggedInUser.id
-        ).length;
-
-        if (selfChatCount === 2) {
-          this.directChatService.currentDirectChat.set(chat);
-          this.directChatService.currentDirectChatId = chat.id || '';
-          return true;
-        }
-        return false;
-      });
-    }
-
-    if (this.loggedInUser.id !== user.id) {
-      directChat = this.directChatService.allDirectChats.find((chat) => {
-        if (
-          chat.userIds.find((id) => id === this.loggedInUser.id) &&
-          chat.userIds.find((id) => id === user.id)
-        ) {
-          this.directChatService.currentDirectChat.set(chat);
-          this.directChatService.currentDirectChatId = chat.id || '';
-          return true;
-        }
-        return false;
-      });
-    }
-
-    if (!directChat) {
-      this.directChatService.currentDirectChat.set(new DirectChat());
-    }
-
-    this.directChatService.currentDirectChatUser.set(user);
-    this.directChatService.isDirectChat = true;
-
-    setTimeout(() => {
-      const activeElement =
-        this.allUsersContainer.nativeElement.querySelector('.active-contact');
-      if (activeElement) {
-        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 100);
   }
 }

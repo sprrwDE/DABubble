@@ -6,7 +6,7 @@
       #chatContainer
       class="main-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px] mt-[100px]"
     >
-      @if (!isDirectChat) {
+      @if (!isDirectChat && !searchChat) {
 
       <div
         *ngFor="let message of currentChannel?.messages"
@@ -90,7 +90,7 @@
         </p>
       </div>
 
-      } @if (isDirectChat) {
+      } @if (isDirectChat && !searchChat) {
 
       <div
         *ngFor="let message of currentDirectChat?.messages"
@@ -159,6 +159,7 @@
 
     <!-- input -->
     <app-message-input
+      *ngIf="!searchChat"
       class="px-[45px]"
       [chatComponent]="this"
       [isDirectChatComponent]="isDirectChat"

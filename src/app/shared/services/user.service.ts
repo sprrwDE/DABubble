@@ -68,4 +68,8 @@ export class UserService {
       return 0;
     });
   }
+
+  getUserById(userId: string) {
+    return this.allUsers.find((user) => user.id === userId);
+  }
 }

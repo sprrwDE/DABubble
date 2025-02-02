@@ -1,8 +1,12 @@
 <header
-  class="z-10 bg-white flex rounded-t-[30px] max-h-[100px] min-h-[100px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+  class="z-10 bg-white flex rounded-t-[30px] min-h-[100px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+  [ngClass]="{
+    'max-h-[100px]': !searchChat,
+    'max-h-[unset]': searchChat
+  }"
 >
   <div
-    *ngIf="!isDirectChat"
+    *ngIf="!isDirectChat && !searchChat"
     (click)="openChannelDetailsPopup('channel-details', 'tl')"
     class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
   >
@@ -45,7 +49,10 @@
     ></app-popup>
   </div>
 
-  <div *ngIf="!isDirectChat" class="flex items-center gap-[15px]">
+  <div
+    *ngIf="!isDirectChat && !searchChat"
+    class="flex items-center gap-[15px]"
+  >
     <div
       *ngIf="channelUsers.length > 0"
       class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
@@ -103,7 +110,7 @@
   </div>
 
   <div
-    *ngIf="isDirectChat"
+    *ngIf="isDirectChat && !searchChat"
     class="flex items-center gap-[15px] rounded-[30px] px-[8px] py-[4px] hover:bg-bg transition-svg-text cursor-pointer"
     (click)="openProfilePopup()"
   >
@@ -125,5 +132,25 @@
     <h2 class="text-[24px] font-bold">
       {{ currentDirectChatUser.name || "lädt..." }}
     </h2>
+  </div>
+
+  <div class="flex flex-col relative gap-[20px] w-full" *ngIf="searchChat">
+    <h2 class="text-[24px] font-bold">Neue Nachricht</h2>
+
+    <div
+      class="popup-input-container overflow-visible flex items-center"
+      (click)="searchChatInput.focus()"
+      (click)="showSearchPopup($event)"
+    >
+      <input
+        type="text"
+        #searchChatInput
+        [(ngModel)]="searchChatService.searchChatInput"
+        placeholder="An: #channel, oder @jemand oder E-Mail Adresse"
+        (input)="searchChatService.searchChats()"
+      />
+    </div>
+
+    <app-search-chat-popup></app-search-chat-popup>
   </div>
 </header>

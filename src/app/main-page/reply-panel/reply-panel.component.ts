@@ -9,7 +9,7 @@ import { User } from '../../shared/models/user.model';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
-import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
 import { Message } from '../../shared/models/message.model';
 import { Reply } from '../../shared/models/reply.model';

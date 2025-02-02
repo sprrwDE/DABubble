@@ -1,0 +1,46 @@
+<div
+  class="gap-[30px] overflow-y-scroll overflow-x-hidden p-[30px] rounded-b-[30px] absolute max-h-[50vh] min-h-[100%] shadow-[0px_6px_14px_0px_#00000033] bg-white top-[100%] left-0 w-full flex flex-col transition-svg-text"
+  [ngClass]="{
+    'scale-0': !searchChatService.openSearchPopup,
+    'scale-100': searchChatService.openSearchPopup
+  }"
+  (click)="$event.stopPropagation()"
+>
+  <div
+    *ngFor="let chat of searchChatService.allChats"
+    class="flex items-center gap-[10px]"
+  >
+    <p
+      class="flex items-center gap-[10px] hover-primary-bg px-[10px] py-[4px] rounded-[30px] cursor-pointer text-[20px] font-bold text-primary transition-svg-text"
+      *ngIf="ifChannel(chat)"
+      (click)="searchChatService.setCurrentChannel(chat)"
+    >
+      # {{ chat.name }}
+    </p>
+
+    <div
+      *ngIf="ifDirectChat(chat)"
+      class="flex items-center gap-[15px] justify-between w-full hover-primary-bg px-[10px] py-[4px] rounded-[30px] cursor-pointer text-[20px] font-bold text-primary transition-svg-text"
+      (click)="
+        searchChatService.setCurrentDirectChat(
+          userService.getUserById(chat.userIds[1])!
+        )
+      "
+    >
+      <div class="flex items-center gap-[10px]">
+        <img
+          class="w-[50px] h-[50px] rounded-full"
+          src="{{ getUserImage(chat) }}"
+          alt=""
+        />
+        <p>&#64; {{ getUserName(chat) }}</p>
+      </div>
+
+      <span class="text-[16px] font-normal"> {{ getUserEmail(chat) }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="searchChatService.allChats.length === 0">
+    <p class="text-center text-[20px]">Keine Chats gefunden</p>
+  </div>
+</div>

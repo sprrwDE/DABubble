@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
-import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
 import { Channel } from '../../shared/models/channel.model';
 import { ChannelService } from '../../shared/services/channel.service';

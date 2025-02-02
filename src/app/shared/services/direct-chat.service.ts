@@ -7,10 +7,10 @@ import {
   onSnapshot,
 } from '@angular/fire/firestore';
 import { Unsubscribe } from 'firebase/firestore';
-import { DirectChat } from './models/direct-chat.model';
-import { Message } from './models/message.model';
-import { User } from './models/user.model';
-import { Reply } from './models/reply.model';
+import { DirectChat } from '../models/direct-chat.model';
+import { Message } from '../models/message.model';
+import { User } from '../models/user.model';
+import { Reply } from '../models/reply.model';
 
 @Injectable({
   providedIn: 'root',

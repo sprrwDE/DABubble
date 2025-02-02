@@ -13,6 +13,7 @@
     </div>
 
     <svg
+      (click)="searchChatService.setSearchChat()"
       class="hover-primary p-[8px] box-content"
       width="24"
       height="24"
@@ -197,7 +198,7 @@
         <!-- render -->
         <div
           *ngFor="let channel of channelService.filterAllChannels()"
-          (click)="setCurrentChannel(channel)"
+          (click)="searchChatService.setCurrentChannel(channel)"
           class="channel-item"
           [ngClass]="{ 'active-channel': channel.id === currentChannel.id }"
         >
@@ -332,7 +333,7 @@
       >
         @for (user of userService.sortUsers(); track $index) {
         <div
-          (click)="setCurrentDirectChat(user)"
+          (click)="searchChatService.setCurrentDirectChat(user)"
           class="contact-item"
           [ngClass]="{ 'active-contact': user.id === currentDirectChatUser.id }"
         >

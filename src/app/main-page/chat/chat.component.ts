@@ -23,8 +23,9 @@ import { publishFacade } from '@angular/compiler';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
-import { DirectChatService } from '../../shared/direct-chat.service';
+import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
+import { SearchChatService } from '../../shared/services/search-chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -63,7 +64,8 @@ export class ChatComponent {
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService,
-    public directChatService: DirectChatService
+    public directChatService: DirectChatService,
+    public searchChatService: SearchChatService
   ) {
     effect(() => {
       if (this.channelService.currentChannel()) {
@@ -103,6 +105,10 @@ export class ChatComponent {
   get channelUsers() {
     const userIds = this.currentChannel?.users;
     return this.allUsers.filter((user) => userIds?.includes(user.id));
+  }
+
+  get searchChat() {
+    return this.searchChatService.searchChat;
   }
 
   // openChannelDetailsPopup(type: string, corner: string) {

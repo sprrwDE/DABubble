@@ -6,14 +6,22 @@ import { UserService } from '../../../shared/services/user.service';
 import { Channel } from '../../../shared/models/channel.model';
 import { User } from '../../../shared/models/user.model';
 import { PopupService } from '../../../popup/popup.service';
-import { DirectChatService } from '../../../shared/direct-chat.service';
+import { DirectChatService } from '../../../shared/services/direct-chat.service';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { AuthService } from '../../../shared/services/auth.service';
+import { SearchChatService } from '../../../shared/services/search-chat.service';
+import { FormsModule } from '@angular/forms';
+import { SearchChatPopupComponent } from './search-chat-popup/search-chat-popup.component';
 
 @Component({
   selector: 'app-chat-header',
   standalone: true,
-  imports: [CommonModule, PopupComponent],
+  imports: [
+    CommonModule,
+    PopupComponent,
+    FormsModule,
+    SearchChatPopupComponent,
+  ],
   templateUrl: './chat-header.component.html',
   styleUrl: './chat-header.component.scss',
 })
@@ -35,9 +43,10 @@ export class ChatHeaderComponent {
 
   constructor(
     private channelService: ChannelService,
-    private userService: UserService,
+    public userService: UserService,
     private popupService: PopupService,
-    private directChatService: DirectChatService
+    private directChatService: DirectChatService,
+    public searchChatService: SearchChatService
   ) {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
@@ -58,6 +67,10 @@ export class ChatHeaderComponent {
 
   get contactProfileContent() {
     return this.popupService.contactProfileContent;
+  }
+
+  get searchChat() {
+    return this.searchChatService.searchChat;
   }
 
   openChannelDetailsPopup(type: string, corner: string) {
@@ -98,5 +111,33 @@ export class ChatHeaderComponent {
   openContactProfilePopup(user: User) {
     this.popupService.contactProfileContent = user;
     this.popupService.contactProfilePopupOpen = true;
+  }
+
+  ifChannel(chat: Channel | DirectChat): chat is Channel {
+    return chat instanceof Channel;
+  }
+
+  ifDirectChat(chat: Channel | DirectChat): chat is DirectChat {
+    return chat instanceof DirectChat;
+  }
+
+  getUserName(chat: DirectChat): string {
+    const user = this.userService.getUserById(chat.userIds[1]);
+    return user?.name || 'lädt...';
+  }
+
+  getUserImage(chat: DirectChat): string {
+    const user = this.userService.getUserById(chat.userIds[1]);
+    return user?.image || 'imgs/avatar/profile.svg';
+  }
+
+  getUserEmail(chat: DirectChat): string {
+    const user = this.userService.getUserById(chat.userIds[1]);
+    return user?.email || '';
+  }
+
+  showSearchPopup($event: any) {
+    $event.stopPropagation();
+    this.searchChatService.openSearchPopup = true;
   }
 }
