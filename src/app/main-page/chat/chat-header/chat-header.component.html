@@ -1,8 +1,8 @@
 <header
-  class="z-10 bg-white flex rounded-t-[30px] min-h-[100px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+  class="z-10 bg-white flex rounded-t-[30px] min-h-[100px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full"
   [ngClass]="{
-    'max-h-[100px]': !searchChat,
-    'max-h-[unset]': searchChat
+    'max-h-[100px] shadow-[0px_2px_10px_0px_#00000014]': !searchChat,
+    'max-h-[unset] shadow-[0]': searchChat
   }"
 >
   <div

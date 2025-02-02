@@ -102,12 +102,13 @@
       </div>
 
       @if(!isDirectChat) {
+
       <app-user-message
         *ngFor="let reply of getRepliesForMessage(currentReplyMessageId)"
         [message]="reply.message"
         [time]="channelService.formatTime(reply.timestamp)"
         [name]="
-          getUserName(
+          getUserNameAndScroll(
             reply.userId,
             reply,
             getRepliesForMessage(currentReplyMessageId)
@@ -118,7 +119,9 @@
         [isReplay]="true"
         [userId]="reply.userId"
       ></app-user-message>
+
       } @if(isDirectChat) {
+
       <app-user-message
         *ngFor="
           let reply of getDirectChatRepliesForMessage(currentReplyMessageId)
@@ -126,7 +129,7 @@
         [message]="reply.message"
         [time]="channelService.formatTime(reply.timestamp)"
         [name]="
-          getUserName(
+          getUserNameAndScroll(
             reply.userId,
             reply,
             getDirectChatRepliesForMessage(currentReplyMessageId)
@@ -137,6 +140,7 @@
         [isReplay]="true"
         [userId]="reply.userId"
       ></app-user-message>
+
       }
     </div>
 

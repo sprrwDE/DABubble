@@ -102,7 +102,7 @@ export class ReplyPanelComponent {
     }
   }
 
-  getUserName(userId: string, reply: Reply, replies: Reply[]) {
+  getUserNameAndScroll(userId: string, reply: Reply, replies: Reply[]) {
     this.checkScrollToBottom(reply, replies);
 
     return (
@@ -126,7 +126,7 @@ export class ReplyPanelComponent {
 
   getRepliesForMessage(messageId: string) {
     return (
-      this.currentChannelMessages.find((message) => message.id === messageId)
+      this.currentChannel.messages?.find((message) => message.id === messageId)
         ?.replies || []
     );
   }
