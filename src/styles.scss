@@ -1,6 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@use "@ctrl/ngx-emoji-mart/picker";
 
 html {
   @apply bg-bg;
