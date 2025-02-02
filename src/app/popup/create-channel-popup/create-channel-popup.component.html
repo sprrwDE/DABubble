@@ -187,30 +187,31 @@
     <p>Bestimmte Leute hinzufügen</p>
   </div>
 
-        <!-- Pills -->
-        <div class="flex flex-wrap gap-2 mt-2 w-[100%]">
-          @if (addUserService.userToAdd.length > 0) { @for (user of
-          addUserService.userToAdd; track $index) {
-          <div
-            class="flex items-center justify-between w-[200px] h-[40px] p-[3px_20px_3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
-          >
-            <div class="flex items-center gap-4">
-              <img
-                class="h-[24px] w-[24px] rounded-full"
-                src="{{ user.image || 'imgs/avatar/profile.svg' }}"
-              />
-              <span class="truncate min-w-0">{{ user.name }}</span>
-            </div>
-            <span
-              class="cursor-pointer"
-              (click)="addUserService.removeUserToAdd(user.id)"
-            >
-              ✕
-            </span>
-          </div>
-          } }
-        </div>
-  
+  <!-- Pills -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2 w-full max-w-[710px]"
+  >
+    @if (addUserService.userToAdd.length > 0) { @for (user of
+    addUserService.userToAdd; track $index) {
+    <div
+      class="flex items-center justify-between h-[40px] p-[3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
+    >
+      <div class="flex items-center gap-4">
+        <img
+          class="h-[24px] w-[24px] rounded-full"
+          src="{{ user.image || 'imgs/avatar/profile.svg' }}"
+        />
+        <span class="truncate min-w-0">{{ user.name }}</span>
+      </div>
+      <span
+        class="cursor-pointer"
+        (click)="addUserService.removeUserToAdd(user.id)"
+      >
+        ✕
+      </span>
+    </div>
+    } }
+  </div>
 
   <div
     class="overflow-hidden transition-svg-text"
@@ -233,17 +234,18 @@
         (input)="addMemberToNewChannel($event)"
         class="flex relative"
       />
-
     </div>
 
     <app-add-user-to-channel-popup
       [display]="showUserPopup"
-      [ngClass]="{ 'scale-100 opacity-100 pointer-events-auto': showUserPopup, 'scale-0 pointer-events-none': !showUserPopup }"
+      [ngClass]="{
+        'scale-100 opacity-100 pointer-events-auto': showUserPopup,
+        'scale-0 pointer-events-none': !showUserPopup
+      }"
       class="absolute left-[40px] w-[400px] mt-[20px] transition-all duration-300 ease-in-out"
       (closePopupEvent)="handleUserPopupClose($event)"
       (clearInputEvent)="handleClearInput()"
     >
-      
     </app-add-user-to-channel-popup>
   </div>
 
