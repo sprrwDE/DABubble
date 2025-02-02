@@ -21,6 +21,17 @@ export class UserProfilePopupComponent {
 
   nameInput: string = '';
 
+  avatarInput: string = '';
+  toggleAvatarSelection: boolean = false;
+  avatars: string[] = [
+    'imgs/avatar/1av.svg',
+    'imgs/avatar/2av.svg',
+    'imgs/avatar/3av.svg',
+    'imgs/avatar/4av.svg',
+    'imgs/avatar/5av.svg',
+    'imgs/avatar/6av.svg',
+  ]
+
   constructor(
     private popupService: PopupService,
     private userService: UserService,
@@ -29,7 +40,7 @@ export class UserProfilePopupComponent {
     effect(() => {
       const user = this.userService.loggedInUser();
       if (user) {
-        this.loggedInUserData = user; // Stelle sicher, dass `user.id` ein String ist
+        this.loggedInUserData = user; 
       }
     });
   }
@@ -43,6 +54,7 @@ export class UserProfilePopupComponent {
   }
 
   closePopup() {
+    this.discardChanges()
     this.popupService.openUserProfilePopup = false;
   }
 
@@ -68,8 +80,27 @@ export class UserProfilePopupComponent {
         this.loggedInUserData.id,
         this.nameInput.trim()
       );
-    } else {
+    } if(this.avatarInput != '') {
+      this.firebaseService.changeProfileImage(this.loggedInUserData.id, this.avatarInput)
+    }
+    else {
       return;
     }
+  }
+
+  showEditProfilePicPopup() {
+    console.log('open')
+    this.toggleAvatarSelection = true
+  }
+
+  selectAvatar(avatar: string) {
+    console.log(avatar)
+    this.avatarInput = avatar
+  }
+
+  discardChanges() {
+    this.nameInput = this.loggedInUserData.name;
+    this.avatarInput = this.loggedInUserData.image;
+    this.toggleAvatarSelection = false;
   }
 }
