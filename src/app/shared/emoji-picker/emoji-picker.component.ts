@@ -2,6 +2,8 @@ import { PickerModule } from "@ctrl/ngx-emoji-mart";
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { Subject } from "rxjs";
+import { EmojiCounterService } from "../services/emoji-counter.service";
+
 
 @Component({
   selector: 'app-emoji-picker',
@@ -14,20 +16,25 @@ export class EmojiPickerComponent {
   isOpened = true;
   @Input() emojiInput$: Subject<string> | undefined;
   @ViewChild("container") container: ElementRef<HTMLElement> | undefined;
-  constructor() {}
+  constructor(private emojiCounterService: EmojiCounterService) {}
+  
   emojiSelected(event: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     this.emojiInput$?.next(event.emoji.native);
     const selectedEmoji = event.emoji.native;
     console.log('Selected Emoji:', selectedEmoji);
+    this.emojiCounterService.addEmoji(selectedEmoji)
   }
+
   eventHandler = (event: Event) => {
     // Watching for outside clicks
     if (!this.container?.nativeElement.contains(event.target as Node)) {
       this.isOpened = false;
       window.removeEventListener("click", this.eventHandler);
     }
-  };/* 
+  };
+  
+  /* 
   toggleEmojiPicker() {
     if (!this.container) {
       return;
@@ -40,4 +47,10 @@ export class EmojiPickerComponent {
     }
   }
  */
+
+  //// ab hier test
+
+  clickedEmojis() {
+
+  }
 }
