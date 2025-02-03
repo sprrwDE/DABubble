@@ -27,27 +27,25 @@ export class EmojiPickerComponent {
   }
 
   eventHandler = (event: Event) => {
-    // Watching for outside clicks
-    if (!this.container?.nativeElement.contains(event.target as Node)) {
+    if (this.isOpened && this.container && !this.container.nativeElement.contains(event.target as Node)) {
       this.isOpened = false;
-      window.removeEventListener("click", this.eventHandler);
+      console.log("Emoji Picker geschlossen");
     }
   };
   
-  /* 
   toggleEmojiPicker() {
-    if (!this.container) {
-      return;
-    }
     this.isOpened = !this.isOpened;
     if (this.isOpened) {
       window.addEventListener("click", this.eventHandler);
     } else {
       window.removeEventListener("click", this.eventHandler);
     }
-  }
- */
+    this.emojiCounterService.resetList()
 
-  //// ab hier test
+  }
+
+/*   ngOnDestroy() {
+    this.emojiCounterService.resetList()
+  } */
 
 }

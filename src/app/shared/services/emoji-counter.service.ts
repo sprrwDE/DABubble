@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class EmojiCounterService {
+  //// Kann beides weg wenn man in Firebase handled
   clickedEmojis: string[] = [];
-
-  emojiCount: Record<string, number> = {}; // Typisierung hier
+  emojiCountArray: { emoji: string; count: number }[] = []; // Array von Objekten
 
   constructor() {}
 
@@ -19,32 +19,46 @@ export class EmojiCounterService {
   addEmoji(emoji: string) {
     this.clickedEmojis.push(emoji);
 
-    // Zähle das Emoji
-    if (this.emojiCount[emoji]) {
-      this.emojiCount[emoji]++;
+    const existingEmoji = this.emojiCountArray.find(
+      (item) => item.emoji === emoji
+    );
+
+    if (existingEmoji) {
+      existingEmoji.count++;
     } else {
-      this.emojiCount[emoji] = 1;
+      this.emojiCountArray.push({ emoji, count: 1 });
     }
 
-    console.log('count', this.emojiCount);
-    console.log('clicked list', this.clickedEmojis);
+    console.log('Count:', this.emojiCountArray);
+    console.log('Clicked List:', this.clickedEmojis);
   }
 
   removeEmoji(emoji: string) {
-    if (this.emojiCount[emoji] && this.emojiCount[emoji] > 0) {
-      this.emojiCount[emoji]--;
+    const index = this.emojiCountArray.findIndex(
+      (item) => item.emoji === emoji
+    );
 
-      const index = this.clickedEmojis.lastIndexOf(emoji);
-      if (index !== -1) {
-        this.clickedEmojis.splice(index, 1);
+    if (index !== -1) {
+      this.emojiCountArray[index].count--;
+
+      const clickedIndex = this.clickedEmojis.lastIndexOf(emoji);
+      if (clickedIndex !== -1) {
+        this.clickedEmojis.splice(clickedIndex, 1);
       }
 
-      if (this.emojiCount[emoji] === 0) {
-        delete this.emojiCount[emoji];
+      if (this.emojiCountArray[index].count === 0) {
+        this.emojiCountArray.splice(index, 1);
       }
 
-      console.log('Count:', this.emojiCount);
+      console.log('Count:', this.emojiCountArray);
       console.log('Clicked List:', this.clickedEmojis);
     }
+  }
+
+  resetList() {
+    this.clickedEmojis = [];
+    this.emojiCountArray = [];
+    console.log('clicked', this.clickedEmojis)
+    console.log('arr', this.emojiCountArray)
   }
 }
