@@ -13,6 +13,9 @@ import { FirebaseService } from '../shared/services/firebase.service';
 import { AddUserService } from '../shared/services/add-user.service';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 import { SearchChatService } from '../shared/services/search-chat.service';
+import { Channel } from '../shared/models/channel.model';
+import { ChannelService } from '../shared/services/channel.service';
+import { MainChatService } from '../shared/services/main-chat.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -34,7 +37,7 @@ export class MainPageComponent {
   timeoutId: any;
   loggedInUser: any;
   public isMobile: boolean = false;
-  public showChannelChat: boolean = false;
+  public currentChannel: Channel = new Channel();
 
   constructor(
     public panelService: PanelService,
@@ -43,7 +46,8 @@ export class MainPageComponent {
     private fb: FirebaseService,
     private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService,
-    private searchChatService: SearchChatService
+    private searchChatService: SearchChatService,
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -81,6 +85,14 @@ export class MainPageComponent {
   public popupOpen = false;
   public popupType: string = '';
   public popupCorner: string = '';
+
+  get showMainChat() {
+    return this.mainChatService.showMainChat;
+  }
+
+  set showMainChat(value: boolean) {
+    this.mainChatService.showMainChat = value;
+  }
 
   get contactProfilePopupOpen() {
     return this.popupService.contactProfilePopupOpen;

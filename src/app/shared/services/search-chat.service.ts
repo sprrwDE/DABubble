@@ -6,6 +6,7 @@ import { ChannelService } from './channel.service';
 import { UserService } from './user.service';
 import { User } from '../models/user.model';
 import { PanelService } from './panel.service';
+import { MainChatService } from './main-chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,8 @@ export class SearchChatService {
     private channelService: ChannelService,
     private directChatService: DirectChatService,
     private userService: UserService,
-    private panelService: PanelService
+    private panelService: PanelService,
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -119,6 +121,8 @@ export class SearchChatService {
 
   // setCurrentChannel
   setCurrentChannel(channel: Channel) {
+    this.mainChatService.showMainChat = true;
+
     this.resetPanelAndChat();
     this.channelService.currentChannel.set(channel);
     this.resetDirectChat();
@@ -127,6 +131,7 @@ export class SearchChatService {
 
   // setSearchChat
   setSearchChat() {
+    this.mainChatService.showMainChat = true;
     this.resetDirectChat();
     this.resetChannelChat();
     this.searchChat = true;
@@ -134,6 +139,7 @@ export class SearchChatService {
 
   // setCurrentDirectChat
   setCurrentDirectChat(user: User) {
+    this.mainChatService.showMainChat = true;
     this.resetPanelAndChat();
     this.resetChannelChat();
     this.resetSearchChat();
@@ -143,21 +149,21 @@ export class SearchChatService {
     this.scrollToActiveContact();
   }
 
-  private resetPanelAndChat() {
+  public resetPanelAndChat() {
     this.panelService.closeReplyPanel();
     this.channelService.chatComponent.scroll = true;
   }
 
-  private resetDirectChat() {
+  public resetDirectChat() {
     this.directChatService.isDirectChat = false;
     this.directChatService.currentDirectChatUser.set(new User());
   }
 
-  private resetChannelChat() {
+  public resetChannelChat() {
     this.channelService.currentChannel.set(new Channel());
   }
 
-  private resetSearchChat() {
+  public resetSearchChat() {
     this.searchChat = false;
     this.searchChatInput = '';
     this.allChats = [];

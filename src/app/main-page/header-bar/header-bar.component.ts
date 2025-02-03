@@ -6,6 +6,8 @@ import { GlobalVariablesService } from '../../shared/services/global-variables.s
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ChannelService } from '../../shared/services/channel.service';
+import { MainChatService } from '../../shared/services/main-chat.service';
+import { SearchChatService } from '../../shared/services/search-chat.service';
 
 @Component({
   selector: 'app-header-bar',
@@ -22,18 +24,20 @@ export class HeaderBarComponent {
   searchControl = new FormControl('');
   list: any = '';
   // list: string[] = ['Apple', 'Banane', 'Kirsche', 'Mango', 'Melone', 'Pfirsich'];
-  filteredList: any = []
+  filteredList: any = [];
 
   constructor(
     private popupService: PopupService,
     private userService: UserService,
     private globalVariablesService: GlobalVariablesService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private mainChatService: MainChatService,
+    private searchChatService: SearchChatService
   ) {
-
-    this.searchControl.valueChanges.subscribe(value => this.applyFilter(value));
+    this.searchControl.valueChanges.subscribe((value) =>
+      this.applyFilter(value)
+    );
     effect(() => {
-
       const user = this.userService.loggedInUser();
       if (user && user !== undefined && user !== null) {
         console.log('eingeloggter user: ', user);
@@ -47,6 +51,14 @@ export class HeaderBarComponent {
     });
   }
 
+  get showMainChat() {
+    return this.mainChatService.showMainChat;
+  }
+
+  set showMainChat(value: boolean) {
+    this.mainChatService.showMainChat = value;
+  }
+
   get openUserProfilePopup() {
     return this.popupService.openUserProfilePopup;
   }
@@ -54,15 +66,17 @@ export class HeaderBarComponent {
   set openUserProfilePopup(value: boolean) {
     this.popupService.openUserProfilePopup = value;
   }
-  
+
   applyFilter(query: string | null) {
     if (query && query.length >= 3) {
       if (!query) {
         // Zeige alle Channels mit allen Nachrichten
-        this.filteredList = this.channelService.allChannels.map((channel: any) => ({
-          ...channel,
-          messages: [...channel.messages], // Alle Nachrichten beibehalten
-        }));
+        this.filteredList = this.channelService.allChannels.map(
+          (channel: any) => ({
+            ...channel,
+            messages: [...channel.messages], // Alle Nachrichten beibehalten
+          })
+        );
         return;
       }
 
@@ -79,10 +93,10 @@ export class HeaderBarComponent {
 
           return { ...channel, messages: filteredMessages }; // Channel bleibt, nur Messages gefiltert
         })
-        .filter(channel => channel.messages.length > 0); // Entferne Channels, die keine passenden Nachrichten haben
+        .filter((channel) => channel.messages.length > 0); // Entferne Channels, die keine passenden Nachrichten haben
       // console.log("Gefilterte Liste:", this.filteredList);
     } else {
-      this.filteredList = ''
+      this.filteredList = '';
     }
   }
 
@@ -90,4 +104,11 @@ export class HeaderBarComponent {
     this.searchControl.setValue('');
   }
 
+  resetChat() {
+    this.searchChatService.resetPanelAndChat();
+    this.searchChatService.resetChannelChat();
+    this.searchChatService.resetSearchChat();
+    this.searchChatService.resetDirectChat();
+    this.mainChatService.showMainChat = false;
+  }
 }

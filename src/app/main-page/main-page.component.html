@@ -18,7 +18,7 @@
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
       [ngClass]="{
-        'w-px': !openSidebar,
+        'w-px': !openSidebar || (isMobile && showMainChat),
         'w-full': openSidebar,
         'w-[100%] max-w-[unset]': isMobile || (isMobile && !openSidebar)
       }"
@@ -27,8 +27,8 @@
 
     <app-chat
       [ngClass]="{
-        'w-[100%]': (isMobile && showChannelChat) || !isMobile,
-        'w-[0%]': isMobile && !showChannelChat
+        'w-[100%]': (isMobile && showMainChat) || !isMobile,
+        'w-[0%]': isMobile && !showMainChat,
       }"
       class="overflow-hidden duration-300"
     ></app-chat>
