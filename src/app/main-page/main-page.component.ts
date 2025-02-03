@@ -13,6 +13,8 @@ import { FirebaseService } from '../shared/services/firebase.service';
 import { AddUserService } from '../shared/services/add-user.service';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 import { SearchChatService } from '../shared/services/search-chat.service';
+import { EmojiPickerComponent } from '../shared/emoji-picker/emoji-picker.component';
+
 import { Channel } from '../shared/models/channel.model';
 import { ChannelService } from '../shared/services/channel.service';
 import { MainChatService } from '../shared/services/main-chat.service';
@@ -28,6 +30,7 @@ import { MainChatService } from '../shared/services/main-chat.service';
     NgIf,
     CommonModule,
     PopupComponent,
+    EmojiPickerComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',

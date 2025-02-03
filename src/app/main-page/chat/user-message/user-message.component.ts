@@ -5,11 +5,13 @@ import { PopupService } from '../../../popup/popup.service';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/models/user.model';
+import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-user-message',
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, EmojiPickerComponent],
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
@@ -29,6 +31,13 @@ export class UserMessageComponent {
   loggedInUser: any;
 
   editMessagePopupOpen: boolean = false;
+  showEmojiPicker = false;
+
+
+  emojiInput$ = new Subject<string>();
+
+
+
 
   constructor(
     private panelService: PanelService,
@@ -121,4 +130,10 @@ export class UserMessageComponent {
     console.log(this.allUsers.find((user) => user.id === userId));
     return this.allUsers.find((user) => user.id === userId);
   }
-}
+  
+    // Beispiel: Emoji setzen
+    setEmoji(emoji: string) {
+      this.emojiInput$.next(emoji);
+    }
+    
+  }

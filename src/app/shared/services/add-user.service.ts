@@ -17,22 +17,17 @@ import { ChannelService } from './channel.service';
   providedIn: 'root',
 })
 export class AddUserService implements OnDestroy {
-  private firestore: Firestore = inject(Firestore); // Direkt Firestore injizieren
-  allChannels: Channel[] = [];
-  messages: Message[] = [];
+  private firestore: Firestore = inject(Firestore); 
   private unsubscribeChannel: any;
   selectedChannel: Channel | null = null;
-
-  // Hier
 
   currentChannelUserIds: string[] = [];
   currentChannelUsers: User[] = [];
 
   isCreatingNewChannel: boolean = false;
 
-  /// Hier
   private allUsersSubject = new BehaviorSubject<User[]>([]);
-  allUsers$ = this.allUsersSubject.asObservable(); // Observable für externe Nutzung
+  allUsers$ = this.allUsersSubject.asObservable(); 
 
   currentChannel: Channel = new Channel();
 
@@ -41,7 +36,7 @@ export class AddUserService implements OnDestroy {
   userToAdd: User[] = [];
   filteredUsers: User[] = [];
 
-  private channelUserIdsSubject = new BehaviorSubject<string[]>([]); // Speichert die User-IDs aus dem Channel
+  private channelUserIdsSubject = new BehaviorSubject<string[]>([]); 
 
   constructor(
     private userservice: UserService,
@@ -76,16 +71,6 @@ export class AddUserService implements OnDestroy {
     });
   }
 
-  /* 
-  
-  NEXT STEPS:
- 
-  input value in andere component übergeben und subscriben
-  ...User Detail Synchen Top bar
-
-
-  */
-
   setUserToAdd(userToPush: string) {
     const push: User | undefined = this.filteredUsers.find(
       (user) => user.id === userToPush
@@ -112,7 +97,6 @@ export class AddUserService implements OnDestroy {
   }
 
   removeUserToAdd(userToRemove: string) {
-    // console.log('New Channel?', this.isCreatingNewChannel)
     console.log(this.possibleUserList, 'possible remove start');
     if (!this.isCreatingNewChannel) {
     }
@@ -146,8 +130,6 @@ export class AddUserService implements OnDestroy {
         console.error('Fehler beim Hinzufügen der User-IDs:', error)
       );
 
-    //// Hier input clearen!!
-    //// Bei Schließen Add User List Clearen
   }
 
   filterArrayForNameInput(name: string) {

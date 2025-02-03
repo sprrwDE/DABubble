@@ -159,8 +159,4 @@ export class CreateChannelPopupComponent {
     this.nameInput = ''; 
   }
 
-
-  // ngOnDestroy() {
-  //   this.unsubLoggedInUser.unsubscribe();
-  // }
 }
