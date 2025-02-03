@@ -50,7 +50,4 @@ export class EmojiPickerComponent {
 
   //// ab hier test
 
-  clickedEmojis() {
-
-  }
 }
