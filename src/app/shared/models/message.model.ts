@@ -1,9 +1,16 @@
 import { Reply } from './reply.model';
 
+export interface Reaction {
+  emoji: string;
+  count: number;
+  userIds: string[]; // Optional: Liste der User, die reagiert haben
+}
+
 export class Message {
   message: string;
   userId: string;
-  likes: number;
+  // likes: number;
+  likes: Reaction[];
   timestamp: number;
   replies?: Reply[];
   id?: string;
@@ -11,7 +18,14 @@ export class Message {
   constructor(obj?: any) {
     this.message = obj?.message || '';
     this.userId = obj?.userId || '';
-    this.likes = obj?.likes || 0;
+    // this.likes = obj?.likes || 0;
+    this.likes = obj?.reactions
+      ? obj.reactions.map((reaction: any) => ({
+          emoji: reaction.emoji,
+          count: reaction.count,
+          userIds: reaction.userIds || [], 
+        }))
+      : [];
     this.timestamp = obj?.timestamp || null;
     this.replies = obj?.replies
       ? obj.replies.map((rep: any) => new Reply(rep))

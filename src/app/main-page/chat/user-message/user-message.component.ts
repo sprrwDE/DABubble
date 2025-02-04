@@ -24,7 +24,7 @@ export class UserMessageComponent {
   @Input() isReplay: boolean = false;
   @Input() lastAnswerTime: any = '';
   @Input() numberOfAnswers: number = 0;
-  @Input() likes: Array<string> = [];
+  @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> = [];
   @Input() messageId: any;
   @Input() userId: string = '';
 
@@ -49,6 +49,15 @@ export class UserMessageComponent {
       this.loggedInUser = this.userService.loggedInUser();
     });
   }
+
+  get currentChannelId() {
+    return this.channelService.currentChannelId;
+  }
+  
+  set currentChannelId(value: string) {
+    this.channelService.currentChannelId = value;
+  }
+  
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
