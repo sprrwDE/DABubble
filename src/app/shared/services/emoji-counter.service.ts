@@ -1,66 +1,6 @@
-/* import { Injectable } from '@angular/core';
-import { UserService } from "../services/user.service";
-
-@Injectable({
-  providedIn: 'root',
-})
-export class EmojiCounterService {
-  //// Kann beides weg wenn man in Firebase handled
-  clickedEmojis: string[] = [];
-  emojiCountArray: { emoji: string; count: number }[] = []; // Array von Objekten
-
-  constructor(private userService: UserService) {}
-
-
-  addEmoji(emoji: string) {
-    this.clickedEmojis.push(emoji);
-
-    const existingEmoji = this.emojiCountArray.find(
-      (item) => item.emoji === emoji
-    );
-
-    if (existingEmoji) {
-      existingEmoji.count++;
-    } else {
-      this.emojiCountArray.push({ emoji, count: 1});
-    }
-
-    console.log('Count:', this.emojiCountArray);
-    console.log('Clicked List:', this.clickedEmojis);
-  }
-
-  removeEmoji(emoji: string) {
-    const index = this.emojiCountArray.findIndex(
-      (item) => item.emoji === emoji
-    );
-
-    if (index !== -1) {
-      this.emojiCountArray[index].count--;
-
-      const clickedIndex = this.clickedEmojis.lastIndexOf(emoji);
-      if (clickedIndex !== -1) {
-        this.clickedEmojis.splice(clickedIndex, 1);
-      }
-
-      if (this.emojiCountArray[index].count === 0) {
-        this.emojiCountArray.splice(index, 1);
-      }
-
-      console.log('Count:', this.emojiCountArray);
-      console.log('Clicked List:', this.clickedEmojis);
-    }
-  }
-
-  resetList() {
-    this.clickedEmojis = [];
-    this.emojiCountArray = [];
-    console.log('clicked', this.clickedEmojis)
-    console.log('arr', this.emojiCountArray)
-  }
-}
- */
-
-  /// Message Model anpassen, dass es matched mit dem Obj. Arr.
+  /// Current Reaction Count holen
+  
+  /// Remove Funktion anpassen
 
   /// Bei add / remove direkt firebase
       // Channel ID holen - check
@@ -76,12 +16,13 @@ export class EmojiCounterService {
 
 import { Injectable } from '@angular/core';
 import { UserService } from "../services/user.service";
+import { FirebaseService } from './firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmojiCounterService {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private firebaseService: FirebaseService) {}
 
   private messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
 
@@ -99,12 +40,12 @@ export class EmojiCounterService {
       }
     } else {
       this.messageLikes[messageId].push({ emoji, count: 1, userIds: [userId] });
+      console.log('user hat bereits geliked')
     }
 
     console.log(`Likes for message ${messageId}:`, `in channel ${channelId}`, this.messageLikes[messageId]);
+    this.firebaseService.updateEmojiCount(this.messageLikes, messageId, channelId)
   }
-
-
 
 
   // Emoji entfernen
@@ -132,4 +73,5 @@ export class EmojiCounterService {
   getLikes(messageId: string) {
     return this.messageLikes[messageId] || [];
   }
+
 }

@@ -136,4 +136,16 @@ export class FirebaseService {
     }
   }
 
+  async updateEmojiCount(reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>, messageId: string, channelId: string) {
+    try {
+      const docRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+      
+      await updateDoc(docRef, { likes: reaction[messageId] });
+  
+      console.log(`Reactions for message ${messageId} in channel ${channelId} updated successfully.`);
+    } catch (error) {
+      console.error('Fehler beim Speichern des Dokuments:', error);
+    }
+  }
+
 }
