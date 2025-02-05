@@ -50,6 +50,10 @@ export class UserMessageComponent {
     });
   }
 
+  getMessageLikes() {
+    return { [this.messageId]: this.likes };
+  }  
+
   get currentChannelId() {
     return this.channelService.currentChannelId;
   }

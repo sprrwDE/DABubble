@@ -21,6 +21,7 @@ export class EmojiPickerComponent {
   @Input() emojiInput$: Subject<string> | undefined;
   @Input() messageId: string = '';
   @Input() channelId: string = '';
+  @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   constructor(
@@ -43,11 +44,13 @@ export class EmojiPickerComponent {
     console.log('Selected Emoji:', selectedEmoji);
     console.log('Reply Message ID:', this.messageId);
     console.log('Channel ID:', this.channelId);
-    this.emojiCounterService.addEmoji(
+    console.log('Current Like Array', this.messageLikes)
+    this.emojiCounterService.handleEmojiLogic(
       selectedEmoji,
       this.messageId,
       this.loggedInUser.id,
-      this.currentChannel.id
+      this.currentChannel.id,
+      this.messageLikes
     );
   }
 

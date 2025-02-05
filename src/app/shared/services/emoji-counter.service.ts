@@ -1,37 +1,58 @@
-  /// Current Reaction Count holen
-  
-  /// Remove Funktion anpassen
+/// Current Reaction Count holen -> Buggy
 
-  /// Bei add / remove direkt firebase
-      // Channel ID holen - check
-      // Current Message ID holen - check
-      // Checken ob Message oder Reply / DM
+/// Remove Funktion anpassen
 
-  /// Im DOM / html Rendern / Synchen
-      // Checken ob bereits geklickt oder nicht -> +1 oder -1
+/// Bei add / remove direkt firebase
+  // Channel ID holen - check
+  // Current Message ID holen - check
+  // Checken ob Message oder Reply / DM
 
-  /// Stylen
-      // Liste
-      // Component
+/// Im DOM / html Rendern / Synchen
+  // Checken ob bereits geklickt oder nicht -> +1 oder -1
+
+/// Stylen
+  // Liste
+  // Component
+
+/// Code aufräumen
 
 import { Injectable } from '@angular/core';
-import { UserService } from "../services/user.service";
+import { UserService } from '../services/user.service';
 import { FirebaseService } from './firebase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmojiCounterService {
-  constructor(private userService: UserService, private firebaseService: FirebaseService) {}
+  constructor(
+    private userService: UserService,
+    private firebaseService: FirebaseService
+  ) {}
 
-  private messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
+  private messageLikes: Record<
+    string,
+    { emoji: string; count: number; userIds: string[] }[]
+  > = {};
 
-  addEmoji(emoji: string, messageId: string, userId: string, channelId: string) {
+  handleEmojiLogic(
+    emoji: string,
+    messageId: string,
+    userId: string,
+    channelId: string,
+    previousReactions: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    > = {}
+  ) {
+    this.messageLikes = previousReactions;
+    console.log('previous reactions:', this.messageLikes);
     if (!this.messageLikes[messageId]) {
       this.messageLikes[messageId] = [];
     }
 
-    const reaction = this.messageLikes[messageId].find(item => item.emoji === emoji);
+    const reaction = this.messageLikes[messageId].find(
+      (item) => item.emoji === emoji
+    );
 
     if (reaction) {
       if (!reaction.userIds.includes(userId)) {
@@ -40,12 +61,24 @@ export class EmojiCounterService {
       }
     } else {
       this.messageLikes[messageId].push({ emoji, count: 1, userIds: [userId] });
-      console.log('user hat bereits geliked')
+      console.log('user hat bereits geliked');
+      // this.removeEmoji()
     }
 
-    console.log(`Likes for message ${messageId}:`, `in channel ${channelId}`, this.messageLikes[messageId]);
-    this.firebaseService.updateEmojiCount(this.messageLikes, messageId, channelId)
+    console.log(
+      `Likes for message ${messageId}:`,
+      `in channel ${channelId}`,
+      this.messageLikes[messageId]
+    );
+    this.firebaseService.updateEmojiCount(
+      this.messageLikes,
+      messageId,
+      channelId
+    );
   }
+
+
+
 
 
   // Emoji entfernen
@@ -53,11 +86,11 @@ export class EmojiCounterService {
     const reactions = this.messageLikes[messageId];
 
     if (reactions) {
-      const index = reactions.findIndex(item => item.emoji === emoji);
+      const index = reactions.findIndex((item) => item.emoji === emoji);
 
       if (index !== -1) {
         const reaction = reactions[index];
-        reaction.userIds = reaction.userIds.filter(id => id !== userId);
+        reaction.userIds = reaction.userIds.filter((id) => id !== userId);
         reaction.count = reaction.userIds.length;
 
         if (reaction.count === 0) {
@@ -73,5 +106,4 @@ export class EmojiCounterService {
   getLikes(messageId: string) {
     return this.messageLikes[messageId] || [];
   }
-
 }
