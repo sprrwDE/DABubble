@@ -12,6 +12,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { SearchChatService } from '../../../shared/services/search-chat.service';
 import { FormsModule } from '@angular/forms';
 import { SearchChatPopupComponent } from './search-chat-popup/search-chat-popup.component';
+import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -40,16 +41,19 @@ export class ChatHeaderComponent {
   @Input() isDirectChat: boolean = false;
 
   loggedInUser: any;
+  isMobile: boolean = false;
 
   constructor(
     private channelService: ChannelService,
     public userService: UserService,
     private popupService: PopupService,
     private directChatService: DirectChatService,
-    public searchChatService: SearchChatService
+    public searchChatService: SearchChatService,
+    private globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
+
       this.channelUsers = this.userService.allUsers.filter((user) =>
         this.currentChannel.users?.includes(user.id)
       );
@@ -62,6 +66,10 @@ export class ChatHeaderComponent {
 
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
   }
 

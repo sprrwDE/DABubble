@@ -1,18 +1,20 @@
 <header
-  class="z-10 bg-white flex rounded-t-[30px] min-h-[100px] justify-between items-center px-[45px] py-[25px] absolute top-0 left-0 w-full"
+  class="z-10 bg-white flex rounded-t-[30px] min-h-[60px] md:min-h-[100px] justify-between items-center px-[16px] py-[10px] md:px-[45px] md:py-[25px] absolute top-0 left-0 w-full"
   [ngClass]="{
-    'max-h-[100px] shadow-[0px_2px_10px_0px_#00000014]': !searchChat,
-    'max-h-[unset] shadow-[0]': searchChat
+    'max-h-[60px] md:max-h-[100px]': !searchChat && !isDirectChat,
+    'shadow-[0px_2px_10px_0px_#00000014]': !searchChat,
+    'max-h-[unset] shadow-[0]': searchChat,
+    'max-h-[100px] md:max-h-[110px]': isDirectChat
   }"
 >
+  <!-- chat name -->
   <div
     *ngIf="!isDirectChat && !searchChat"
     (click)="openChannelDetailsPopup('channel-details', 'tl')"
     class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
   >
     <svg
-      width="32"
-      height="33"
+      class="h-[27px] w-[32px] md:h-[33px]"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +25,7 @@
       />
     </svg>
 
-    <h2 class="text-[24px] font-bold">
+    <h2 class="text-[20px] md:text-[24px] font-bold">
       {{ currentChannel.name || "lädt..." }}
     </h2>
 
@@ -49,12 +51,13 @@
     ></app-popup>
   </div>
 
+  <!-- chat members -->
   <div
     *ngIf="!isDirectChat && !searchChat"
     class="flex items-center gap-[15px]"
   >
     <div
-      *ngIf="channelUsers.length > 0"
+      *ngIf="channelUsers.length > 0 && !isMobile"
       class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
       (click)="openMemberListPopup('member-list', 'tr', false)"
     >
@@ -82,8 +85,7 @@
       class="hover-primary transition-svg-text flex items-center justify-center bg-bg rounded-full p-[8px]"
     >
       <svg
-        width="24"
-        height="24"
+        class="w-[18px] h-[18px] md:w-[24px] md:h-[24px]"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

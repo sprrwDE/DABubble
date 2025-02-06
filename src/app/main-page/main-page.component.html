@@ -27,14 +27,15 @@
 
     <app-chat
       [ngClass]="{
-        'w-[100%]': (isMobile && showMainChat) || !isMobile,
-        'w-[0%]': isMobile && !showMainChat,
+        'w-[100%]':
+          (isMobile && showMainChat && !isReplyPanelOpen) || !isMobile,
+        'w-[0%]': (isMobile && !showMainChat) || (isMobile && isReplyPanelOpen)
       }"
       class="overflow-hidden duration-300"
     ></app-chat>
 
     <app-reply-panel
-      class="w-[450px] duration-300 max-w-[450px] overflow-hidden"
+      class="w-[450px] duration-300 max-w-full md:max-w-[450px] overflow-hidden"
       [ngClass]="{
         'w-px': !panelService.isReplyPanelOpen,
         'w-full': panelService.isReplyPanelOpen
@@ -76,9 +77,7 @@
         stroke-linecap="round"
       />
     </svg>
-
   </div>
-
 
   <!-- popup -->
   <app-popup

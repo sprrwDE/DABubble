@@ -36,9 +36,20 @@
   height: 24px;
   width: 24px;
   transition: 0.15s;
+  padding: 4px;
+  box-sizing: content-box;
   @apply rounded-full;
 
   &:hover {
+    svg,
+    path {
+      @apply fill-primary;
+      @apply stroke-primary;
+    }
+    @apply bg-bg;
+  }
+
+  @media (max-width: 768px) {
     svg,
     path {
       @apply fill-primary;

@@ -105,6 +105,10 @@ export class MainPageComponent {
     this.popupService.contactProfilePopupOpen = value;
   }
 
+  get isReplyPanelOpen() {
+    return this.panelService.isReplyPanelOpen;
+  }
+
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }

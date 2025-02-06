@@ -7,22 +7,15 @@
 }
 
 .main-chat-date {
-  @apply w-full flex justify-center items-center px-[45px] relative;
+  @apply w-full flex justify-center items-center px-[16px] md:px-[45px] relative;
 
   &:before {
     content: "";
-    position: absolute;
-    top: 50%;
-    height: 1px;
-    width: calc(100% - 90px);
-    left: 45px;
-    @apply bg-lines;
-    border-radius: 100px;
-    z-index: 1;
+    @apply bg-lines top-[50%] z-[1] h-px absolute left-[16px] md:left-[45px] w-[calc(100%-32px)] md:w-[calc(100%-90px)] rounded-[100px];
   }
 
   p {
-    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px] z-[2] bg-white;
+    @apply border-2 border-lines px-[15px] py-[5px] rounded-[30px] text-[18px] z-[1] bg-white;
     position: relative;
   }
 }

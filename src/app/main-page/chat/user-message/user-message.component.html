@@ -3,11 +3,13 @@
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{
     'flex-row-reverse': isContact,
-    'px-[30px]': isReplay,
-    'px-[45px]': !isReplay
+    'px-[16px]': isReplay || !isReplay,
+    'md:px-[30px]': isReplay,
+    'md:px-[45px]': !isReplay
   }"
 >
   <!-- reaction bar -->
+
   <div
     class="reaction-bar flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 bg-white pl-[20px] pr-[15px] py-[5px] transition-svg-text"
     [ngClass]="{
@@ -249,7 +251,7 @@
 
     <!-- message -->
     <p
-      class="text-[18px] rounded-[30px] p-[15px] max-w-[675px] flex justify-end items-center transition-svg-text"
+      class="text-[17px] md:text-[18px] rounded-[30px] p-[15px] max-w-[675px] flex justify-end items-center transition-svg-text"
       [ngClass]="{
         'rounded-tl-[0px] bg-bg text-black contact-message': isContact,
         'rounded-tr-[0px] bg-chat text-white': !isContact
@@ -258,11 +260,21 @@
       {{ message }}
     </p>
 
-    <!-- add icon-btn -->
+    <!-- EMOJI CONTAINER          ngIf korrigieren-->
     <div
       *ngIf="likes.length > 0"
-      class="flex items-center justify-end gap-[10px]"
+      class="flex items-center justify-end gap-[8px]"
     >
+      <!-- EMOJI RENDERN -->
+      <!-- <div
+    *ngFor="let ?? of ??"
+    class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
+    >
+    <img class="h-[20px] w-[20px]" src="" alt="" />
+    <span class="text-[16px]">1</span>
+      </div> -->
+
+      <!-- add Emoji-btn -->
       <div
         class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text hover:scale-110"
       >
@@ -303,7 +315,6 @@
         (click)="openReplyPanel()"
         class="text-primary text-[18px] hover:font-bold hover:cursor-pointer"
       >
-        <!-- Ins Span die Anzahl der Antworten rein rendern -->
         <span> {{ numberOfAnswers }} </span> Antworten
       </p>
 
@@ -313,15 +324,19 @@
     </div>
   </div>
 
-  <img src="{{ imgUrl || '' }}" alt="" />
+  <img
+    class="max-w-[50px] max-h-[50px] md:max-w-[70px] md:max-h-[70px] w-[50px] h-[50px] md:w-[70px] md:h-[70px] rounded-full"
+    src="{{ imgUrl || '' }}"
+    alt=""
+  />
 </div>
 
 <app-emoji-picker
   class=""
   *ngIf="showEmojiPicker"
   [messageId]="messageId"
-  [channelId]="currentChannelId" 
+  [channelId]="currentChannelId"
   [emojiInput$]="emojiInput$"
   [messageLikes]="getMessageLikes()"
-  >
+>
 </app-emoji-picker>
