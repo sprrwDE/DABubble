@@ -44,43 +44,50 @@ export class EmojiCounterService {
       { emoji: string; count: number; userIds: string[] }[]
     > = {}
   ) {
-    this.messageLikes = previousReactions;
-    console.log('previous reactions:', this.messageLikes);
+    // Bestehende Reaktionen laden
+    console.log(previousReactions, 'prevvvvvvv')
+    this.messageLikes = {...previousReactions};
+    console.log(this.messageLikes, 'likes neu')
+  
     if (!this.messageLikes[messageId]) {
       this.messageLikes[messageId] = [];
     }
-
-    const reaction = this.messageLikes[messageId].find(
+  
+    // Prüfen, ob das Emoji bereits vorhanden ist
+    const reactionIndex = this.messageLikes[messageId].findIndex(
       (item) => item.emoji === emoji
     );
-
-    if (reaction) {
+  
+    if (reactionIndex !== -1) {
+      const reaction = this.messageLikes[messageId][reactionIndex];
+  
+      // Prüfen, ob der User bereits reagiert hat
       if (!reaction.userIds.includes(userId)) {
         reaction.count++;
         reaction.userIds.push(userId);
+      } else {
+        // Falls der User bereits reagiert hat, die Reaktion entfernen
+        reaction.userIds = reaction.userIds.filter((id) => id !== userId);
+        reaction.count--;
+  
+        if (reaction.count === 0) {
+          this.messageLikes[messageId].splice(reactionIndex, 1);
+        }
       }
     } else {
+      // Falls die Reaktion noch nicht existiert, hinzufügen
       this.messageLikes[messageId].push({ emoji, count: 1, userIds: [userId] });
-      console.log('user hat bereits geliked');
-      // this.removeEmoji()
     }
-
-    console.log(
-      `Likes for message ${messageId}:`,
-      `in channel ${channelId}`,
-      this.messageLikes[messageId]
-    );
+  
+    // Firebase mit aktualisierten Daten synchronisieren
     this.firebaseService.updateEmojiCount(
       this.messageLikes,
       messageId,
       channelId
     );
   }
-
-
-
-
-
+  
+  
   // Emoji entfernen
   removeEmoji(emoji: string, messageId: string, userId: string) {
     const reactions = this.messageLikes[messageId];

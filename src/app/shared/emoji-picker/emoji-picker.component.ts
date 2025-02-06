@@ -35,16 +35,14 @@ export class EmojiPickerComponent {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
   }
 
   emojiSelected(event: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     this.emojiInput$?.next(event.emoji.native);
     const selectedEmoji = event.emoji.native;
-    console.log('Selected Emoji:', selectedEmoji);
-    console.log('Reply Message ID:', this.messageId);
-    console.log('Channel ID:', this.channelId);
-    console.log('Current Like Array', this.messageLikes)
     this.emojiCounterService.handleEmojiLogic(
       selectedEmoji,
       this.messageId,
@@ -75,7 +73,4 @@ export class EmojiPickerComponent {
     // this.emojiCounterService.resetList()
   }
 
-  /*   ngOnDestroy() {
-    this.emojiCounterService.resetList()
-  } */
 }

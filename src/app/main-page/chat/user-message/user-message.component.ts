@@ -33,11 +33,7 @@ export class UserMessageComponent {
   editMessagePopupOpen: boolean = false;
   showEmojiPicker = false;
 
-
   emojiInput$ = new Subject<string>();
-
-
-
 
   constructor(
     private panelService: PanelService,

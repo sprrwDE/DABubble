@@ -136,16 +136,48 @@ export class FirebaseService {
     }
   }
 
-  async updateEmojiCount(reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>, messageId: string, channelId: string) {
+  async updateEmojiCount(
+    reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
+    messageId: string,
+    channelId: string
+  ) {
     try {
       const docRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
-      
-      await updateDoc(docRef, { likes: reaction[messageId] });
+      const docSnap = await getDoc(docRef);
   
-      console.log(`Reactions for message ${messageId} in channel ${channelId} updated successfully.`);
+      if (docSnap.exists()) {
+        // 💡 Hier Typumwandlung erzwingen
+        const docData = docSnap.data() as { likes?: { emoji: string; count: number; userIds: string[] }[] };
+        const currentLikes = docData.likes || []; 
+  
+        // Neues Likes-Array erstellen, indem bestehende Likes beibehalten werden
+        const updatedLikes = [...currentLikes];
+  
+        reaction[messageId].forEach((newReaction) => {
+          const existingIndex = updatedLikes.findIndex((r) => r.emoji === newReaction.emoji);
+          
+          if (existingIndex !== -1) {
+            // Falls das Emoji existiert, aktualisieren
+            updatedLikes[existingIndex] = newReaction;
+          } else {
+            // Falls nicht, neu hinzufügen
+            updatedLikes.push(newReaction);
+          }
+        });
+  
+        // Speichern in Firebase
+        await updateDoc(docRef, { likes: updatedLikes });
+  
+        console.log(`Updated reactions for message ${messageId} in channel ${channelId}:`, updatedLikes);
+      }
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
   }
+  
+  checkDocSnap() {
+    
+  }
+  
 
 }
