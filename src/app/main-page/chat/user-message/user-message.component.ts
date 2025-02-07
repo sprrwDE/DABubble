@@ -6,7 +6,8 @@ import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
 import { User } from '../../../shared/models/user.model';
 import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs'
+import { EmojiCounterService } from '../../../shared/services/emoji-counter.service';
 
 @Component({
   selector: 'app-user-message',
@@ -27,6 +28,7 @@ export class UserMessageComponent {
   @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> = [];
   @Input() messageId: any;
   @Input() userId: string = '';
+  @Input() channelId: string = ''
 
   loggedInUser: any;
 
@@ -39,7 +41,8 @@ export class UserMessageComponent {
     private panelService: PanelService,
     private popupService: PopupService,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    private emojiCounterService: EmojiCounterService,
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -53,14 +56,6 @@ export class UserMessageComponent {
   getMessageLikes() {
     return { [this.messageId]: this.likes };
   }  
-
-  get currentChannelId() {
-    return this.channelService.currentChannelId;
-  }
-  
-  set currentChannelId(value: string) {
-    this.channelService.currentChannelId = value;
-  }
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
@@ -110,6 +105,17 @@ export class UserMessageComponent {
       this.numberOfAnswers,
       this.userId
     );
+  }
+
+  reactOnEmoji(emoji: string, user: string, message: string, channel: string, likes: { emoji: string; count: number; userIds: string[] }[]) {
+    console.log('emoji', emoji, 'user', user, 'messageid', message, 'channelid', channel, 'likesarray', likes)
+    const reactionsAsRecord: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {
+      [message]: likes
+    };
+    
+    this.emojiCounterService.handleEmojiLogic(emoji, message, user, channel, reactionsAsRecord);
+    
+    return
   }
 
   onMouseLeave() {
