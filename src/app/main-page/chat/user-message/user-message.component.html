@@ -269,7 +269,7 @@
        @for (like of likes; track $index) {
         <div class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
         >
-        <span>{{like.emoji}}</span>
+        <span (click)="reactOnEmoji(like.emoji, loggedInUser, messageId, channelId, likes)">{{like.emoji}}</span>
         <span class="text-[16px]">{{like.count}}</span>
           </div> 
        }
@@ -284,6 +284,7 @@
           viewBox="0 0 25 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          (click)="showEmojiPicker = !showEmojiPicker"
         >
           <mask
             id="mask0_104638_16403"
@@ -335,7 +336,7 @@
   class=""
   *ngIf="showEmojiPicker"
   [messageId]="messageId"
-  [channelId]="currentChannelId"
+  [channelId]="channelId"
   [emojiInput$]="emojiInput$"
   [messageLikes]="getMessageLikes()"
 >
