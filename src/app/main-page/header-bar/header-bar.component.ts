@@ -17,13 +17,13 @@ import { SearchChatService } from '../../shared/services/search-chat.service';
   styleUrl: './header-bar.component.scss',
 })
 export class HeaderBarComponent {
+  filteredUserNames: any[] = [];
   public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
   public userImage: string = '';
   public isMobile: boolean = false;
   searchControl = new FormControl('');
   list: any = '';
-  // list: string[] = ['Apple', 'Banane', 'Kirsche', 'Mango', 'Melone', 'Pfirsich'];
   filteredList: any = [];
 
   constructor(
@@ -68,35 +68,38 @@ export class HeaderBarComponent {
   }
 
   applyFilter(query: string | null) {
+    this.searchForUser(query)
+    // If the query doesn't start with "@" but has at least 3 characters, filter by message text
     if (query && query.length >= 3) {
-      if (!query) {
-        // Zeige alle Channels mit allen Nachrichten
-        this.filteredList = this.channelService.allChannels.map(
-          (channel: any) => ({
-            ...channel,
-            messages: [...channel.messages], // Alle Nachrichten beibehalten
-          })
-        );
-        return;
-      }
-
       this.filteredList = this.channelService.allChannels
         .map((channel: any) => {
-          if (!channel.messages || !Array.isArray(channel.messages)) {
-            return { ...channel, messages: [] }; // Falls keine Nachrichten existieren, leeres Array
-          }
+          // Ensure there are messages to filter
+          const messages = Array.isArray(channel.messages) ? channel.messages : [];
 
-          // Filtere die Nachrichten innerhalb des Channels
-          const filteredMessages = channel.messages.filter((msg: any) =>
+          // Filter messages that contain the query (case-insensitive)
+          const filteredMessages = messages.filter((msg: any) =>
             msg.message?.toLowerCase().includes(query.toLowerCase())
           );
 
-          return { ...channel, messages: filteredMessages }; // Channel bleibt, nur Messages gefiltert
+          // Return the channel with the filtered messages
+          return { ...channel, messages: filteredMessages };
         })
-        .filter((channel) => channel.messages.length > 0); // Entferne Channels, die keine passenden Nachrichten haben
-      // console.log("Gefilterte Liste:", this.filteredList);
+        // Remove channels that have no matching messages
+        .filter((channel: any) => channel.messages && channel.messages.length > 0);
     } else {
+      // Optionally, handle the case where the query is null or less than 3 characters
       this.filteredList = '';
+    }
+  }
+
+  searchForUser(query: string | null) {
+    if (query?.startsWith('@')) {
+      if (query.length >= 3) {
+        const usernameQuery = query.slice(1).toLowerCase();
+        this.filteredUserNames = this.userService.allUsers.filter((user) => user.name.toLowerCase().includes(usernameQuery.toLowerCase()))
+      }
+    } else {
+      this.filteredUserNames = [];
     }
   }
 
