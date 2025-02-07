@@ -63,6 +63,9 @@ export class EmojiCounterService {
     }
   }
 
+
+  ///// Hier bug
+
   handleReaction(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
