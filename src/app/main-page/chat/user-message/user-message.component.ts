@@ -46,6 +46,10 @@ export class UserMessageComponent {
     });
   }
 
+  ngOnInit() {
+    console.log('Likes empfangen in UserMessageComponent:', this.likes);
+  }  
+
   getMessageLikes() {
     return { [this.messageId]: this.likes };
   }  
@@ -57,7 +61,6 @@ export class UserMessageComponent {
   set currentChannelId(value: string) {
     this.channelService.currentChannelId = value;
   }
-  
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;

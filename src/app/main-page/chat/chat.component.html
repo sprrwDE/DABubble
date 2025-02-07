@@ -37,6 +37,7 @@
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [userId]="message.userId"
+          [likes]="getLikes(message)"
         ></app-user-message>
       </div>
 

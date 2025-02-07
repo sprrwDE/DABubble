@@ -260,19 +260,19 @@
       {{ message }}
     </p>
 
-    <!-- EMOJI CONTAINER          ngIf korrigieren-->
+    <!-- EMOJI CONTAINER -->
     <div
       *ngIf="likes.length > 0"
       class="flex items-center justify-end gap-[8px]"
     >
       <!-- EMOJI RENDERN -->
-      <!-- <div
-    *ngFor="let ?? of ??"
-    class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
-    >
-    <img class="h-[20px] w-[20px]" src="" alt="" />
-    <span class="text-[16px]">1</span>
-      </div> -->
+       @for (like of likes; track $index) {
+        <div class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
+        >
+        <span>{{like.emoji}}</span>
+        <span class="text-[16px]">{{like.count}}</span>
+          </div> 
+       }
 
       <!-- add Emoji-btn -->
       <div

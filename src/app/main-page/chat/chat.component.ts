@@ -111,6 +111,11 @@ export class ChatComponent {
     return this.searchChatService.searchChat;
   }
 
+  getLikes(message: Message) {
+    console.log('Likes für Nachricht:', message?.id, message?.likes);
+    return message.likes || []
+  }
+
   // openChannelDetailsPopup(type: string, corner: string) {
   //   this.channelDetailsPopupOpen = true;
   //   this.channelDetailsPopupType = type;
