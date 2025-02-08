@@ -33,8 +33,6 @@ export class ChatHeaderComponent {
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
   memberListPopupOpen: boolean = false;
-  memberListPopupType: string = '';
-  memberListPopupCorner: string = '';
 
   currentDirectChatUser: User = new User();
 
@@ -91,9 +89,7 @@ export class ChatHeaderComponent {
     this.channelDetailsPopupOpen = false;
   }
 
-  openMemberListPopup(type: string, corner: string, addMembers: boolean) {
-    this.memberListPopupType = type;
-    this.memberListPopupCorner = corner;
+  openMemberListPopup(addMembers: boolean) {
     this.memberListPopupOpen = true;
 
     this.popupService.showAddMembersPopup = addMembers;

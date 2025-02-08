@@ -47,8 +47,8 @@ export class EmojiCounterService {
     previousReactions: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = {}) {
-
+    > = {}
+  ) {
     this.messageLikes = { ...previousReactions };
 
     if (!this.messageLikes[messageId]) {
@@ -59,7 +59,7 @@ export class EmojiCounterService {
       (item) => item.emoji === emoji
     );
 
-    this.checkReactingUser(reactionIndex, userId, messageId, emoji)
+    this.checkReactingUser(reactionIndex, userId, messageId, emoji);
 
     this.firebaseService.updateEmojiCount(
       this.messageLikes,
@@ -68,8 +68,12 @@ export class EmojiCounterService {
     );
   }
 
-
-  checkReactingUser(reactionIndex: number, userId: string, messageId: string, emoji: string) {
+  checkReactingUser(
+    reactionIndex: number,
+    userId: string,
+    messageId: string,
+    emoji: string
+  ) {
     if (reactionIndex !== -1) {
       const reaction = this.messageLikes[messageId][reactionIndex];
       this.handleReaction(reaction, userId, messageId);
@@ -86,17 +90,17 @@ export class EmojiCounterService {
     if (!reaction.userIds.includes(userId)) {
       reaction.count++;
       reaction.userIds.push(userId);
-      return true; 
+      return true;
     } else {
       reaction.userIds = reaction.userIds.filter((id) => id !== userId);
       reaction.count--;
-  
+
       if (reaction.count === 0) {
         this.messageLikes[messageId] = this.messageLikes[messageId].filter(
           (r) => r.emoji !== reaction.emoji
         );
       }
-      return false; 
+      return false;
     }
   }
 }

@@ -22,7 +22,7 @@ export class FirebaseService {
   private fetchedSingleSubject = new BehaviorSubject<DocumentData>({});
   fetchedSingleData$ = this.fetchedSingleSubject.asObservable();
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore) {}
 
   getData(db: string) {
     try {
@@ -83,7 +83,7 @@ export class FirebaseService {
       return unsubscribe;
     } catch (error) {
       console.error('Error setting up listener:', error);
-      return () => { };
+      return () => {};
     }
   }
 
@@ -120,7 +120,7 @@ export class FirebaseService {
   async changeProfileImage(id: string, image: string) {
     try {
       const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
-      console.log(image)
+      console.log(image);
       await updateDoc(docRef, { image });
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
@@ -137,25 +137,31 @@ export class FirebaseService {
   }
 
   async updateEmojiCount(
-    reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
+    reaction: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    >,
     messageId: string,
     channelId: string
   ) {
     try {
-      const docRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+      const docRef = doc(
+        this.firestore,
+        `channels/${channelId}/messages/${messageId}`
+      );
       const docSnap = await getDoc(docRef);
-  
       if (docSnap.exists()) {
         // 💡 Hier Typumwandlung erzwingen
-        const docData = docSnap.data() as { likes?: { emoji: string; count: number; userIds: string[] }[] };
-        const currentLikes = docData.likes || []; 
-  
+        const docData = docSnap.data() as {
+          likes?: { emoji: string; count: number; userIds: string[] }[];
+        };
+        const currentLikes = docData.likes || [];
         // Neues Likes-Array erstellen, indem bestehende Likes beibehalten werden
         const updatedLikes = [...currentLikes];
-  
         reaction[messageId].forEach((newReaction) => {
-          const existingIndex = updatedLikes.findIndex((r) => r.emoji === newReaction.emoji);
-          
+          const existingIndex = updatedLikes.findIndex(
+            (r) => r.emoji === newReaction.emoji
+          );
           if (existingIndex !== -1) {
             // Falls das Emoji existiert, aktualisieren
             updatedLikes[existingIndex] = newReaction;
@@ -164,20 +170,17 @@ export class FirebaseService {
             updatedLikes.push(newReaction);
           }
         });
-  
         // Speichern in Firebase
         await updateDoc(docRef, { likes: updatedLikes });
-  
-        console.log(`Updated reactions for message ${messageId} in channel ${channelId}:`, updatedLikes);
+        console.log(
+          `Updated reactions for message ${messageId} in channel ${channelId}:`,
+          updatedLikes
+        );
       }
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
   }
-  
-  checkDocSnap() {
-    
-  }
-  
 
+  checkDocSnap() {}
 }

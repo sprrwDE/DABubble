@@ -129,7 +129,7 @@
       </div>
 
       <div
-        class="px-[45px] flex flex-col gap-[10px]"
+        class="px-[16px] md:px-[45px] flex flex-col gap-[10px]"
         *ngIf="currentDirectChat?.messages?.length === 0"
       >
         <div
@@ -137,7 +137,7 @@
           class="flex gap-[25px] items-end cursor-pointer hover:text-hover"
         >
           <img
-            class="w-[100px] h-[100px] rounded-full"
+            class="w-[80px] md:w-[100px] h-[80px] md:h-[100px] rounded-full"
             src="{{ currentDirectChatUser.image || 'imgs/avatar/profile.svg' }}"
             alt=""
           />
@@ -147,7 +147,7 @@
           </h2>
         </div>
 
-        <p class="flex gap-[5px]">
+        <p class="flex gap-[5px] flex-wrap">
           Diese Unterhaltung findet nur zwischen
           <span
             (click)="openContactProfilePopup(currentDirectChatUser)"

@@ -18,6 +18,7 @@ import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { User } from '../../shared/models/user.model';
 import { DirectChat } from '../../shared/models/direct-chat.model';
 import { SearchChatService } from '../../shared/services/search-chat.service';
+import { MainChatService } from '../../shared/services/main-chat.service';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -52,7 +53,8 @@ export class SidebarNavComponent {
     public panelService: PanelService,
     public globalVariablesService: GlobalVariablesService,
     public directChatService: DirectChatService,
-    public searchChatService: SearchChatService
+    public searchChatService: SearchChatService,
+    public mainChatService: MainChatService
   ) {
     this.searchChatService.sidebarNavComponent = this;
 
@@ -76,6 +78,10 @@ export class SidebarNavComponent {
 
   get allChannels() {
     return this.channelService.allChannels;
+  }
+
+  get showMainChat() {
+    return this.mainChatService.showMainChat;
   }
 
   toggleChannels() {
