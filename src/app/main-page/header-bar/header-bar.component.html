@@ -26,7 +26,7 @@
   </div>
 
   <!-- Search Input -->
-  <div (click)="searchInput.focus()"
+  <div (click)="searchInput.focus()" (click)="$event.stopPropagation()"
     class="searchInput-container cursor-text hidden md:flex items-center justify-between h-full rounded-[42px] w-full text-[24px] bg-white px-[45px] outline-none transition-all duration-75">
     <div class="relative w-full max-w-md">
       <!-- Suchfeld -->
@@ -37,16 +37,25 @@
       <!-- && searchInput.value.length > 0  später zu ngif hier unten einfügen um liste unsichtbar zu machen solange nichts gesucht wird-->
       <ul *ngIf="filteredUserNames.length > 0"
         class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
-        <div *ngFor="let username of filteredUserNames" class="p-3 hover:bg-gray-100 cursor-pointer">
-          <div class="flex justify-between items-center">
-            <p>{{ "@" + username.name }}</p>
-            <img [src]=" username.image" alt="" class="size-8 rounded-full">
+        <div *ngFor="let user of filteredUserNames" class="p-3 hover:bg-gray-100 cursor-pointer">
+          <div (click)="this.searchChatService.setCurrentDirectChat(user)" class="flex justify-between items-center">
+            <p>{{ "@" + user.name }}</p>
+            <img [src]=" user.image" alt="" class="size-8 rounded-full">
+          </div>
+        </div>
+      </ul>
+
+      <ul *ngIf="filteredChannels.length > 0"
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+        <div *ngFor="let channel of filteredChannels" class="p-3 hover:bg-gray-100 cursor-pointer">
+          <div (click)="searchChatService.setCurrentChannel(channel)" class="flex justify-between items-center">
+            <p>{{ "#" + channel.name }}</p>
           </div>
         </div>
       </ul>
 
       <ul *ngIf="filteredList.length > 0"
-        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y overflow-auto h-[80vh]">
         <div *ngFor="let item of filteredList" class="p-3 hover:bg-gray-100 cursor-pointer">
           <div *ngFor="let message of item.messages">
             <p>

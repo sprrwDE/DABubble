@@ -1,4 +1,4 @@
-import { Component, effect, HostListener } from '@angular/core';
+import { Component, effect, HostListener, ViewChild } from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -36,6 +36,8 @@ import { MainChatService } from '../shared/services/main-chat.service';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
+  @ViewChild(HeaderBarComponent) headerComponent!: HeaderBarComponent;
+
   afkDelay: number = 3000;
   timeoutId: any;
   loggedInUser: any;
@@ -50,7 +52,7 @@ export class MainPageComponent {
     private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService,
     private searchChatService: SearchChatService,
-    private mainChatService: MainChatService
+    private mainChatService: MainChatService,
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -121,5 +123,6 @@ export class MainPageComponent {
 
   closePopups() {
     this.searchChatService.openSearchPopup = false;
+    this.headerComponent.clearSearch()
   }
 }

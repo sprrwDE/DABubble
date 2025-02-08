@@ -17,6 +17,7 @@ import { SearchChatService } from '../../shared/services/search-chat.service';
   styleUrl: './header-bar.component.scss',
 })
 export class HeaderBarComponent {
+  filteredChannels: any[] = []
   filteredUserNames: any[] = [];
   public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
@@ -32,7 +33,7 @@ export class HeaderBarComponent {
     private globalVariablesService: GlobalVariablesService,
     private channelService: ChannelService,
     private mainChatService: MainChatService,
-    private searchChatService: SearchChatService
+    public searchChatService: SearchChatService
   ) {
     this.searchControl.valueChanges.subscribe((value) =>
       this.applyFilter(value)
@@ -69,6 +70,7 @@ export class HeaderBarComponent {
 
   applyFilter(query: string | null) {
     this.searchForUser(query)
+    this.searchForChannel(query)
     // If the query doesn't start with "@" but has at least 3 characters, filter by message text
     if (query && query.length >= 3) {
       this.filteredList = this.channelService.allChannels
@@ -94,12 +96,23 @@ export class HeaderBarComponent {
 
   searchForUser(query: string | null) {
     if (query?.startsWith('@')) {
-      if (query.length >= 3) {
+      if (query.length >= 1) {
         const usernameQuery = query.slice(1).toLowerCase();
         this.filteredUserNames = this.userService.allUsers.filter((user) => user.name.toLowerCase().includes(usernameQuery.toLowerCase()))
       }
     } else {
       this.filteredUserNames = [];
+    }
+  }
+
+  searchForChannel(query: string | null) {
+    if (query?.startsWith('#')) {
+      if (query.length >= 1) {
+        const usernameQuery = query.slice(1).toLowerCase();
+        this.filteredChannels = this.channelService.allChannels.filter((channel) => channel.name.toLowerCase().includes(usernameQuery.toLowerCase()))
+      }
+    } else {
+      this.filteredChannels = [];
     }
   }
 
@@ -114,4 +127,5 @@ export class HeaderBarComponent {
     this.searchChatService.resetDirectChat();
     this.mainChatService.showMainChat = false;
   }
+
 }
