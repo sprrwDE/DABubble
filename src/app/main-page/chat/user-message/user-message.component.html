@@ -260,19 +260,19 @@
       {{ message }}
     </p>
 
-    <!-- EMOJI CONTAINER          ngIf korrigieren-->
+    <!-- EMOJI CONTAINER -->
     <div
       *ngIf="likes.length > 0"
       class="flex items-center justify-end gap-[8px]"
     >
       <!-- EMOJI RENDERN -->
-      <!-- <div
-    *ngFor="let ?? of ??"
-    class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
-    >
-    <img class="h-[20px] w-[20px]" src="" alt="" />
-    <span class="text-[16px]">1</span>
-      </div> -->
+       @for (like of likes; track $index) {
+        <div class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
+        >
+        <span (click)="reactOnEmoji(like.emoji, loggedInUser, messageId, channelId, likes)">{{like.emoji}}</span>
+        <span class="text-[16px]">{{like.count}}</span>
+          </div> 
+       }
 
       <!-- add Emoji-btn -->
       <div
@@ -284,6 +284,7 @@
           viewBox="0 0 25 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          (click)="showEmojiPicker = !showEmojiPicker"
         >
           <mask
             id="mask0_104638_16403"
@@ -335,7 +336,7 @@
   class=""
   *ngIf="showEmojiPicker"
   [messageId]="messageId"
-  [channelId]="currentChannelId"
+  [channelId]="channelId"
   [emojiInput$]="emojiInput$"
   [messageLikes]="getMessageLikes()"
 >

@@ -1,5 +1,3 @@
-/// Current Reaction Count holen -> Buggy
-
 /// Remove Funktion anpassen
 
 /// Bei add / remove direkt firebase
@@ -34,7 +32,6 @@ export class EmojiCounterService {
     { emoji: string; count: number; userIds: string[] }[]
   > = {};
 
-  // Likes für eine Nachricht abrufen
   getLikes(messageId: string) {
     return this.messageLikes[messageId] || [];
   }
@@ -49,12 +46,22 @@ export class EmojiCounterService {
       { emoji: string; count: number; userIds: string[] }[]
     > = {}
   ) {
+    console.log(
+      'emoji',
+      emoji,
+      'user',
+      userId,
+      'messageid',
+      messageId,
+      'channelid',
+      channelId,
+      'likesarray',
+      previousReactions
+    );
     this.messageLikes = { ...previousReactions };
-
     if (!this.messageLikes[messageId]) {
       this.messageLikes[messageId] = [];
     }
-
     const reactionIndex = this.messageLikes[messageId].findIndex(
       (item) => item.emoji === emoji
     );
@@ -81,6 +88,8 @@ export class EmojiCounterService {
       this.messageLikes[messageId].push({ emoji, count: 1, userIds: [userId] });
     }
   }
+
+  ///// Hier bug
 
   handleReaction(
     reaction: { emoji: string; count: number; userIds: string[] },
