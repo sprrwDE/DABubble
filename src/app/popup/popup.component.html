@@ -4,8 +4,6 @@
   [ngClass]="{
     'scale-0': !popupOpen,
     'rounded-tl-[0px]': popupCorner === 'tl',
-
-
     'rounded-tr-[0px]': popupCorner === 'tr',
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
       popupType === 'create-channel' || popupType === 'contact-profile',
@@ -15,10 +13,11 @@
       popupType === 'member-list',
     'top-[calc(100%+20px)] right-[0px]':
       popupType === 'profile-menu' || popupType === 'user-profile',
-
-
-    'max-w-[500px] min-w-[500px]':
+    'overflow-y-auto w-[90vw] max-w-[500px] max-h-[95vh] md:max-h-[unset] md:w-[500px] md:min-w-[500px]':
       popupType === 'user-profile' || popupType === 'contact-profile',
+
+
+
   }"
 >
   <app-create-channel-popup
