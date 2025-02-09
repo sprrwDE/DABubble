@@ -109,8 +109,8 @@
               <img [src]="this.userService.getUserById(message.userId)?.image" alt="" class="rounded-full size-8">
             </div>
 
-            <p [ngClass]="this.userService.loggedInUser()?.name?.toLowerCase() == this.userService.getUserById(message.userId)?.name?.toLowerCase()? 'bg-chat rounded-tl-3xl rounded-tr-none' : 'bg-bg !text-black font-bold '"
-              class="border p-4 overflow-y-auto max-h-20 text-base text-white rounded-3xl rounded-tl-none">
+            <p [ngClass]="this.userService.loggedInUser()?.name?.toLowerCase() == this.userService.getUserById(message.userId)?.name?.toLowerCase()? 'bg-chat rounded-tl-3xl rounded-tr-none' : 'bg-bg !text-black font-bold rounded-tl-none'"
+              class="border p-4 overflow-y-auto max-h-20 text-base text-white rounded-3xl ">
               {{ message.message }}
             </p>
           </div>
