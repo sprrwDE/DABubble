@@ -111,6 +111,7 @@ export class HeaderBarComponent {
         })
         // Remove channels that have no matching messages
         .filter((channel: any) => channel.messages && channel.messages.length > 0);
+       
     } else {
       // Optionally, handle the case where the query is null or less than 3 characters
       this.filteredList = [];
