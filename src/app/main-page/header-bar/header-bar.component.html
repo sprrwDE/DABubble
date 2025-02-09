@@ -35,17 +35,17 @@
 
       <!-- Dropdown Liste -->
       <!-- && searchInput.value.length > 0  später zu ngif hier unten einfügen um liste unsichtbar zu machen solange nichts gesucht wird-->
-      <ul *ngIf="filteredUserNames.length > 0"
+      <ul [@dropdownAnimation]="filteredUserNames.length > 0 ? 'open' : 'closed'" 
         class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
         <div *ngFor="let user of filteredUserNames" class="p-3 hover:bg-gray-100 cursor-pointer">
           <div (click)="this.searchChatService.setCurrentDirectChat(user)" class="flex justify-between items-center">
             <p>{{ "@" + user.name }}</p>
-            <img [src]=" user.image" alt="" class="size-8 rounded-full">
+            <img [src]="user.image" alt="" class="size-8 rounded-full">
           </div>
         </div>
       </ul>
 
-      <ul *ngIf="filteredChannels.length > 0"
+      <ul [@dropdownAnimation]="filteredChannels.length > 0 ? 'open' : 'closed'" 
         class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
         <div *ngFor="let channel of filteredChannels" class="p-3 hover:bg-gray-100 cursor-pointer">
           <div (click)="searchChatService.setCurrentChannel(channel)" class="flex justify-between items-center">
@@ -54,14 +54,18 @@
         </div>
       </ul>
 
-      <ul *ngIf="filteredList.length > 0"
+      <ul [@dropdownAnimation]="filteredList.length > 0 ? 'open' : 'closed'"
         class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y overflow-auto h-[80vh]">
         <div *ngFor="let item of filteredList" class="p-3 hover:bg-gray-100 cursor-pointer">
           <div *ngFor="let message of item.messages">
-            <p>
-              {{ "@" + this.userService.getUserById(message.userId)?.name }}
-            </p>
-            <p class="border p-4 overflow-y-auto max-h-20 text-base bg-chat text-white rounded-3xl rounded-tl-none">
+            <div class="flex items-center gap-4"
+              [ngClass]="this.userService.loggedInUser()?.name?.toLowerCase() == this.userService.getUserById(message.userId)?.name?.toLowerCase()? 'justify-end':'justify-start'">
+              <p>{{ " @" + this.userService.getUserById(message.userId)?.name }}</p>
+              <img [src]="this.userService.getUserById(message.userId)?.image" alt="" class="rounded-full size-8">
+            </div>
+
+            <p [ngClass]="this.userService.loggedInUser()?.name?.toLowerCase() == this.userService.getUserById(message.userId)?.name?.toLowerCase()? 'bg-chat rounded-tl-3xl rounded-tr-none' : 'bg-bg !text-black font-bold '"
+              class="border p-4 overflow-y-auto max-h-20 text-base text-white rounded-3xl rounded-tl-none">
               {{ message.message }}
             </p>
           </div>

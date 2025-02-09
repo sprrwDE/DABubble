@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { UserService } from '../../shared/services/user.service';
@@ -8,6 +8,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ChannelService } from '../../shared/services/channel.service';
 import { MainChatService } from '../../shared/services/main-chat.service';
 import { SearchChatService } from '../../shared/services/search-chat.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-header-bar',
@@ -15,6 +16,25 @@ import { SearchChatService } from '../../shared/services/search-chat.service';
   imports: [PopupComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './header-bar.component.html',
   styleUrl: './header-bar.component.scss',
+  animations: [
+    trigger('dropdownAnimation', [
+      state('closed', style({
+        height: '0px',
+        opacity: 0,
+        overflow: 'hidden',
+      })),
+      state('open', style({
+        height: '*',
+        opacity: 1,
+      })),
+      transition('closed => open', [
+        animate('300ms ease-out')
+      ]),
+      transition('open => closed', [
+        animate('200ms ease-in')
+      ])
+    ])
+  ]
 })
 export class HeaderBarComponent {
   filteredChannels: any[] = []
@@ -26,6 +46,7 @@ export class HeaderBarComponent {
   searchControl = new FormControl('');
   list: any = '';
   filteredList: any = [];
+  isOpen = signal(false);
 
   constructor(
     private popupService: PopupService,
@@ -51,6 +72,8 @@ export class HeaderBarComponent {
       this.isMobile = this.globalVariablesService.isMobile();
     });
   }
+
+
 
   get showMainChat() {
     return this.mainChatService.showMainChat;
@@ -90,13 +113,14 @@ export class HeaderBarComponent {
         .filter((channel: any) => channel.messages && channel.messages.length > 0);
     } else {
       // Optionally, handle the case where the query is null or less than 3 characters
-      this.filteredList = '';
+      this.filteredList = [];
     }
   }
 
   searchForUser(query: string | null) {
     if (query?.startsWith('@')) {
       if (query.length >= 1) {
+        this.isOpen.set(true)
         const usernameQuery = query.slice(1).toLowerCase();
         this.filteredUserNames = this.userService.allUsers.filter((user) => user.name.toLowerCase().includes(usernameQuery.toLowerCase()))
       }
