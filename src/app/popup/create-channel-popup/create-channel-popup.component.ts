@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
 import { AddUserToChannelPopupComponent } from '../add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { AddUserService } from '../../shared/services/add-user.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-create-channel-popup',
@@ -27,17 +28,25 @@ export class CreateChannelPopupComponent {
   showUserPopup: boolean = false;
   nameInput: string = '';
 
+  isMobile: any;
+
   constructor(
     public popupService: PopupService,
     public userService: UserService,
     public channelService: ChannelService,
-    public addUserService: AddUserService
+    public addUserService: AddUserService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
+
       if (user) {
         this.channel.channelCreatorId = user.id;
       }
+    });
+
+    effect(() => {
+      this.isMobile = this.globalVariablesService.isMobile();
     });
 
     this.popupService.channelDetailsPopup = this;
@@ -156,7 +165,6 @@ export class CreateChannelPopupComponent {
   }
 
   handleClearInput() {
-    this.nameInput = ''; 
+    this.nameInput = '';
   }
-
 }

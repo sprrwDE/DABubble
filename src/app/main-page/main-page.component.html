@@ -92,4 +92,18 @@
     [popupType]="'contact-profile'"
     (closePopupEvent)="contactProfilePopupOpen = false"
   ></app-popup>
+
+  <app-popup
+    class="md:hidden"
+    [popupOpen]="openUserProfilePopup"
+    [popupType]="'user-profile-mobile'"
+    (closePopupEvent)="openUserProfilePopup = false"
+  ></app-popup>
+
+  <app-popup
+    class="md:hidden"
+    [popupOpen]="channelDetailsPopupOpen"
+    [popupType]="'channel-details-mobile'"
+    (closePopupEvent)="channelDetailsPopupOpen = false"
+  ></app-popup>
 </section>

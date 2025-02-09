@@ -10,7 +10,7 @@
   <!-- chat name -->
   <div
     *ngIf="!isDirectChat && !searchChat"
-    (click)="openChannelDetailsPopup('channel-details', 'tl')"
+    (click)="openChannelDetailsPopup()"
     class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
   >
     <svg
@@ -44,9 +44,10 @@
     </svg>
 
     <app-popup
-      [popupCorner]="channelDetailsPopupCorner"
+      class="hidden md:block"
+      [popupCorner]="'tl'"
       [popupOpen]="channelDetailsPopupOpen"
-      [popupType]="channelDetailsPopupType"
+      [popupType]="'channel-details'"
       (closePopupEvent)="closeChannelDetailsPopup()"
     ></app-popup>
   </div>
