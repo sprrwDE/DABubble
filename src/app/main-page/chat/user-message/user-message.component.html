@@ -263,16 +263,22 @@
     <!-- EMOJI CONTAINER -->
     <div
       *ngIf="likes.length > 0"
-      class="flex items-center justify-end gap-[8px]"
+      class="flex items-center max-w-[200px] md:max-w-[unset] overflow-x-auto gap-[8px]"
     >
       <!-- EMOJI RENDERN -->
-       @for (like of likes; track $index) {
-        <div class="flex items-center gap-[10px] border-1 border-lines rounded-[20px] py-[5px] px-[10px]"
+      @for (like of likes; track $index) {
+      <div
+        class="flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
+      >
+        <span
+          (click)="
+            reactOnEmoji(like.emoji, loggedInUser, messageId, channelId, likes)
+          "
+          >{{ like.emoji }}</span
         >
-        <span (click)="reactOnEmoji(like.emoji, loggedInUser, messageId, channelId, likes)">{{like.emoji}}</span>
-        <span class="text-[16px]">{{like.count}}</span>
-          </div> 
-       }
+        <span class="text-[16px]">{{ like.count }}</span>
+      </div>
+      }
 
       <!-- add Emoji-btn -->
       <div

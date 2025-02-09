@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Input, Output } from '@angular/core';
 import { CreateChannelPopupComponent } from './create-channel-popup/create-channel-popup.component';
 import { ChannelDetailsPopupComponent } from './channel-details-popup/channel-details-popup.component';
 import { MemberListPopupComponent } from './member-list-popup/member-list-popup.component';
@@ -8,6 +8,7 @@ import { UserProfilePopupComponent } from './user-profile-popup/user-profile-pop
 import { ProfileMenuPopupComponent } from './profile-menu-popup/profile-menu-popup.component';
 import { ContactProfilePopupComponent } from './contact-profile-popup/contact-profile-popup.component';
 import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-user-to-channel-popup.component';
+import { GlobalVariablesService } from '../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-popup',
@@ -33,7 +34,16 @@ export class PopupComponent {
 
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  constructor(public popupService: PopupService) {}
+  isMobile: any;
+
+  constructor(
+    public popupService: PopupService,
+    public globalService: GlobalVariablesService
+  ) {
+    effect(() => {
+      this.isMobile = this.globalService.isMobile;
+    });
+  }
 
   closePopup() {
     this.popupService.resetEditStates();

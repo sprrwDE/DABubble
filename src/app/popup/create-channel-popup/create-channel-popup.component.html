@@ -1,5 +1,5 @@
 <section
-  *ngIf="!showCreateChannelAddPeoplePopup"
+  *ngIf="!showCreateChannelAddPeoplePopup || isMobile"
   class="flex flex-col gap-[20px]"
 >
   <div class="flex w-full items-center justify-between">
@@ -107,7 +107,7 @@
 
 <!-- Add users to channel popup-->
 <section
-  *ngIf="showCreateChannelAddPeoplePopup"
+  *ngIf="showCreateChannelAddPeoplePopup && !isMobile"
   class="min-w-[710px] flex flex-col gap-[20px]"
 >
   <div class="flex w-full items-center justify-between">

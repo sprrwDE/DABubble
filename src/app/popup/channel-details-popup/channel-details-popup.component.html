@@ -1,5 +1,8 @@
 <section class="channel-details-popup flex flex-col gap-[20px]">
-  <div class="flex justify-between items-center w-full">
+  <div
+    class="flex justify-between items-center w-full"
+    [ngClass]="{ 'shadow-[0px_2px_10px_0px_#00000014]': isMobile }"
+  >
     <div class="flex items-center gap-[15px]">
       <svg
         width="30"

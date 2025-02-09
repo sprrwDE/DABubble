@@ -29,7 +29,6 @@ import { GlobalVariablesService } from '../../../shared/services/global-variable
 export class ChatHeaderComponent {
   currentChannel: Channel = new Channel();
   channelUsers: User[] = [];
-  channelDetailsPopupOpen: boolean = false;
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
   memberListPopupOpen: boolean = false;
@@ -79,9 +78,15 @@ export class ChatHeaderComponent {
     return this.searchChatService.searchChat;
   }
 
-  openChannelDetailsPopup(type: string, corner: string) {
-    this.channelDetailsPopupType = type;
-    this.channelDetailsPopupCorner = corner;
+  get channelDetailsPopupOpen() {
+    return this.popupService.channelDetailsPopupOpen;
+  }
+
+  set channelDetailsPopupOpen(value: boolean) {
+    this.popupService.channelDetailsPopupOpen = value;
+  }
+
+  openChannelDetailsPopup() {
     this.channelDetailsPopupOpen = true;
   }
 

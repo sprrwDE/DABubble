@@ -52,7 +52,7 @@ export class MainPageComponent {
     private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService,
     private searchChatService: SearchChatService,
-    private mainChatService: MainChatService,
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -111,6 +111,22 @@ export class MainPageComponent {
     return this.panelService.isReplyPanelOpen;
   }
 
+  get openUserProfilePopup() {
+    return this.popupService.openUserProfilePopup;
+  }
+
+  set openUserProfilePopup(value: boolean) {
+    this.popupService.openUserProfilePopup = value;
+  }
+
+  get channelDetailsPopupOpen() {
+    return this.popupService.channelDetailsPopupOpen;
+  }
+
+  set channelDetailsPopupOpen(value: boolean) {
+    this.popupService.channelDetailsPopupOpen = value;
+  }
+
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }
@@ -123,6 +139,6 @@ export class MainPageComponent {
 
   closePopups() {
     this.searchChatService.openSearchPopup = false;
-    this.headerComponent.clearSearch()
+    this.headerComponent.clearSearch();
   }
 }

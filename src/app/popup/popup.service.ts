@@ -23,6 +23,8 @@ export class PopupService {
 
   addUserToChannelPopup = false;
 
+  channelDetailsPopupOpen: boolean = false;
+
   channelDetailsPopup!: CreateChannelPopupComponent;
   memberListPopup!: MemberListPopupComponent;
 
