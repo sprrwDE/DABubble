@@ -266,7 +266,7 @@
       class="flex items-center max-w-[200px] md:max-w-[unset] overflow-x-auto gap-[8px]"
     >
       <!-- EMOJI RENDERN -->
-      @for (like of likes; track $index) {
+      @for (like of sortedLikes(); track $index) {
       <div
         class="flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
       >

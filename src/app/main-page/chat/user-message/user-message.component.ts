@@ -180,4 +180,8 @@ export class UserMessageComponent {
   setEmoji(emoji: string) {
     this.emojiInput$.next(emoji);
   }
+
+  sortedLikes() {
+    return this.likes.sort((a, b) => b.count - a.count);
+  }
 }
