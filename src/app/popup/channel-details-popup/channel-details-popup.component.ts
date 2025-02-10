@@ -5,6 +5,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-channel-details-popup',
@@ -18,6 +19,10 @@ export class ChannelDetailsPopupComponent {
 
   currentChannel: Channel = new Channel();
   isMobile: boolean = false;
+  loggedInUser: any;
+
+  userList: User[] = [];
+
   constructor(
     public popupService: PopupService,
     public channelService: ChannelService,
@@ -27,10 +32,17 @@ export class ChannelDetailsPopupComponent {
     // Effect reagiert auf Änderungen des Signals
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
+      this.userList = this.allUsers.filter((user) =>
+        this.currentChannel.users.includes(user.id)
+      );
     });
 
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
+    });
+
+    effect(() => {
+      this.loggedInUser = this.userService.loggedInUser();
     });
   }
 
@@ -64,5 +76,24 @@ export class ChannelDetailsPopupComponent {
     this.popupService.resetEditStates();
 
     this.closePopupEvent.emit();
+  }
+
+  openProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+
+    if (this.loggedInUser.id === user.id) this.openUserProfilePopup();
+    else this.openContactProfilePopup(user);
+
+    this.closePopup();
+  }
+
+  openUserProfilePopup() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  openContactProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+    this.popupService.contactProfilePopupOpen = true;
   }
 }

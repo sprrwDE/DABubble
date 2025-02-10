@@ -1,7 +1,10 @@
 <section class="channel-details-popup flex flex-col gap-[20px]">
   <div
-    class="flex justify-between items-center w-full"
-    [ngClass]="{ 'shadow-[0px_2px_10px_0px_#00000014]': isMobile }"
+    class="flex justify-between items-center w-full sticky md:static top-[0px] md:top-[unset] z-[10000] md:z-[unset] bg-white"
+    [ngClass]="{
+      'shadow-[0px_2px_10px_0px_#00000014] pt-[40px] pb-[20px] px-[16px]':
+        isMobile
+    }"
   >
     <div class="flex items-center gap-[15px]">
       <svg
@@ -68,155 +71,243 @@
   </div>
 
   <div
-    class="flex flex-col gap-[20px] rounded-[20px] transition-svg-text"
-    [ngClass]="{
-      'border border-lines p-[20px]': !editChannelName
-    }"
+    class="pb-[20px] px-[16px] md:pb-[0px] md:px-[0px] flex flex-col gap-[20px]"
   >
-    <div class="flex justify-between items-center w-full">
-      <h3 class="text-[18px] font-bold">Channel-Name</h3>
+    <div
+      class="flex flex-col gap-[20px] rounded-[20px] transition-svg-text"
+      [ngClass]="{
+        'border border-lines p-[20px]': !editChannelName
+      }"
+    >
+      <div class="flex justify-between items-center w-full">
+        <h3 class="text-[18px] font-bold">Channel-Name</h3>
 
-      <p
-        *ngIf="!editChannelName"
-        (click)="editChannelName = true"
-        class="text-hover hover:font-bold cursor-pointer transition-svg-text"
-      >
-        Bearbeiten
-      </p>
-      <p
+        <p
+          *ngIf="!editChannelName"
+          (click)="editChannelName = true"
+          class="text-hover hover:font-bold cursor-pointer transition-svg-text"
+        >
+          Bearbeiten
+        </p>
+        <p
+          *ngIf="editChannelName"
+          (click)="editChannelName = false"
+          class="text-hover hover:font-bold cursor-pointer transition-svg-text"
+        >
+          Speichern
+        </p>
+      </div>
+
+      <div
         *ngIf="editChannelName"
-        (click)="editChannelName = false"
-        class="text-hover hover:font-bold cursor-pointer transition-svg-text"
+        (click)="channelName.focus()"
+        class="popup-input-container"
       >
-        Speichern
-      </p>
+        <svg
+          width="23"
+          height="24"
+          viewBox="0 0 23 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+            id="mask0_105201_6568"
+            style="mask-type: alpha"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="23"
+            height="24"
+          >
+            <rect y="0.5" width="23" height="23" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_105201_6568)">
+            <path
+              d="M6.94787 19.6666C6.64439 19.6666 6.39683 19.5469 6.20516 19.3073C6.01349 19.0677 5.95759 18.8041 6.03745 18.5166L6.70828 15.8333H4.57599C4.25655 15.8333 4.00099 15.7097 3.80933 15.4624C3.61766 15.2145 3.56176 14.9389 3.64162 14.6354C3.68953 14.4118 3.80134 14.2361 3.97703 14.1083C4.15273 13.9805 4.35238 13.9166 4.57599 13.9166H7.18745L8.14578 10.0833H5.53433C5.21488 10.0833 4.95933 9.95969 4.76766 9.71244C4.57599 9.46455 4.52009 9.18887 4.59995 8.8854C4.64787 8.66179 4.75967 8.48609 4.93537 8.35831C5.11106 8.23054 5.31071 8.16665 5.53433 8.16665H8.62495L9.41558 5.0281C9.46349 4.82047 9.56731 4.65276 9.72703 4.52498C9.88676 4.3972 10.0784 4.33331 10.302 4.33331C10.6055 4.33331 10.8531 4.4531 11.0447 4.69269C11.2364 4.93227 11.2923 5.19581 11.2125 5.48331L10.5416 8.16665H14.375L15.1656 5.0281C15.2135 4.82047 15.3173 4.65276 15.477 4.52498C15.6368 4.3972 15.8284 4.33331 16.052 4.33331C16.3555 4.33331 16.6031 4.4531 16.7947 4.69269C16.9864 4.93227 17.0423 5.19581 16.9625 5.48331L16.2916 8.16665H18.4239C18.7434 8.16665 18.9989 8.29027 19.1906 8.53752C19.3822 8.78541 19.4381 9.06109 19.3583 9.36456C19.3104 9.58817 19.1986 9.76387 19.0229 9.89165C18.8472 10.0194 18.6475 10.0833 18.4239 10.0833H15.8125L14.8541 13.9166H17.4656C17.785 13.9166 18.0406 14.0403 18.2322 14.2875C18.4239 14.5354 18.4798 14.8111 18.4 15.1146C18.352 15.3382 18.2402 15.5139 18.0645 15.6416C17.8888 15.7694 17.6892 15.8333 17.4656 15.8333H14.375L13.5843 18.9719C13.5364 19.1795 13.4326 19.3472 13.2729 19.475C13.1131 19.6028 12.9215 19.6666 12.6979 19.6666C12.3944 19.6666 12.1468 19.5469 11.9552 19.3073C11.7635 19.0677 11.7076 18.8041 11.7875 18.5166L12.4583 15.8333H8.62495L7.83433 18.9719C7.78641 19.1795 7.68259 19.3472 7.52287 19.475C7.36314 19.6028 7.17148 19.6666 6.94787 19.6666ZM9.10412 13.9166H12.9375L13.8958 10.0833H10.0625L9.10412 13.9166Z"
+              fill="#686868"
+            />
+          </g>
+        </svg>
+
+        <input
+          #channelName
+          type="text"
+          placeholder="{{ currentChannel.name || 'Channel-Name' }}"
+        />
+      </div>
+
+      <div *ngIf="!editChannelName" class="flex items-center gap-[10px]">
+        <svg
+          width="23"
+          height="24"
+          viewBox="0 0 23 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+            id="mask0_105201_6568"
+            style="mask-type: alpha"
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="23"
+            height="24"
+          >
+            <rect y="0.5" width="23" height="23" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_105201_6568)">
+            <path
+              d="M6.94787 19.6666C6.64439 19.6666 6.39683 19.5469 6.20516 19.3073C6.01349 19.0677 5.95759 18.8041 6.03745 18.5166L6.70828 15.8333H4.57599C4.25655 15.8333 4.00099 15.7097 3.80933 15.4624C3.61766 15.2145 3.56176 14.9389 3.64162 14.6354C3.68953 14.4118 3.80134 14.2361 3.97703 14.1083C4.15273 13.9805 4.35238 13.9166 4.57599 13.9166H7.18745L8.14578 10.0833H5.53433C5.21488 10.0833 4.95933 9.95969 4.76766 9.71244C4.57599 9.46455 4.52009 9.18887 4.59995 8.8854C4.64787 8.66179 4.75967 8.48609 4.93537 8.35831C5.11106 8.23054 5.31071 8.16665 5.53433 8.16665H8.62495L9.41558 5.0281C9.46349 4.82047 9.56731 4.65276 9.72703 4.52498C9.88676 4.3972 10.0784 4.33331 10.302 4.33331C10.6055 4.33331 10.8531 4.4531 11.0447 4.69269C11.2364 4.93227 11.2923 5.19581 11.2125 5.48331L10.5416 8.16665H14.375L15.1656 5.0281C15.2135 4.82047 15.3173 4.65276 15.477 4.52498C15.6368 4.3972 15.8284 4.33331 16.052 4.33331C16.3555 4.33331 16.6031 4.4531 16.7947 4.69269C16.9864 4.93227 17.0423 5.19581 16.9625 5.48331L16.2916 8.16665H18.4239C18.7434 8.16665 18.9989 8.29027 19.1906 8.53752C19.3822 8.78541 19.4381 9.06109 19.3583 9.36456C19.3104 9.58817 19.1986 9.76387 19.0229 9.89165C18.8472 10.0194 18.6475 10.0833 18.4239 10.0833H15.8125L14.8541 13.9166H17.4656C17.785 13.9166 18.0406 14.0403 18.2322 14.2875C18.4239 14.5354 18.4798 14.8111 18.4 15.1146C18.352 15.3382 18.2402 15.5139 18.0645 15.6416C17.8888 15.7694 17.6892 15.8333 17.4656 15.8333H14.375L13.5843 18.9719C13.5364 19.1795 13.4326 19.3472 13.2729 19.475C13.1131 19.6028 12.9215 19.6666 12.6979 19.6666C12.3944 19.6666 12.1468 19.5469 11.9552 19.3073C11.7635 19.0677 11.7076 18.8041 11.7875 18.5166L12.4583 15.8333H8.62495L7.83433 18.9719C7.78641 19.1795 7.68259 19.3472 7.52287 19.475C7.36314 19.6028 7.17148 19.6666 6.94787 19.6666ZM9.10412 13.9166H12.9375L13.8958 10.0833H10.0625L9.10412 13.9166Z"
+              fill="#686868"
+            />
+          </g>
+        </svg>
+
+        <p>{{ currentChannel.name || "lädt..." }}</p>
+      </div>
     </div>
 
     <div
-      *ngIf="editChannelName"
-      (click)="channelName.focus()"
-      class="popup-input-container"
+      class="flex flex-col gap-[20px] rounded-[20px] transition-svg-text"
+      [ngClass]="{
+        'border border-lines p-[20px]': !editChannelDescription
+      }"
     >
-      <svg
-        width="23"
-        height="24"
-        viewBox="0 0 23 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <mask
-          id="mask0_105201_6568"
-          style="mask-type: alpha"
-          maskUnits="userSpaceOnUse"
-          x="0"
-          y="0"
-          width="23"
-          height="24"
+      <div class="flex justify-between items-center w-full">
+        <h3 class="text-[18px] font-bold">Beschreibung</h3>
+
+        <p
+          *ngIf="!editChannelDescription"
+          (click)="editChannelDescription = true"
+          class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
-          <rect y="0.5" width="23" height="23" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_105201_6568)">
-          <path
-            d="M6.94787 19.6666C6.64439 19.6666 6.39683 19.5469 6.20516 19.3073C6.01349 19.0677 5.95759 18.8041 6.03745 18.5166L6.70828 15.8333H4.57599C4.25655 15.8333 4.00099 15.7097 3.80933 15.4624C3.61766 15.2145 3.56176 14.9389 3.64162 14.6354C3.68953 14.4118 3.80134 14.2361 3.97703 14.1083C4.15273 13.9805 4.35238 13.9166 4.57599 13.9166H7.18745L8.14578 10.0833H5.53433C5.21488 10.0833 4.95933 9.95969 4.76766 9.71244C4.57599 9.46455 4.52009 9.18887 4.59995 8.8854C4.64787 8.66179 4.75967 8.48609 4.93537 8.35831C5.11106 8.23054 5.31071 8.16665 5.53433 8.16665H8.62495L9.41558 5.0281C9.46349 4.82047 9.56731 4.65276 9.72703 4.52498C9.88676 4.3972 10.0784 4.33331 10.302 4.33331C10.6055 4.33331 10.8531 4.4531 11.0447 4.69269C11.2364 4.93227 11.2923 5.19581 11.2125 5.48331L10.5416 8.16665H14.375L15.1656 5.0281C15.2135 4.82047 15.3173 4.65276 15.477 4.52498C15.6368 4.3972 15.8284 4.33331 16.052 4.33331C16.3555 4.33331 16.6031 4.4531 16.7947 4.69269C16.9864 4.93227 17.0423 5.19581 16.9625 5.48331L16.2916 8.16665H18.4239C18.7434 8.16665 18.9989 8.29027 19.1906 8.53752C19.3822 8.78541 19.4381 9.06109 19.3583 9.36456C19.3104 9.58817 19.1986 9.76387 19.0229 9.89165C18.8472 10.0194 18.6475 10.0833 18.4239 10.0833H15.8125L14.8541 13.9166H17.4656C17.785 13.9166 18.0406 14.0403 18.2322 14.2875C18.4239 14.5354 18.4798 14.8111 18.4 15.1146C18.352 15.3382 18.2402 15.5139 18.0645 15.6416C17.8888 15.7694 17.6892 15.8333 17.4656 15.8333H14.375L13.5843 18.9719C13.5364 19.1795 13.4326 19.3472 13.2729 19.475C13.1131 19.6028 12.9215 19.6666 12.6979 19.6666C12.3944 19.6666 12.1468 19.5469 11.9552 19.3073C11.7635 19.0677 11.7076 18.8041 11.7875 18.5166L12.4583 15.8333H8.62495L7.83433 18.9719C7.78641 19.1795 7.68259 19.3472 7.52287 19.475C7.36314 19.6028 7.17148 19.6666 6.94787 19.6666ZM9.10412 13.9166H12.9375L13.8958 10.0833H10.0625L9.10412 13.9166Z"
-            fill="#686868"
-          />
-        </g>
-      </svg>
-
-      <input
-        #channelName
-        type="text"
-        placeholder="{{ currentChannel.name || 'Channel-Name' }}"
-      />
-    </div>
-
-    <div *ngIf="!editChannelName" class="flex items-center gap-[10px]">
-      <svg
-        width="23"
-        height="24"
-        viewBox="0 0 23 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <mask
-          id="mask0_105201_6568"
-          style="mask-type: alpha"
-          maskUnits="userSpaceOnUse"
-          x="0"
-          y="0"
-          width="23"
-          height="24"
+          Bearbeiten
+        </p>
+        <p
+          *ngIf="editChannelDescription"
+          (click)="editChannelDescription = false"
+          class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
-          <rect y="0.5" width="23" height="23" fill="#D9D9D9" />
-        </mask>
-        <g mask="url(#mask0_105201_6568)">
-          <path
-            d="M6.94787 19.6666C6.64439 19.6666 6.39683 19.5469 6.20516 19.3073C6.01349 19.0677 5.95759 18.8041 6.03745 18.5166L6.70828 15.8333H4.57599C4.25655 15.8333 4.00099 15.7097 3.80933 15.4624C3.61766 15.2145 3.56176 14.9389 3.64162 14.6354C3.68953 14.4118 3.80134 14.2361 3.97703 14.1083C4.15273 13.9805 4.35238 13.9166 4.57599 13.9166H7.18745L8.14578 10.0833H5.53433C5.21488 10.0833 4.95933 9.95969 4.76766 9.71244C4.57599 9.46455 4.52009 9.18887 4.59995 8.8854C4.64787 8.66179 4.75967 8.48609 4.93537 8.35831C5.11106 8.23054 5.31071 8.16665 5.53433 8.16665H8.62495L9.41558 5.0281C9.46349 4.82047 9.56731 4.65276 9.72703 4.52498C9.88676 4.3972 10.0784 4.33331 10.302 4.33331C10.6055 4.33331 10.8531 4.4531 11.0447 4.69269C11.2364 4.93227 11.2923 5.19581 11.2125 5.48331L10.5416 8.16665H14.375L15.1656 5.0281C15.2135 4.82047 15.3173 4.65276 15.477 4.52498C15.6368 4.3972 15.8284 4.33331 16.052 4.33331C16.3555 4.33331 16.6031 4.4531 16.7947 4.69269C16.9864 4.93227 17.0423 5.19581 16.9625 5.48331L16.2916 8.16665H18.4239C18.7434 8.16665 18.9989 8.29027 19.1906 8.53752C19.3822 8.78541 19.4381 9.06109 19.3583 9.36456C19.3104 9.58817 19.1986 9.76387 19.0229 9.89165C18.8472 10.0194 18.6475 10.0833 18.4239 10.0833H15.8125L14.8541 13.9166H17.4656C17.785 13.9166 18.0406 14.0403 18.2322 14.2875C18.4239 14.5354 18.4798 14.8111 18.4 15.1146C18.352 15.3382 18.2402 15.5139 18.0645 15.6416C17.8888 15.7694 17.6892 15.8333 17.4656 15.8333H14.375L13.5843 18.9719C13.5364 19.1795 13.4326 19.3472 13.2729 19.475C13.1131 19.6028 12.9215 19.6666 12.6979 19.6666C12.3944 19.6666 12.1468 19.5469 11.9552 19.3073C11.7635 19.0677 11.7076 18.8041 11.7875 18.5166L12.4583 15.8333H8.62495L7.83433 18.9719C7.78641 19.1795 7.68259 19.3472 7.52287 19.475C7.36314 19.6028 7.17148 19.6666 6.94787 19.6666ZM9.10412 13.9166H12.9375L13.8958 10.0833H10.0625L9.10412 13.9166Z"
-            fill="#686868"
-          />
-        </g>
-      </svg>
+          Speichern
+        </p>
+      </div>
 
-      <p>{{ currentChannel.name || "lädt..." }}</p>
-    </div>
-  </div>
-
-  <div
-    class="flex flex-col gap-[20px] rounded-[20px] transition-svg-text"
-    [ngClass]="{
-      'border border-lines p-[20px]': !editChannelDescription
-    }"
-  >
-    <div class="flex justify-between items-center w-full">
-      <h3 class="text-[18px] font-bold">Beschreibung</h3>
-
-      <p
-        *ngIf="!editChannelDescription"
-        (click)="editChannelDescription = true"
-        class="text-hover hover:font-bold cursor-pointer transition-svg-text"
-      >
-        Bearbeiten
-      </p>
-      <p
+      <div
         *ngIf="editChannelDescription"
-        (click)="editChannelDescription = false"
-        class="text-hover hover:font-bold cursor-pointer transition-svg-text"
+        (click)="channelDescription.focus()"
+        class="popup-input-container"
       >
-        Speichern
-      </p>
+        <input #channelDescription type="text" placeholder="Dein Text hier" />
+      </div>
+
+      <div
+        *ngIf="!editChannelDescription"
+        class="max-h-[140px] overflow-y-auto overflow-x-hidden pr-[10px] flex gap-[10px]"
+      >
+        <p>
+          {{ currentChannel.description || "lädt..." }}
+        </p>
+      </div>
+
+      <div class="w-full h-[1px] bg-lines rounded-full"></div>
+
+      <div class="flex flex-col gap-[20px]">
+        <p class="text-[18px] font-bold">Erstellt von</p>
+
+        <p class="text-[24px] text-hover">
+          {{ getCurrentChannelCreatorName() || "lädt..." }}
+        </p>
+      </div>
     </div>
 
+    <!-- show members mobile -->
     <div
-      *ngIf="editChannelDescription"
-      (click)="channelDescription.focus()"
-      class="popup-input-container"
+      *ngIf="isMobile"
+      class="flex flex-col gap-[20px] border border-lines py-[20px] px-[16px] rounded-[20px]"
     >
-      <input #channelDescription type="text" placeholder="Dein Text hier" />
+      <h2 class="text-[24px] font-bold">Mitglieder</h2>
+
+      <div class="flex flex-col gap-[15px]">
+        <div
+          class="flex flex-col gap-[13px] overflow-y-scroll overflow-x-hidden max-h-[200px] md:max-h-[400px]"
+        >
+          <!-- Unten rein rendern -->
+
+          @for (user of userList; track $index) {
+          <div
+            (click)="openProfilePopup(user)"
+            class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+          >
+            <div class="relative">
+              <img
+                class="w-[50px] h-[50px] rounded-full"
+                src="{{ user.image || 'imgs/avatar1.png' }}"
+                alt=""
+              />
+
+              <div
+                class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
+                [ngClass]="{
+                  'bg-online': user.status === 'online',
+                  'bg-disable': user.status === 'offline'
+                }"
+              ></div>
+            </div>
+
+            <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
+            <p>
+              {{ user.name || "NoName" }}
+              <span *ngIf="user.id === loggedInUser?.id">(Du)</span>
+              <!-- beispiel:
+              <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
+            --></p>
+          </div>
+          }
+
+          <!-- Oben rein rendern -->
+        </div>
+
+        <div
+          class="hover-primary-bg flex items-center gap-[15px] transition-svg-text px-[29px] py-[12px] rounded-[100px]"
+        >
+          <div class="bg-bg p-[5px] rounded-full">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <mask
+                id="mask0_105708_9192"
+                style="mask-type: alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="24"
+                height="24"
+              >
+                <rect width="24" height="24" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_105708_9192)">
+                <path
+                  d="M19 14C18.7167 14 18.4793 13.904 18.288 13.712C18.096 13.5207 18 13.2833 18 13V11H16C15.7167 11 15.4793 10.904 15.288 10.712C15.096 10.5207 15 10.2833 15 10C15 9.71667 15.096 9.479 15.288 9.287C15.4793 9.09567 15.7167 9 16 9H18V7C18 6.71667 18.096 6.479 18.288 6.287C18.4793 6.09567 18.7167 6 19 6C19.2833 6 19.5207 6.09567 19.712 6.287C19.904 6.479 20 6.71667 20 7V9H22C22.2833 9 22.5207 9.09567 22.712 9.287C22.904 9.479 23 9.71667 23 10C23 10.2833 22.904 10.5207 22.712 10.712C22.5207 10.904 22.2833 11 22 11H20V13C20 13.2833 19.904 13.5207 19.712 13.712C19.5207 13.904 19.2833 14 19 14ZM9 12C7.9 12 6.95833 11.6083 6.175 10.825C5.39167 10.0417 5 9.1 5 8C5 6.9 5.39167 5.95833 6.175 5.175C6.95833 4.39167 7.9 4 9 4C10.1 4 11.0417 4.39167 11.825 5.175C12.6083 5.95833 13 6.9 13 8C13 9.1 12.6083 10.0417 11.825 10.825C11.0417 11.6083 10.1 12 9 12ZM2 20C1.71667 20 1.47933 19.904 1.288 19.712C1.096 19.5207 1 19.2833 1 19V17.2C1 16.6333 1.146 16.1123 1.438 15.637C1.72933 15.1623 2.11667 14.8 2.6 14.55C3.63333 14.0333 4.68333 13.6457 5.75 13.387C6.81667 13.129 7.9 13 9 13C10.1 13 11.1833 13.129 12.25 13.387C13.3167 13.6457 14.3667 14.0333 15.4 14.55C15.8833 14.8 16.2707 15.1623 16.562 15.637C16.854 16.1123 17 16.6333 17 17.2V19C17 19.2833 16.904 19.5207 16.712 19.712C16.5207 19.904 16.2833 20 16 20H2ZM3 18H15V17.2C15 17.0167 14.9543 16.85 14.863 16.7C14.771 16.55 14.65 16.4333 14.5 16.35C13.6 15.9 12.6917 15.5623 11.775 15.337C10.8583 15.1123 9.93333 15 9 15C8.06667 15 7.14167 15.1123 6.225 15.337C5.30833 15.5623 4.4 15.9 3.5 16.35C3.35 16.4333 3.22933 16.55 3.138 16.7C3.046 16.85 3 17.0167 3 17.2V18ZM9 10C9.55 10 10.021 9.804 10.413 9.412C10.8043 9.02067 11 8.55 11 8C11 7.45 10.8043 6.97933 10.413 6.588C10.021 6.196 9.55 6 9 6C8.45 6 7.97933 6.196 7.588 6.588C7.196 6.97933 7 7.45 7 8C7 8.55 7.196 9.02067 7.588 9.412C7.97933 9.804 8.45 10 9 10Z"
+                  fill="black"
+                />
+              </g>
+            </svg>
+          </div>
+
+          <p class="text-[18px]">Mitglieder hinzufügen</p>
+        </div>
+      </div>
     </div>
 
-    <div
-      *ngIf="!editChannelDescription"
-      class="max-h-[140px] overflow-y-auto overflow-x-hidden pr-[10px] flex gap-[10px]"
-    >
-      <p>
-        {{ currentChannel.description || "lädt..." }}
-      </p>
+    <!--  -->
+    <div class="flex justify-end">
+      <button (click)="$event.stopPropagation(); closePopup()">
+        Channel verlassen
+      </button>
     </div>
-
-    <div class="w-full h-[1px] bg-lines rounded-full"></div>
-
-    <div class="flex flex-col gap-[20px]">
-      <p class="text-[18px] font-bold">Erstellt von</p>
-
-      <p class="text-[24px] text-hover">
-        {{ getCurrentChannelCreatorName() || "lädt..." }}
-      </p>
-    </div>
-  </div>
-
-  <div class="flex justify-end">
-    <button (click)="$event.stopPropagation(); closePopup()">
-      Channel verlassen
-    </button>
   </div>
 </section>

@@ -1,6 +1,6 @@
 <div
   (click)="$event.stopPropagation()"
-  class="py-[20px] px-[16px] md:py-[40px] md:px-[40px] cursor-default transition-svg-text shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
+  class="cursor-default transition-svg-text shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
   [ngClass]="{
     'rounded-[30px]':
       popupType === 'contact-profile' ||
@@ -8,6 +8,16 @@
       popupType === 'profile-menu' ||
       popupType === 'user-profile' ||
       popupType === 'user-profile-mobile',
+
+    'py-[20px] px-[16px] md:py-[40px] md:px-[40px]': 
+      popupType === 'contact-profile' ||
+      popupType === 'channel-details' ||
+      popupType === 'profile-menu' ||
+      popupType === 'create-channel' ||
+      popupType === 'member-list' ||
+      popupType === 'user-profile' ||
+      popupType === 'user-profile-mobile',
+
     'scale-0': !popupOpen,
     'rounded-tl-[0px]': popupCorner === 'tl',
     'rounded-tr-[0px]': popupCorner === 'tr',
@@ -15,15 +25,13 @@
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
      popupType === 'contact-profile' || popupType === 'user-profile-mobile',
 
-     'top-0 left-0 right-0 md:right-[unset] bottom-0 md:bottom-[unset] rounded-none md:rounded-[30px] md:top-[50%] overflow-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%]': popupType === 'create-channel',
+    'top-0 left-0 right-0 md:right-[unset] bottom-0 md:bottom-[unset] rounded-none md:rounded-[30px] md:top-[50%] overflow-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%]': popupType === 'create-channel',
 
-
-    'top-[100%] left-[0] max-w-[870px] min-w-[870px] ': popupType === 'channel-details',
+    'top-[100%] left-0 max-w-[870px] min-w-[870px] ': popupType === 'channel-details',
     
     'top-[0] left-[0] right-[0] bottom-[0] w-[100vw] h-[100vh] overflow-auto ': popupType === 'channel-details-mobile',
 
-
-    'top-[calc(100%+15px)] rounded-[20px] md:rounded-[30px] right-[0] w-[91vw] md:max-w-[415px] md:min-w-[415px] ':
+    'top-[calc(100%+15px)] md:rounded-tr-[0px] rounded-[20px] md:rounded-[30px] right-[0] w-[91vw] md:max-w-[415px] md:min-w-[415px] ':
       popupType === 'member-list',
 
     'md:top-[calc(100%+20px)] md:right-[0px]':
