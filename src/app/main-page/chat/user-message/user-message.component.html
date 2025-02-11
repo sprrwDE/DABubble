@@ -263,7 +263,7 @@
     <!-- EMOJI CONTAINER -->
     <div
       *ngIf="likes.length > 0"
-      class="flex items-center max-w-[200px] md:max-w-[unset] overflow-x-auto gap-[8px]"
+      class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
     >
       <!-- EMOJI RENDERN -->
       @for (like of sortedLikes(); track $index) {
@@ -284,7 +284,7 @@
 
       <!-- add Emoji-btn -->
       <div
-        class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text hover:scale-110"
+        class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text scale-90 hover:scale-100"
       >
         <svg
           width="25"
