@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
@@ -7,23 +7,32 @@ import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
 import { PanelService } from '../../shared/services/panel.service';
+import { CommonModule } from '@angular/common';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-profile-menu-popup',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './profile-menu-popup.component.html',
   styleUrl: './profile-menu-popup.component.scss',
 })
 export class ProfileMenuPopupComponent {
+  isMobile: any;
+
   constructor(
     private popupService: PopupService,
     public authService: AuthService,
     public router: Router,
     public directChatService: DirectChatService,
     public channelService: ChannelService,
-    public panelService: PanelService
-  ) {}
+    public panelService: PanelService,
+    public globalService: GlobalVariablesService
+  ) {
+    effect(() => {
+      this.isMobile = this.globalService.isMobile();
+    });
+  }
 
   logout() {
     this.directChatService.currentDirectChatUser.set(new User());

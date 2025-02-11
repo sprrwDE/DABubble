@@ -127,6 +127,14 @@ export class MainPageComponent {
     this.popupService.channelDetailsPopupOpen = value;
   }
 
+  get profileMenuPopupOpen() {
+    return this.popupService.profileMenuPopupOpen;
+  }
+
+  set profileMenuPopupOpen(value: boolean) {
+    this.popupService.profileMenuPopupOpen = value;
+  }
+
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }

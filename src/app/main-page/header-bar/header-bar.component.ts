@@ -8,7 +8,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ChannelService } from '../../shared/services/channel.service';
 import { MainChatService } from '../../shared/services/main-chat.service';
 import { SearchChatService } from '../../shared/services/search-chat.service';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-header-bar',
@@ -18,28 +24,29 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   styleUrl: './header-bar.component.scss',
   animations: [
     trigger('dropdownAnimation', [
-      state('closed', style({
-        height: '0px',
-        opacity: 0,
-        overflow: 'hidden',
-      })),
-      state('open', style({
-        height: '*',
-        opacity: 1,
-      })),
-      transition('closed => open', [
-        animate('300ms ease-out')
-      ]),
-      transition('open => closed', [
-        animate('200ms ease-in')
-      ])
-    ])
-  ]
+      state(
+        'closed',
+        style({
+          height: '0px',
+          opacity: 0,
+          overflow: 'hidden',
+        })
+      ),
+      state(
+        'open',
+        style({
+          height: '*',
+          opacity: 1,
+        })
+      ),
+      transition('closed => open', [animate('300ms ease-out')]),
+      transition('open => closed', [animate('200ms ease-in')]),
+    ]),
+  ],
 })
 export class HeaderBarComponent {
-  filteredChannels: any[] = []
+  filteredChannels: any[] = [];
   filteredUserNames: any[] = [];
-  public profileMenuPopupOpen: boolean = false;
   public UserName: string = '';
   public userImage: string = '';
   public isMobile: boolean = false;
@@ -73,8 +80,6 @@ export class HeaderBarComponent {
     });
   }
 
-
-
   get showMainChat() {
     return this.mainChatService.showMainChat;
   }
@@ -91,15 +96,25 @@ export class HeaderBarComponent {
     this.popupService.openUserProfilePopup = value;
   }
 
+  get profileMenuPopupOpen() {
+    return this.popupService.profileMenuPopupOpen;
+  }
+
+  set profileMenuPopupOpen(value: boolean) {
+    this.popupService.profileMenuPopupOpen = value;
+  }
+
   applyFilter(query: string | null) {
-    this.searchForUser(query)
-    this.searchForChannel(query)
+    this.searchForUser(query);
+    this.searchForChannel(query);
     // If the query doesn't start with "@" but has at least 3 characters, filter by message text
     if (query && query.length >= 3) {
       this.filteredList = this.channelService.allChannels
         .map((channel: any) => {
           // Ensure there are messages to filter
-          const messages = Array.isArray(channel.messages) ? channel.messages : [];
+          const messages = Array.isArray(channel.messages)
+            ? channel.messages
+            : [];
 
           // Filter messages that contain the query (case-insensitive)
           const filteredMessages = messages.filter((msg: any) =>
@@ -110,8 +125,9 @@ export class HeaderBarComponent {
           return { ...channel, messages: filteredMessages };
         })
         // Remove channels that have no matching messages
-        .filter((channel: any) => channel.messages && channel.messages.length > 0);
-       
+        .filter(
+          (channel: any) => channel.messages && channel.messages.length > 0
+        );
     } else {
       // Optionally, handle the case where the query is null or less than 3 characters
       this.filteredList = [];
@@ -121,9 +137,11 @@ export class HeaderBarComponent {
   searchForUser(query: string | null) {
     if (query?.startsWith('@')) {
       if (query.length >= 1) {
-        this.isOpen.set(true)
+        this.isOpen.set(true);
         const usernameQuery = query.slice(1).toLowerCase();
-        this.filteredUserNames = this.userService.allUsers.filter((user) => user.name.toLowerCase().includes(usernameQuery.toLowerCase()))
+        this.filteredUserNames = this.userService.allUsers.filter((user) =>
+          user.name.toLowerCase().includes(usernameQuery.toLowerCase())
+        );
       }
     } else {
       this.filteredUserNames = [];
@@ -134,7 +152,10 @@ export class HeaderBarComponent {
     if (query?.startsWith('#')) {
       if (query.length >= 1) {
         const usernameQuery = query.slice(1).toLowerCase();
-        this.filteredChannels = this.channelService.allChannels.filter((channel) => channel.name.toLowerCase().includes(usernameQuery.toLowerCase()))
+        this.filteredChannels = this.channelService.allChannels.filter(
+          (channel) =>
+            channel.name.toLowerCase().includes(usernameQuery.toLowerCase())
+        );
       }
     } else {
       this.filteredChannels = [];
@@ -152,5 +173,4 @@ export class HeaderBarComponent {
     this.searchChatService.resetDirectChat();
     this.mainChatService.showMainChat = false;
   }
-
 }

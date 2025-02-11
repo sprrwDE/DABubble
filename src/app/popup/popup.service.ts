@@ -21,6 +21,8 @@ export class PopupService {
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
 
+  profileMenuPopupOpen: boolean = false;
+
   addUserToChannelPopup = false;
 
   channelDetailsPopupOpen: boolean = false;

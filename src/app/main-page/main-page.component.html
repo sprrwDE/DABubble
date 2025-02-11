@@ -1,4 +1,4 @@
-<section class="relative" (click)="closePopups()">
+<section class="relative overflow-hidden" (click)="closePopups()">
   <div>
     <div
       *ngFor="let user of allUsers"
@@ -95,15 +95,22 @@
 
   <app-popup
     class="md:hidden"
-    [popupOpen]="openUserProfilePopup"
-    [popupType]="'user-profile-mobile'"
-    (closePopupEvent)="openUserProfilePopup = false"
+    [popupOpen]="channelDetailsPopupOpen"
+    [popupType]="'channel-details-mobile'"
+    (closePopupEvent)="channelDetailsPopupOpen = false"
   ></app-popup>
 
   <app-popup
     class="md:hidden"
-    [popupOpen]="channelDetailsPopupOpen"
-    [popupType]="'channel-details-mobile'"
-    (closePopupEvent)="channelDetailsPopupOpen = false"
+    [popupOpen]="profileMenuPopupOpen"
+    [popupType]="'profile-menu'"
+    (closePopupEvent)="profileMenuPopupOpen = false"
+  ></app-popup>
+
+  <app-popup
+    class="md:hidden"
+    [popupOpen]="openUserProfilePopup"
+    [popupType]="'user-profile-mobile'"
+    (closePopupEvent)="openUserProfilePopup = false"
   ></app-popup>
 </section>
