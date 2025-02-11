@@ -1,12 +1,6 @@
-/// Remove Funktion anpassen
-
-/// Bei add / remove direkt firebase
-// Channel ID holen - check
-// Current Message ID holen - check
 // Checken ob Message oder Reply / DM
 
 /// Im DOM / html Rendern / Synchen
-// Checken ob bereits geklickt oder nicht -> +1 oder -1
 
 /// Stylen
 // Liste
