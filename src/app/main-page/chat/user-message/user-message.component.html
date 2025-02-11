@@ -267,17 +267,19 @@
     >
       <!-- EMOJI RENDERN -->
       @for (like of sortedLikes(); track $index) {
-      <div
-        class="flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
-      >
-        <span
-          (click)="
-            reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
-          "
-          >{{ like.emoji }}</span
+        @if(like.count > 0) {
+          <div
+          class="flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         >
-        <span class="text-[16px]">{{ like.count }}</span>
-      </div>
+          <span
+            (click)="
+              reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
+            "
+            >{{ like.emoji }}</span
+          >
+          <span class="text-[16px]">{{ like.count }}</span>
+        </div>
+        }
       }
 
       <!-- add Emoji-btn -->
