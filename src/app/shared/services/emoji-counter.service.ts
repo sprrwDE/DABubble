@@ -95,32 +95,35 @@ export class EmojiCounterService {
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
     messageId: string
-  ): boolean {
-    console.log('Vorher:', reaction);
-
+  ) {
+    console.log('🔹 Vorher:', JSON.stringify(reaction, null, 2));
+  
     if (!reaction.userIds.includes(userId)) {
-      // Falls die UserID noch nicht vorhanden ist, fügen wir sie hinzu
-      reaction.count++;
+      // Falls der Benutzer noch nicht reagiert hat, füge ihn hinzu
       reaction.userIds.push(userId);
-      console.log('Nach Hinzufügen:', reaction);
-      return true;
+      reaction.count++;
+      console.log('✅ Hinzugefügt:', JSON.stringify(reaction, null, 2));
     } else {
-      // Falls die UserID vorhanden ist, entfernen wir sie
+      // Falls der Benutzer bereits reagiert hat, entferne ihn
       reaction.userIds = reaction.userIds.filter((id) => id !== userId);
       reaction.count--;
-
-      console.log('Nach Entfernen:', reaction);
-
-      // Falls keine Reaktionen mehr da sind, entfernen wir das ganze Reaction-Objekt
+  
+      console.log('❌ Entfernt:', JSON.stringify(reaction, null, 2));
+  
+      // Falls keine Nutzer mehr diese Reaktion haben, setze `userIds` auf ein leeres Array
       if (reaction.count === 0) {
-        if (this.messageLikes[messageId]) {
-          this.messageLikes[messageId] = this.messageLikes[messageId].filter(
-            (r) => r.emoji !== reaction.emoji
-          );
-        }
+        console.log('🗑️ Reaktion komplett entfernt für Emoji:', reaction.emoji);
+        
+        // Sicherstellen, dass `userIds` leer ist
+        reaction.userIds = [];
+  
+        // Das ganze Reaktionsobjekt aus der Liste entfernen
+        this.messageLikes[messageId] = this.messageLikes[messageId].filter(
+          (r) => r.emoji !== reaction.emoji
+        );
       }
-
-      return false;
     }
+  
+    console.log('📌 Nachher:', JSON.stringify(reaction, null, 2));
   }
-}
+    }

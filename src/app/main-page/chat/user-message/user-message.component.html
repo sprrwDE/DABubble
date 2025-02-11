@@ -266,21 +266,24 @@
       class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
     >
       <!-- EMOJI RENDERN -->
-      @for (like of sortedLikes(); track $index) {
-        @if(like.count > 0) {
-          <div
-          class="flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
-        >
-          <span
-            (click)="
-              reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
-            "
-            >{{ like.emoji }}</span
-          >
-          <span class="text-[16px]">{{ like.count }}</span>
-        </div>
-        }
-      }
+      @for (like of sortedLikes(); track $index) { @if(like.count > 0) {
+      <div
+        class="cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
+        (click)="
+          reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
+        "
+      >
+        <span>{{ like.emoji }}</span>
+        <!-- <span
+          [ngClass]="{
+            'text-[#D9D9D9]': like.userIds.includes(loggedInUser.id),
+            'text-black': !like.userIds.includes(loggedInUser.id)
+          }"
+        > {{ like.count }}
+        </span> -->
+        <span class="text-[16px]">{{ like.count }}</span>
+      </div>
+      } }
 
       <!-- add Emoji-btn -->
       <div

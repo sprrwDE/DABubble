@@ -137,50 +137,45 @@ export class FirebaseService {
   }
 
   async updateEmojiCount(
-    reaction: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    >,
+    reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
     messageId: string,
     channelId: string
   ) {
+    console.log('🛠️ updateEmojiCount() gestartet mit:', { reaction, messageId, channelId });
+  
     try {
       const docRef = doc(
         this.firestore,
         `channels/${channelId}/messages/${messageId}`
       );
       const docSnap = await getDoc(docRef);
+  
+      console.log('📄 Firebase DocSnap:', docSnap.exists());
+  
       if (docSnap.exists()) {
-        // 💡 Hier Typumwandlung erzwingen
         const docData = docSnap.data() as {
           likes?: { emoji: string; count: number; userIds: string[] }[];
         };
-        const currentLikes = docData.likes || [];
-        // Neues Likes-Array erstellen, indem bestehende Likes beibehalten werden
-        const updatedLikes = [...currentLikes];
-        reaction[messageId].forEach((newReaction) => {
-          const existingIndex = updatedLikes.findIndex(
-            (r) => r.emoji === newReaction.emoji
-          );
-          if (existingIndex !== -1) {
-            // Falls das Emoji existiert, aktualisieren
-            updatedLikes[existingIndex] = newReaction;
-          } else {
-            // Falls nicht, neu hinzufügen
-            updatedLikes.push(newReaction);
-          }
-        });
-        // Speichern in Firebase
+  
+        let updatedLikes = reaction[messageId] || [];
+  
+        // 🔥 Fix: Falls `count === 0`, entferne das Emoji aus der Liste
+        updatedLikes = updatedLikes.filter(r => r.count > 0);
+  
+        console.log('✅ Speichere in Firebase:', updatedLikes);
+  
         await updateDoc(docRef, { likes: updatedLikes });
+  
         console.log(
-          `Updated reactions for message ${messageId} in channel ${channelId}:`,
-          updatedLikes
+          `🎉 Erfolgreich gespeichert für Message ${messageId} in Channel ${channelId}`
         );
+      } else {
+        console.error('❌ Kein Dokument gefunden für', messageId, channelId);
       }
     } catch (error) {
-      console.error('Fehler beim Speichern des Dokuments:', error);
+      console.error('🔥 Fehler beim Speichern in Firebase:', error);
     }
   }
-
+  
   checkDocSnap() {}
 }

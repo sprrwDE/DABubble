@@ -112,7 +112,6 @@ export class ChatComponent {
   }
 
   getLikes(message: Message) {
-    console.log('Likes für Nachricht:', message?.id, message?.likes);
     return message.likes || []
   }
 
