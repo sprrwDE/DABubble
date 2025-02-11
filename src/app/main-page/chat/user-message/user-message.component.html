@@ -272,7 +272,7 @@
       >
         <span
           (click)="
-            reactOnEmoji(like.emoji, loggedInUser, messageId, channelId, likes)
+            reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
           "
           >{{ like.emoji }}</span
         >

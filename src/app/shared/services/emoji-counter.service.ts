@@ -96,19 +96,30 @@ export class EmojiCounterService {
     userId: string,
     messageId: string
   ): boolean {
+    console.log('Vorher:', reaction);
+
     if (!reaction.userIds.includes(userId)) {
+      // Falls die UserID noch nicht vorhanden ist, fügen wir sie hinzu
       reaction.count++;
       reaction.userIds.push(userId);
+      console.log('Nach Hinzufügen:', reaction);
       return true;
     } else {
+      // Falls die UserID vorhanden ist, entfernen wir sie
       reaction.userIds = reaction.userIds.filter((id) => id !== userId);
       reaction.count--;
 
+      console.log('Nach Entfernen:', reaction);
+
+      // Falls keine Reaktionen mehr da sind, entfernen wir das ganze Reaction-Objekt
       if (reaction.count === 0) {
-        this.messageLikes[messageId] = this.messageLikes[messageId].filter(
-          (r) => r.emoji !== reaction.emoji
-        );
+        if (this.messageLikes[messageId]) {
+          this.messageLikes[messageId] = this.messageLikes[messageId].filter(
+            (r) => r.emoji !== reaction.emoji
+          );
+        }
       }
+
       return false;
     }
   }
