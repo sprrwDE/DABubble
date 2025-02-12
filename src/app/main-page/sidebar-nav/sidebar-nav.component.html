@@ -142,7 +142,7 @@
         </div>
 
         <svg
-          (click)="openPopup('create-channel', '')"
+          (click)="openCreateChannelPopup()"
           class="hover:cursor-pointer plus-btn"
           width="24"
           height="24"
@@ -183,8 +183,7 @@
         id="all-channels"
         [ngClass]="{
           'h-full': showChannels,
-          'h-0 overflow-hidden': !showChannels,
-      
+          'h-0 overflow-hidden': !showChannels,      
         }"
         class="pl-[5px] max-h-[100%] flex flex-col gap-[10px] transition-all duration-300 ease-in-out select-none"
       >
@@ -227,7 +226,7 @@
         <!-- Add Channel btn -->
         <div
           class="hover-primarytransition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
-          (click)="openPopup('create-channel', '')"
+          (click)="openCreateChannelPopup()"
         >
           <svg
             width="24"

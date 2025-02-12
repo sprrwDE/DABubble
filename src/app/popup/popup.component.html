@@ -41,27 +41,40 @@
         popupType === 'user-profile' ||
         popupType === 'user-profile-mobile'),
 
-    'translate-y-[100vh] md:translate-y-[unset] md:scale-0': !popupOpen && popupType === 'profile-menu',
+    'translate-y-[100vh] md:translate-y-[unset] md:scale-0': !popupOpen && (popupType === 'profile-menu' || popupType === 'member-list-mobile' || popupType === 'add-users-to-new-channel'),
 
-    'shadow-[0px_-3px_10px_0px_#00000033]': popupType === 'profile-menu',
+    'shadow-[0px_-3px_10px_0px_#00000033]': popupType === 'profile-menu' || popupType === 'member-list-mobile'|| popupType === 'add-users-to-new-channel',
 
     'rounded-tl-[0px]': popupCorner === 'tl',
     'rounded-tr-[0px]': popupCorner === 'tr',
 
+    'md:rounded-[30px]' : popupType === 'profile-menu' || popupType === 'member-list' || popupType === 'create-channel',
+
+    'top-0 left-0 right-0 bottom-0': popupType === 'channel-details-mobile' || popupType === 'create-channel',
+
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
      popupType === 'contact-profile' || popupType === 'user-profile-mobile',
 
-    'top-0 left-0 right-0 md:right-[unset] bottom-0 md:bottom-[unset] rounded-none md:rounded-[30px] md:top-[50%] overflow-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%]': popupType === 'create-channel',
+    'h-[max-content] rounded-none md:top-[50%] overflow-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%]': popupType === 'create-channel',
 
     'top-[100%] left-[0px] max-w-[870px] min-w-[870px] ': popupType === 'channel-details',
     
-    'top-[0] left-[0] right-[0] bottom-[0] w-[100vw] h-[100vh] overflow-auto ': popupType === 'channel-details-mobile',
+    'w-[100vw] h-[100vh] overflow-auto ': popupType === 'channel-details-mobile',
 
-    'top-[calc(100%+15px)] md:rounded-tr-[0px] rounded-[20px] md:rounded-[30px] right-[0] w-[91vw] md:max-w-[415px] md:min-w-[415px] ':
+    'top-[calc(100%+15px)] md:rounded-tr-[0px] rounded-[20px] right-[0] w-[91vw] md:max-w-[415px] md:min-w-[415px] ':
       popupType === 'member-list',
 
-    'rounded-t-[30px] md:rounded-tr-[0px] md:rounded-[30px] px-[26px] py-[30px] md:py-[40px] md:px-[40px] bottom-0 left-0 right-0 md:left-[unset] md:bottom-[unset]':
+    ' px-[16.001px] pt-[30px] pb-[100px] ':
+      popupType === 'member-list-mobile',
+
+    'md:rounded-tr-[0px] px-[26px] py-[30px] md:py-[40px] md:px-[40px]  md:left-[unset] md:bottom-[unset]':
       popupType === 'profile-menu',
+
+
+    'px-[20px] py-[40px]': popupType === 'add-users-to-new-channel',
+
+    'rounded-t-[30px] bottom-[0%] left-[0%] right-[0%]':
+      popupType === 'profile-menu' || popupType === 'add-users-to-new-channel' || popupType === 'member-list-mobile' ,
 
     'md:top-[calc(100%+20px)] md:right-[0px]':
       popupType === 'user-profile' || popupType === 'profile-menu',
@@ -83,7 +96,7 @@
   ></app-channel-details-popup>
 
   <app-member-list-popup
-    *ngIf="popupType === 'member-list'"
+    *ngIf="popupType === 'member-list' || popupType === 'member-list-mobile'"
     (closePopupEvent)="closePopup()"
   ></app-member-list-popup>
 
@@ -101,6 +114,12 @@
     *ngIf="popupType === 'contact-profile'"
     (closePopupEvent)="closePopup()"
   ></app-contact-profile-popup>
+
+  <app-add-users-to-new-channel
+    *ngIf="popupType === 'add-users-to-new-channel'"
+    [display]="true"
+    (closePopupEvent)="closePopup()"
+  ></app-add-users-to-new-channel>
 </div>
 
 <!-- popup background -->

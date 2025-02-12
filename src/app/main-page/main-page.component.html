@@ -22,7 +22,6 @@
         'w-full': openSidebar,
         'w-[100%] max-w-[unset]': isMobile || (isMobile && !openSidebar)
       }"
-      (openPopupEvent)="openPopup($event)"
     ></app-sidebar-nav>
 
     <app-chat
@@ -81,16 +80,10 @@
 
   <!-- popup -->
   <app-popup
-    [popupCorner]="popupCorner"
-    [popupOpen]="popupOpen"
-    [popupType]="popupType"
-    (closePopupEvent)="popupOpen = false"
-  ></app-popup>
-
-  <app-popup
-    [popupOpen]="contactProfilePopupOpen"
-    [popupType]="'contact-profile'"
-    (closePopupEvent)="contactProfilePopupOpen = false"
+    [popupCorner]="'tl'"
+    [popupOpen]="createChannelPopupOpen"
+    [popupType]="'create-channel'"
+    (closePopupEvent)="createChannelPopupOpen = false"
   ></app-popup>
 
   <app-popup
@@ -108,9 +101,28 @@
   ></app-popup>
 
   <app-popup
+    [popupOpen]="contactProfilePopupOpen"
+    [popupType]="'contact-profile'"
+    (closePopupEvent)="contactProfilePopupOpen = false"
+  ></app-popup>
+
+  <app-popup
     class="md:hidden"
     [popupOpen]="openUserProfilePopup"
     [popupType]="'user-profile-mobile'"
     (closePopupEvent)="openUserProfilePopup = false"
+  ></app-popup>
+
+  <app-popup
+    [popupOpen]="mobileMemberListPopupOpen"
+    [popupType]="'member-list-mobile'"
+    (closePopupEvent)="mobileMemberListPopupOpen = false"
+  ></app-popup>
+
+  <app-popup
+    class="md:hidden"
+    [popupOpen]="showCreateChannelAddPeoplePopup"
+    [popupType]="'add-users-to-new-channel'"
+    (closePopupEvent)="showCreateChannelAddPeoplePopup = false"
   ></app-popup>
 </section>
