@@ -32,6 +32,9 @@ export class UserProfilePopupComponent {
     'imgs/avatar/6av.svg',
   ]
 
+
+
+  /// Loggedin User nicht synchon bei editieren
   constructor(
     private popupService: PopupService,
     private userService: UserService,
@@ -74,17 +77,21 @@ export class UserProfilePopupComponent {
   }
 
   pushData() {
-    if (this.nameInput.trim() != '') {
-      this.editingUserProfile = false;
-      this.firebaseService.updateUserName(
-        this.loggedInUserData.id,
-        this.nameInput.trim()
-      );
-    } if(this.avatarInput != '') {
-      this.firebaseService.changeProfileImage(this.loggedInUserData.id, this.avatarInput)
+    const updates: Partial<User> = {};
+
+    if (this.nameInput.trim() !== '') {
+      updates.name = this.nameInput.trim();
+      this.firebaseService.updateUserName(this.loggedInUserData.id, updates.name);
     }
-    else {
-      return;
+
+    if (this.avatarInput !== '') {
+      updates.image = this.avatarInput;
+      this.firebaseService.changeProfileImage(this.loggedInUserData.id, updates.image);
+    }
+
+    if (Object.keys(updates).length > 0) {
+      this.userService.updateLoggedInUser(updates); // Hier wird der User synchron aktualisiert
+      this.editingUserProfile = false;
     }
   }
 
@@ -94,7 +101,6 @@ export class UserProfilePopupComponent {
   }
 
   selectAvatar(avatar: string) {
-    console.log(avatar)
     this.avatarInput = avatar
   }
 

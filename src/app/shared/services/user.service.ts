@@ -72,4 +72,17 @@ export class UserService {
   getUserById(userId: string) {
     return this.allUsers.find((user) => user.id === userId);
   }
+
+  updateLoggedInUser(updatedUser: Partial<User>) {
+    if (this.loggedInUser()) {
+      const currentUser = this.loggedInUser()!;
+      const updated = new User({
+        ...currentUser,
+        ...updatedUser, // Aktualisierte Werte übernehmen
+      });
+
+      this.setLoggedInUser(updated);
+    }
+  }
+
 }
