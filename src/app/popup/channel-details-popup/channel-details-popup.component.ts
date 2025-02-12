@@ -96,4 +96,9 @@ export class ChannelDetailsPopupComponent {
     this.popupService.contactProfileContent = user;
     this.popupService.contactProfilePopupOpen = true;
   }
+
+  openMemberListPopup() {
+    this.popupService.mobileMemberListPopupOpen = true;
+    this.popupService.showAddMembersPopup = true;
+  }
 }

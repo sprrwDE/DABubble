@@ -9,6 +9,7 @@ import { ProfileMenuPopupComponent } from './profile-menu-popup/profile-menu-pop
 import { ContactProfilePopupComponent } from './contact-profile-popup/contact-profile-popup.component';
 import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
+import { AddUsersToNewChannelComponent } from './create-channel-popup/add-users-to-new-channel/add-users-to-new-channel.component';
 
 @Component({
   selector: 'app-popup',
@@ -23,6 +24,7 @@ import { GlobalVariablesService } from '../shared/services/global-variables.serv
     ProfileMenuPopupComponent,
     ContactProfilePopupComponent,
     AddUserToChannelPopupComponent,
+    AddUsersToNewChannelComponent,
   ],
   templateUrl: './popup.component.html',
   styleUrl: './popup.component.scss',

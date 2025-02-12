@@ -1,28 +1,27 @@
-import { Component, effect, EventEmitter, Output, Input } from '@angular/core';
-import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { PopupService } from '../popup.service';
-import { Channel } from '../../shared/models/channel.model';
+import { CommonModule } from '@angular/common';
+import { Component, effect, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../shared/services/user.service';
+import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
+import { PopupService } from '../../popup.service';
+import { UserService } from '../../../shared/services/user.service';
+import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
+import { AddUserService } from '../../../shared/services/add-user.service';
+import { ChannelService } from '../../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
-import { ChannelService } from '../../shared/services/channel.service';
-import { AddUserService } from '../../shared/services/add-user.service';
-import { GlobalVariablesService } from '../../shared/services/global-variables.service';
-import { AddUsersToNewChannelComponent } from './add-users-to-new-channel/add-users-to-new-channel.component';
+import { Channel } from '../../../shared/models/channel.model';
 
 @Component({
-  selector: 'app-create-channel-popup',
+  selector: 'app-add-users-to-new-channel',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddUsersToNewChannelComponent],
-  templateUrl: './create-channel-popup.component.html',
-  styleUrl: './create-channel-popup.component.scss',
+  imports: [CommonModule, FormsModule, AddUserToChannelPopupComponent],
+  templateUrl: './add-users-to-new-channel.component.html',
+  styleUrl: './add-users-to-new-channel.component.scss',
 })
-export class CreateChannelPopupComponent {
-  @Output() closePopupEvent = new EventEmitter<void>();
-  @Input() display: boolean = false;
+export class AddUsersToNewChannelComponent {
   userIds: string[] = [];
 
-  unsubLoggedInUser!: Subscription;
+  @Output() closePopupEvent = new EventEmitter<void>();
+  @Input() display: boolean = false;
 
   showUserPopup: boolean = false;
   nameInput: string = '';
@@ -47,8 +46,6 @@ export class CreateChannelPopupComponent {
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
     });
-
-    this.popupService.channelDetailsPopup = this;
   }
 
   get channel() {
@@ -57,6 +54,10 @@ export class CreateChannelPopupComponent {
 
   set channel(value: Channel) {
     this.popupService.createChannelPopupChannel = value;
+  }
+
+  get allUsers() {
+    return this.userService.allUsers;
   }
 
   get showErrorText() {
@@ -83,10 +84,6 @@ export class CreateChannelPopupComponent {
     this.popupService.showCreateChannelAddPeopleInput = value;
   }
 
-  get allUsers() {
-    return this.userService.allUsers;
-  }
-
   showAddUsersToChannelPopup() {
     if (this.channel.name.trim() !== '') {
       this.showCreateChannelAddPeoplePopup = true;
@@ -111,6 +108,9 @@ export class CreateChannelPopupComponent {
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
     console.log(this.channel);
+
+    this.popupService.createChannelPopupOpen = false;
+    this.popupService.createChannelPopupChannel = new Channel();
     this.closePopup();
   }
 
@@ -163,11 +163,7 @@ export class CreateChannelPopupComponent {
   }
 
   closePopup() {
-    this.popupService.createChannelPopupOpen = false;
-    this.showUserPopup = false;
     this.showCreateChannelAddPeoplePopup = false;
-
-    this.popupService.createChannelPopupChannel = new Channel();
   }
 
   handleUserPopupClose(event: boolean) {

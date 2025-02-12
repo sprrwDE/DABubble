@@ -92,9 +92,9 @@ export class SidebarNavComponent {
     this.showContacts = !this.showContacts;
   }
 
-  openPopup(popupType: string, popupCorner: string) {
+  openCreateChannelPopup() {
     this.popupService.showCreateChannelAddPeoplePopup = false;
     this.popupService.showCreateChannelAddPeopleInput = false;
-    this.openPopupEvent.emit({ type: popupType, corner: popupCorner });
+    this.popupService.createChannelPopupOpen = true;
   }
 }

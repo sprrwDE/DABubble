@@ -87,9 +87,13 @@ export class MainPageComponent {
 
   selectedUser: User = new User();
 
-  public popupOpen = false;
-  public popupType: string = '';
-  public popupCorner: string = '';
+  get createChannelPopupOpen() {
+    return this.popupService.createChannelPopupOpen;
+  }
+
+  set createChannelPopupOpen(value: boolean) {
+    this.popupService.createChannelPopupOpen = value;
+  }
 
   get showMainChat() {
     return this.mainChatService.showMainChat;
@@ -135,14 +139,24 @@ export class MainPageComponent {
     this.popupService.profileMenuPopupOpen = value;
   }
 
-  toggleSidebar() {
-    this.openSidebar = !this.openSidebar;
+  get mobileMemberListPopupOpen() {
+    return this.popupService.mobileMemberListPopupOpen;
   }
 
-  openPopup(event: { type: string; corner: string }) {
-    this.popupOpen = true;
-    this.popupType = event.type;
-    this.popupCorner = event.corner;
+  set mobileMemberListPopupOpen(value: boolean) {
+    this.popupService.mobileMemberListPopupOpen = value;
+  }
+
+  get showCreateChannelAddPeoplePopup() {
+    return this.popupService.showCreateChannelAddPeoplePopup;
+  }
+
+  set showCreateChannelAddPeoplePopup(value: boolean) {
+    this.popupService.showCreateChannelAddPeoplePopup = value;
+  }
+
+  toggleSidebar() {
+    this.openSidebar = !this.openSidebar;
   }
 
   closePopups() {

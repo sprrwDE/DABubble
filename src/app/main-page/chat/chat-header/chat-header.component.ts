@@ -31,8 +31,6 @@ export class ChatHeaderComponent {
   channelUsers: User[] = [];
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
-  memberListPopupOpen: boolean = false;
-
   currentDirectChatUser: User = new User();
 
   @Input() isDirectChat: boolean = false;
@@ -68,6 +66,14 @@ export class ChatHeaderComponent {
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
     });
+  }
+
+  get memberListPopupOpen() {
+    return this.popupService.memberListPopupOpen;
+  }
+
+  set memberListPopupOpen(value: boolean) {
+    this.popupService.memberListPopupOpen = value;
   }
 
   get contactProfileContent() {
