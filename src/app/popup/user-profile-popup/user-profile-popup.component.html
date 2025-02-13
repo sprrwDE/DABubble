@@ -70,9 +70,10 @@
         <!-- for schleife hier !!! -->
          @for (avatar of avatars; track $index) {
           <img
-          (click)="selectAvatar(avatar)"
+          (click)="selectAvatar($index)"
           class="cursor-pointer size-12 md:size-16 hover:bg-[rgb(230,230,230)] rounded-[100%] p-1"
-          [src]="avatar"
+          [ngClass]="{ 'border-4 border-blue-500': avatar.selected, 'border-2 border-gray-300': !avatar.selected }"
+          [src]="avatar.url"
           alt="Avatar"
         />
          }

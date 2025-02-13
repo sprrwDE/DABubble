@@ -6,11 +6,12 @@ import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../shared/services/firebase.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-user-profile-popup',
   standalone: true,
-  imports: [NgIf, FormsModule],
+  imports: [NgIf, FormsModule, NgClass],
   templateUrl: './user-profile-popup.component.html',
   styleUrl: './user-profile-popup.component.scss',
 })
@@ -23,16 +24,14 @@ export class UserProfilePopupComponent {
 
   avatarInput: string = '';
   toggleAvatarSelection: boolean = false;
-  avatars: string[] = [
-    'imgs/avatar/1av.svg',
-    'imgs/avatar/2av.svg',
-    'imgs/avatar/3av.svg',
-    'imgs/avatar/4av.svg',
-    'imgs/avatar/5av.svg',
-    'imgs/avatar/6av.svg',
-  ]
-
-
+  avatars: { url: string; selected: boolean }[] = [
+    { url: 'imgs/avatar/1av.svg', selected: false },
+    { url: 'imgs/avatar/2av.svg', selected: false },
+    { url: 'imgs/avatar/3av.svg', selected: false },
+    { url: 'imgs/avatar/4av.svg', selected: false },
+    { url: 'imgs/avatar/5av.svg', selected: false },
+    { url: 'imgs/avatar/6av.svg', selected: false },
+  ];  
 
   /// Loggedin User nicht synchon bei editieren
   constructor(
@@ -77,6 +76,10 @@ export class UserProfilePopupComponent {
   }
 
   pushData() {
+    this.avatars.forEach(avatar => {
+      avatar.selected = false;
+    });
+    this.toggleAvatarSelection = false
     const updates: Partial<User> = {};
 
     if (this.nameInput.trim() !== '') {
@@ -96,17 +99,23 @@ export class UserProfilePopupComponent {
   }
 
   showEditProfilePicPopup() {
-    console.log('open')
-    this.toggleAvatarSelection = true
+    this.toggleAvatarSelection = !this.toggleAvatarSelection
   }
 
-  selectAvatar(avatar: string) {
-    this.avatarInput = avatar
+  selectAvatar(i: number) {
+    this.avatars.forEach(avatar => {
+      avatar.selected = false;
+    });
+    this.avatarInput = this.avatars[i].url;
+    this.avatars[i].selected = true
   }
 
   discardChanges() {
     this.nameInput = this.loggedInUserData.name;
     this.avatarInput = this.loggedInUserData.image;
     this.toggleAvatarSelection = false;
+    this.avatars.forEach(avatar => {
+      avatar.selected = false;
+    });
   }
 }
