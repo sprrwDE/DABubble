@@ -1,6 +1,6 @@
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, Input, ViewChild, effect } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, Output, ViewChild, effect, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../services/emoji-counter.service';
 import { UserService } from '../services/user.service';
@@ -15,7 +15,6 @@ import { Channel } from '../models/channel.model';
   styleUrl: './emoji-picker.component.scss',
 })
 export class EmojiPickerComponent {
-  isOpened = true;
   loggedInUser: any;
   currentChannel: Channel = new Channel();
   @Input() emojiInput$: Subject<string> | undefined;
@@ -23,6 +22,22 @@ export class EmojiPickerComponent {
   @Input() channelId: string = '';
   @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
+
+  private _showEmojiPicker = false;
+
+  @Input()
+  set showEmojiPicker(value: boolean) {
+    this._showEmojiPicker = value;
+    this.isOpened = value;
+  }
+  
+  get showEmojiPicker(): boolean {
+    return this._showEmojiPicker;
+  }
+
+  @Output() showEmojiPickerChange = new EventEmitter<boolean>(); // 🔥 EventEmitter für die Synchronisation
+  
+  isOpened = false;
 
   constructor(
     private emojiCounterService: EmojiCounterService,
@@ -75,13 +90,16 @@ export class EmojiPickerComponent {
 
     @HostListener('document:click', ['$event'])
     handleClickOutside(event: Event) {
-      if (this.isOpened && this.container && !this.container.nativeElement.contains(event.target as Node)) {
+      if (
+        this.isOpened &&
+        this.container &&
+        !this.container.nativeElement.contains(event.target as Node)
+      ) {
         this.isOpened = false;
+        this._showEmojiPicker = false;
+        this.showEmojiPickerChange.emit(false); // 🔥 Event auslösen, damit `UserMessageComponent` es mitbekommt
         console.log('Emoji Picker geschlossen');
       }
     }
   
-  
-  
-
 }
