@@ -51,6 +51,6 @@ export class PopupComponent {
   closePopup() {
     this.popupService.resetEditStates();
     this.closePopupEvent.emit();
-    this.addUserService.userToAdd = []
+    this.addUserService.resetLists();
   }
 }

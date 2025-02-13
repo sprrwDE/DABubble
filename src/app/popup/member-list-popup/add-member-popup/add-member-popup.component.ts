@@ -39,6 +39,8 @@ export class AddMemberPopupComponent {
 
   closeUserPopup() {
     this.showUserPopup = false;
+    this.addUserService.filteredUsers = [];
+    this.addUserService.userToAdd = [];
   }
 
   addMemberToExistingChannel(event: Event) {
@@ -79,6 +81,8 @@ export class AddMemberPopupComponent {
 
   closePopup() {
     this.closePopupEvent.emit();
+    this.addUserService.filteredUsers = [];
+    this.addUserService.userToAdd = [];
   }
 
   handleUserPopupClose(event: boolean) {

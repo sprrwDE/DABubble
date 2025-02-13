@@ -13,6 +13,7 @@ import { SearchChatService } from '../../../shared/services/search-chat.service'
 import { FormsModule } from '@angular/forms';
 import { SearchChatPopupComponent } from './search-chat-popup/search-chat-popup.component';
 import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
+import { AddUserService } from '../../../shared/services/add-user.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -44,7 +45,8 @@ export class ChatHeaderComponent {
     private popupService: PopupService,
     private directChatService: DirectChatService,
     public searchChatService: SearchChatService,
-    private globalVariablesService: GlobalVariablesService
+    private globalVariablesService: GlobalVariablesService,
+    private addUserService: AddUserService
   ) {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
@@ -102,7 +104,6 @@ export class ChatHeaderComponent {
 
   openMemberListPopup(addMembers: boolean) {
     this.memberListPopupOpen = true;
-
     this.popupService.showAddMembersPopup = addMembers;
   }
 

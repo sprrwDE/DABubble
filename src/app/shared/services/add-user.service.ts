@@ -172,6 +172,25 @@ export class AddUserService implements OnDestroy {
     });
   }
 
+  resetLists() {
+    // Setze alle Listen auf den gewünschten Zustand zurück
+    this.allUsers = this.allUsersSubject.getValue(); // Holt alle globalen Nutzer
+    this.userToAdd = []; // Leere Liste für hinzuzufügende Nutzer
+    this.filteredUsers = []; // Leere gefilterte Liste
+    
+    // Aktualisiere possibleUserList mit allen Nutzern, die noch nicht im aktuellen Channel sind
+    this.possibleUserList = this.allUsers.filter(
+      (user) => !this.currentChannelUserIds.includes(user.id)
+    );
+  
+    console.log('Listen zurückgesetzt:', {
+      allUsers: this.allUsers,
+      userToAdd: this.userToAdd,
+      filteredUsers: this.filteredUsers,
+      possibleUserList: this.possibleUserList,
+    });
+  }
+  
   ngOnDestroy(): void {
     if (this.unsubscribeChannel) {
       this.unsubscribeChannel();
