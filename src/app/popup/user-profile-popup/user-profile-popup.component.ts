@@ -80,7 +80,7 @@ export class UserProfilePopupComponent {
     this.avatars.forEach(avatar => {
       avatar.selected = false;
     });
-    this.toggleAvatarSelection = false
+    this.popupService.toggleAvatarSelection = false
     const updates: Partial<User> = {};
 
     if (this.nameInput.trim() !== '') {
@@ -95,7 +95,7 @@ export class UserProfilePopupComponent {
 
     if (Object.keys(updates).length > 0) {
       this.userService.updateLoggedInUser(updates); // Hier wird der User synchron aktualisiert
-      this.editingUserProfile = false;
+      this.popupService.editingUserProfile = false;
     }
   }
 
