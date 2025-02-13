@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { ChannelService } from './channel.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ export class GlobalVariablesService {
   // Signal, das den mobilen Zustand speichert
   isMobile = signal(window.innerWidth < 768);
 
-  constructor() {
+  constructor(private channelService: ChannelService) {
     // Initialen Zustand setzen
     this.updateIsMobile();
 
@@ -18,5 +19,6 @@ export class GlobalVariablesService {
   private updateIsMobile() {
     this.isMobile.set(window.innerWidth < 768);
     console.log(this.isMobile());
+    console.log(this.channelService.allChannels);
   }
 }

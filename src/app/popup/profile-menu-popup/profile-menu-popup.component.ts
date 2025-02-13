@@ -9,6 +9,7 @@ import { User } from '../../shared/models/user.model';
 import { PanelService } from '../../shared/services/panel.service';
 import { CommonModule } from '@angular/common';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
+import { SearchChatService } from '../../shared/services/search-chat.service';
 
 @Component({
   selector: 'app-profile-menu-popup',
@@ -27,7 +28,8 @@ export class ProfileMenuPopupComponent {
     public directChatService: DirectChatService,
     public channelService: ChannelService,
     public panelService: PanelService,
-    public globalService: GlobalVariablesService
+    public globalService: GlobalVariablesService,
+    public searchChatService: SearchChatService
   ) {
     effect(() => {
       this.isMobile = this.globalService.isMobile();
@@ -37,8 +39,17 @@ export class ProfileMenuPopupComponent {
   logout() {
     this.directChatService.currentDirectChatUser.set(new User());
     this.channelService.currentChannel.set(new Channel());
-    this.panelService.closeReplyPanel();
+
     this.directChatService.isDirectChat = false;
+
+    this.searchChatService.resetPanelAndChat();
+    this.searchChatService.resetChannelChat();
+    this.searchChatService.resetSearchChat();
+    this.searchChatService.resetDirectChat();
+
+    this.searchChatService.searchChat = true;
+
+    this.popupService.profileMenuPopupOpen = false;
 
     this.router.navigate(['/login']);
   }

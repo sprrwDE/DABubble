@@ -223,8 +223,16 @@
           <p>{{ channel.name }}</p>
         </div>
 
+        <div
+          *ngIf="channelService.filterAllChannels().length === 0"
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Lade Kanäle...</p>
+        </div>
+
         <!-- Add Channel btn -->
         <div
+          *ngIf="channelService.filterAllChannels().length > 0"
           class="hover-primarytransition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
           (click)="openCreateChannelPopup()"
         >
@@ -348,6 +356,13 @@
           </p>
         </div>
         }
+
+        <div
+          *ngIf="userService.sortUsers().length === 0"
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Lade Benutzer...</p>
+        </div>
       </div>
     </div>
   </div>

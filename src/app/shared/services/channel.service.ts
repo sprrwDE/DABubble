@@ -57,12 +57,6 @@ export class ChannelService {
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
-
-      this.allChannels = this.allChannels.filter((channel) =>
-        channel.users.includes(this.loggedInUser?.id)
-      );
-
-      console.log(this.allChannels);
     });
 
     effect(() => {

@@ -51,6 +51,8 @@ export class UserService {
       loggedInUserId = user.id;
     } else {
       loggedInUserId = '';
+
+      return [];
     }
 
     return this.allUsers.sort((a, b) => {
@@ -84,5 +86,4 @@ export class UserService {
       this.setLoggedInUser(updated);
     }
   }
-
 }
