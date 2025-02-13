@@ -1,12 +1,12 @@
-<emoji-mart
-      class="picker"
-      color="var(--str-chat__primary-color)"
-      *ngIf="isOpened"
-      title="Pick your emoji…"
-      emoji="point_up"
-      (emojiSelect)="emojiSelected($event)"
-      [isNative]="true"
-    >
-</emoji-mart>
-<span (click)="toggleEmojiPicker()">XXX</span>
-
+<div #container>
+  <emoji-mart
+    class="picker"
+    color="var(--str-chat__primary-color)"
+    *ngIf="isOpened"
+    title="Pick your emoji…"
+    emoji="point_up"
+    (emojiSelect)="emojiSelected($event)"
+    [isNative]="true"
+  >
+  </emoji-mart>
+</div>

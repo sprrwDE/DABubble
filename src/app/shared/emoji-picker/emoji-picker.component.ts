@@ -1,6 +1,6 @@
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild, effect } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild, effect } from '@angular/core';
 import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../services/emoji-counter.service';
 import { UserService } from '../services/user.service';
@@ -63,7 +63,7 @@ export class EmojiPickerComponent {
     }
   };
 
-  toggleEmojiPicker() {
+/* toggleEmojiPicker() {
     this.isOpened = !this.isOpened;
     if (this.isOpened) {
       window.addEventListener('click', this.eventHandler);
@@ -71,6 +71,17 @@ export class EmojiPickerComponent {
       window.removeEventListener('click', this.eventHandler);
     }
     // this.emojiCounterService.resetList()
-  }
+  } */
+
+    @HostListener('document:click', ['$event'])
+    handleClickOutside(event: Event) {
+      if (this.isOpened && this.container && !this.container.nativeElement.contains(event.target as Node)) {
+        this.isOpened = false;
+        console.log('Emoji Picker geschlossen');
+      }
+    }
+  
+  
+  
 
 }

@@ -37,6 +37,7 @@ import { MainChatService } from '../shared/services/main-chat.service';
 })
 export class MainPageComponent {
   @ViewChild(HeaderBarComponent) headerComponent!: HeaderBarComponent;
+  @ViewChild(EmojiPickerComponent, { static: false }) emojiPickerComponent!: EmojiPickerComponent;
 
   afkDelay: number = 3000;
   timeoutId: any;
@@ -162,5 +163,10 @@ export class MainPageComponent {
   closePopups() {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
+/*     
+    if (this.emojiPickerComponent) {
+      this.emojiPickerComponent.toggleEmojiPicker();
+    } */
   }
+
 }
