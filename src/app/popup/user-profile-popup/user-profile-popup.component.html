@@ -46,6 +46,7 @@
     <div
       *ngIf="editingUserProfile"
       class="cursor-pointer absolute bottom-0 right-[33%] rounded-full bg-lines w-[32px] h-[32px] flex items-center justify-center border-2 border-white"
+      [ngClass]="{ 'border-4 border-[#525af0]': popupService.toggleAvatarSelection}"
       (click)="showEditProfilePicPopup()"
     >
       <svg
@@ -63,16 +64,16 @@
     </div>
   </div>
 
-  @if(toggleAvatarSelection) {
+  @if(popupService.toggleAvatarSelection) {
     <div class="text-left w-full flex justify-center flex-col">
-      <span class="text-xl">Aus der Liste wählen</span>
+      <span class="text-xl">Neuen Avatar auswählen</span>
       <div class="flex gap-2 md:gap-2 mt-2 md:mt-8 justify-center w-fit m-auto">
         <!-- for schleife hier !!! -->
          @for (avatar of avatars; track $index) {
           <img
           (click)="selectAvatar($index)"
           class="cursor-pointer size-12 md:size-16 hover:bg-[rgb(230,230,230)] rounded-[100%] p-1"
-          [ngClass]="{ 'border-4 border-blue-500': avatar.selected, 'border-2 border-gray-300': !avatar.selected }"
+          [ngClass]="{ 'border-4 border-[#525af0]': avatar.selected, 'border-2 border-gray-300': !avatar.selected }"
           [src]="avatar.url"
           alt="Avatar"
         />

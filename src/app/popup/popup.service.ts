@@ -23,6 +23,7 @@ export class PopupService {
 
   openUserProfilePopup = false;
   editingUserProfile = false;
+  toggleAvatarSelection = false; 
 
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
@@ -49,5 +50,7 @@ export class PopupService {
 
     this.editChannelName = false;
     this.editChannelDescription = false;
+    this.editingUserProfile = false;
+    this.toggleAvatarSelection = false; 
   }
 }

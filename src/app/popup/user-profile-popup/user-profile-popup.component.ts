@@ -35,7 +35,7 @@ export class UserProfilePopupComponent {
 
   /// Loggedin User nicht synchon bei editieren
   constructor(
-    private popupService: PopupService,
+    public popupService: PopupService,
     private userService: UserService,
     private firebaseService: FirebaseService
   ) {
@@ -57,6 +57,7 @@ export class UserProfilePopupComponent {
 
   closePopup() {
     this.discardChanges()
+    this.popupService.toggleAvatarSelection = false;
     this.popupService.openUserProfilePopup = false;
   }
 
@@ -99,7 +100,7 @@ export class UserProfilePopupComponent {
   }
 
   showEditProfilePicPopup() {
-    this.toggleAvatarSelection = !this.toggleAvatarSelection
+    this.popupService.toggleAvatarSelection = !this.popupService.toggleAvatarSelection
   }
 
   selectAvatar(i: number) {

@@ -23,7 +23,6 @@ import { AddUsersToNewChannelComponent } from './create-channel-popup/add-users-
     UserProfilePopupComponent,
     ProfileMenuPopupComponent,
     ContactProfilePopupComponent,
-    AddUserToChannelPopupComponent,
     AddUsersToNewChannelComponent,
   ],
   templateUrl: './popup.component.html',
