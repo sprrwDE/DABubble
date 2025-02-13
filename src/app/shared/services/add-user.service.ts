@@ -7,7 +7,6 @@ import {
   arrayUnion,
 } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.model';
-import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';

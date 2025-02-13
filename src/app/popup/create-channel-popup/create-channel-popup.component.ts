@@ -168,6 +168,7 @@ export class CreateChannelPopupComponent {
     this.showCreateChannelAddPeoplePopup = false;
 
     this.popupService.createChannelPopupChannel = new Channel();
+    this.addUserService.userToAdd = []
   }
 
   handleUserPopupClose(event: boolean) {

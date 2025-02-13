@@ -10,6 +10,7 @@ import { ContactProfilePopupComponent } from './contact-profile-popup/contact-pr
 import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 import { AddUsersToNewChannelComponent } from './create-channel-popup/add-users-to-new-channel/add-users-to-new-channel.component';
+import { AddUserService } from '../shared/services/add-user.service';
 
 @Component({
   selector: 'app-popup',
@@ -39,7 +40,8 @@ export class PopupComponent {
 
   constructor(
     public popupService: PopupService,
-    public globalService: GlobalVariablesService
+    public globalService: GlobalVariablesService,
+    private addUserService: AddUserService
   ) {
     effect(() => {
       this.isMobile = this.globalService.isMobile;
@@ -49,5 +51,6 @@ export class PopupComponent {
   closePopup() {
     this.popupService.resetEditStates();
     this.closePopupEvent.emit();
+    this.addUserService.userToAdd = []
   }
 }
