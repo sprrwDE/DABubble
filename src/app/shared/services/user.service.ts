@@ -71,7 +71,7 @@ export class UserService {
     });
   }
 
-  getUserById(userId: string) {
+  getUserById(userId: string): User | undefined {
     return this.allUsers.find((user) => user.id === userId);
   }
 

@@ -58,20 +58,20 @@
     class="flex items-center gap-[15px]"
   >
     <div
-      *ngIf="channelUsers.length > 0 && !isMobile"
+      *ngIf="currentChannel.users.length > 0 && !isMobile"
       class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
       (click)="openMemberListPopup(false)"
     >
       <div class="flex items-center">
         <img
-          *ngFor="let user of channelUsers.slice(0, 3)"
+          *ngFor="let userId of currentChannel.users.slice(0, 3)"
           class="group-members-avatar"
-          [src]="user.image || 'imgs/avatar1.png'"
+          [src]="userService.getUserById(userId)?.image || 'imgs/avatar1.png'"
           alt=""
         />
       </div>
 
-      <p class="text-[20px] font-semibold">{{ channelUsers.length }}</p>
+      <p class="text-[20px] font-semibold">{{ currentChannel.users.length }}</p>
     </div>
 
     <div

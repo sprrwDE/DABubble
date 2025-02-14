@@ -29,7 +29,6 @@ import { AddUserService } from '../../../shared/services/add-user.service';
 })
 export class ChatHeaderComponent {
   currentChannel: Channel = new Channel();
-  channelUsers: User[] = [];
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
   currentDirectChatUser: User = new User();
@@ -51,9 +50,7 @@ export class ChatHeaderComponent {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
 
-      this.channelUsers = this.userService.allUsers.filter((user) =>
-        this.currentChannel.users?.includes(user.id)
-      );
+      console.log(this.currentChannel);
     });
 
     effect(() => {

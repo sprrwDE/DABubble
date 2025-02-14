@@ -28,9 +28,10 @@
       [ngClass]="{
         'w-[100%]':
           (isMobile && showMainChat && !isReplyPanelOpen) || !isMobile,
-        'w-[0%]': (isMobile && !showMainChat) || (isMobile && isReplyPanelOpen)
+        'w-[0%]': (isMobile && !showMainChat) || (isMobile && isReplyPanelOpen),
+        'overflow-hidden': isMobile
       }"
-      class="overflow-hidden duration-300"
+      class="duration-300"
     ></app-chat>
 
     <app-reply-panel

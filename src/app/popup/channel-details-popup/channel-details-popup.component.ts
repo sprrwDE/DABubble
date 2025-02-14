@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
@@ -6,11 +6,13 @@ import { UserService } from '../../shared/services/user.service';
 import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { User } from '../../shared/models/user.model';
+import { SearchChatService } from '../../shared/services/search-chat.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-channel-details-popup',
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [CommonModule, FormsModule],
   templateUrl: './channel-details-popup.component.html',
   styleUrl: './channel-details-popup.component.scss',
 })
@@ -21,20 +23,21 @@ export class ChannelDetailsPopupComponent {
   isMobile: boolean = false;
   loggedInUser: any;
 
-  userList: User[] = [];
+  channelNameInput: string = '';
+  channelDescriptionInput: string = '';
 
   constructor(
     public popupService: PopupService,
     public channelService: ChannelService,
     public userService: UserService,
-    public globalVariablesService: GlobalVariablesService
+    public globalVariablesService: GlobalVariablesService,
+    public searchChatService: SearchChatService
   ) {
     // Effect reagiert auf Änderungen des Signals
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
-      this.userList = this.allUsers.filter((user) =>
-        this.currentChannel.users.includes(user.id)
-      );
+
+      console.log(this.currentChannel);
     });
 
     effect(() => {
@@ -64,6 +67,56 @@ export class ChannelDetailsPopupComponent {
 
   get allUsers() {
     return this.userService.allUsers;
+  }
+
+  editChannelNameFunction() {
+    if (this.channelNameInput !== '') {
+      console.log(this.channelNameInput);
+
+      this.channelService.editChannelName(
+        this.currentChannel.id,
+        this.channelNameInput
+      );
+
+      this.editChannelName = false;
+
+      this.channelNameInput = '';
+    } else {
+      this.editChannelName = false;
+    }
+  }
+
+  editChannelDescriptionFunction() {
+    if (this.channelDescriptionInput !== '') {
+      console.log(this.channelDescriptionInput);
+
+      this.channelService.editChannelDescription(
+        this.currentChannel.id,
+        this.channelDescriptionInput
+      );
+
+      this.editChannelDescription = false;
+
+      this.channelDescriptionInput = '';
+    } else {
+      this.editChannelDescription = false;
+    }
+  }
+
+  leaveChannel(event: Event) {
+    event.stopPropagation();
+    this.closePopup();
+
+    if (this.currentChannel.users.length === 1) {
+      this.channelService.deleteChannel(this.currentChannel.id);
+    } else {
+      this.channelService.leaveChannel(
+        this.currentChannel.id,
+        this.loggedInUser.id
+      );
+    }
+
+    this.searchChatService.setSearchChat();
   }
 
   public getCurrentChannelCreatorName() {

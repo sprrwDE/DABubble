@@ -19,6 +19,5 @@ export class GlobalVariablesService {
   private updateIsMobile() {
     this.isMobile.set(window.innerWidth < 768);
     console.log(this.isMobile());
-    console.log(this.channelService.allChannels);
   }
 }

@@ -83,7 +83,10 @@
         <h3 class="text-[18px] font-bold">Channel-Name</h3>
 
         <p
-          *ngIf="!editChannelName"
+          *ngIf="
+            !editChannelName &&
+            currentChannel.channelCreatorId === loggedInUser?.id
+          "
           (click)="editChannelName = true"
           class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
@@ -91,7 +94,7 @@
         </p>
         <p
           *ngIf="editChannelName"
-          (click)="editChannelName = false"
+          (click)="editChannelNameFunction()"
           class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
           Speichern
@@ -130,6 +133,7 @@
         </svg>
 
         <input
+          [(ngModel)]="channelNameInput"
           #channelName
           type="text"
           placeholder="{{ currentChannel.name || 'Channel-Name' }}"
@@ -177,7 +181,10 @@
         <h3 class="text-[18px] font-bold">Beschreibung</h3>
 
         <p
-          *ngIf="!editChannelDescription"
+          *ngIf="
+            !editChannelDescription &&
+            currentChannel.channelCreatorId === loggedInUser?.id
+          "
           (click)="editChannelDescription = true"
           class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
@@ -185,7 +192,7 @@
         </p>
         <p
           *ngIf="editChannelDescription"
-          (click)="editChannelDescription = false"
+          (click)="editChannelDescriptionFunction()"
           class="text-hover hover:font-bold cursor-pointer transition-svg-text"
         >
           Speichern
@@ -197,7 +204,12 @@
         (click)="channelDescription.focus()"
         class="popup-input-container"
       >
-        <input #channelDescription type="text" placeholder="Dein Text hier" />
+        <input
+          #channelDescription
+          type="text"
+          placeholder="Dein Text hier"
+          [(ngModel)]="channelDescriptionInput"
+        />
       </div>
 
       <div
@@ -233,36 +245,41 @@
         >
           <!-- Unten rein rendern -->
 
-          @for (user of userList; track $index) {
+          <!-- @for (userId of currentChannel.users; track $index) { -->
           <div
-            (click)="openProfilePopup(user)"
+            *ngFor="let userId of currentChannel.users"
+            (click)="openProfilePopup(userService.getUserById(userId)!)"
             class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
           >
             <div class="relative">
               <img
                 class="w-[50px] h-[50px] rounded-full"
-                src="{{ user.image || 'imgs/avatar1.png' }}"
+                [src]="
+                  userService.getUserById(userId)?.image || 'imgs/avatar1.png'
+                "
                 alt=""
               />
 
               <div
                 class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
                 [ngClass]="{
-                  'bg-online': user.status === 'online',
-                  'bg-disable': user.status === 'offline'
+                  'bg-online':
+                    userService.getUserById(userId)?.status === 'online',
+                  'bg-disable':
+                    userService.getUserById(userId)?.status === 'offline'
                 }"
               ></div>
             </div>
 
             <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
             <p>
-              {{ user.name || "NoName" }}
-              <span *ngIf="user.id === loggedInUser?.id">(Du)</span>
+              {{ userService.getUserById(userId)?.name || "NoName" }}
+              <span *ngIf="userId === loggedInUser?.id">(Du)</span>
               <!-- beispiel:
               <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
             --></p>
           </div>
-          }
+          <!-- } -->
 
           <!-- Oben rein rendern -->
         </div>
@@ -306,9 +323,7 @@
 
     <!--  -->
     <div class="flex justify-end">
-      <button (click)="$event.stopPropagation(); closePopup()">
-        Channel verlassen
-      </button>
+      <button (click)="leaveChannel($event)">Channel verlassen</button>
     </div>
   </div>
 </section>

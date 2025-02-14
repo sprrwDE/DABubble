@@ -4,7 +4,7 @@
   <!-- Logo -->
   <div
     *ngIf="!isMobile || !showMainChat"
-    class="min-w-[unset] md:min-w-[350px] max-h-full pl-[16px]"
+    class="min-w-[unset] md:min-w-[334px] max-h-full pl-[16px]"
   >
     <img
       src="imgs/logo-with-text.svg"
@@ -207,7 +207,7 @@
   <!-- Profile Container -->
   <div
     (click)="profileMenuPopupOpen = true"
-    class="profile-container relative hover:cursor-pointer hover:text-primary min-w-[unset] transition-all duration-150 md:min-w-[450px] flex justify-end gap-4 max-h-full items-center"
+    class="profile-container relative hover:cursor-pointer hover:text-primary w-[unset] md:pl-[40px] transition-all duration-150 md:w-[max-content] flex justify-end gap-4 max-h-full items-center"
   >
     <p class="text-[32px] hidden md:block font-bold">{{ UserName }}</p>
 

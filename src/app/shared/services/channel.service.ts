@@ -9,15 +9,15 @@ import {
   collection,
   doc,
   onSnapshot,
+  arrayRemove,
+  updateDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
 import { ChatComponent } from '../../main-page/chat/chat.component';
 import { UserService } from './user.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Injectable({
   providedIn: 'root',
 })
@@ -148,7 +148,10 @@ export class ChannelService {
     message.replies = this.createRepliesFromDocs(snapshot).sort(
       (a, b) => a.timestamp - b.timestamp
     );
-    this.updateCurrentChannel(this.currentChannel, this.currentChannelMessages);
+    this.updateCurrentChannel(
+      this.currentChannel(),
+      this.currentChannelMessages
+    );
   }
 
   private createRepliesFromDocs(snapshot: any): Reply[] {
@@ -170,10 +173,10 @@ export class ChannelService {
     }
   }
 
-  private updateCurrentChannel(channel: any, messages: Message[]) {
+  private updateCurrentChannel(channel: Channel, messages: Message[]) {
     // this.initializeCurrentChannelIfNeeded();
 
-    if (this.currentChannelId === channel.id) {
+    if (this.currentChannel().id === channel.id) {
       this.currentChannelMessages = messages;
       this.currentChannel.set(channel);
     }
@@ -200,6 +203,32 @@ export class ChannelService {
     } catch (error) {
       console.error('Fehler beim Erstellen des Benutzers: ', error);
     }
+  }
+
+  async leaveChannel(channelId: string, userId: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await updateDoc(channelRef, {
+      users: arrayRemove(userId),
+    });
+  }
+
+  async deleteChannel(channelId: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await deleteDoc(channelRef);
+  }
+
+  async editChannelName(channelId: string, newName: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await updateDoc(channelRef, {
+      name: newName,
+    });
+  }
+
+  async editChannelDescription(channelId: string, newDescription: string) {
+    const channelRef = doc(this.firestore, 'channels', channelId);
+    await updateDoc(channelRef, {
+      description: newDescription,
+    });
   }
 
   async sendMessage(data: any) {
