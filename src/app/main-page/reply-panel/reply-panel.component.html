@@ -4,7 +4,8 @@
   <header
     class="z-[9] bg-white flex justify-between items-center px-[16px] md:px-[40px] py-[15px] md:py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
     [ngClass]="{
-      'max-h-[60px] md:min-h-[unset]': !isDirectChat,
+      'max-h-[60px] md:max-h-[100px] min-h-[60px] md:min-h-[100px]':
+        !isDirectChat,
       'min-h-[80px] md:min-h-[110px]': isDirectChat
     }"
   >
