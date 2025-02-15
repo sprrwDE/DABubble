@@ -28,8 +28,6 @@ export class UserMessageComponent {
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> =
     [];
-  @Input() replyLikes: Array<{ emoji: string; count: number; userIds: string[] }> =
-    [];
   @Input() messageId: any;
   @Input() userId: string = '';
   @Input() channelId: string = '';
@@ -57,7 +55,7 @@ export class UserMessageComponent {
 
   ngOnInit() {
     console.log('Likes empfangen in UserMessageComponent:', this.likes);
-    console.log('reply likes', this.replyLikes)
+    console.log('reply likes', this.likes)
   }
 
   getMessageLikes() {
@@ -65,7 +63,7 @@ export class UserMessageComponent {
   }
 
   getReplyLikes() {
-    return { [this.replyId]: this.replyLikes };
+    return { [this.replyId]: this.likes };
   }  
 
   get editingUserProfile() {
@@ -157,7 +155,8 @@ get currentReplyMessageId() {
       message,
       user,
       channel,
-      reactionsAsRecord
+      reactionsAsRecord,
+      this.isReplay
     );
 
     return;

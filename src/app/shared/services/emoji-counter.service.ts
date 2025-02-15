@@ -38,35 +38,41 @@ export class EmojiCounterService {
     previousReactions: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = {}
+    > = {},
+    isReply: boolean
   ) {
-    console.log(
-      'emoji',
-      emoji,
-      'user',
-      userId,
-      'messageid',
-      messageId,
-      'channelid',
-      channelId,
-      'likesarray',
-      previousReactions
-    );
-    this.messageLikes = { ...previousReactions };
-    if (!this.messageLikes[messageId]) {
-      this.messageLikes[messageId] = [];
+    if(!isReply) {
+
+      console.log(
+        'emoji',
+        emoji,
+        'user',
+        userId,
+        'messageid',
+        messageId,
+        'channelid',
+        channelId,
+        'likesarray',
+        previousReactions,
+      );
+      this.messageLikes = { ...previousReactions };
+      if (!this.messageLikes[messageId]) {
+        this.messageLikes[messageId] = [];
+      }
+      const reactionIndex = this.messageLikes[messageId].findIndex(
+        (item) => item.emoji === emoji
+      );
+  
+      this.checkReactingUser(reactionIndex, userId, messageId, emoji);
+  
+      this.firebaseService.updateEmojiCount(
+        this.messageLikes,
+        messageId,
+        channelId
+      );
+    } else {
+      console.log('reply')
     }
-    const reactionIndex = this.messageLikes[messageId].findIndex(
-      (item) => item.emoji === emoji
-    );
-
-    this.checkReactingUser(reactionIndex, userId, messageId, emoji);
-
-    this.firebaseService.updateEmojiCount(
-      this.messageLikes,
-      messageId,
-      channelId
-    );
   }
 
   checkReactingUser(

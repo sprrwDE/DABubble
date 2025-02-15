@@ -24,6 +24,7 @@ export class EmojiPickerComponent {
   @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @Input() replyLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @Input() isTextInput: boolean = false;
+  @Input() isReply: boolean = false;
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   private _showEmojiPicker = false;
@@ -68,7 +69,8 @@ export class EmojiPickerComponent {
         this.messageId,
         this.loggedInUser.id,
         this.currentChannel.id,
-        this.messageLikes
+        this.messageLikes,
+        this.isReply
       );
     } else {
       this.emojiInput$?.next(event.emoji.native);
