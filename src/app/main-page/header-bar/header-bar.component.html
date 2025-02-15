@@ -33,6 +33,15 @@
       <input [formControl]="searchControl" #searchInput placeholder="Devspace durchsuchen"
         class="h-full w-full text-[24px] outline-none border-none" />
 
+
+      <ul *ngIf="noMessage" class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+        <div class="p-3 hover:bg-gray-100 cursor-pointer">
+          <div class="flex justify-between items-center">
+            <p>Keine Einträge gefunden</p>
+          </div>
+        </div>
+      </ul>
+
       <!-- Dropdown Liste -->
       <!-- && searchInput.value.length > 0  später zu ngif hier unten einfügen um liste unsichtbar zu machen solange nichts gesucht wird-->
       <ul [@dropdownAnimation]="filteredUserNames.length > 0 ? 'open' : 'closed'"

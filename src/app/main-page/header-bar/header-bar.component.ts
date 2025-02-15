@@ -48,15 +48,16 @@ import { collectionSnapshots } from '@angular/fire/firestore';
 export class HeaderBarComponent {
   filteredChannels: any[] = [];
   filteredUserNames: any[] = [];
+  filteredList: any = [];
   public UserName: string = '';
   public userImage: string = '';
   public isMobile: boolean = false;
   searchControl = new FormControl('');
   list: any = '';
-  filteredList: any = [];
   isOpen = signal(false);
   searchInput: any;
   isSearching: boolean = false;
+  noMessage: boolean = false;
 
   constructor(
     private popupService: PopupService,
@@ -127,31 +128,36 @@ export class HeaderBarComponent {
   applyFilter(query: string | null) {
     this.searchForUser(query);
     this.searchForChannel(query);
-    // If the query doesn't start with "@" but has at least 3 characters, filter by message text
-    if (query && query.length >= 3) {
-      this.filteredList = this.channelService.allChannels
-        .map((channel: any) => {
-          // Ensure there are messages to filter
-          const messages = Array.isArray(channel.messages)
-            ? channel.messages
-            : [];
 
-          // Filter messages that contain the query (case-insensitive)
-          const filteredMessages = messages.filter((msg: any) =>
-            msg.message?.toLowerCase().includes(query.toLowerCase())
-          );
-          // Return the channel with the filtered messages
-          return { ...channel, messages: filteredMessages };
-        })
-        // Remove channels that have no matching messages
-        .filter(
-          (channel: any) => channel.messages && channel.messages.length > 0
-        );
-    } else {
-      // Optionally, handle the case where the query is null or less than 3 characters
+    // Stelle sicher, dass keine Nachricht angezeigt wird, wenn weniger als 3 Zeichen eingegeben wurden
+    if (!query || query.length < 3) {
       this.filteredList = [];
+      this.noMessage = false;  // Nachricht ausblenden
+      return;  // Beende die Funktion sofort
+    }
+
+    // Standardmäßig setzen wir die Nachricht auf "keine Ergebnisse"
+    this.noMessage = true;
+
+    this.filteredList = this.channelService.allChannels
+      .map((channel: any) => {
+        const messages = Array.isArray(channel.messages) ? channel.messages : [];
+
+        // Filtere Nachrichten, die den Suchbegriff enthalten
+        const filteredMessages = messages.filter((msg: any) =>
+          msg.message?.toLowerCase().includes(query.toLowerCase())
+        );
+
+        return { ...channel, messages: filteredMessages };
+      })
+      .filter((channel: any) => channel.messages && channel.messages.length > 0);
+
+    // Falls es Treffer gibt, setzen wir noMessage auf false
+    if (this.filteredList.length > 0) {
+      this.noMessage = false;
     }
   }
+
 
   searchForUser(query: string | null) {
     if (query?.startsWith('@')) {

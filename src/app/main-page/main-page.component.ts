@@ -36,6 +36,7 @@ import { MainChatService } from '../shared/services/main-chat.service';
 })
 export class MainPageComponent {
   @ViewChild(HeaderBarComponent) headerComponent!: HeaderBarComponent;
+  @ViewChild(SidebarNavComponent) sidebarNavComponent!: SidebarNavComponent;
   @ViewChild(EmojiPickerComponent, { static: false })
   emojiPickerComponent!: EmojiPickerComponent;
 
@@ -198,6 +199,7 @@ export class MainPageComponent {
   closePopups() {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
+    this.sidebarNavComponent.clearSearch();
 
     this.currentEditMessageId = '';
     /*     

@@ -64,3 +64,31 @@
     @apply border-[3px] border-primary;
   }
 }
+
+.profile-container {
+  &:hover {
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.searchInput-container {
+  &:has(input:focus) {
+    @apply border-[3px] border-primary;
+  }
+}
+
+.x-button {
+  background-color: unset;
+  padding: unset;
+  width: 2rem /* 16px */;
+  height: 2rem /* 16px */;
+  border-radius: 100%;
+  &:hover {
+    background-color: rgb(233, 233, 233);
+  }
+}
+
+
+
