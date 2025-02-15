@@ -61,6 +61,10 @@ export class UserMessageComponent {
     return { [this.messageId]: this.likes };
   }
 
+  getReplyLikes() {
+    return { [this.replyId]: this.likes };
+  }
+
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
   }

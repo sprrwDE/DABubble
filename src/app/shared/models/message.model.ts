@@ -18,7 +18,6 @@ export class Message {
   constructor(obj?: any) {
     this.message = obj?.message || '';
     this.userId = obj?.userId || '';
-    // this.likes = obj?.likes || 0;
     this.likes = obj?.likes 
     ? obj.likes.map((like: any) => ({
         emoji: like.emoji,

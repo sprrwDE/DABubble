@@ -21,6 +21,7 @@ export class EmojiPickerComponent {
   @Input() messageId: string = '';
   @Input() channelId: string = '';
   @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
+  @Input() replyLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   private _showEmojiPicker = false;
