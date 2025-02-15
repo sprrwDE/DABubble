@@ -27,14 +27,14 @@
 
   <!-- Search Input -->
   <div (click)="searchInput.focus()" (click)="$event.stopPropagation()"
-    class="searchInput-container cursor-text hidden md:flex items-center justify-between h-full rounded-[42px] w-full text-[24px] bg-white px-[45px] outline-none transition-all duration-75">
-    <div class="relative w-full max-w-md">
+    class="searchInput-container cursor-text  hidden md:flex items-center justify-between h-full rounded-[42px] w-full text-[24px] bg-white px-[45px] outline-none transition-all duration-75">
+    <div class="relative  w-full max-w-md">
       <!-- Suchfeld -->
       <input [formControl]="searchControl" #searchInput placeholder="Devspace durchsuchen"
         class="h-full w-full text-[24px] outline-none border-none" />
 
 
-      <ul *ngIf="noMessage" class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+      <ul *ngIf="noMessage" class="absolute left-0 w-full mt-5 border rounded-md bg-white z-20 shadow-md divide-y">
         <div class="p-3 hover:bg-gray-100 cursor-pointer">
           <div class="flex justify-between items-center">
             <p>Keine Einträge gefunden</p>
@@ -43,11 +43,10 @@
       </ul>
 
       <!-- Dropdown Liste -->
-      <!-- && searchInput.value.length > 0  später zu ngif hier unten einfügen um liste unsichtbar zu machen solange nichts gesucht wird-->
       <ul [@dropdownAnimation]="filteredUserNames.length > 0 ? 'open' : 'closed'"
-        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+        class="absolute left-0 w-full mt-5 border rounded-md bg-white z-20 shadow-md divide-y">
         <div *ngFor="let user of filteredUserNames" class="p-3 hover:bg-gray-100 cursor-pointer">
-          <div (click)="this.searchChatService.setCurrentDirectChat(user)" class="flex justify-between items-center">
+          <div (click)="this.searchChatService.setCurrentDirectChat(user); clearSearch()" class="flex justify-between items-center">
             <p>{{ "@" + user.name }}</p>
             <img [src]="user.image" alt="" class="size-8 rounded-full" />
           </div>
@@ -55,19 +54,19 @@
       </ul>
 
       <ul [@dropdownAnimation]="filteredChannels.length > 0 ? 'open' : 'closed'"
-        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y">
+        class="absolute left-0 w-full mt-5 border rounded-md bg-white z-20 shadow-md divide-y">
         <div *ngFor="let channel of filteredChannels" class="p-3 hover:bg-gray-100 cursor-pointer">
-          <div (click)="searchChatService.setCurrentChannel(channel)" class="flex justify-between items-center">
+          <div (click)="searchChatService.setCurrentChannel(channel); clearSearch()" class="flex justify-between items-center">
             <p>{{ "#" + channel.name }}</p>
           </div>
         </div>
       </ul>
 
       <ul [@dropdownAnimation]="filteredList.length > 0 ? 'open' : 'closed'"
-        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y overflow-auto h-[80vh]">
+        class="absolute left-0 w-full mt-5 border rounded-md bg-white z-20 shadow-md divide-y overflow-auto h-[80vh]">
         <div *ngFor="let item of filteredList" class="p-3 cursor-pointer">
           <div *ngFor="let message of item.messages" class="hover:bg-gray-100"
-            (click)="searchChatService.setCurrentChannel(item, isSearching); ">
+            (click)="searchChatService.setCurrentChannel(item, isSearching); clearSearch() ">
             <div class="flex items-center gap-4" [ngClass]="
                 this.userService.loggedInUser()?.name?.toLowerCase() ==
                 this.userService
