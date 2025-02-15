@@ -145,12 +145,10 @@ export class UserMessageComponent {
       'likesarray',
       likes,
     );
-    const reactionsAsRecord: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    > = {
-      [message]: likes,
-    };
+    const reactionsAsRecord: Record<string, { emoji: string; count: number; userIds: string[] }[]> =
+    this.isReplay
+      ? { [this.replyId]: likes }
+      : { [message]: likes };
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
