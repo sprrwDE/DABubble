@@ -120,10 +120,10 @@ export class SearchChatService {
   }
 
   // setCurrentChannel
-  setCurrentChannel(channel: Channel) {
+  setCurrentChannel(channel: Channel,  isSearching:boolean = false) {
     this.mainChatService.showMainChat = true;
 
-    this.resetPanelAndChat();
+    this.resetPanelAndChat(isSearching);
     this.channelService.currentChannel.set(channel);
     this.resetDirectChat();
     this.resetSearchChat();
@@ -149,9 +149,14 @@ export class SearchChatService {
     this.scrollToActiveContact();
   }
 
-  public resetPanelAndChat() {
+  public resetPanelAndChat(isSearching: boolean = false) {
     this.panelService.closeReplyPanel();
-    this.channelService.chatComponent.scroll = true;
+    if(!isSearching){
+      this.channelService.chatComponent.scroll = true;
+    } else {
+      this.channelService.chatComponent.scroll = false;
+    }
+    
   }
 
   public resetDirectChat() {

@@ -64,7 +64,7 @@ export class UserMessageComponent {
 
   getReplyLikes() {
     return { [this.replyId]: this.likes };
-  }  
+  }
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;
@@ -82,13 +82,13 @@ export class UserMessageComponent {
     this.popupService.openUserProfilePopup = value;
   }
 
-get currentReplyMessageId() {
+  get currentReplyMessageId() {
     return this.channelService.currentReplyMessageId;
   }
 
   set currentReplyMessageId(value: string) {
     this.channelService.currentReplyMessageId = value;
-  } 
+  }
 
   get allUsers() {
     return this.userService.allUsers;

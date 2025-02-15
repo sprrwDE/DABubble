@@ -1,9 +1,9 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, Inject, Renderer2, signal } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { UserService } from '../../shared/services/user.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ChannelService } from '../../shared/services/channel.service';
 import { MainChatService } from '../../shared/services/main-chat.service';
@@ -15,6 +15,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { collectionSnapshots } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-header-bar',
@@ -54,6 +55,8 @@ export class HeaderBarComponent {
   list: any = '';
   filteredList: any = [];
   isOpen = signal(false);
+  searchInput: any;
+  isSearching: boolean = false;
 
   constructor(
     private popupService: PopupService,
@@ -61,7 +64,8 @@ export class HeaderBarComponent {
     private globalVariablesService: GlobalVariablesService,
     private channelService: ChannelService,
     private mainChatService: MainChatService,
-    public searchChatService: SearchChatService
+    public searchChatService: SearchChatService,
+    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document
   ) {
     this.searchControl.valueChanges.subscribe((value) =>
       this.applyFilter(value)
@@ -104,6 +108,24 @@ export class HeaderBarComponent {
     this.popupService.profileMenuPopupOpen = value;
   }
 
+  scrollToMessage(message: any, messageId: any, chanel: any) {
+    console.log("hhhhhhhhhhhhhhhh", message)
+    console.log("CHGHHHHH", chanel.messages)
+    this.isSearching = true
+    chanel.messages.filter((eachMessage: any) => {
+      if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
+        setTimeout(() => {
+          const element = this.document.querySelector(`[data-message-id="${messageId}"]`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          this.isSearching = false
+        }, 500); // Warten, bis der Kanal geladen ist
+
+      }
+    })
+  }
+
   applyFilter(query: string | null) {
     this.searchForUser(query);
     this.searchForChannel(query);
@@ -120,7 +142,7 @@ export class HeaderBarComponent {
           const filteredMessages = messages.filter((msg: any) =>
             msg.message?.toLowerCase().includes(query.toLowerCase())
           );
-
+          console.log("sssssssssssssssssssssssss", filteredMessages)
           // Return the channel with the filtered messages
           return { ...channel, messages: filteredMessages };
         })
