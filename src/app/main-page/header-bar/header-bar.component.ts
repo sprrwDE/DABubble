@@ -109,8 +109,6 @@ export class HeaderBarComponent {
   }
 
   scrollToMessage(message: any, messageId: any, chanel: any) {
-    console.log("hhhhhhhhhhhhhhhh", message)
-    console.log("CHGHHHHH", chanel.messages)
     this.isSearching = true
     chanel.messages.filter((eachMessage: any) => {
       if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
@@ -142,7 +140,6 @@ export class HeaderBarComponent {
           const filteredMessages = messages.filter((msg: any) =>
             msg.message?.toLowerCase().includes(query.toLowerCase())
           );
-          console.log("sssssssssssssssssssssssss", filteredMessages)
           // Return the channel with the filtered messages
           return { ...channel, messages: filteredMessages };
         })
