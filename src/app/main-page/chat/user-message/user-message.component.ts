@@ -28,6 +28,8 @@ export class UserMessageComponent {
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> =
     [];
+  @Input() replyLikes: Array<{ emoji: string; count: number; userIds: string[] }> =
+    [];
   @Input() messageId: any;
   @Input() userId: string = '';
   @Input() channelId: string = '';
@@ -55,6 +57,7 @@ export class UserMessageComponent {
 
   ngOnInit() {
     console.log('Likes empfangen in UserMessageComponent:', this.likes);
+    console.log('reply likes', this.replyLikes)
   }
 
   getMessageLikes() {
@@ -62,8 +65,8 @@ export class UserMessageComponent {
   }
 
   getReplyLikes() {
-    return { [this.replyId]: this.likes };
-  }
+    return { [this.replyId]: this.replyLikes };
+  }  
 
   get editingUserProfile() {
     return this.popupService.editingUserProfile;

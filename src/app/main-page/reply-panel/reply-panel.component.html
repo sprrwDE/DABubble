@@ -126,7 +126,8 @@
         [isReplay]="true"
         [userId]="reply.userId"
         [replyId]="reply.id"
-      ></app-user-message>
+        [replyLikes]="reply.likes || []"
+        ></app-user-message>
 
       } @if(isDirectChat) {
 
@@ -146,7 +147,7 @@
         [imgUrl]="getImgUrl(reply.userId)"
         [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
-        [userId]="reply.userId"
+        [userId]="reply.id"
       ></app-user-message>
 
       }

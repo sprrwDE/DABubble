@@ -18,11 +18,13 @@ import { User } from '../../../shared/models/user.model';
 import { Subscription } from 'rxjs';
 import { DirectChatService } from '../../../shared/services/direct-chat.service';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
+import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-message-input',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EmojiPickerComponent],
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
 })
@@ -31,6 +33,10 @@ export class MessageInputComponent implements OnInit {
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
   @Input() isDirectChatComponent: boolean = false;
+
+  showEmojiPicker = false;
+  emojiInput$ = new Subject<string>();
+  
 
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;

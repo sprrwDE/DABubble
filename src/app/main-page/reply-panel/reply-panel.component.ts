@@ -11,7 +11,6 @@ import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
-import { Message } from '../../shared/models/message.model';
 import { Reply } from '../../shared/models/reply.model';
 
 @Component({
@@ -60,6 +59,7 @@ export class ReplyPanelComponent {
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
+    console.log()
   }
 
   get isDirectChat() {
@@ -129,6 +129,11 @@ export class ReplyPanelComponent {
       this.currentChannel.messages?.find((message) => message.id === messageId)
         ?.replies || []
     );
+  }
+
+  test(reply: Reply) {
+    console.log(reply, 'ASKJDNBAKJSDNASJDBN');
+    return reply.likes
   }
 
   getDirectChatRepliesForMessage(messageId: string) {

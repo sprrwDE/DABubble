@@ -34,6 +34,7 @@
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          (click)="showEmojiPicker = !showEmojiPicker"
         >
           <mask
             id="mask0_104638_669"
@@ -118,3 +119,12 @@
     </div>
   </div>
 </div>
+
+<app-emoji-picker
+  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+  *ngIf="showEmojiPicker"
+  [showEmojiPicker]="showEmojiPicker"
+  (showEmojiPickerChange)="showEmojiPicker = $event"
+  [isTextInput]="true"
+>
+</app-emoji-picker>

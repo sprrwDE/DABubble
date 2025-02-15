@@ -20,8 +20,10 @@ export class EmojiPickerComponent {
   @Input() emojiInput$: Subject<string> | undefined;
   @Input() messageId: string = '';
   @Input() channelId: string = '';
+  @Input() replyId: string = '';
   @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @Input() replyLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
+  @Input() isTextInput: boolean = false;
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   private _showEmojiPicker = false;
@@ -57,15 +59,21 @@ export class EmojiPickerComponent {
   }
 
   emojiSelected(event: any) {
-    this.emojiInput$?.next(event.emoji.native);
-    const selectedEmoji = event.emoji.native;
-    this.emojiCounterService.handleEmojiLogic(
-      selectedEmoji,
-      this.messageId,
-      this.loggedInUser.id,
-      this.currentChannel.id,
-      this.messageLikes
-    );
+    if(!this.isTextInput) {
+      this.emojiInput$?.next(event.emoji.native);
+      const selectedEmoji = event.emoji.native;
+      console.log('current Reply Likes', this.replyLikes, 'for', this.replyId)
+      this.emojiCounterService.handleEmojiLogic(
+        selectedEmoji,
+        this.messageId,
+        this.loggedInUser.id,
+        this.currentChannel.id,
+        this.messageLikes
+      );
+    } else {
+      console.log('input')
+    }
+
   }
 
   eventHandler = (event: Event) => {
