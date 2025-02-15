@@ -30,7 +30,6 @@ import { MainChatService } from '../shared/services/main-chat.service';
     NgIf,
     CommonModule,
     PopupComponent,
-    EmojiPickerComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
@@ -40,7 +39,9 @@ export class MainPageComponent {
   @ViewChild(EmojiPickerComponent, { static: false })
   emojiPickerComponent!: EmojiPickerComponent;
 
-  afkDelay: number = 3000;
+
+  // afkDelay = 3000; // zum testen auf 3 Sekunden stellen
+  afkDelay = 5 * 60 * 1000; // 5 Minuten in Millisekunden
   timeoutId: any;
   loggedInUser: any;
   public isMobile: boolean = false;
@@ -68,22 +69,47 @@ export class MainPageComponent {
     return this.userService.allUsers;
   }
 
-  // @HostListener('mousemove', ['$event'])
-  // afkMode() {
-  //   this.updateUserStatus('online');
-  //   clearTimeout(this.timeoutId);
-  //   this.timeoutId = setTimeout(() => {
-  //     this.updateUserStatus('abwesend');
-  //   }, this.afkDelay);
-  // }
+  @HostListener('mousemove')
+  @HostListener('keydown')
+  @HostListener('click')
+  afkMode() {
+    const user = this.userService.loggedInUser();
 
-  // updateUserStatus(status: string) {
-  //   this.userService.loggedInUser$.subscribe((user) => {
-  //     if (user && user.id) {
-  //       this.fb.updateStateUser(user.id, status);
-  //     }
-  //   });
-  // }
+    // Prüfe, ob der User schon online ist → vermeide unnötige Schreibvorgänge
+    if (user?.status !== 'online') {
+      this.updateUserStatus('online');
+    }
+
+    // Verhindere mehrfach gesetzte Timeouts, indem der vorherige gelöscht wird
+    clearTimeout(this.timeoutId);
+
+    // Setze einen neuen Timeout für 5 Minuten
+    this.timeoutId = setTimeout(() => {
+      this.updateUserStatus('abwesend');
+    }, this.afkDelay);
+  }
+
+  updateUserStatus(status: string) {
+    const user = this.userService.loggedInUser();
+
+    if (user && user.id) {
+      // Falls sich der Status nicht geändert hat, beende die Funktion
+      if (user.status === status) {
+        return;
+      }
+
+      // Erstelle eine neue User-Instanz mit dem aktualisierten Status
+      const updatedUser = new User({ ...user, status });
+
+      // Signal aktualisieren
+      this.userService.loggedInUser.set(updatedUser);
+
+      // Firebase-Update ausführen
+      this.fb.updateStateUser(user.id, status);
+    }
+  }
+
+
 
   openSidebar = true;
 
