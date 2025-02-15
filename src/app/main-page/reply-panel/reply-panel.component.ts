@@ -74,6 +74,10 @@ export class ReplyPanelComponent {
     return this.channelService.currentReplyMessageId;
   }
 
+  get currentChannelId() {
+    return this.channelService.currentChannelId;
+  }
+
   get allUsers() {
     return this.userService.allUsers;
   }
@@ -138,7 +142,7 @@ export class ReplyPanelComponent {
       )?.replies || []
     );
   }
-  
+
   getMsgId(messageId: string) {
     return messageId
   }
