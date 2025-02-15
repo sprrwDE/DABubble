@@ -155,7 +155,7 @@ export class ChannelService {
   }
 
   private createRepliesFromDocs(snapshot: any): Reply[] {
-    return snapshot.docs.map((doc: any) => new Reply(doc.data()));
+    return snapshot.docs.map((doc: any) => new Reply({ ...doc.data(), id: doc.id }));
   }
 
   private updateChannel(channel: Channel, messages: Message[]) {
@@ -246,7 +246,8 @@ export class ChannelService {
         this.firestore,
         `channels/${this.activeChannel.id}/messages/${messageId}`
       );
-      await addDoc(collection(messageRef, 'replies'), data);
+      const replyRef = await addDoc(collection(messageRef, 'replies'), data);
+      await updateDoc(replyRef, { id: replyRef.id });
     } catch (error) {
       console.error('Fehler beim Erstellen der Antwort:', error);
     }

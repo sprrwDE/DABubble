@@ -31,6 +31,7 @@ export class UserMessageComponent {
   @Input() messageId: any;
   @Input() userId: string = '';
   @Input() channelId: string = '';
+  @Input() replyId: string = ''
 
   loggedInUser: any;
 
@@ -76,13 +77,13 @@ export class UserMessageComponent {
     this.popupService.openUserProfilePopup = value;
   }
 
-  get currentReplyMessageId() {
+get currentReplyMessageId() {
     return this.channelService.currentReplyMessageId;
   }
 
   set currentReplyMessageId(value: string) {
     this.channelService.currentReplyMessageId = value;
-  }
+  } 
 
   get allUsers() {
     return this.userService.allUsers;
@@ -123,7 +124,7 @@ export class UserMessageComponent {
     user: string,
     message: string,
     channel: string,
-    likes: { emoji: string; count: number; userIds: string[] }[]
+    likes: { emoji: string; count: number; userIds: string[] }[],
   ) {
     console.log(
       'emoji',
@@ -135,7 +136,7 @@ export class UserMessageComponent {
       'channelid',
       channel,
       'likesarray',
-      likes
+      likes,
     );
     const reactionsAsRecord: Record<
       string,
