@@ -93,6 +93,12 @@ export class EmojiCounterService {
         (item) => item.emoji === emoji
       );
       this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
+      this.firebaseService.updateEmojiCountReplys(
+        this.messageLikes,
+        messageId,
+        channelId,
+        replyId
+      );
     }
   }
 

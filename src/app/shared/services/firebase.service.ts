@@ -176,6 +176,49 @@ export class FirebaseService {
       console.error('🔥 Fehler beim Speichern in Firebase:', error);
     }
   }
+
+  async updateEmojiCountReplys(
+    reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
+    messageId: string,
+    channelId: string,
+    replyId: string
+  ) {
+    console.log('🛠️ updateEmojiCount() gestartet mit:', { reaction, messageId, channelId, replyId });
+  
+    try {
+      const docRef = doc(
+        this.firestore,
+        `channels/${channelId}/messages/${messageId}/replies/${replyId}`
+      );
+      const docSnap = await getDoc(docRef);
+  
+      console.log('📄 Firebase DocSnap:', docSnap.exists());
+  
+      if (docSnap.exists()) {
+        const docData = docSnap.data() as {
+          likes?: { emoji: string; count: number; userIds: string[] }[];
+        };
+  
+        let updatedLikes = reaction[replyId] || [];
+  
+        // 🔥 Fix: Falls `count === 0`, entferne das Emoji aus der Liste
+        updatedLikes = updatedLikes.filter(r => r.count > 0);
+  
+        console.log('✅ Speichere in Firebase:', updatedLikes);
+  
+        await updateDoc(docRef, { likes: updatedLikes });
+  
+        console.log(
+          `🎉 Erfolgreich gespeichert für Reply ${replyId} in Message ${messageId} in Channel ${channelId}`
+        );
+      } else {
+        console.error('❌ Kein Dokument gefunden für', messageId, channelId);
+      }
+    } catch (error) {
+      console.error('🔥 Fehler beim Speichern in Firebase:', error);
+    }
+
+  }
   
   checkDocSnap() {}
 }

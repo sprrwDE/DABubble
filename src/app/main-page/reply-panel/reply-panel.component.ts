@@ -138,6 +138,10 @@ export class ReplyPanelComponent {
       )?.replies || []
     );
   }
+  
+  getMsgId(messageId: string) {
+    return messageId
+  }
 
   // ngOnDestroy() {
   //   this.unsubscribeLoggedInUser.unsubscribe();

@@ -63,7 +63,7 @@ export class EmojiPickerComponent {
     if(!this.isTextInput) {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
-      console.log('current Reply Likes', this.replyLikes, 'for', this.replyId)
+      console.log('current Reply Likes', this.replyLikes, 'for', this.replyId, 'in', this.messageId)
       this.emojiCounterService.handleEmojiLogic(
         selectedEmoji,
         this.messageId,

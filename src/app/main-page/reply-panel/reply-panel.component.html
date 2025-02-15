@@ -127,6 +127,7 @@
         [userId]="reply.userId"
         [replyId]="reply.id"
         [likes]="reply.likes || []"
+        [messageId]="currentReplyMessageId"
         ></app-user-message>
 
       } @if(isDirectChat) {
@@ -148,7 +149,7 @@
         [isContact]="checkIfContact(reply.userId)"
         [isReplay]="true"
         [userId]="reply.id"
-        [messageId]="panelService.messageId"
+        [messageId]="currentReplyMessageId"
       ></app-user-message>
 
       }
