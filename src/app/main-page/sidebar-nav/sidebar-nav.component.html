@@ -224,12 +224,24 @@
         </div>
 
         <div
-          *ngIf="channelService.filterAllChannels().length === 0"
+          *ngIf="
+            channelService.filterAllChannels().length === 0 &&
+            allChannels.length === 0
+          "
           class="w-full flex justify-center items-center"
         >
           <p class="font-bold">Lade Kanäle...</p>
         </div>
 
+        <div
+          *ngIf="
+            channelService.filterAllChannels().length === 0 &&
+            allChannels.length > 0
+          "
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Du bist in keinem Kanal</p>
+        </div>
         <!-- Add Channel btn -->
         <div
           *ngIf="channelService.filterAllChannels().length > 0"

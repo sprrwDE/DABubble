@@ -8,6 +8,7 @@ import { User } from '../../../shared/models/user.model';
 import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
 import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../../../shared/services/emoji-counter.service';
+import { MainChatService } from '../../../shared/services/main-chat.service';
 
 @Component({
   selector: 'app-user-message',
@@ -43,7 +44,8 @@ export class UserMessageComponent {
     private popupService: PopupService,
     private channelService: ChannelService,
     private userService: UserService,
-    private emojiCounterService: EmojiCounterService
+    private emojiCounterService: EmojiCounterService,
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -84,6 +86,14 @@ export class UserMessageComponent {
 
   get allUsers() {
     return this.userService.allUsers;
+  }
+
+  get currentEditMessageId() {
+    return this.mainChatService.currentEditMessageId;
+  }
+
+  set currentEditMessageId(value: string) {
+    this.mainChatService.currentEditMessageId = value;
   }
 
   toggleEditMessagePopup() {
@@ -183,5 +193,10 @@ export class UserMessageComponent {
 
   sortedLikes() {
     return this.likes.sort((a, b) => b.count - a.count);
+  }
+
+  setCurrentEditMessageId(event: Event) {
+    event.stopPropagation();
+    this.currentEditMessageId = this.messageId;
   }
 }

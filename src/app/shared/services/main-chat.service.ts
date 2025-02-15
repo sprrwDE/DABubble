@@ -6,5 +6,7 @@ import { Injectable } from '@angular/core';
 export class MainChatService {
   showMainChat: boolean = false;
 
+  currentEditMessageId: string = '';
+
   constructor() {}
 }

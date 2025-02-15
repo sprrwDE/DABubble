@@ -37,7 +37,8 @@ import { MainChatService } from '../shared/services/main-chat.service';
 })
 export class MainPageComponent {
   @ViewChild(HeaderBarComponent) headerComponent!: HeaderBarComponent;
-  @ViewChild(EmojiPickerComponent, { static: false }) emojiPickerComponent!: EmojiPickerComponent;
+  @ViewChild(EmojiPickerComponent, { static: false })
+  emojiPickerComponent!: EmojiPickerComponent;
 
   afkDelay: number = 3000;
   timeoutId: any;
@@ -156,6 +157,14 @@ export class MainPageComponent {
     this.popupService.showCreateChannelAddPeoplePopup = value;
   }
 
+  get currentEditMessageId() {
+    return this.mainChatService.currentEditMessageId;
+  }
+
+  set currentEditMessageId(value: string) {
+    this.mainChatService.currentEditMessageId = value;
+  }
+
   toggleSidebar() {
     this.openSidebar = !this.openSidebar;
   }
@@ -163,10 +172,11 @@ export class MainPageComponent {
   closePopups() {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
-/*     
+
+    this.currentEditMessageId = '';
+    /*     
     if (this.emojiPickerComponent) {
       this.emojiPickerComponent.toggleEmojiPicker();
     } */
   }
-
 }
