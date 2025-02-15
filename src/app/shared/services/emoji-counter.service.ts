@@ -42,7 +42,11 @@ export class EmojiCounterService {
       { emoji: string; count: number; userIds: string[] }[]
     > = {},
     isReply: boolean,
-    replyId: string
+    replyId: string,
+    prevRevReactions:  Record<
+    string,
+    { emoji: string; count: number; userIds: string[] }[]
+  > = {},
   ) {
     /* console.log(
         'emoji',
@@ -85,13 +89,14 @@ export class EmojiCounterService {
         previousReactions,
       'replyId',
       replyId) */
-      this.messageLikes = { ...previousReactions };
+      this.messageLikes = { ...prevRevReactions };
       if (!this.messageLikes[replyId]) {
         this.messageLikes[replyId] = [];
       }
       const reactionIndex = this.messageLikes[replyId].findIndex(
         (item) => item.emoji === emoji
       );
+      console.log('AHAHAHAHAHAH', this.messageLikes[replyId])
       this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
       this.firebaseService.updateEmojiCountReplys(
         this.messageLikes,

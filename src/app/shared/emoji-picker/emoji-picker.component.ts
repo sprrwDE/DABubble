@@ -71,7 +71,8 @@ export class EmojiPickerComponent {
         this.currentChannel.id,
         this.messageLikes,
         this.isReply,
-        this.replyId
+        this.replyId,
+        this.replyLikes
       );
     } else {
       this.emojiInput$?.next(event.emoji.native);
