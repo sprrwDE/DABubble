@@ -14,6 +14,7 @@ export class PanelService {
   numberOfAnswers: number = 0;
   scroll: boolean = true;
   userId: string = '';
+  messageId: string = ''
 
   replyPanelComponent!: ReplyPanelComponent;
 
@@ -32,7 +33,8 @@ export class PanelService {
     imgUrl: string,
     isContact: boolean,
     numberOfAnswers: number,
-    userId: string
+    userId: string,
+    messageId: string
   ) {
     this.message = message;
     this.name = name;
@@ -41,5 +43,6 @@ export class PanelService {
     this.isContact = isContact;
     this.numberOfAnswers = numberOfAnswers;
     this.userId = userId;
+    this.messageId = messageId
   }
 }

@@ -11,6 +11,7 @@
 import { Injectable } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { FirebaseService } from './firebase.service';
+import { PanelService } from './panel.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ import { FirebaseService } from './firebase.service';
 export class EmojiCounterService {
   constructor(
     private userService: UserService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private panelService: PanelService
   ) {}
 
   private messageLikes: Record<
@@ -39,7 +41,8 @@ export class EmojiCounterService {
       string,
       { emoji: string; count: number; userIds: string[] }[]
     > = {},
-    isReply: boolean
+    isReply: boolean,
+    replyId: string
   ) {
     if(!isReply) {
 
@@ -72,6 +75,18 @@ export class EmojiCounterService {
       );
     } else {
       console.log('reply')
+      console.log('emoji',
+        emoji,
+        'user',
+        userId,
+        'messageid',
+        this.panelService.messageId,
+        'channelid',
+        channelId,
+        'likesarray',
+        previousReactions,
+      'replyId',
+      replyId)
     }
   }
 
