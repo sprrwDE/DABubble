@@ -70,7 +70,8 @@ export class EmojiPickerComponent {
         this.loggedInUser.id,
         this.currentChannel.id,
         this.messageLikes,
-        this.isReply
+        this.isReply,
+        this.replyId
       );
     } else {
       this.emojiInput$?.next(event.emoji.native);

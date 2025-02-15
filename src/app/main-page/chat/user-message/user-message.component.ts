@@ -109,6 +109,7 @@ get currentReplyMessageId() {
   openReplyPanel() {
     console.log(this.userId);
     this.currentReplyMessageId = this.messageId;
+    console.log(this.messageId, 'test');
     this.panelService.openReplyPanel();
     this.panelService.scroll = true;
 
@@ -120,7 +121,8 @@ get currentReplyMessageId() {
       this.imgUrl,
       this.isContact,
       this.numberOfAnswers,
-      this.userId
+      this.userId,
+      this.messageId
     );
   }
 
@@ -156,7 +158,8 @@ get currentReplyMessageId() {
       user,
       channel,
       reactionsAsRecord,
-      this.isReplay
+      this.isReplay,
+      this.replyId
     );
 
     return;
