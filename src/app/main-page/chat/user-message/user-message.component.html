@@ -1,5 +1,5 @@
 <div
-  (click)="$event.stopPropagation()"
+  (click)="$event.preventDefault()"
   (mouseleave)="onMouseLeave()"
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{

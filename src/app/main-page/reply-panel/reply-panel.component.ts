@@ -131,11 +131,6 @@ export class ReplyPanelComponent {
     );
   }
 
-  test(reply: Reply) {
-    console.log(reply, 'ASKJDNBAKJSDNASJDBN');
-    return reply.likes
-  }
-
   getDirectChatRepliesForMessage(messageId: string) {
     return (
       this.currentDirectChat?.messages?.find(

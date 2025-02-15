@@ -71,7 +71,9 @@ export class EmojiPickerComponent {
         this.messageLikes
       );
     } else {
-      console.log('input')
+      this.emojiInput$?.next(event.emoji.native);
+      const selectedEmoji = event.emoji.native;
+      console.log('input', selectedEmoji)
     }
 
   }
@@ -79,8 +81,8 @@ export class EmojiPickerComponent {
   eventHandler = (event: Event) => {
     if (
       this.isOpened &&
-      this.container &&
-      !this.container.nativeElement.contains(event.target as Node)
+      this.container 
+      && !this.container.nativeElement.contains(event.target as Node)
     ) {
       this.isOpened = false;
       console.log('Emoji Picker geschlossen');
@@ -97,7 +99,7 @@ export class EmojiPickerComponent {
     // this.emojiCounterService.resetList()
   } */
 
-    @HostListener('document:click', ['$event'])
+ @HostListener('document:click', ['$event'])
     handleClickOutside(event: Event) {
       if (
         this.isOpened &&
@@ -109,6 +111,5 @@ export class EmojiPickerComponent {
         this.showEmojiPickerChange.emit(false); // 🔥 Event auslösen, damit `UserMessageComponent` es mitbekommt
         console.log('Emoji Picker geschlossen');
       }
-    }
-  
+    } 
 }
