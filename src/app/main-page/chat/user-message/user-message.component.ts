@@ -25,6 +25,7 @@ export class UserMessageComponent {
   @Input() imgUrl: string = '';
   @Input() isContact: boolean = false;
   @Input() isReplay: boolean = false;
+  @Input() isFirstReply: boolean = false
   @Input() lastAnswerTime: any = '';
   @Input() numberOfAnswers: number = 0;
   @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> =
@@ -153,7 +154,7 @@ export class UserMessageComponent {
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = this.isReplay ? { [this.replyId]: likes } : { [message]: likes };
+    > = this.isReplay ? { [this.replyId]: likes } : { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
