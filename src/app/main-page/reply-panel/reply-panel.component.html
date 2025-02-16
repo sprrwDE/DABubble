@@ -128,8 +128,8 @@
         [replyId]="reply.id"
         [likes]="reply.likes || []"
         [messageId]="currentReplyMessageId"
-        [channelId]="channelService.activeChannel.id"
-        ></app-user-message>
+        [channelId]="currentChannel.id"
+      ></app-user-message>
 
       } @if(isDirectChat) {
 

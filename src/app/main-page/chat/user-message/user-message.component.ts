@@ -1,5 +1,5 @@
-import { NgClass, NgIf } from '@angular/common';
-import { Component, effect, Input } from '@angular/core';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { Component, effect, Input, ViewChild, ElementRef } from '@angular/core';
 import { PanelService } from '../../../shared/services/panel.service';
 import { PopupService } from '../../../popup/popup.service';
 import { ChannelService } from '../../../shared/services/channel.service';
@@ -9,11 +9,12 @@ import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.
 import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../../../shared/services/emoji-counter.service';
 import { MainChatService } from '../../../shared/services/main-chat.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-message',
   standalone: true,
-  imports: [NgClass, NgIf, EmojiPickerComponent],
+  imports: [NgClass, NgIf, EmojiPickerComponent, CommonModule, FormsModule],
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
@@ -31,14 +32,18 @@ export class UserMessageComponent {
   @Input() messageId: any;
   @Input() userId: string = '';
   @Input() channelId: string = '';
-  @Input() replyId: string = ''
+  @Input() replyId: string = '';
 
   loggedInUser: any;
 
   editMessagePopupOpen: boolean = false;
   showEmojiPicker = false;
 
+  editedMessage: string = '';
+
   emojiInput$ = new Subject<string>();
+
+  @ViewChild('editMessage') editMessage!: ElementRef;
 
   constructor(
     private panelService: PanelService,
@@ -55,7 +60,7 @@ export class UserMessageComponent {
 
   ngOnInit() {
     console.log('Likes empfangen in UserMessageComponent:', this.likes);
-    console.log('reply likes', this.likes)
+    console.log('reply likes', this.likes);
   }
 
   getMessageLikes() {
@@ -131,7 +136,7 @@ export class UserMessageComponent {
     user: string,
     message: string,
     channel: string,
-    likes: { emoji: string; count: number; userIds: string[] }[],
+    likes: { emoji: string; count: number; userIds: string[] }[]
   ) {
     console.log(
       'emoji',
@@ -143,12 +148,12 @@ export class UserMessageComponent {
       'channelid',
       channel,
       'likesarray',
-      likes,
+      likes
     );
-    const reactionsAsRecord: Record<string, { emoji: string; count: number; userIds: string[] }[]> =
-    this.isReplay
-      ? { [this.replyId]: likes }
-      : { [message]: likes };
+    const reactionsAsRecord: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    > = this.isReplay ? { [this.replyId]: likes } : { [message]: likes };
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
@@ -203,8 +208,25 @@ export class UserMessageComponent {
     return this.likes.sort((a, b) => b.count - a.count);
   }
 
-  setCurrentEditMessageId(event: Event) {
-    event.stopPropagation();
+  ngAfterViewInit() {
+    if (this.editMessage) {
+      this.adjustTextareaHeight();
+    }
+  }
+
+  adjustTextareaHeight() {
+    const textarea = this.editMessage.nativeElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  setCurrentEditMessageId() {
     this.currentEditMessageId = this.messageId;
+    this.editedMessage = this.message.trim();
+  }
+
+  saveEditedMessage() {
+    this.channelService.editMessage(this.messageId, this.editedMessage);
+    this.currentEditMessageId = '';
   }
 }

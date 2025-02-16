@@ -30,7 +30,6 @@ export class ChannelService {
   currentChannelId: string = '';
 
   currentChannel = signal<Channel>(new Channel());
-  activeChannel = new Channel();
   currentChannelMessages: Message[] = [];
 
   currentChannelIdIsInitialized = false;
@@ -57,10 +56,6 @@ export class ChannelService {
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
-    });
-
-    effect(() => {
-      this.activeChannel = this.currentChannel();
     });
 
     this.getAllChannels();
@@ -155,7 +150,9 @@ export class ChannelService {
   }
 
   private createRepliesFromDocs(snapshot: any): Reply[] {
-    return snapshot.docs.map((doc: any) => new Reply({ ...doc.data(), id: doc.id }));
+    return snapshot.docs.map(
+      (doc: any) => new Reply({ ...doc.data(), id: doc.id })
+    );
   }
 
   private updateChannel(channel: Channel, messages: Message[]) {
@@ -231,9 +228,26 @@ export class ChannelService {
     });
   }
 
+  async editMessage(messageId: string, newMessage: string) {
+    const messageRef = doc(
+      this.firestore,
+      'channels',
+      this.currentChannel().id,
+      'messages',
+      messageId
+    );
+    await updateDoc(messageRef, {
+      message: newMessage,
+    });
+  }
+
   async sendMessage(data: any) {
     try {
-      const channelRef = doc(this.firestore, 'channels', this.activeChannel.id);
+      const channelRef = doc(
+        this.firestore,
+        'channels',
+        this.currentChannel().id
+      );
       await addDoc(collection(channelRef, 'messages'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen der Nachricht:', error);
@@ -244,7 +258,7 @@ export class ChannelService {
     try {
       const messageRef = doc(
         this.firestore,
-        `channels/${this.activeChannel.id}/messages/${messageId}`
+        `channels/${this.currentChannel().id}/messages/${messageId}`
       );
       const replyRef = await addDoc(collection(messageRef, 'replies'), data);
       await updateDoc(replyRef, { id: replyRef.id });
