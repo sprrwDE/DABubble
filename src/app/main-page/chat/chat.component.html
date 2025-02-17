@@ -130,6 +130,7 @@
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [userId]="message.userId"
           [isDirectChat]="true"
+          [channelId]="currentDirectChat.id || ''"
         ></app-user-message>
       </div>
 

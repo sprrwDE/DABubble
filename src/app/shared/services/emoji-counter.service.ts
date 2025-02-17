@@ -43,7 +43,6 @@ export class EmojiCounterService {
     prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
     isDirectChat: boolean
   ) {
-    if(!isDirectChat) {
       if (!isReply) {
         // Falls wir noch keine Reaktionen für diese Message haben, initialisiere sie aus previousReactions oder als leeres Array
         if (!this.messageLikes[messageId]) {
@@ -53,12 +52,22 @@ export class EmojiCounterService {
           (item) => item.emoji === emoji
         );
         this.checkReactingUser(reactionIndex, userId, messageId, emoji);
+        if(!isDirectChat) {
         this.firebaseService.updateEmojiCount(
           this.messageLikes,
           messageId,
-          channelId
-        );
-      } else {
+          channelId,
+          'channels'
+        );} 
+        else {
+          this.firebaseService.updateEmojiCount(
+            this.messageLikes,
+            messageId,
+            channelId,
+            'direct-chats'
+          );} 
+    } 
+       else {
         // Für Replies: Verwende den vorhandenen Zustand für diesen replyId, falls vorhanden, ansonsten initialisiere mit den übergebenen prevRevReactions
         if (!this.messageLikes[replyId]) {
           this.messageLikes[replyId] = prevRevReactions[replyId] ? [...prevRevReactions[replyId]] : [];
@@ -68,16 +77,22 @@ export class EmojiCounterService {
         );
         console.log('Aktueller Zustand für replyId', replyId, ':', this.messageLikes[replyId]);
         this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
+        if(!isDirectChat) {
         this.firebaseService.updateEmojiCountReplys(
           this.messageLikes,
           messageId,
           channelId,
-          replyId
-        );
+          replyId,
+          'chats'
+        );} 
+        else {
+          this.firebaseService.updateEmojiCount(
+            this.messageLikes,
+            messageId,
+            replyId,
+            'direct-chats'
+          );}
       }
-    } else {
-      console.log('DM DETECTEDDDDD', emoji)
-    }
   }
   
   checkReactingUserReply(
