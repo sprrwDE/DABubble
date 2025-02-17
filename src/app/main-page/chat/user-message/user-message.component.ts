@@ -174,7 +174,6 @@ export class UserMessageComponent {
       revReactionsAsRecord,
       this.isDirectChat
     );
-
     return;
   }
 

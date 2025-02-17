@@ -130,6 +130,7 @@
         [likes]="reply.likes || []"
         [messageId]="currentReplyMessageId"
         [channelId]="currentChannel.id"
+        [isDirectChat]="isDirectChat" 
       ></app-user-message>
 
       } @if(isDirectChat) {
@@ -152,6 +153,7 @@
         [isReplay]="true"
         [userId]="reply.id"
         [messageId]="currentReplyMessageId"
+        [isDirectChat]="isDirectChat" 
       ></app-user-message>
 
       }
