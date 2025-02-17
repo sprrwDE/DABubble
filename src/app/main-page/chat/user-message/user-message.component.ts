@@ -25,6 +25,7 @@ export class UserMessageComponent {
   @Input() imgUrl: string = '';
   @Input() isContact: boolean = false;
   @Input() isReplay: boolean = false;
+  @Input() isDirectChat: boolean = false;
   @Input() isFirstReply: boolean = false
   @Input() lastAnswerTime: any = '';
   @Input() numberOfAnswers: number = 0;
@@ -137,7 +138,7 @@ export class UserMessageComponent {
     user: string,
     message: string,
     channel: string,
-    likes: { emoji: string; count: number; userIds: string[] }[]
+    likes: { emoji: string; count: number; userIds: string[] }[],
   ) {
     console.log(
       'emoji',

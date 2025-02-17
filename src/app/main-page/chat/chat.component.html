@@ -111,6 +111,8 @@
           <p>{{ channelService.formatDate(message.timestamp) }}</p>
         </div>
 
+
+        <!-- DMs -->
         <app-user-message
           [message]="message.message"
           [messageId]="message?.id"
@@ -127,6 +129,7 @@
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [userId]="message.userId"
+          [isDirectChat]="true"
         ></app-user-message>
       </div>
 

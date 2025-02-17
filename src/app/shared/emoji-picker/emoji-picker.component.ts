@@ -40,6 +40,7 @@ export class EmojiPickerComponent {
   }
 
   @Output() showEmojiPickerChange = new EventEmitter<boolean>(); // 🔥 EventEmitter für die Synchronisation
+  @Output() emojiSelectedEvent = new EventEmitter<string>();
   
   isOpened = false;
 
@@ -57,6 +58,7 @@ export class EmojiPickerComponent {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });
+    
   }
 
   emojiSelected(event: any) {
@@ -78,6 +80,7 @@ export class EmojiPickerComponent {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
       console.log('input', selectedEmoji)
+      this.emojiSelectedEvent.emit(selectedEmoji);
     }
 
   }
