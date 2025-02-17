@@ -155,7 +155,13 @@ export class UserMessageComponent {
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = this.isReplay ? { [this.replyId]: likes } : { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+    > = { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+
+    const revReactionsAsRecord: Record<
+    string,
+    { emoji: string; count: number; userIds: string[] }[]
+  > = { [this.replyId]: likes }
+
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
@@ -164,7 +170,9 @@ export class UserMessageComponent {
       channel,
       reactionsAsRecord,
       this.isReplay,
-      this.replyId
+      this.replyId,
+      revReactionsAsRecord,
+      this.isDirectChat
     );
 
     return;
