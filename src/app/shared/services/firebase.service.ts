@@ -139,14 +139,15 @@ export class FirebaseService {
   async updateEmojiCount(
     reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
     messageId: string,
-    channelId: string
+    channelId: string,
+    chat: string
   ) {
     console.log('🛠️ updateEmojiCount() gestartet mit:', { reaction, messageId, channelId });
   
     try {
       const docRef = doc(
         this.firestore,
-        `channels/${channelId}/messages/${messageId}`
+        `${chat}/${channelId}/messages/${messageId}`
       );
       const docSnap = await getDoc(docRef);
   
@@ -181,14 +182,15 @@ export class FirebaseService {
     reaction: Record<string, { emoji: string; count: number; userIds: string[] }[]>,
     messageId: string,
     channelId: string,
-    replyId: string
+    replyId: string,
+    chat: string
   ) {
     console.log('🛠️ updateEmojiCount() gestartet mit:', { reaction, messageId, channelId, replyId });
   
     try {
       const docRef = doc(
         this.firestore,
-        `channels/${channelId}/messages/${messageId}/replies/${replyId}`
+        `${chat}/${channelId}/messages/${messageId}/replies/${replyId}`
       );
       const docSnap = await getDoc(docRef);
   

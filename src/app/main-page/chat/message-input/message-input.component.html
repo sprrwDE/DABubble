@@ -126,5 +126,6 @@
   [showEmojiPicker]="showEmojiPicker"
   (showEmojiPickerChange)="showEmojiPicker = $event"
   [isTextInput]="true"
+  (emojiSelectedEvent)="insertEmoji($event)"
 >
 </app-emoji-picker>

@@ -104,6 +104,7 @@
           <p>{{ channelService.formatDate(message.timestamp) }}</p>
         </div>
 
+        <!-- DMs -->
         <app-user-message
           [messageId]="message?.id"
           [isContact]="checkIfContact(message.userId)"

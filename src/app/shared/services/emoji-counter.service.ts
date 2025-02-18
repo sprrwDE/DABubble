@@ -40,39 +40,59 @@ export class EmojiCounterService {
     previousReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
     isReply: boolean,
     replyId: string,
-    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {}
+    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
+    isDirectChat: boolean
   ) {
-    if (!isReply) {
-      // Falls wir noch keine Reaktionen für diese Message haben, initialisiere sie aus previousReactions oder als leeres Array
-      if (!this.messageLikes[messageId]) {
-        this.messageLikes[messageId] = previousReactions[messageId] ? [...previousReactions[messageId]] : [];
+      if (!isReply) {
+        // Falls wir noch keine Reaktionen für diese Message haben, initialisiere sie aus previousReactions oder als leeres Array
+        if (!this.messageLikes[messageId]) {
+          this.messageLikes[messageId] = previousReactions[messageId] ? [...previousReactions[messageId]] : [];
+        }
+        const reactionIndex = this.messageLikes[messageId].findIndex(
+          (item) => item.emoji === emoji
+        );
+        this.checkReactingUser(reactionIndex, userId, messageId, emoji);
+        if(!isDirectChat) {
+        this.firebaseService.updateEmojiCount(
+          this.messageLikes,
+          messageId,
+          channelId,
+          'channels'
+        );} 
+        else {
+          this.firebaseService.updateEmojiCount(
+            this.messageLikes,
+            messageId,
+            channelId,
+            'direct-chats'
+          );} 
+    } 
+       else {
+        // Für Replies: Verwende den vorhandenen Zustand für diesen replyId, falls vorhanden, ansonsten initialisiere mit den übergebenen prevRevReactions
+        if (!this.messageLikes[replyId]) {
+          this.messageLikes[replyId] = prevRevReactions[replyId] ? [...prevRevReactions[replyId]] : [];
+        }
+        const reactionIndex = this.messageLikes[replyId].findIndex(
+          (item) => item.emoji === emoji
+        );
+        console.log('Aktueller Zustand für replyId', replyId, ':', this.messageLikes[replyId]);
+        this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
+        if(!isDirectChat) {
+        this.firebaseService.updateEmojiCountReplys(
+          this.messageLikes,
+          messageId,
+          channelId,
+          replyId,
+          'chats'
+        );} 
+        else {
+          this.firebaseService.updateEmojiCount(
+            this.messageLikes,
+            messageId,
+            replyId,
+            'direct-chats'
+          );}
       }
-      const reactionIndex = this.messageLikes[messageId].findIndex(
-        (item) => item.emoji === emoji
-      );
-      this.checkReactingUser(reactionIndex, userId, messageId, emoji);
-      this.firebaseService.updateEmojiCount(
-        this.messageLikes,
-        messageId,
-        channelId
-      );
-    } else {
-      // Für Replies: Verwende den vorhandenen Zustand für diesen replyId, falls vorhanden, ansonsten initialisiere mit den übergebenen prevRevReactions
-      if (!this.messageLikes[replyId]) {
-        this.messageLikes[replyId] = prevRevReactions[replyId] ? [...prevRevReactions[replyId]] : [];
-      }
-      const reactionIndex = this.messageLikes[replyId].findIndex(
-        (item) => item.emoji === emoji
-      );
-      console.log('Aktueller Zustand für replyId', replyId, ':', this.messageLikes[replyId]);
-      this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
-      this.firebaseService.updateEmojiCountReplys(
-        this.messageLikes,
-        messageId,
-        channelId,
-        replyId
-      );
-    }
   }
   
   checkReactingUserReply(

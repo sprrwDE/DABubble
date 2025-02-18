@@ -25,6 +25,7 @@ export class EmojiPickerComponent {
   @Input() replyLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
   @Input() isTextInput: boolean = false;
   @Input() isReply: boolean = false;
+  @Input() isDirectChat: boolean = false;
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   private _showEmojiPicker = false;
@@ -40,6 +41,7 @@ export class EmojiPickerComponent {
   }
 
   @Output() showEmojiPickerChange = new EventEmitter<boolean>(); // 🔥 EventEmitter für die Synchronisation
+  @Output() emojiSelectedEvent = new EventEmitter<string>();
   
   isOpened = false;
 
@@ -57,6 +59,7 @@ export class EmojiPickerComponent {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });
+    
   }
 
   emojiSelected(event: any) {
@@ -72,12 +75,14 @@ export class EmojiPickerComponent {
         this.messageLikes,
         this.isReply,
         this.replyId,
-        this.replyLikes
+        this.replyLikes,
+        this.isDirectChat
       );
     } else {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
       console.log('input', selectedEmoji)
+      this.emojiSelectedEvent.emit(selectedEmoji);
     }
 
   }

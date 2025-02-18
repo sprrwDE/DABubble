@@ -270,7 +270,12 @@ export class UserMessageComponent implements OnDestroy {
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = this.isReply ? { [this.replyId]: likes } : { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+    > = { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+
+    const revReactionsAsRecord: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    > = { [this.replyId]: likes };
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
@@ -278,10 +283,11 @@ export class UserMessageComponent implements OnDestroy {
       user,
       channel,
       reactionsAsRecord,
-      this.isReply,
-      this.replyId
+      this.isReplay,
+      this.replyId,
+      revReactionsAsRecord,
+      this.isDirectChat
     );
-
     return;
   }
 
