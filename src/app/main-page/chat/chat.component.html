@@ -26,19 +26,12 @@
         </div>
 
         <app-user-message
-          [message]="message.message"
           [messageId]="message?.id"
-          [time]="channelService.formatTime(message.timestamp)"
-          [imgUrl]="getUserImage(message.userId)"
-          [name]="
-            getUserName(message.userId, message, currentChannel.messages || [])
-          "
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
-          [userId]="message.userId"
-          [likes]="getLikes(message)"
           [channelId]="currentChannel.id"
+          [path]="currentChannel.messages"
         ></app-user-message>
       </div>
 
@@ -112,21 +105,11 @@
         </div>
 
         <app-user-message
-          [message]="message.message"
           [messageId]="message?.id"
-          [time]="channelService.formatTime(message.timestamp)"
-          [imgUrl]="getUserImage(message.userId)"
-          [name]="
-            getUserName(
-              message.userId,
-              message,
-              currentDirectChat.messages || []
-            )
-          "
           [isContact]="checkIfContact(message.userId)"
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
-          [userId]="message.userId"
+          [path]="currentDirectChat.messages"
         ></app-user-message>
       </div>
 

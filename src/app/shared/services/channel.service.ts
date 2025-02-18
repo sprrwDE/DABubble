@@ -17,6 +17,7 @@ import { Message } from '../models/message.model';
 import { Reply } from '../models/reply.model';
 import { ChatComponent } from '../../main-page/chat/chat.component';
 import { UserService } from './user.service';
+import { MainChatService } from './main-chat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,7 @@ export class ChannelService {
   // currentChannelUsers: User[] = [];
   private currentChannelIdSubject = new BehaviorSubject<string | null>(null);
 
-  currentReplyMessageId: string = '';
+  currentReplyMessageId = signal<string>('');
 
   chatComponent!: ChatComponent;
 
@@ -52,7 +53,8 @@ export class ChannelService {
   constructor(
     public fb: FirebaseService,
     private ngZone: NgZone,
-    private userService: UserService
+    private userService: UserService,
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -238,6 +240,21 @@ export class ChannelService {
     );
     await updateDoc(messageRef, {
       message: newMessage,
+    });
+  }
+
+  async editReply(messageId: string, replyId: string, newReply: string) {
+    const replyRef = doc(
+      this.firestore,
+      'channels',
+      this.currentChannel().id,
+      'messages',
+      messageId,
+      'replies',
+      replyId
+    );
+    await updateDoc(replyRef, {
+      message: newReply,
     });
   }
 

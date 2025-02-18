@@ -1,5 +1,12 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, effect, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  effect,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+} from '@angular/core';
 import { PanelService } from '../../../shared/services/panel.service';
 import { PopupService } from '../../../popup/popup.service';
 import { ChannelService } from '../../../shared/services/channel.service';
@@ -10,6 +17,9 @@ import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../../../shared/services/emoji-counter.service';
 import { MainChatService } from '../../../shared/services/main-chat.service';
 import { FormsModule } from '@angular/forms';
+import { Channel } from '../../../shared/models/channel.model';
+import { DirectChat } from '../../../shared/models/direct-chat.model';
+import { DirectChatService } from '../../../shared/services/direct-chat.service';
 
 @Component({
   selector: 'app-user-message',
@@ -18,22 +28,27 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
-export class UserMessageComponent {
-  @Input() message: string = '';
-  @Input() time: string = '';
-  @Input() name: string = '';
-  @Input() imgUrl: string = '';
-  @Input() isContact: boolean = false;
-  @Input() isReplay: boolean = false;
-  @Input() isFirstReply: boolean = false
-  @Input() lastAnswerTime: any = '';
-  @Input() numberOfAnswers: number = 0;
-  @Input() likes: Array<{ emoji: string; count: number; userIds: string[] }> =
-    [];
+export class UserMessageComponent implements OnDestroy {
+  @Input() path: any;
   @Input() messageId: any;
-  @Input() userId: string = '';
   @Input() channelId: string = '';
   @Input() replyId: string = '';
+
+  @Input() isContact: boolean = false;
+
+  @Input() isReply: boolean = false;
+  @Input() isFirstReply: boolean = false;
+  @Input() isChannelReply: boolean = false;
+
+  @Input() lastAnswerTime: any = '';
+  @Input() numberOfAnswers: number = 0;
+
+  messageObj: any;
+  message: string = '';
+  time: string = '';
+  name: string = '';
+  imgUrl: string = '';
+  likes: Array<{ emoji: string; count: number; userIds: string[] }> = [];
 
   loggedInUser: any;
 
@@ -44,7 +59,16 @@ export class UserMessageComponent {
 
   emojiInput$ = new Subject<string>();
 
+  renderReplyMessage: boolean = false;
+
+  currentChannel: Channel = new Channel();
+  currentDirectChat: DirectChat = new DirectChat();
+
   @ViewChild('editMessage') editMessage!: ElementRef;
+  @ViewChild('messageContainer') messageContainer!: ElementRef;
+  messageContainerWidthIsBelow400: boolean = false;
+
+  private resizeObserver: ResizeObserver;
 
   constructor(
     private panelService: PanelService,
@@ -52,24 +76,45 @@ export class UserMessageComponent {
     private channelService: ChannelService,
     private userService: UserService,
     private emojiCounterService: EmojiCounterService,
-    private mainChatService: MainChatService
+    private mainChatService: MainChatService,
+    private directChatService: DirectChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
-  }
 
-  ngOnInit() {
-    console.log('Likes empfangen in UserMessageComponent:', this.likes);
-    console.log('reply likes', this.likes);
-  }
+    effect(() => {
+      this.renderReplyMessage = this.mainChatService.renderReplyMessage();
 
-  getMessageLikes() {
-    return { [this.messageId]: this.likes };
-  }
+      if (this.renderReplyMessage && this.isFirstReply) {
+        this.getMessageFromId(this.messageId);
 
-  getReplyLikes() {
-    return { [this.replyId]: this.likes };
+        setTimeout(() => {
+          this.mainChatService.renderReplyMessage.set(false);
+        }, 0);
+      }
+    });
+
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+
+      setTimeout(() => {
+        this.mainChatService.renderReplyMessage.set(true);
+      }, 0);
+    });
+
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.checkMessageContainerWidth();
+
+      console.log(
+        'messageContainerWidthIsBelow400',
+        this.messageContainerWidthIsBelow400
+      );
+    });
   }
 
   get editingUserProfile() {
@@ -88,14 +133,6 @@ export class UserMessageComponent {
     this.popupService.openUserProfilePopup = value;
   }
 
-  get currentReplyMessageId() {
-    return this.channelService.currentReplyMessageId;
-  }
-
-  set currentReplyMessageId(value: string) {
-    this.channelService.currentReplyMessageId = value;
-  }
-
   get allUsers() {
     return this.userService.allUsers;
   }
@@ -108,28 +145,107 @@ export class UserMessageComponent {
     this.mainChatService.currentEditMessageId = value;
   }
 
+  get firstReplyMessageId() {
+    return this.panelService.messageId;
+  }
+
+  ngOnInit() {
+    console.log('Likes empfangen in UserMessageComponent:', this.likes);
+    console.log('reply likes', this.likes);
+
+    this.getMessageFromId(this.messageId);
+  }
+
+  ngAfterViewInit() {
+    if (this.editMessage) {
+      this.adjustTextareaHeight();
+    }
+
+    if (this.messageContainer?.nativeElement) {
+      this.resizeObserver.observe(this.messageContainer.nativeElement);
+      this.checkMessageContainerWidth();
+    }
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver.disconnect();
+  }
+
+  adjustTextareaHeight() {
+    const textarea = this.editMessage.nativeElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  checkMessageContainerWidth() {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    const messageContainer = this.messageContainer.nativeElement;
+
+    if (messageContainer.offsetWidth < 400) {
+      this.messageContainerWidthIsBelow400 = true;
+    } else {
+      this.messageContainerWidthIsBelow400 = false;
+    }
+  }
+
+  getMessageFromId(messageId: string) {
+    if (this.isFirstReply) {
+      if (this.currentChannel.id !== '') {
+        this.messageObj = this.currentChannel?.messages?.find(
+          (message: any) => message.id === this.firstReplyMessageId
+        );
+      } else {
+        this.messageObj = this.currentDirectChat?.messages?.find(
+          (message: any) => message.id === this.firstReplyMessageId
+        );
+      }
+    } else {
+      this.messageObj = this.path?.find(
+        (message: any) => message.id === messageId
+      );
+    }
+
+    this.message = this.messageObj?.message;
+    this.time = this.channelService.formatTime(this.messageObj?.timestamp);
+    this.name =
+      this.userService.getUserById(this.messageObj?.userId)?.name ||
+      'NAN = Not A NAME';
+    this.imgUrl =
+      this.userService.getUserById(this.messageObj?.userId)?.image ||
+      'imgs/avatar/profile.svg';
+    this.likes = this.messageObj?.likes;
+  }
+
+  getMessageLikes() {
+    return { [this.messageId]: this.likes };
+  }
+
+  getReplyLikes() {
+    return { [this.replyId]: this.likes };
+  }
+
   toggleEditMessagePopup() {
     this.editMessagePopupOpen = !this.editMessagePopupOpen;
   }
 
-  openReplyPanel() {
-    console.log(this.userId);
-    this.currentReplyMessageId = this.messageId;
-    console.log(this.messageId, 'test');
+  async openReplyPanel() {
+    // console.log(this.messageObj.userId);
+    // console.log(this.messageId, 'test');
+
+    this.channelService.currentReplyMessageId.set(this.messageId);
+
+    this.panelService.renderReplyPanel(
+      this.isContact,
+      this.numberOfAnswers,
+      this.messageId
+    );
+
     this.panelService.openReplyPanel();
     this.panelService.scroll = true;
 
-    // Hier muss dann statt der message die ID des chats (replay chats) übergeben werden
-    this.panelService.renderReplyPanel(
-      this.message,
-      this.name,
-      this.time,
-      this.imgUrl,
-      this.isContact,
-      this.numberOfAnswers,
-      this.userId,
-      this.messageId
-    );
+    setTimeout(() => {
+      this.mainChatService.renderReplyMessage.set(true);
+    }, 0);
   }
 
   reactOnEmoji(
@@ -154,7 +270,7 @@ export class UserMessageComponent {
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = this.isReplay ? { [this.replyId]: likes } : { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+    > = this.isReply ? { [this.replyId]: likes } : { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
@@ -162,7 +278,7 @@ export class UserMessageComponent {
       user,
       channel,
       reactionsAsRecord,
-      this.isReplay,
+      this.isReply,
       this.replyId
     );
 
@@ -174,11 +290,11 @@ export class UserMessageComponent {
   }
 
   openProfilePopup() {
-    let user = this.getUser(this.userId);
+    let user = this.getUser(this.messageObj.userId);
 
     this.popupService.contactProfileContent = user || new User();
 
-    if (this.loggedInUser.id === this.userId)
+    if (this.loggedInUser.id === this.messageObj.userId)
       this.openUserProfilePopupFunction();
     else this.openContactProfilePopup(user || new User());
   }
@@ -209,25 +325,40 @@ export class UserMessageComponent {
     return this.likes.sort((a, b) => b.count - a.count);
   }
 
-  ngAfterViewInit() {
-    if (this.editMessage) {
-      this.adjustTextareaHeight();
-    }
-  }
-
-  adjustTextareaHeight() {
-    const textarea = this.editMessage.nativeElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }
-
   setCurrentEditMessageId() {
     this.currentEditMessageId = this.messageId;
     this.editedMessage = this.message.trim();
   }
 
   saveEditedMessage() {
-    this.channelService.editMessage(this.messageId, this.editedMessage);
+    if (this.currentChannel.id !== '') {
+      if (!this.isReply || this.isFirstReply) {
+        this.channelService.editMessage(
+          this.isFirstReply ? this.firstReplyMessageId : this.messageId,
+          this.editedMessage
+        );
+      } else {
+        this.channelService.editReply(
+          this.firstReplyMessageId,
+          this.messageId,
+          this.editedMessage
+        );
+      }
+    } else {
+      if (!this.isReply || this.isFirstReply) {
+        console.log(this.isFirstReply);
+        this.directChatService.editMessage(
+          this.isFirstReply ? this.firstReplyMessageId : this.messageId,
+          this.editedMessage
+        );
+      } else {
+        this.directChatService.editReply(
+          this.firstReplyMessageId,
+          this.messageId,
+          this.editedMessage
+        );
+      }
+    }
     this.currentEditMessageId = '';
   }
 }

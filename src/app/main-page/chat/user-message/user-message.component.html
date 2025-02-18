@@ -1,12 +1,16 @@
 <div
-  (click)="$event.preventDefault(); $event.stopPropagation()"
+  (click)="
+    $event.preventDefault();
+    $event.stopPropagation();
+    getMessageFromId(messageId)
+  "
   (mouseleave)="onMouseLeave()"
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{
     'flex-row-reverse': isContact,
-    'px-[16px]': isReplay || !isReplay,
-    'md:px-[30px]': isReplay,
-    'md:px-[45px]': !isReplay
+    'px-[16px]': isReply || !isReply,
+    'md:px-[30px]': isReply,
+    'md:px-[45px]': !isReply
   }"
 >
   <!-- reaction bar -->
@@ -17,11 +21,11 @@
     [ngClass]="{
       'right-[50px]': isContact,
       'left-[50px]': !isContact,
-      'right-[30px]': isContact && isReplay,
-      'left-[30px]': !isContact && isReplay
+      'right-[30px]': isContact && isReply,
+      'left-[30px]': !isContact && isReply
     }"
   >
-    <div *ngIf="!isReplay" class="transition-svg-text reaction-item-like">
+    <div *ngIf="!isReply" class="transition-svg-text reaction-item-like">
       <svg
         width="20"
         height="20"
@@ -43,7 +47,7 @@
       </svg>
     </div>
 
-    <div *ngIf="!isReplay" class="transition-svg-text reaction-item-like">
+    <div *ngIf="!isReply" class="transition-svg-text reaction-item-like">
       <svg
         width="20"
         height="20"
@@ -147,7 +151,7 @@
 
     <div
       (click)="openReplyPanel()"
-      *ngIf="!isReplay"
+      *ngIf="!isReply"
       class="transition-svg-text reaction-item"
     >
       <svg
@@ -277,7 +281,7 @@
 
     <!-- EMOJI CONTAINER -->
     <div
-      *ngIf="likes.length > 0"
+      *ngIf="likes?.length || [].length > 0"
       class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
     >
       <!-- EMOJI RENDERN -->
@@ -335,7 +339,7 @@
 
     <!-- answer btn container -->
     <div
-      *ngIf="numberOfAnswers > 0 && !isReplay"
+      *ngIf="numberOfAnswers > 0 && !isReply"
       class="flex items-center gap-[20px] flex-wrap"
     >
       <p
@@ -352,9 +356,11 @@
   </div>
 
   <div
+    #messageContainer
     (click)="editMessage.focus()"
     *ngIf="currentEditMessageId === messageId"
-    class="w-full h-full md:ml-[80px] p-[20px] rounded-[20px] bg-white flex flex-col gap-[16px] border-[1px] border-lines"
+    class="w-full h-full p-[20px] rounded-[20px] bg-white flex flex-col gap-[16px] border-[1px] border-lines"
+    [ngClass]="{ 'md:ml-[80px]': !messageContainerWidthIsBelow400 }"
   >
     <textarea
       [(ngModel)]="editedMessage"
@@ -427,6 +433,6 @@
   [replyLikes]="getReplyLikes()"
   [showEmojiPicker]="showEmojiPicker"
   (showEmojiPickerChange)="showEmojiPicker = $event"
-  [isReply]="isReplay"
+  [isReply]="isReply"
 >
 </app-emoji-picker>

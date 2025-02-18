@@ -89,14 +89,8 @@
       }"
     >
       <app-user-message
-        [message]="panelService.message"
-        [time]="panelService.time"
-        [name]="panelService.name"
-        [imgUrl]="panelService.imgUrl"
         [isContact]="panelService.isContact"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [isReplay]="true"
-        [userId]="panelService.userId"
+        [isReply]="true"
         [isFirstReply]="true"
       ></app-user-message>
 
@@ -112,46 +106,23 @@
       @if(!isDirectChat) {
 
       <app-user-message
-        *ngFor="let reply of getRepliesForMessage(currentReplyMessageId)"
-        [message]="reply.message"
-        [time]="channelService.formatTime(reply.timestamp)"
-        [name]="
-          getUserNameAndScroll(
-            reply.userId,
-            reply,
-            getRepliesForMessage(currentReplyMessageId)
-          )
-        "
-        [imgUrl]="getImgUrl(reply.userId)"
+        *ngFor="let reply of getChannelReplies()"
         [isContact]="checkIfContact(reply.userId)"
-        [isReplay]="true"
-        [userId]="reply.userId"
+        [isReply]="true"
         [replyId]="reply.id"
-        [likes]="reply.likes || []"
-        [messageId]="currentReplyMessageId"
+        [messageId]="reply.id"
         [channelId]="currentChannel.id"
+        [path]="getChannelReplies()"
       ></app-user-message>
 
       } @if(isDirectChat) {
 
       <app-user-message
-        *ngFor="
-          let reply of getDirectChatRepliesForMessage(currentReplyMessageId)
-        "
-        [message]="reply.message"
-        [time]="channelService.formatTime(reply.timestamp)"
-        [name]="
-          getUserNameAndScroll(
-            reply.userId,
-            reply,
-            getDirectChatRepliesForMessage(currentReplyMessageId)
-          )
-        "
-        [imgUrl]="getImgUrl(reply.userId)"
+        *ngFor="let reply of getDirectChatReplies()"
         [isContact]="checkIfContact(reply.userId)"
-        [isReplay]="true"
-        [userId]="reply.id"
-        [messageId]="currentReplyMessageId"
+        [isReply]="true"
+        [messageId]="reply.id"
+        [path]="getDirectChatReplies()"
       ></app-user-message>
 
       }
@@ -159,7 +130,7 @@
 
     <!-- input -->
     <app-message-input
-      [isReplayInput]="true"
+      [isReplyInput]="true"
       class="px-[15px]"
       [replyPanelComponent]="this"
     ></app-message-input>

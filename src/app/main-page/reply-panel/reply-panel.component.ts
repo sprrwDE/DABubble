@@ -28,6 +28,8 @@ export class ReplyPanelComponent {
   public currentDirectChatUser: User = new User();
   public currentDirectChat: DirectChat = new DirectChat();
 
+  currentReplyMessageId: string = '';
+
   constructor(
     public panelService: PanelService,
     public channelService: ChannelService,
@@ -55,11 +57,15 @@ export class ReplyPanelComponent {
     effect(() => {
       this.currentDirectChat = this.directChatService.currentDirectChat();
     });
+
+    effect(() => {
+      this.currentReplyMessageId = this.channelService.currentReplyMessageId();
+    });
   }
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
-    console.log()
+    console.log();
   }
 
   get isDirectChat() {
@@ -68,14 +74,6 @@ export class ReplyPanelComponent {
 
   get currentChannelMessages() {
     return this.channelService.currentChannelMessages;
-  }
-
-  get currentReplyMessageId() {
-    return this.channelService.currentReplyMessageId;
-  }
-
-  get currentChannelId() {
-    return this.channelService.currentChannelId;
   }
 
   get allUsers() {
@@ -115,36 +113,24 @@ export class ReplyPanelComponent {
     );
   }
 
-  getImgUrl(userId: string) {
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.image ||
-      'imgs/avatar1.png'
-    );
-  }
-
   checkIfContact(userId: string): boolean {
     let loggedInUserId = this.loggedInUser.id;
 
     return loggedInUserId !== userId;
   }
 
-  getRepliesForMessage(messageId: string) {
+  getChannelReplies() {
     return (
-      this.currentChannel.messages?.find((message) => message.id === messageId)
-        ?.replies || []
-    );
-  }
-
-  getDirectChatRepliesForMessage(messageId: string) {
-    return (
-      this.currentDirectChat?.messages?.find(
-        (message) => message.id === messageId
+      this.currentChannel.messages?.find(
+        (message) => message.id === this.currentReplyMessageId
       )?.replies || []
     );
   }
 
-  getMsgId(messageId: string) {
-    return messageId
+  getDirectChatReplies() {
+    return this.currentDirectChat?.messages?.find(
+      (message) => message.id === this.currentReplyMessageId
+    )?.replies;
   }
 
   // ngOnDestroy() {

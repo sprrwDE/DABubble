@@ -1,6 +1,6 @@
 <div
   (click)="
-    isReplayInput
+    isReplyInput
       ? replyInput.nativeElement.focus()
       : chatInput.nativeElement.focus()
   "
@@ -8,7 +8,7 @@
 >
   <textarea
     #chatInput
-    *ngIf="!isReplayInput"
+    *ngIf="!isReplyInput"
     [(ngModel)]="message.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
     placeholder="Nachricht an #Entwicklerteam"
@@ -16,7 +16,7 @@
 
   <textarea
     #replyInput
-    *ngIf="isReplayInput"
+    *ngIf="isReplyInput"
     [(ngModel)]="reply.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
     placeholder="Antworten..."
@@ -88,7 +88,7 @@
     </div>
 
     <div
-      (click)="isReplayInput ? sendReply() : sendMessage()"
+      (click)="isReplyInput ? sendReply() : sendMessage()"
       class="main-chat-send-btn"
     >
       <svg

@@ -5,6 +5,7 @@ import {
   doc,
   Firestore,
   onSnapshot,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Unsubscribe } from 'firebase/firestore';
 import { DirectChat } from '../models/direct-chat.model';
@@ -124,7 +125,9 @@ export class DirectChatService {
   }
 
   private createRepliesFromDocs(snapshot: any): Reply[] {
-    return snapshot.docs.map((doc: any) => new Reply(doc.data()));
+    return snapshot.docs.map(
+      (doc: any) => new Reply({ ...doc.data(), id: doc.id })
+    );
   }
 
   private updateDirectChat(directChat: DirectChat, messages: Message[]) {
@@ -179,6 +182,34 @@ export class DirectChatService {
     }
   }
 
+  async editMessage(messageId: string, newMessage: string) {
+    const messageRef = doc(
+      this.firestore,
+      'direct-chats',
+      this.currentDirectChat().id || '',
+      'messages',
+      messageId
+    );
+    await updateDoc(messageRef, {
+      message: newMessage,
+    });
+  }
+
+  async editReply(messageId: string, replyId: string, newReply: string) {
+    const replyRef = doc(
+      this.firestore,
+      'direct-chats',
+      this.currentDirectChat().id || '',
+      'messages',
+      messageId,
+      'replies',
+      replyId
+    );
+    await updateDoc(replyRef, {
+      message: newReply,
+    });
+  }
+
   async sendMessage(data: any) {
     try {
       const directChatRef = doc(
@@ -198,7 +229,8 @@ export class DirectChatService {
         this.firestore,
         `direct-chats/${this.currentDirectChatId}/messages/${messageId}`
       );
-      await addDoc(collection(messageRef, 'replies'), data);
+      const replyRef = await addDoc(collection(messageRef, 'replies'), data);
+      await updateDoc(replyRef, { id: replyRef.id });
     } catch (error) {
       console.error('Fehler beim Erstellen der Antwort:', error);
     }

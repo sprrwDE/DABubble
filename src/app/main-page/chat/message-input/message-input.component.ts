@@ -29,14 +29,13 @@ import { Subject } from 'rxjs';
   styleUrl: './message-input.component.scss',
 })
 export class MessageInputComponent implements OnInit {
-  @Input() isReplayInput: boolean = false;
+  @Input() isReplyInput: boolean = false;
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
   @Input() isDirectChatComponent: boolean = false;
 
   showEmojiPicker = false;
   emojiInput$ = new Subject<string>();
-  
 
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
@@ -46,6 +45,8 @@ export class MessageInputComponent implements OnInit {
 
   currentDirectChat: DirectChat = new DirectChat();
   currentDirectChatUser: User = new User();
+
+  currentReplyMessageId: string = '';
 
   constructor(
     private channelService: ChannelService,
@@ -64,6 +65,10 @@ export class MessageInputComponent implements OnInit {
       this.currentDirectChatUser =
         this.directChatService.currentDirectChatUser();
     });
+
+    effect(() => {
+      this.currentReplyMessageId = this.channelService.currentReplyMessageId();
+    });
   }
 
   ngOnInit(): void {}
@@ -72,10 +77,6 @@ export class MessageInputComponent implements OnInit {
   reply: Reply = new Reply();
 
   directChat: DirectChat = new DirectChat();
-
-  get currentReplyMessageId(): string {
-    return this.channelService.currentReplyMessageId;
-  }
 
   get isDirectChat(): boolean {
     return this.directChatService.isDirectChat;
