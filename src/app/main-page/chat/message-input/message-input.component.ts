@@ -82,6 +82,15 @@ export class MessageInputComponent implements OnInit {
     return this.directChatService.isDirectChat;
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    // Prüfen, ob Enter ohne Shift gedrückt wurde
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();  // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
+      this.isReplyInput ? this.sendReply() : this.sendMessage()         // Formular abschicken
+    }
+  }
+
+
   async sendMessage() {
     console.log(this.channelService.currentChannel());
     if (this.isMessageEmpty()) return;
