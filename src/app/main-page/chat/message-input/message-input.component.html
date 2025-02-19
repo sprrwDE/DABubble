@@ -12,6 +12,7 @@
     [(ngModel)]="message.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
     placeholder="Nachricht an #Entwicklerteam"
+    (keydown)="onKeyDown($event)"
   ></textarea>
 
   <textarea
@@ -20,6 +21,7 @@
     [(ngModel)]="reply.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
     placeholder="Antworten..."
+    (keydown)="onKeyDown($event)"
   ></textarea>
 
   <!-- icons -->
