@@ -1,6 +1,15 @@
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, Input, Output, ViewChild, effect, EventEmitter } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+  effect,
+  EventEmitter,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../services/emoji-counter.service';
 import { UserService } from '../services/user.service';
@@ -21,11 +30,19 @@ export class EmojiPickerComponent {
   @Input() messageId: string = '';
   @Input() channelId: string = '';
   @Input() replyId: string = '';
-  @Input() messageLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
-  @Input() replyLikes: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {};
+  @Input() messageLikes: Record<
+    string,
+    { emoji: string; count: number; userIds: string[] }[]
+  > = {};
+  @Input() replyLikes: Record<
+    string,
+    { emoji: string; count: number; userIds: string[] }[]
+  > = {};
   @Input() isTextInput: boolean = false;
   @Input() isReply: boolean = false;
   @Input() isDirectChat: boolean = false;
+  @Input() isFirstReply: boolean = false;
+
   @ViewChild('container') container: ElementRef<HTMLElement> | undefined;
 
   private _showEmojiPicker = false;
@@ -35,14 +52,14 @@ export class EmojiPickerComponent {
     this._showEmojiPicker = value;
     this.isOpened = value;
   }
-  
+
   get showEmojiPicker(): boolean {
     return this._showEmojiPicker;
   }
 
   @Output() showEmojiPickerChange = new EventEmitter<boolean>(); // 🔥 EventEmitter für die Synchronisation
   @Output() emojiSelectedEvent = new EventEmitter<string>();
-  
+
   isOpened = false;
 
   constructor(
@@ -59,14 +76,21 @@ export class EmojiPickerComponent {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });
-    
   }
 
   emojiSelected(event: any) {
-    if(!this.isTextInput) {
+    if (!this.isTextInput) {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
-      console.log('current Reply Likes', this.replyLikes, 'for', this.replyId, 'in', this.messageId)
+      console.log(
+        'current Reply Likes',
+        this.replyLikes,
+        'for',
+        this.replyId,
+        'in',
+        this.messageId
+      );
+
       this.emojiCounterService.handleEmojiLogic(
         selectedEmoji,
         this.messageId,
@@ -76,29 +100,29 @@ export class EmojiPickerComponent {
         this.isReply,
         this.replyId,
         this.replyLikes,
-        this.isDirectChat
+        this.isDirectChat,
+        this.isFirstReply
       );
     } else {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
-      console.log('input', selectedEmoji)
+      console.log('input', selectedEmoji);
       this.emojiSelectedEvent.emit(selectedEmoji);
     }
-
   }
 
   eventHandler = (event: Event) => {
     if (
       this.isOpened &&
-      this.container 
-      && !this.container.nativeElement.contains(event.target as Node)
+      this.container &&
+      !this.container.nativeElement.contains(event.target as Node)
     ) {
       this.isOpened = false;
       console.log('Emoji Picker geschlossen');
     }
   };
 
-/* toggleEmojiPicker() {
+  /* toggleEmojiPicker() {
     this.isOpened = !this.isOpened;
     if (this.isOpened) {
       window.addEventListener('click', this.eventHandler);
@@ -108,17 +132,17 @@ export class EmojiPickerComponent {
     // this.emojiCounterService.resetList()
   } */
 
- @HostListener('document:click', ['$event'])
-    handleClickOutside(event: Event) {
-      if (
-        this.isOpened &&
-        this.container &&
-        !this.container.nativeElement.contains(event.target as Node)
-      ) {
-        this.isOpened = false;
-        this._showEmojiPicker = false;
-        this.showEmojiPickerChange.emit(false); // 🔥 Event auslösen, damit `UserMessageComponent` es mitbekommt
-        console.log('Emoji Picker geschlossen');
-      }
-    } 
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    if (
+      this.isOpened &&
+      this.container &&
+      !this.container.nativeElement.contains(event.target as Node)
+    ) {
+      this.isOpened = false;
+      this._showEmojiPicker = false;
+      this.showEmojiPickerChange.emit(false); // 🔥 Event auslösen, damit `UserMessageComponent` es mitbekommt
+      console.log('Emoji Picker geschlossen');
+    }
+  }
 }

@@ -425,15 +425,16 @@
 <app-emoji-picker
   class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
   *ngIf="showEmojiPicker"
-  [messageId]="messageId"
+  [messageId]="isFirstReply ? messageObj?.id : messageId"
   [channelId]="channelId"
-  [replyId]="replyId"
+  [replyId]="messageId"
   [emojiInput$]="emojiInput$"
   [messageLikes]="getMessageLikes()"
   [replyLikes]="getReplyLikes()"
   [showEmojiPicker]="showEmojiPicker"
   (showEmojiPickerChange)="showEmojiPicker = $event"
-  [isReply]="isReplay"
+  [isReply]="isReply"
   [isDirectChat]="isDirectChat"
+  [isFirstReply]="isFirstReply"
 >
 </app-emoji-picker>

@@ -111,6 +111,8 @@
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [path]="currentDirectChat.messages"
+          [isDirectChat]="true"
+          [channelId]="currentDirectChat.id || ''"
         ></app-user-message>
       </div>
 

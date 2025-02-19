@@ -193,13 +193,13 @@ export class MessageInputComponent implements OnInit {
   }
 
   insertEmoji(emoji: string) {
-    if(!this.isReplayInput) {
+    if (!this.isReplyInput) {
       this.message.message += emoji;
     } else {
       this.reply.message += emoji;
     }
     this.showEmojiPicker = !this.showEmojiPicker;
-  }  
+  }
 
   ngOnDestroy() {
     if (this.unsubLoggedInUser) {

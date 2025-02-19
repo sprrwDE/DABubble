@@ -106,23 +106,25 @@
       @if(!isDirectChat) {
 
       <app-user-message
-        *ngFor="let reply of getChannelReplies()"
+        *ngFor="let reply of getChannelReplies()?.replies"
         [isContact]="checkIfContact(reply.userId)"
         [isReply]="true"
-        [replyId]="reply.id"
         [messageId]="reply.id"
         [channelId]="currentChannel.id"
-        [path]="getChannelReplies()"
+        [parentElement]="getChannelReplies()"
+        [path]="getChannelReplies()?.replies"
+        [isDirectChat]="isDirectChat"
       ></app-user-message>
 
       } @if(isDirectChat) {
 
       <app-user-message
-        *ngFor="let reply of getDirectChatReplies()"
+        *ngFor="let reply of getDirectChatReplies()?.replies"
         [isContact]="checkIfContact(reply.userId)"
         [isReply]="true"
         [messageId]="reply.id"
-        [path]="getDirectChatReplies()"
+        [parentElement]="getDirectChatReplies()"
+        [path]="getDirectChatReplies()?.replies"
         [isDirectChat]="isDirectChat"
       ></app-user-message>
 

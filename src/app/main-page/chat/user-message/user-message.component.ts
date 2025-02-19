@@ -30,12 +30,12 @@ import { DirectChatService } from '../../../shared/services/direct-chat.service'
 })
 export class UserMessageComponent implements OnDestroy {
   @Input() path: any;
+  @Input() parentElement: any;
   @Input() messageId: any;
   @Input() channelId: string = '';
-  @Input() replyId: string = '';
 
   @Input() isContact: boolean = false;
-
+  @Input() isDirectChat: boolean = false;
   @Input() isReply: boolean = false;
   @Input() isFirstReply: boolean = false;
   @Input() isChannelReply: boolean = false;
@@ -221,7 +221,7 @@ export class UserMessageComponent implements OnDestroy {
   }
 
   getReplyLikes() {
-    return { [this.replyId]: this.likes };
+    return { [this.messageId]: this.likes };
   }
 
   toggleEditMessagePopup() {
@@ -251,7 +251,7 @@ export class UserMessageComponent implements OnDestroy {
   reactOnEmoji(
     emoji: string,
     user: string,
-    message: string,
+    messageId: string,
     channel: string,
     likes: { emoji: string; count: number; userIds: string[] }[]
   ) {
@@ -261,7 +261,7 @@ export class UserMessageComponent implements OnDestroy {
       'user',
       user,
       'messageid',
-      message,
+      messageId,
       'channelid',
       channel,
       'likesarray',
@@ -270,24 +270,26 @@ export class UserMessageComponent implements OnDestroy {
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = { [message]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+    > = { [this.parentElement.id]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
 
     const revReactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = { [this.replyId]: likes };
+    > = { [messageId]: likes };
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
-      message,
+      this.isFirstReply ? this.messageObj?.id : this.parentElement.id,
       user,
       channel,
       reactionsAsRecord,
-      this.isReplay,
-      this.replyId,
+      this.isReply,
+      messageId,
       revReactionsAsRecord,
-      this.isDirectChat
+      this.isDirectChat,
+      this.isFirstReply
     );
+
     return;
   }
 

@@ -120,17 +120,15 @@ export class ReplyPanelComponent {
   }
 
   getChannelReplies() {
-    return (
-      this.currentChannel.messages?.find(
-        (message) => message.id === this.currentReplyMessageId
-      )?.replies || []
+    return this.currentChannel.messages?.find(
+      (message) => message.id === this.currentReplyMessageId
     );
   }
 
   getDirectChatReplies() {
     return this.currentDirectChat?.messages?.find(
       (message) => message.id === this.currentReplyMessageId
-    )?.replies;
+    );
   }
 
   // ngOnDestroy() {
