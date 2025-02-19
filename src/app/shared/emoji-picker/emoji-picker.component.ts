@@ -91,6 +91,10 @@ export class EmojiPickerComponent {
         this.messageId
       );
 
+      console.log('HIIIIIIIIIIIIII');
+      console.log(this.messageId, 'messageId');
+      console.log(this.replyId, 'replyId');
+
       this.emojiCounterService.handleEmojiLogic(
         selectedEmoji,
         this.messageId,

@@ -205,6 +205,8 @@ export class UserMessageComponent implements OnDestroy {
       );
     }
 
+    console.log(this.messageObj, 'messageObj');
+
     this.message = this.messageObj?.message;
     this.time = this.channelService.formatTime(this.messageObj?.timestamp);
     this.name =

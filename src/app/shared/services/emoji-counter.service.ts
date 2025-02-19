@@ -50,7 +50,8 @@ export class EmojiCounterService {
     isDirectChat: boolean,
     isFirstReply: boolean
   ) {
-    console.log(isFirstReply, 'isFirstReply');
+    console.log(messageId, 'messageId');
+    console.log(replyId, 'replyId');
 
     if (!isReply || isFirstReply) {
       // Falls wir noch keine Reaktionen für diese Message haben, initialisiere sie aus previousReactions oder als leeres Array

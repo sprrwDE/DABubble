@@ -425,7 +425,7 @@
 <app-emoji-picker
   class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
   *ngIf="showEmojiPicker"
-  [messageId]="isFirstReply ? messageObj?.id : messageId"
+  [messageId]="isReply ? parentElement?.id : messageId"
   [channelId]="channelId"
   [replyId]="messageId"
   [emojiInput$]="emojiInput$"
