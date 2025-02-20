@@ -162,22 +162,13 @@ export class ChatComponent {
     }
   }
 
-  getUserName(userId: string, message: Message, messages: Message[]): string {
+  checkIfContact(
+    userId: string,
+    message: Message,
+    messages: Message[]
+  ): boolean {
     this.checkScrollToBottom(message, messages);
 
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.name || 'lädt...'
-    );
-  }
-
-  getUserImage(userId: string): string {
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.image ||
-      'imgs/avatar1.png'
-    );
-  }
-
-  checkIfContact(userId: string): boolean {
     if (this.loggedInUser) {
       let loggedInUserId = this.loggedInUser.id;
       return loggedInUserId !== userId;

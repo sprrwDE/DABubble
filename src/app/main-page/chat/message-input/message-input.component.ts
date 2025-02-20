@@ -85,11 +85,10 @@ export class MessageInputComponent implements OnInit {
   onKeyDown(event: KeyboardEvent): void {
     // Prüfen, ob Enter ohne Shift gedrückt wurde
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();  // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
-      this.isReplyInput ? this.sendReply() : this.sendMessage()         // Formular abschicken
+      event.preventDefault(); // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
+      this.isReplyInput ? this.sendReply() : this.sendMessage(); // Formular abschicken
     }
   }
-
 
   async sendMessage() {
     console.log(this.channelService.currentChannel());
@@ -198,6 +197,7 @@ export class MessageInputComponent implements OnInit {
 
     this.reply.message = '';
 
+    this.replyPanelComponent.scroll = true;
     console.log('Successfully sent message!!');
   }
 

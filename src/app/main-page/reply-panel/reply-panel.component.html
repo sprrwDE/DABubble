@@ -107,7 +107,13 @@
 
       <app-user-message
         *ngFor="let reply of getChannelReplies()?.replies"
-        [isContact]="checkIfContact(reply.userId)"
+        [isContact]="
+          checkIfContact(
+            reply.userId,
+            reply,
+            getChannelReplies()?.replies || []
+          )
+        "
         [isReply]="true"
         [messageId]="reply.id"
         [channelId]="currentChannel.id"
@@ -120,7 +126,13 @@
 
       <app-user-message
         *ngFor="let reply of getDirectChatReplies()?.replies"
-        [isContact]="checkIfContact(reply.userId)"
+        [isContact]="
+          checkIfContact(
+            reply.userId,
+            reply,
+            getDirectChatReplies()?.replies || []
+          )
+        "
         [isReply]="true"
         [messageId]="reply.id"
         [parentElement]="getDirectChatReplies()"

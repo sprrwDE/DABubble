@@ -27,7 +27,13 @@
 
         <app-user-message
           [messageId]="message?.id"
-          [isContact]="checkIfContact(message.userId)"
+          [isContact]="
+            checkIfContact(
+              message.userId,
+              message,
+              currentChannel.messages || []
+            )
+          "
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [channelId]="currentChannel.id"
@@ -107,7 +113,13 @@
         <!-- DMs -->
         <app-user-message
           [messageId]="message?.id"
-          [isContact]="checkIfContact(message.userId)"
+          [isContact]="
+            checkIfContact(
+              message.userId,
+              message,
+              currentDirectChat.messages || []
+            )
+          "
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [path]="currentDirectChat.messages"
