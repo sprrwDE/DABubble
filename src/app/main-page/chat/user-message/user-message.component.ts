@@ -109,11 +109,6 @@ export class UserMessageComponent implements OnDestroy {
 
     this.resizeObserver = new ResizeObserver(() => {
       this.checkMessageContainerWidth();
-
-      console.log(
-        'messageContainerWidthIsBelow400',
-        this.messageContainerWidthIsBelow400
-      );
     });
   }
 
@@ -150,9 +145,6 @@ export class UserMessageComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    console.log('Likes empfangen in UserMessageComponent:', this.likes);
-    console.log('reply likes', this.likes);
-
     this.getMessageFromId(this.messageId);
   }
 
@@ -178,9 +170,7 @@ export class UserMessageComponent implements OnDestroy {
   }
 
   checkMessageContainerWidth() {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     const messageContainer = this.messageContainer.nativeElement;
-
     if (messageContainer.offsetWidth < 400) {
       this.messageContainerWidthIsBelow400 = true;
     } else {
@@ -204,8 +194,6 @@ export class UserMessageComponent implements OnDestroy {
         (message: any) => message.id === messageId
       );
     }
-
-    console.log(this.messageObj, 'messageObj');
 
     this.message = this.messageObj?.message;
     this.time = this.channelService.formatTime(this.messageObj?.timestamp);
@@ -231,9 +219,6 @@ export class UserMessageComponent implements OnDestroy {
   }
 
   async openReplyPanel() {
-    // console.log(this.messageObj.userId);
-    // console.log(this.messageId, 'test');
-
     this.channelService.currentReplyMessageId.set(this.messageId);
 
     this.panelService.renderReplyPanel(
@@ -257,33 +242,25 @@ export class UserMessageComponent implements OnDestroy {
     channel: string,
     likes: { emoji: string; count: number; userIds: string[] }[]
   ) {
-    console.log(
-      'emoji',
-      emoji,
-      'user',
-      user,
-      'messageid',
-      messageId,
-      'channelid',
-      channel,
-      'likesarray',
-      likes
-    );
     const reactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = { [this.parentElement.id]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
+    > = { [this.messageObj?.id]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
 
     const revReactionsAsRecord: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]
-    > = { [messageId]: likes };
+    > = { [this.messageObj?.id]: likes };
 
     this.emojiCounterService.handleEmojiLogic(
       emoji,
-      this.isFirstReply ? this.messageObj?.id : this.parentElement.id,
+      !this.isFirstReply && this.isReply
+        ? this.parentElement?.id
+        : this.messageObj?.id,
       user,
-      channel,
+      this.currentChannel.id === ''
+        ? this.currentDirectChat.id || ''
+        : this.currentChannel.id,
       reactionsAsRecord,
       this.isReply,
       messageId,
@@ -320,9 +297,6 @@ export class UserMessageComponent implements OnDestroy {
   }
 
   getUser(userId: string) {
-    console.log(this.allUsers);
-    console.log(userId);
-    console.log(this.allUsers.find((user) => user.id === userId));
     return this.allUsers.find((user) => user.id === userId);
   }
 
@@ -356,7 +330,6 @@ export class UserMessageComponent implements OnDestroy {
       }
     } else {
       if (!this.isReply || this.isFirstReply) {
-        console.log(this.isFirstReply);
         this.directChatService.editMessage(
           this.isFirstReply ? this.firstReplyMessageId : this.messageId,
           this.editedMessage

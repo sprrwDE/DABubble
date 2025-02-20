@@ -8,21 +8,35 @@
 
 /// Code aufräumen
 
-import { Injectable } from '@angular/core';
+import { effect, Injectable } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { FirebaseService } from './firebase.service';
 import { PanelService } from './panel.service';
+import { ChannelService } from './channel.service';
+import { DirectChatService } from './direct-chat.service';
+import { Channel } from '../models/channel.model';
+import { DirectChat } from '../models/direct-chat.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmojiCounterService {
+  currentChannel: Channel = new Channel();
+  currentDirectChat: DirectChat = new DirectChat();
   constructor(
     private userService: UserService,
     private firebaseService: FirebaseService,
-    private panelService: PanelService
-  ) {}
-
+    private panelService: PanelService,
+    private channelService: ChannelService,
+    private directChatService: DirectChatService
+  ) {
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
+  }
   private messageLikes: Record<
     string,
     { emoji: string; count: number; userIds: string[] }[]
@@ -50,11 +64,7 @@ export class EmojiCounterService {
     isDirectChat: boolean,
     isFirstReply: boolean
   ) {
-    console.log(messageId, 'messageId');
-    console.log(replyId, 'replyId');
-
     if (!isReply || isFirstReply) {
-      // Falls wir noch keine Reaktionen für diese Message haben, initialisiere sie aus previousReactions oder als leeres Array
       if (!this.messageLikes[messageId]) {
         this.messageLikes[messageId] = previousReactions[messageId]
           ? [...previousReactions[messageId]]
@@ -64,7 +74,7 @@ export class EmojiCounterService {
         (item) => item.emoji === emoji
       );
       this.checkReactingUser(reactionIndex, userId, messageId, emoji);
-      if (!isDirectChat) {
+      if (this.currentChannel.id !== '') {
         this.firebaseService.updateEmojiCount(
           this.messageLikes,
           messageId,
@@ -80,7 +90,6 @@ export class EmojiCounterService {
         );
       }
     } else {
-      // Für Replies: Verwende den vorhandenen Zustand für diesen replyId, falls vorhanden, ansonsten initialisiere mit den übergebenen prevRevReactions
       if (!this.messageLikes[replyId]) {
         this.messageLikes[replyId] = prevRevReactions[replyId]
           ? [...prevRevReactions[replyId]]
@@ -89,15 +98,9 @@ export class EmojiCounterService {
       const reactionIndex = this.messageLikes[replyId].findIndex(
         (item) => item.emoji === emoji
       );
-      console.log(
-        'Aktueller Zustand für replyId',
-        replyId,
-        ':',
-        this.messageLikes[replyId]
-      );
       this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
-      if (!isDirectChat) {
-        this.firebaseService.updateEmojiCountReplys(
+      if (this.currentChannel.id !== '') {
+        this.firebaseService.updateEmojiCountReplies(
           this.messageLikes,
           messageId,
           channelId,
@@ -105,9 +108,10 @@ export class EmojiCounterService {
           'channels'
         );
       } else {
-        this.firebaseService.updateEmojiCount(
+        this.firebaseService.updateEmojiCountReplies(
           this.messageLikes,
           messageId,
+          channelId,
           replyId,
           'direct-chats'
         );
@@ -121,7 +125,6 @@ export class EmojiCounterService {
     replyId: string,
     emoji: string
   ) {
-    console.log('AUFGERUFEN');
     if (!this.messageLikes[replyId]) {
       this.messageLikes[replyId] = [];
     }
@@ -131,7 +134,6 @@ export class EmojiCounterService {
       this.handleReactionReply(reaction, userId, replyId);
     } else {
       this.messageLikes[replyId].push({ emoji, count: 1, userIds: [userId] });
-      console.log(this.messageLikes[replyId], 'LIKES');
     }
   }
 
@@ -140,33 +142,21 @@ export class EmojiCounterService {
     userId: string,
     replyId: string
   ) {
-    console.log('🔹 Vorher (Reply):', JSON.stringify(reaction, null, 2));
-
-    // Prüfe, ob der Benutzer bereits reagiert hat
     const alreadyReacted = reaction.userIds.includes(userId);
 
     if (alreadyReacted) {
-      // Benutzer hat bereits reagiert – also Like entfernen
       reaction.userIds = reaction.userIds.filter((id) => id !== userId);
       reaction.count = Math.max(reaction.count - 1, 0);
-      console.log('❌ Entfernt (Reply):', JSON.stringify(reaction, null, 2));
-
-      // Falls keine Nutzer mehr diesen Like haben, entferne das gesamte Reaktionsobjekt
       if (reaction.count === 0) {
-        console.log('🗑️ Reaktion für Reply entfernt:', reaction.emoji);
         reaction.userIds = [];
         this.messageLikes[replyId] = this.messageLikes[replyId].filter(
           (r) => r.emoji !== reaction.emoji
         );
       }
     } else {
-      // Benutzer hat noch nicht reagiert – Like hinzufügen
       reaction.userIds.push(userId);
       reaction.count++;
-      console.log('✅ Hinzugefügt (Reply):', JSON.stringify(reaction, null, 2));
     }
-
-    console.log('📌 Nachher (Reply):', JSON.stringify(reaction, null, 2));
   }
 
   handleReaction(
@@ -174,33 +164,21 @@ export class EmojiCounterService {
     userId: string,
     messageId: string
   ) {
-    console.log('🔹 Vorher:', JSON.stringify(reaction, null, 2));
-
-    // Prüfe, ob der Benutzer bereits reagiert hat
     const alreadyReacted = reaction.userIds.includes(userId);
 
     if (alreadyReacted) {
-      // Benutzer hat bereits reagiert – Like entfernen
       reaction.userIds = reaction.userIds.filter((id) => id !== userId);
       reaction.count = Math.max(reaction.count - 1, 0);
-      console.log('❌ Entfernt:', JSON.stringify(reaction, null, 2));
-
-      // Falls keine Nutzer mehr diesen Like haben, entferne das Reaktionsobjekt
       if (reaction.count === 0) {
-        console.log('🗑️ Reaktion komplett entfernt für Emoji:', reaction.emoji);
         reaction.userIds = [];
         this.messageLikes[messageId] = this.messageLikes[messageId].filter(
           (r) => r.emoji !== reaction.emoji
         );
       }
     } else {
-      // Benutzer hat noch nicht reagiert – Like hinzufügen
       reaction.userIds.push(userId);
       reaction.count++;
-      console.log('✅ Hinzugefügt:', JSON.stringify(reaction, null, 2));
     }
-
-    console.log('📌 Nachher:', JSON.stringify(reaction, null, 2));
   }
 
   checkReactingUser(

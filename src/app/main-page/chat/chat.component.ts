@@ -70,7 +70,6 @@ export class ChatComponent {
     effect(() => {
       if (this.channelService.currentChannel()) {
         this.currentChannel = this.channelService.currentChannel();
-        console.log(this.currentChannel);
       } else {
         this.currentChannel = new Channel();
       }
@@ -112,7 +111,7 @@ export class ChatComponent {
   }
 
   getLikes(message: Message) {
-    return message.likes || []
+    return message.likes || [];
   }
 
   // openChannelDetailsPopup(type: string, corner: string) {
@@ -163,22 +162,13 @@ export class ChatComponent {
     }
   }
 
-  getUserName(userId: string, message: Message, messages: Message[]): string {
+  checkIfContact(
+    userId: string,
+    message: Message,
+    messages: Message[]
+  ): boolean {
     this.checkScrollToBottom(message, messages);
 
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.name || 'lädt...'
-    );
-  }
-
-  getUserImage(userId: string): string {
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.image ||
-      'imgs/avatar1.png'
-    );
-  }
-
-  checkIfContact(userId: string): boolean {
     if (this.loggedInUser) {
       let loggedInUserId = this.loggedInUser.id;
       return loggedInUserId !== userId;

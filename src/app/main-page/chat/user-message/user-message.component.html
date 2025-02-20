@@ -33,7 +33,13 @@
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         (click)="
-          reactOnEmoji('✅', loggedInUser.id, messageId, channelId, likes)
+          reactOnEmoji(
+            '✅',
+            loggedInUser.id,
+            messageId,
+            isDirectChat ? currentDirectChat?.id || '' : currentChannel.id,
+            likes
+          )
         "
       >
         <path
@@ -55,7 +61,13 @@
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         (click)="
-          reactOnEmoji('🙌', loggedInUser.id, messageId, channelId, likes)
+          reactOnEmoji(
+            '🙌',
+            loggedInUser.id,
+            messageId,
+            isDirectChat ? currentDirectChat?.id || '' : currentChannel.id,
+            likes
+          )
         "
       >
         <path
@@ -289,7 +301,13 @@
       <div
         class="cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         (click)="
-          reactOnEmoji(like.emoji, loggedInUser.id, messageId, channelId, likes)
+          reactOnEmoji(
+            like.emoji,
+            loggedInUser?.id || '',
+            messageId,
+            isDirectChat ? currentDirectChat?.id || '' : currentChannel.id,
+            likes
+          )
         "
       >
         <span>{{ like.emoji }}</span>
@@ -425,8 +443,12 @@
 <app-emoji-picker
   class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
   *ngIf="showEmojiPicker"
-  [messageId]="isReply ? parentElement?.id : messageId"
-  [channelId]="channelId"
+  [messageId]="
+    !this.isFirstReply && this.isReply
+      ? this.parentElement?.id
+      : this.messageObj?.id
+  "
+  [channelId]="isDirectChat ? currentDirectChat.id || '' : currentChannel.id"
   [replyId]="messageId"
   [emojiInput$]="emojiInput$"
   [messageLikes]="getMessageLikes()"

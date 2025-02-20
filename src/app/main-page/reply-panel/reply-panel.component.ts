@@ -104,16 +104,9 @@ export class ReplyPanelComponent {
     }
   }
 
-  getUserNameAndScroll(userId: string, reply: Reply, replies: Reply[]) {
+  checkIfContact(userId: string, reply: Reply, replies: Reply[]): boolean {
     this.checkScrollToBottom(reply, replies);
 
-    return (
-      this.allUsers.find((user: User) => user.id === userId)?.name ||
-      'NAN = Not A NAME'
-    );
-  }
-
-  checkIfContact(userId: string): boolean {
     let loggedInUserId = this.loggedInUser.id;
 
     return loggedInUserId !== userId;
