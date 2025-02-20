@@ -1,9 +1,67 @@
 <section class="flex items-center justify-center h-screen w-screen">
-    <div
-    class="p-[40px] bg-white rounded-3xl flex flex-col gap-5"
-  >
-    <span>Datenschutzerklärung</span>
-    <button routerLink="/login">Back</button>
+  <div class="p-10 bg-white rounded-3xl flex flex-col gap-5 max-h-screen overflow-auto shadow-lg w-11/12 md:w-3/4 lg:w-1/2">
+    <span class="text-2xl font-bold">Datenschutzerklärung</span>
+
+    <span class="text-xl font-semibold">Allgemeine Hinweise</span>
+
+    <p class="text-gray-700">
+      Diese Datenschutzerklärung informiert dich über die Art, den Umfang und den Zweck der Verarbeitung personenbezogener Daten bei der Nutzung von 
+      <span class="font-semibold">DA Bubble</span>. Wir nehmen den Schutz deiner persönlichen Daten sehr ernst und behandeln sie vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften.
+    </p>
+
+    <span class="text-xl font-semibold">Verantwortliche Stelle</span>
+
+    <p class="text-gray-700">Verantwortlich für die Datenverarbeitung im Sinne der Datenschutzgesetze sind:</p>
+
+    <div class="text-gray-700">
+      Mehmet Deliaci, Denis Dudda, Kai Schulz<br>
+      Altenweg 47<br>
+      75228 Ispringen<br>
+      E-Mail: <a href="mailto:info@sparrowmedia.de" class="text-blue-500 hover:underline">info&#64;sparrowmedia.de</a>
+    </div>
+
+    <span class="text-xl font-semibold">Erhobene Daten und deren Verwendung</span>
+
+    <p class="text-gray-700">
+      Wir verwenden Angular, Angular Fire sowie die Firebase/Firestore-Datenbank, um 
+      <span class="font-semibold">DA Bubble</span> bereitzustellen. Dabei können folgende Daten erfasst und verarbeitet werden:
+    </p>
+
+    <ul class="list-disc list-inside text-gray-700">
+      <li>Registrierungsdaten (z. B. Name, E-Mail-Adresse, Passwort)</li>
+      <li>Nutzungsdaten (z. B. IP-Adresse, Browserinformationen, besuchte Seiten)</li>
+      <li>Kommunikationsdaten (z. B. Chatnachrichten, Kommentare)</li>
+    </ul>
+
+    <p class="text-gray-700">
+      Die Verarbeitung dieser Daten erfolgt ausschließlich zum Betrieb und zur Verbesserung der Anwendung. Eine Weitergabe an Dritte erfolgt nur, wenn dies gesetzlich vorgeschrieben ist oder du ausdrücklich zugestimmt hast.
+    </p>
+
+    <span class="text-xl font-semibold">Speicherung und Löschung</span>
+
+    <p class="text-gray-700">
+      Die Daten werden in Firebase Firestore gespeichert. Wir bewahren personenbezogene Daten nur so lange auf, wie es für die Erbringung unserer Dienstleistungen erforderlich ist. Auf Wunsch kannst du deine Daten jederzeit löschen lassen.
+    </p>
+
+    <span class="text-xl font-semibold">Cookies und Tracking-Technologien</span>
+
+    <p class="text-gray-700">
+      DA Bubble nutzt keine Cookies oder Tracking-Technologien zur Analyse des Nutzerverhaltens. Alle erfassten Daten dienen ausschließlich der Funktionalität der Anwendung.
+    </p>
+
+    <span class="text-xl font-semibold">Deine Rechte</span>
+
+    <p class="text-gray-700">
+      Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner personenbezogenen Daten. Zudem kannst du der Verarbeitung widersprechen und deine Einwilligung jederzeit widerrufen.
+    </p>
+
+    <p class="text-gray-700">
+      Falls du Fragen zum Datenschutz hast, kontaktiere uns unter 
+      <a href="mailto:info@sparrowmedia.de" class="text-blue-500 hover:underline">info&#64;sparrowmedia.de</a>.
+    </p>
+
+    <button routerLink="/login" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+      Zurück
+    </button>
   </div>
-  </section>
-  
+</section>
