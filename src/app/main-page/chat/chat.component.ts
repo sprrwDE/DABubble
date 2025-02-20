@@ -70,7 +70,6 @@ export class ChatComponent {
     effect(() => {
       if (this.channelService.currentChannel()) {
         this.currentChannel = this.channelService.currentChannel();
-        console.log(this.currentChannel);
       } else {
         this.currentChannel = new Channel();
       }
@@ -112,7 +111,7 @@ export class ChatComponent {
   }
 
   getLikes(message: Message) {
-    return message.likes || []
+    return message.likes || [];
   }
 
   // openChannelDetailsPopup(type: string, corner: string) {

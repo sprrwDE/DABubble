@@ -48,15 +48,12 @@ export class FirebaseService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        console.log('Document data:', data);
         this.fetchedSingleSubject.next(data);
         return data;
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
-      console.error('Error fetching document:', error);
       throw error;
     }
   }
@@ -72,10 +69,8 @@ export class FirebaseService {
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          console.log('Live Document Data:', data);
           callback(data);
         } else {
-          console.log('No such document!');
           callback(null);
         }
       });
@@ -89,7 +84,6 @@ export class FirebaseService {
 
   async addUser(userInterface: User) {
     let user: any;
-    console.log('der userinterface ist das hier: ', userInterface);
     if (userInterface instanceof User) {
       user = userInterface.toJSON();
     } else {
@@ -99,10 +93,6 @@ export class FirebaseService {
     try {
       const docRef = doc(this.firestore, `users/${user.id}`);
       await setDoc(docRef, user);
-      console.log(
-        'Dokument mit benutzerdefinierter ID erfolgreich gespeichert:',
-        user.id
-      );
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
     }
@@ -119,8 +109,7 @@ export class FirebaseService {
 
   async changeProfileImage(id: string, image: string) {
     try {
-      const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
-      console.log(image);
+      const docRef = doc(this.firestore, `users/${id}`);
       await updateDoc(docRef, { image });
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
@@ -129,7 +118,7 @@ export class FirebaseService {
 
   async updateUserName(id: string, input: string) {
     try {
-      const docRef = doc(this.firestore, `users/${id}`); // Benutzerdefinierte ID
+      const docRef = doc(this.firestore, `users/${id}`);
       await updateDoc(docRef, { name: input });
     } catch (error) {
       console.error('Fehler beim Speichern des Dokuments:', error);
@@ -145,12 +134,6 @@ export class FirebaseService {
     channelId: string,
     chat: string
   ) {
-    console.log('🛠️ updateEmojiCount() gestartet mit:', {
-      reaction,
-      messageId,
-      channelId,
-    });
-
     try {
       const docRef = doc(
         this.firestore,
@@ -158,34 +141,17 @@ export class FirebaseService {
       );
       const docSnap = await getDoc(docRef);
 
-      console.log('📄 Firebase DocSnap:', docSnap.exists());
-
       if (docSnap.exists()) {
-        const docData = docSnap.data() as {
-          likes?: { emoji: string; count: number; userIds: string[] }[];
-        };
-
         let updatedLikes = reaction[messageId] || [];
-
-        // 🔥 Fix: Falls `count === 0`, entferne das Emoji aus der Liste
         updatedLikes = updatedLikes.filter((r) => r.count > 0);
-
-        console.log('✅ Speichere in Firebase:', updatedLikes);
-
         await updateDoc(docRef, { likes: updatedLikes });
-
-        console.log(
-          `🎉 Erfolgreich gespeichert für Message ${messageId} in Channel ${channelId}`
-        );
-      } else {
-        console.error('❌ Kein Dokument gefunden für', messageId, channelId);
       }
     } catch (error) {
-      console.error('🔥 Fehler beim Speichern in Firebase:', error);
+      console.error('Fehler beim Speichern in Firebase:', error);
     }
   }
 
-  async updateEmojiCountReplys(
+  async updateEmojiCountReplies(
     reaction: Record<
       string,
       { emoji: string; count: number; userIds: string[] }[]

@@ -15,6 +15,8 @@ import { EmojiCounterService } from '../services/emoji-counter.service';
 import { UserService } from '../services/user.service';
 import { ChannelService } from '../services/channel.service';
 import { Channel } from '../models/channel.model';
+import { DirectChat } from '../models/direct-chat.model';
+import { DirectChatService } from '../services/direct-chat.service';
 
 @Component({
   selector: 'app-emoji-picker',
@@ -26,6 +28,7 @@ import { Channel } from '../models/channel.model';
 export class EmojiPickerComponent {
   loggedInUser: any;
   currentChannel: Channel = new Channel();
+  currentDirectChat: DirectChat = new DirectChat();
   @Input() emojiInput$: Subject<string> | undefined;
   @Input() messageId: string = '';
   @Input() channelId: string = '';
@@ -65,7 +68,8 @@ export class EmojiPickerComponent {
   constructor(
     private emojiCounterService: EmojiCounterService,
     private userService: UserService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private directChatService: DirectChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -74,7 +78,7 @@ export class EmojiPickerComponent {
       this.currentChannel = this.channelService.currentChannel();
     });
     effect(() => {
-      this.currentChannel = this.channelService.currentChannel();
+      this.currentDirectChat = this.directChatService.currentDirectChat();
     });
   }
 
@@ -94,12 +98,16 @@ export class EmojiPickerComponent {
       console.log('HIIIIIIIIIIIIII');
       console.log(this.messageId, 'messageId');
       console.log(this.replyId, 'replyId');
+      console.log(this.currentDirectChat.id, 'channelId');
+      console.log(this.isDirectChat, 'channelId');
 
       this.emojiCounterService.handleEmojiLogic(
         selectedEmoji,
         this.messageId,
         this.loggedInUser.id,
-        this.currentChannel.id,
+        this.currentChannel.id === ''
+          ? this.currentDirectChat.id || ''
+          : this.currentChannel.id,
         this.messageLikes,
         this.isReply,
         this.replyId,
@@ -145,8 +153,7 @@ export class EmojiPickerComponent {
     ) {
       this.isOpened = false;
       this._showEmojiPicker = false;
-      this.showEmojiPickerChange.emit(false); // 🔥 Event auslösen, damit `UserMessageComponent` es mitbekommt
-      console.log('Emoji Picker geschlossen');
+      this.showEmojiPickerChange.emit(false);
     }
   }
 }
