@@ -90,7 +90,6 @@ export class MessageInputComponent implements OnInit {
     }
   }
 
-
   async sendMessage() {
     console.log(this.channelService.currentChannel());
     if (this.isMessageEmpty()) return;
