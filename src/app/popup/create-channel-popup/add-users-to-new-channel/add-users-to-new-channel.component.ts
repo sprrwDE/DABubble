@@ -104,14 +104,14 @@ export class AddUsersToNewChannelComponent {
       this.addUserService.userToAdd.forEach((user) =>
         this.channel.users.push(user.id)
       );
-      if(!this.channel.users.includes(this.channel.channelCreatorId)) {
-        this.channel.users.push(this.channel.channelCreatorId)
+      if(!this.channel.users.includes(this.channelService.loggedInUser.id)) {
+        this.channel.users.push(this.channelService.loggedInUser.id)
       }
     }
     this.channelService.addChannel(this.channel.toJSON());
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
-    console.log(this.channel);
+    console.log(this.channel, 'channnn');
 
     this.popupService.createChannelPopupOpen = false;
     this.popupService.createChannelPopupChannel = new Channel();
