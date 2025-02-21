@@ -220,7 +220,7 @@ export class MainPageComponent {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
     this.sidebarNavComponent.clearSearch();
-    if (!this.emojiPickerComponent.showEmojiPicker) {
+    if (this.emojiPickerComponent && !this.emojiPickerComponent.showEmojiPicker) {
       this.currentEditMessageId = '';
     }
 
