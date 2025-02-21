@@ -9,8 +9,8 @@
   [ngClass]="{
     'flex-row-reverse': isContact,
     'px-[16px]': isReply || !isReply,
-    'md:px-[30px]': isReply,
-    'md:px-[45px]': !isReply
+    'lg:px-[30px]': isReply,
+    'lg:px-[45px]': !isReply
   }"
 >
   <!-- reaction bar -->
@@ -252,8 +252,8 @@
     *ngIf="currentEditMessageId !== messageId"
     class="flex flex-col gap-[10px]"
     [ngClass]="{
-      'items-start md:pr-[80px]': isContact,
-      'items-end md:pl-[80px] ': !isContact
+      'items-start md:pr-[20px] lg:pr-[80px]': isContact,
+      'items-end md:pl-[20px] lg:pl-[80px] ': !isContact
     }"
   >
     <!-- name and time -->
@@ -376,7 +376,7 @@
   <div
     (click)="editMessage.focus()"
     *ngIf="currentEditMessageId === messageId"
-    class="w-full pl-[80px]"
+    class="w-full lg:pl-[80px]"
   >
     <div
       class="w-full h-full p-[20px] rounded-[20px] bg-white flex flex-col gap-[16px] border-[1px] border-lines"
@@ -440,7 +440,7 @@
   </div>
 
   <img
-    class="max-w-[50px] max-h-[50px] md:max-w-[70px] md:max-h-[70px] w-[50px] h-[50px] md:w-[70px] md:h-[70px] rounded-full"
+    class="max-w-[50px] max-h-[50px] w-[50px] h-[50px] md:max-w-[60px] md:max-h-[60px] md:w-[60px] md:h-[60px] lg:max-w-[70px] lg:max-h-[70px] lg:w-[70px] lg:h-[70px] rounded-full"
     src="{{ imgUrl || '' }}"
     alt=""
   />
