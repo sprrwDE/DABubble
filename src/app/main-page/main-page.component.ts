@@ -222,6 +222,7 @@ export class MainPageComponent {
     this.sidebarNavComponent.clearSearch();
 
     this.currentEditMessageId = '';
+
     /*     
     if (this.emojiPickerComponent) {
       this.emojiPickerComponent.toggleEmojiPicker();

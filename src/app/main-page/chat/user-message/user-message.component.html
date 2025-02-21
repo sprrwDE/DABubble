@@ -466,7 +466,7 @@
   [isReply]="isReply"
   [isDirectChat]="isDirectChat"
   [isFirstReply]="isFirstReply"
-  [editMessage]="editMessagePopupOpen"
+  [editMessage]="currentEditMessageId === messageId"
   (emojiSelectedEvent)="insertEmoji($event)"
 >
 </app-emoji-picker>
