@@ -42,6 +42,7 @@ export class EmojiPickerComponent {
     { emoji: string; count: number; userIds: string[] }[]
   > = {};
   @Input() isTextInput: boolean = false;
+  @Input() editMessage: boolean = false;
   @Input() isReply: boolean = false;
   @Input() isDirectChat: boolean = false;
   @Input() isFirstReply: boolean = false;
@@ -83,7 +84,8 @@ export class EmojiPickerComponent {
   }
 
   emojiSelected(event: any) {
-    if (!this.isTextInput) {
+    console.log(this.editMessage, 'edit')
+    if (!this.isTextInput && !this.editMessage) {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
       console.log(
@@ -115,7 +117,8 @@ export class EmojiPickerComponent {
         this.isDirectChat,
         this.isFirstReply
       );
-    } else {
+    } 
+    else {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
       console.log('input', selectedEmoji);

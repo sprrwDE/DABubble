@@ -326,4 +326,10 @@ export class UserMessageComponent {
       this.saveEditedMessage()
     }
   }
+
+  insertEmoji(emoji: string) {
+    // Emoji an den aktuellen Text anhängen
+    this.editedMessage += emoji;
+  }
+  
 }

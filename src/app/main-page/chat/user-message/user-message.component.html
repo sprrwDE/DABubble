@@ -405,6 +405,7 @@
             viewBox="0 0 24 25"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            (click)="showEmojiPicker = !showEmojiPicker"
           >
             <mask
               id="mask0_112248_10059"
@@ -465,5 +466,7 @@
   [isReply]="isReply"
   [isDirectChat]="isDirectChat"
   [isFirstReply]="isFirstReply"
+  [editMessage]="editMessagePopupOpen"
+  (emojiSelectedEvent)="insertEmoji($event)"
 >
 </app-emoji-picker>
