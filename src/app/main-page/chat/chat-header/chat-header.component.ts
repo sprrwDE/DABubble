@@ -1,4 +1,4 @@
-import { Component, effect, Input } from '@angular/core';
+import { Component, effect, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../popup/popup.component';
 import { ChannelService } from '../../../shared/services/channel.service';
@@ -37,6 +37,7 @@ export class ChatHeaderComponent {
 
   loggedInUser: any;
   isMobile: boolean = false;
+  memberListContainerWidth: boolean = false;
 
   constructor(
     private channelService: ChannelService,
@@ -49,8 +50,6 @@ export class ChatHeaderComponent {
   ) {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
-
-      console.log(this.currentChannel);
     });
 
     effect(() => {

@@ -25,7 +25,7 @@
       />
     </svg>
 
-    <h2 class="text-[20px] md:text-[24px] font-bold">
+    <h2 class="text-[20px] md:text-[24px] font-bold min-w-[max-content]">
       {{ currentChannel.name || "lädt..." }}
     </h2>
 
@@ -54,11 +54,16 @@
 
   <!-- chat members -->
   <div
+    #memberListContainer
     *ngIf="!isDirectChat && !searchChat"
-    class="flex items-center gap-[15px]"
+    class="flex items-center w-[181px] justify-end gap-[15px] max-w-[50%]"
   >
     <div
-      *ngIf="currentChannel.users.length > 0 && !isMobile"
+      *ngIf="
+        currentChannel.users.length > 0 &&
+        !isMobile &&
+        memberListContainer.offsetWidth > 180
+      "
       class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
       (click)="openMemberListPopup(false)"
     >

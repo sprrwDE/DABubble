@@ -18,9 +18,10 @@
     <app-sidebar-nav
       class="w-[350px] duration-300 max-w-[350px] overflow-hidden"
       [ngClass]="{
-        'w-px': !openSidebar || (isMobile && showMainChat),
-        'w-full': openSidebar,
-        'w-[100%] max-w-[unset]': isMobile || (isMobile && !openSidebar)
+        'w-px': !panelService.isSidebarOpen || (isMobile && showMainChat),
+        'w-full': panelService.isSidebarOpen,
+        'w-[100%] max-w-[unset]':
+          isMobile || (isMobile && !panelService.isSidebarOpen)
       }"
     ></app-sidebar-nav>
 
@@ -48,10 +49,12 @@
     (click)="toggleSidebar()"
     *ngIf="!isMobile"
   >
-    <p *ngIf="openSidebar" class="flex items-center">
+    <p *ngIf="panelService.isSidebarOpen" class="flex items-center">
       Workspace-Menü schließen
     </p>
-    <p *ngIf="!openSidebar" class="flex items-center">Workspace-Menü öffnen</p>
+    <p *ngIf="!panelService.isSidebarOpen" class="flex items-center">
+      Workspace-Menü öffnen
+    </p>
 
     <svg
       width="32"

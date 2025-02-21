@@ -40,12 +40,12 @@ export class MainPageComponent {
   @ViewChild(EmojiPickerComponent, { static: false })
   emojiPickerComponent!: EmojiPickerComponent;
 
-
   // afkDelay = 3000; // zum testen auf 3 Sekunden stellen
   afkDelay = 5 * 60 * 1000; // 5 Minuten in Millisekunden
   timeoutId: any;
   loggedInUser: any;
   public isMobile: boolean = false;
+  public isTablet: boolean = false;
   public currentChannel: Channel = new Channel();
 
   constructor(
@@ -64,6 +64,22 @@ export class MainPageComponent {
 
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
+    });
+
+    effect(() => {
+      this.isTablet = this.globalVariablesService.isTablet();
+    });
+
+    window.addEventListener('resize', () => {
+      if (this.isTablet) {
+        if (this.panelService.isSidebarOpen) {
+          this.panelService.openReplyPanel();
+        }
+
+        if (this.panelService.isReplyPanelOpen) {
+          this.panelService.openSidebar();
+        }
+      }
     });
   }
   get allUsers() {
@@ -109,10 +125,6 @@ export class MainPageComponent {
       this.fb.updateStateUser(user.id, status);
     }
   }
-
-
-
-  openSidebar = true;
 
   selectedUser: User = new User();
 
@@ -193,7 +205,15 @@ export class MainPageComponent {
   }
 
   toggleSidebar() {
-    this.openSidebar = !this.openSidebar;
+    if (!this.panelService.isSidebarOpen) {
+      console.log('open');
+
+      this.panelService.openSidebar();
+    } else if (this.panelService.isSidebarOpen) {
+      console.log('close');
+
+      this.panelService.isSidebarOpen = false;
+    }
   }
 
   closePopups() {
