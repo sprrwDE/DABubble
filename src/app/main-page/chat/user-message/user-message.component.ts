@@ -318,4 +318,12 @@ export class UserMessageComponent {
     }
     this.currentEditMessageId = '';
   }
+
+  onKeyDown(event: KeyboardEvent): void {
+    // Prüfen, ob Enter ohne Shift gedrückt wurde
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
+      this.saveEditedMessage()
+    }
+  }
 }

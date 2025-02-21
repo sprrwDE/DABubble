@@ -389,6 +389,7 @@
         [style.height.px]="editMessage.scrollHeight"
         placeholder="{{ message }}"
         (input)="adjustTextareaHeight()"
+        (keydown)="onKeyDown($event)"
       ></textarea>
 
       <div
