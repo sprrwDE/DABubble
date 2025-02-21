@@ -28,7 +28,7 @@ import { DirectChatService } from '../../../shared/services/direct-chat.service'
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
-export class UserMessageComponent implements OnDestroy {
+export class UserMessageComponent {
   @Input() path: any;
   @Input() parentElement: any;
   @Input() messageId: any;
@@ -65,10 +65,6 @@ export class UserMessageComponent implements OnDestroy {
   currentDirectChat: DirectChat = new DirectChat();
 
   @ViewChild('editMessage') editMessage!: ElementRef;
-  @ViewChild('messageContainer') messageContainer!: ElementRef;
-  messageContainerWidthIsBelow400: boolean = false;
-
-  private resizeObserver: ResizeObserver;
 
   constructor(
     private panelService: PanelService,
@@ -105,10 +101,6 @@ export class UserMessageComponent implements OnDestroy {
 
     effect(() => {
       this.currentDirectChat = this.directChatService.currentDirectChat();
-    });
-
-    this.resizeObserver = new ResizeObserver(() => {
-      this.checkMessageContainerWidth();
     });
   }
 
@@ -152,30 +144,12 @@ export class UserMessageComponent implements OnDestroy {
     if (this.editMessage) {
       this.adjustTextareaHeight();
     }
-
-    if (this.messageContainer?.nativeElement) {
-      this.resizeObserver.observe(this.messageContainer.nativeElement);
-      this.checkMessageContainerWidth();
-    }
-  }
-
-  ngOnDestroy() {
-    this.resizeObserver.disconnect();
   }
 
   adjustTextareaHeight() {
     const textarea = this.editMessage.nativeElement;
     textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
-  }
-
-  checkMessageContainerWidth() {
-    const messageContainer = this.messageContainer.nativeElement;
-    if (messageContainer.offsetWidth < 400) {
-      this.messageContainerWidthIsBelow400 = true;
-    } else {
-      this.messageContainerWidthIsBelow400 = false;
-    }
   }
 
   getMessageFromId(messageId: string) {
