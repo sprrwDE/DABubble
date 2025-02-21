@@ -1,0 +1,24 @@
+section {
+  color: black;
+
+  svg,
+  path {
+    fill: black;
+  }
+
+  .hover-primary-bg {
+    &:hover {
+      svg,
+      path {
+        @apply fill-primary;
+      }
+    }
+  }
+
+  .primary-svg-text {
+    svg,
+    path {
+      fill: rgb(68, 77, 242);
+    }
+  }
+}
