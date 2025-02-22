@@ -35,6 +35,8 @@ export class AddUserService implements OnDestroy {
   userToAdd: User[] = [];
   filteredUsers: User[] = [];
 
+  loggedInUserData: User = new User();
+
   private channelUserIdsSubject = new BehaviorSubject<string[]>([]); 
 
   constructor(
@@ -52,6 +54,7 @@ export class AddUserService implements OnDestroy {
         this.subscribeToChannelById(this.currentChannel.id);
       }
     });
+
 
     combineLatest([
       this.userservice.fetchedCollection$,
@@ -118,6 +121,7 @@ export class AddUserService implements OnDestroy {
   }
 
   pushMembersToChannel(channelId: string) {
+    console.log(this.userToAdd, 'automatisch hinzugefügt')
     const arrayToPush = this.userToAdd.map((user) => user.id); // Extrahiert nur die IDs
     const channelRef = doc(this.firestore, 'channels', channelId);
 

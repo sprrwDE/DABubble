@@ -9,6 +9,7 @@ import { AddUserService } from '../../../shared/services/add-user.service';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../shared/models/channel.model';
+import { loggedIn } from '@angular/fire/auth-guard';
 
 @Component({
   selector: 'app-add-users-to-new-channel',
@@ -103,11 +104,14 @@ export class AddUsersToNewChannelComponent {
       this.addUserService.userToAdd.forEach((user) =>
         this.channel.users.push(user.id)
       );
+      if(!this.channel.users.includes(this.channelService.loggedInUser.id)) {
+        this.channel.users.push(this.channelService.loggedInUser.id)
+      }
     }
     this.channelService.addChannel(this.channel.toJSON());
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
-    console.log(this.channel);
+    console.log(this.channel, 'channnn');
 
     this.popupService.createChannelPopupOpen = false;
     this.popupService.createChannelPopupChannel = new Channel();

@@ -123,6 +123,7 @@ export class EmojiPickerComponent {
       const selectedEmoji = event.emoji.native;
       console.log('input', selectedEmoji);
       this.emojiSelectedEvent.emit(selectedEmoji);
+      this.showEmojiPicker = !this.showEmojiPicker;
     }
   }
 
