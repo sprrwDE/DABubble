@@ -1,9 +1,5 @@
 <div
-  (click)="
-    $event.preventDefault();
-    $event.stopPropagation();
-    getMessageFromId(messageId)
-  "
+  (click)="$event.preventDefault(); getMessageFromId(messageId)"
   (mouseleave)="onMouseLeave()"
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{
@@ -25,22 +21,25 @@
       'left-[30px]': !isContact && isReply
     }"
   >
-    <div *ngIf="!isReply" class="transition-svg-text reaction-item-like">
+    <div
+      *ngIf="!isReply"
+      (click)="
+        reactOnEmoji(
+          '✅',
+          loggedInUser.id,
+          messageId,
+          isDirectChat ? currentDirectChat.id || '' : currentChannel.id,
+          likes
+        )
+      "
+      class="transition-svg-text reaction-item-like"
+    >
       <svg
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        (click)="
-          reactOnEmoji(
-            '✅',
-            loggedInUser.id,
-            messageId,
-            isDirectChat ? currentDirectChat.id || '' : currentChannel.id,
-            likes
-          )
-        "
       >
         <path
           d="M10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20Z"
@@ -53,22 +52,25 @@
       </svg>
     </div>
 
-    <div *ngIf="!isReply" class="transition-svg-text reaction-item-like">
+    <div
+      *ngIf="!isReply"
+      (click)="
+        reactOnEmoji(
+          '🙌',
+          loggedInUser.id,
+          messageId,
+          isDirectChat ? currentDirectChat.id || '' : currentChannel.id,
+          likes
+        )
+      "
+      class="transition-svg-text reaction-item-like"
+    >
       <svg
         width="20"
         height="20"
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        (click)="
-          reactOnEmoji(
-            '🙌',
-            loggedInUser.id,
-            messageId,
-            isDirectChat ? currentDirectChat.id || '' : currentChannel.id,
-            likes
-          )
-        "
       >
         <path
           d="M8.33765 0L10.0043 3.33333L11.671 0H8.33765ZM14.3043 0.333333L14.071 4.06667L17.171 2L14.3043 0.333333ZM2.83765 2L5.97098 4.06667L5.73765 0.333333L2.83765 2Z"
