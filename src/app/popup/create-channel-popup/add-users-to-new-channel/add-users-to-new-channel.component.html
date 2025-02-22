@@ -130,6 +130,10 @@
       />
     </div>
 
+<!--     <p *ngIf="showErrorText" class="text-error mt-[-10px]">
+      Bitte fügen Sie Mitglieder hinzu
+    </p> -->
+
     <app-add-user-to-channel-popup
       [display]="showUserPopup"
       [ngClass]="{
@@ -144,6 +148,8 @@
   </div>
 
   <div class="flex justify-end w-full md:w-[unset]">
-    <button (click)="createChannel()">Erstellen</button>
+    <button (click)="createChannel()"
+    [disabled]="showCreateChannelAddPeopleInput && addUserService.userToAdd.length === 0"
+    >Erstellen</button>
   </div>
 </section>
