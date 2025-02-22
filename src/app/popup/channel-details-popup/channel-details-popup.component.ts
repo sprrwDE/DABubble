@@ -20,8 +20,9 @@ export class ChannelDetailsPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
   currentChannel: Channel = new Channel();
-  isMobile: boolean = false;
   loggedInUser: any;
+  isMobile: boolean = false;
+  isTablet: boolean = false;
 
   channelNameInput: string = '';
   channelDescriptionInput: string = '';
@@ -42,6 +43,10 @@ export class ChannelDetailsPopupComponent {
 
     effect(() => {
       this.isMobile = this.globalVariablesService.isMobile();
+    });
+
+    effect(() => {
+      this.isTablet = this.globalVariablesService.isTablet();
     });
 
     effect(() => {

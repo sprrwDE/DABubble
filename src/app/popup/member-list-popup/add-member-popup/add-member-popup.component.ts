@@ -19,11 +19,14 @@ export class AddMemberPopupComponent {
   showUserPopup: boolean = false;
   nameInput: string = '';
 
-  constructor(public popupService: PopupService, public addUserService: AddUserService) {}
+  constructor(
+    public popupService: PopupService,
+    public addUserService: AddUserService
+  ) {}
 
   addMembers(id: string) {
     this.addUserService.pushMembersToChannel(id);
-    this.clearInputAndClosePopup()
+    this.clearInputAndClosePopup();
     this.addUserService.userToAdd = [];
   }
 
@@ -31,7 +34,7 @@ export class AddMemberPopupComponent {
     event.stopPropagation();
     this.addUserService.isCreatingNewChannel = false;
     if (this.addUserService.userToAdd.length == 0 && this.nameInput == 'Gast') {
-      return
+      return;
     } else {
       this.showUserPopup = true;
     }
@@ -45,18 +48,18 @@ export class AddMemberPopupComponent {
 
   addMemberToExistingChannel(event: Event) {
     this.addUserService.isCreatingNewChannel = false;
-    this.getNameInput(event)
+    this.getNameInput(event);
   }
 
   getNameInput(event: Event) {
     let name = this.nameInput.trim().toLowerCase();
     this.addUserService.filterArrayForNameInput(name);
-  
+
     if (this.addUserService.userToAdd.length === 0) {
       this.showUserPopup = true;
       return;
     }
-  
+
     if (this.nameInput !== '') {
       this.showAddUserToChannelSection(event);
     } else {
@@ -66,17 +69,17 @@ export class AddMemberPopupComponent {
 
   setUser(userId: string) {
     this.addUserService.setUserToAdd(userId);
-    this.nameInput = ''; 
+    this.nameInput = '';
   }
 
   clearInputAndClosePopup() {
-    this.nameInput = ''; 
-    this.showUserPopup = false; 
+    this.nameInput = '';
+    this.showUserPopup = false;
     this.closePopupEvent.emit();
   }
 
   handleClearInput() {
-    this.nameInput = ''; 
+    this.nameInput = '';
   }
 
   closePopup() {
@@ -88,4 +91,4 @@ export class AddMemberPopupComponent {
   handleUserPopupClose(event: boolean) {
     this.showUserPopup = event;
   }
- }
+}

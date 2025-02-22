@@ -41,7 +41,9 @@
         popupType === 'user-profile' ||
         popupType === 'user-profile-mobile'),
 
-    'translate-y-[100vh] md:translate-y-[unset] md:scale-0': !popupOpen && (popupType === 'profile-menu' || popupType === 'member-list-mobile' || popupType === 'add-users-to-new-channel'),
+    'translate-y-[100vh]': !popupOpen && (popupType === 'profile-menu' ||popupType === 'member-list-mobile'||  popupType === 'add-users-to-new-channel'),
+    'md:translate-y-[unset] md:scale-0': !popupOpen && (popupType === 'profile-menu' ||  popupType === 'add-users-to-new-channel'),
+    'xl:translate-y-[unset] xl:scale-0': !popupOpen && (popupType === 'member-list-mobile'),
 
     'shadow-[0px_-3px_10px_0px_#00000033]': popupType === 'profile-menu' || popupType === 'member-list-mobile'|| popupType === 'add-users-to-new-channel',
 

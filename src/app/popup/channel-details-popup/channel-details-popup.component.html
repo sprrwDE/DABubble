@@ -1,9 +1,9 @@
 <section class="channel-details-popup flex flex-col gap-[20px]">
   <div
-    class="flex justify-between items-center w-full sticky md:static top-[0px] md:top-[unset] z-[10000] md:z-[unset] bg-white"
+    class="flex justify-between items-center w-full sticky xl:static top-[0px] xl:top-[unset] z-[10000] xl:z-[unset] bg-white"
     [ngClass]="{
       'shadow-[0px_2px_10px_0px_#00000014] pt-[40px] pb-[20px] px-[16px]':
-        isMobile
+        isTablet
     }"
   >
     <div class="flex items-center gap-[15px]">
@@ -71,7 +71,7 @@
   </div>
 
   <div
-    class="pb-[20px] px-[16px] md:pb-[0px] md:px-[0px] flex flex-col gap-[20px]"
+    class="pb-[20px] px-[16px] xl:pb-[0px] xl:px-[0px] flex flex-col gap-[20px]"
   >
     <div
       class="flex flex-col gap-[20px] rounded-[20px] transition-svg-text"
@@ -234,14 +234,14 @@
 
     <!-- show members mobile -->
     <div
-      *ngIf="isMobile"
+      *ngIf="isTablet"
       class="flex flex-col gap-[20px] border border-lines py-[20px] px-[16px] rounded-[20px]"
     >
       <h2 class="text-[24px] font-bold">Mitglieder</h2>
 
       <div class="flex flex-col gap-[15px]">
         <div
-          class="flex flex-col gap-[13px] overflow-y-scroll overflow-x-hidden max-h-[200px] md:max-h-[400px]"
+          class="flex flex-col gap-[13px] overflow-y-scroll overflow-x-hidden max-h-[200px] xl:max-h-[400px]"
         >
           <!-- Unten rein rendern -->
 
