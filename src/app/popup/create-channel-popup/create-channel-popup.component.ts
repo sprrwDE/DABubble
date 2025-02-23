@@ -28,6 +28,7 @@ export class CreateChannelPopupComponent {
   nameInput: string = '';
 
   isMobile: any;
+  loggedInUser: any;
 
   constructor(
     public popupService: PopupService,
@@ -37,11 +38,7 @@ export class CreateChannelPopupComponent {
     public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
-      const user = this.userService.loggedInUser();
-
-      if (user) {
-        this.channel.channelCreatorId = user.id;
-      }
+      this.loggedInUser = this.userService.loggedInUser();
     });
 
     effect(() => {
@@ -107,6 +104,8 @@ export class CreateChannelPopupComponent {
         this.channel.users.push(user.id)
       );
     }
+    this.channel.channelCreatorId = this.loggedInUser.id;
+
     this.channelService.addChannel(this.channel.toJSON());
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
@@ -168,7 +167,7 @@ export class CreateChannelPopupComponent {
     this.showCreateChannelAddPeoplePopup = false;
 
     this.popupService.createChannelPopupChannel = new Channel();
-    this.addUserService.userToAdd = []
+    this.addUserService.userToAdd = [];
   }
 
   handleUserPopupClose(event: boolean) {

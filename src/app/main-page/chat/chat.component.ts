@@ -205,4 +205,27 @@ export class ChatComponent {
   ngOnInit() {
     this.channelService.chatComponent = this;
   }
+
+  formatDate(timestamp: number) {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const messageDate = new Date(timestamp);
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+    };
+
+    if (messageDate.toDateString() === today.toDateString()) {
+      return 'heute';
+    } else if (messageDate.toDateString() === yesterday.toDateString()) {
+      return 'gestern';
+    } else {
+      const date = new Date(timestamp);
+
+      return 'am ' + date.toLocaleDateString('de-DE', options);
+    }
+  }
 }

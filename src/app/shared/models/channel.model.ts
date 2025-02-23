@@ -6,6 +6,7 @@ export class Channel {
   description: string;
   users: string[];
   channelCreatorId: string;
+  timestamp: number;
   messages?: Message[];
 
   constructor(obj?: any) {
@@ -17,6 +18,7 @@ export class Channel {
     this.messages = obj?.messages
       ? obj.messages.map((msg: any) => new Message(msg))
       : [];
+    this.timestamp = obj?.timestamp || null;
   }
 
   toJSON() {
@@ -25,6 +27,7 @@ export class Channel {
       description: this.description,
       users: this.users,
       channelCreatorId: this.channelCreatorId,
+      timestamp: this.timestamp,
     };
   }
 }

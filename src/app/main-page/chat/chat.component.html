@@ -64,8 +64,26 @@
           </h2>
         </div>
 
-        <p class="flex gap-[10px]">
-          Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels
+        <p class="flex gap-[5px]">
+          <span>
+            <span *ngIf="loggedInUser.id === currentChannel.channelCreatorId">
+              Du hast
+            </span>
+
+            <span *ngIf="loggedInUser.id !== currentChannel.channelCreatorId">
+              {{
+                userService.getUserById(currentChannel.channelCreatorId)
+                  ?.name || "lädt..."
+              }}
+              hat
+            </span>
+            diesen Channel
+            <span>
+              {{ formatDate(currentChannel.timestamp) }}
+            </span>
+            erstellt. Das ist der Anfang des Channels
+          </span>
+
           <span class="flex items-center gap-[10px] text-hover">
             <svg
               width="20"

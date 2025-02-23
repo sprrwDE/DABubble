@@ -28,7 +28,7 @@ export class AddUsersToNewChannelComponent {
   nameInput: string = '';
 
   isMobile: any;
-
+  loggedInUser: any;
   constructor(
     public popupService: PopupService,
     public userService: UserService,
@@ -37,11 +37,7 @@ export class AddUsersToNewChannelComponent {
     public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
-      const user = this.userService.loggedInUser();
-
-      if (user) {
-        this.channel.channelCreatorId = user.id;
-      }
+      this.loggedInUser = this.userService.loggedInUser();
     });
 
     effect(() => {
@@ -104,11 +100,15 @@ export class AddUsersToNewChannelComponent {
       this.addUserService.userToAdd.forEach((user) =>
         this.channel.users.push(user.id)
       );
-      if(!this.channel.users.includes(this.channelService.loggedInUser.id)) {
-        this.channel.users.push(this.channelService.loggedInUser.id)
+      if (!this.channel.users.includes(this.channelService.loggedInUser.id)) {
+        this.channel.users.push(this.channelService.loggedInUser.id);
       }
     }
+    this.channel.channelCreatorId = this.loggedInUser.id;
+    this.channel.timestamp = new Date().getTime();
+
     this.channelService.addChannel(this.channel.toJSON());
+
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
     console.log(this.channel, 'channnn');
