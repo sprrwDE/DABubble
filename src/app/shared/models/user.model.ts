@@ -4,6 +4,7 @@ export class User {
  image: string;
  status: string;
  id!: string;
+ isNotGoogle: boolean;
 
  constructor(obj?: any) {
     this.name = obj ? obj.name : '';
@@ -11,6 +12,7 @@ export class User {
     this.image = obj ? obj.image : '';
     this.status = obj ? obj.status : '';
     this.id = obj ? obj.id : '';
+    this.isNotGoogle = obj ? obj.isNotGoogle : false;
 
     // this.trackMouseStatus()
  }
@@ -22,6 +24,7 @@ export class User {
      image: this.image,
      status: this.status,
      id: this.id,
+     isNotGoogle: this.isNotGoogle
    };
  }
 

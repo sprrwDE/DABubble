@@ -59,7 +59,9 @@ export class RegisterComponent {
         name: this.contactForm.value.name,
         image: '/imgs/avatar/profile.svg',
         status: 'offline',
+        isNotGoogle: true,
       });
+      console.log("user ist: ", user)
       this.addUserToFirebase(user);
       this.routeId(user.id);
     } catch (error) {
