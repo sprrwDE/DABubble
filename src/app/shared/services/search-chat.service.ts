@@ -120,7 +120,7 @@ export class SearchChatService {
   }
 
   // setCurrentChannel
-  setCurrentChannel(channel: Channel,  isSearching:boolean = false) {
+  setCurrentChannel(channel: Channel, isSearching: boolean = false) {
     this.mainChatService.showMainChat = true;
 
     this.resetPanelAndChat(isSearching);
@@ -151,27 +151,29 @@ export class SearchChatService {
 
   public resetPanelAndChat(isSearching: boolean = false) {
     this.panelService.closeReplyPanel();
-    if(!isSearching){
+    if (!isSearching) {
       this.channelService.chatComponent.scroll = true;
     } else {
       this.channelService.chatComponent.scroll = false;
     }
-    
   }
 
   public resetDirectChat() {
     this.directChatService.isDirectChat = false;
     this.directChatService.currentDirectChatUser.set(new User());
+    this.panelService.closeReplyPanel();
   }
 
   public resetChannelChat() {
     this.channelService.currentChannel.set(new Channel());
+    this.panelService.closeReplyPanel();
   }
 
   public resetSearchChat() {
     this.searchChat = false;
     this.searchChatInput = '';
     this.allChats = [];
+    this.panelService.closeReplyPanel();
   }
 
   private findExistingDirectChat(user: User): DirectChat | undefined {

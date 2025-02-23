@@ -48,6 +48,8 @@ export class MainPageComponent {
   public isTablet: boolean = false;
   public currentChannel: Channel = new Channel();
 
+  selectedUser: User = new User();
+
   constructor(
     public panelService: PanelService,
     public popupService: PopupService,
@@ -72,61 +74,16 @@ export class MainPageComponent {
 
     window.addEventListener('resize', () => {
       if (this.isTablet) {
-        if (this.panelService.isSidebarOpen) {
-          this.panelService.openReplyPanel();
-        }
-
         if (this.panelService.isReplyPanelOpen) {
           this.panelService.openSidebar();
         }
       }
     });
   }
+
   get allUsers() {
     return this.userService.allUsers;
   }
-
-  @HostListener('mousemove')
-  @HostListener('keydown')
-  @HostListener('click')
-  afkMode() {
-    const user = this.userService.loggedInUser();
-
-    // Prüfe, ob der User schon online ist → vermeide unnötige Schreibvorgänge
-    if (user?.status !== 'online') {
-      this.updateUserStatus('online');
-    }
-
-    // Verhindere mehrfach gesetzte Timeouts, indem der vorherige gelöscht wird
-    clearTimeout(this.timeoutId);
-
-    // Setze einen neuen Timeout für 5 Minuten
-    this.timeoutId = setTimeout(() => {
-      this.updateUserStatus('abwesend');
-    }, this.afkDelay);
-  }
-
-  updateUserStatus(status: string) {
-    const user = this.userService.loggedInUser();
-
-    if (user && user.id) {
-      // Falls sich der Status nicht geändert hat, beende die Funktion
-      if (user.status === status) {
-        return;
-      }
-
-      // Erstelle eine neue User-Instanz mit dem aktualisierten Status
-      const updatedUser = new User({ ...user, status });
-
-      // Signal aktualisieren
-      this.userService.loggedInUser.set(updatedUser);
-
-      // Firebase-Update ausführen
-      this.fb.updateStateUser(user.id, status);
-    }
-  }
-
-  selectedUser: User = new User();
 
   get createChannelPopupOpen() {
     return this.popupService.createChannelPopupOpen;
@@ -204,14 +161,50 @@ export class MainPageComponent {
     this.mainChatService.currentEditMessageId = value;
   }
 
+  @HostListener('mousemove')
+  @HostListener('keydown')
+  @HostListener('click')
+  afkMode() {
+    const user = this.userService.loggedInUser();
+
+    // Prüfe, ob der User schon online ist → vermeide unnötige Schreibvorgänge
+    if (user?.status !== 'online') {
+      this.updateUserStatus('online');
+    }
+
+    // Verhindere mehrfach gesetzte Timeouts, indem der vorherige gelöscht wird
+    clearTimeout(this.timeoutId);
+
+    // Setze einen neuen Timeout für 5 Minuten
+    this.timeoutId = setTimeout(() => {
+      this.updateUserStatus('abwesend');
+    }, this.afkDelay);
+  }
+
+  updateUserStatus(status: string) {
+    const user = this.userService.loggedInUser();
+
+    if (user && user.id) {
+      // Falls sich der Status nicht geändert hat, beende die Funktion
+      if (user.status === status) {
+        return;
+      }
+
+      // Erstelle eine neue User-Instanz mit dem aktualisierten Status
+      const updatedUser = new User({ ...user, status });
+
+      // Signal aktualisieren
+      this.userService.loggedInUser.set(updatedUser);
+
+      // Firebase-Update ausführen
+      this.fb.updateStateUser(user.id, status);
+    }
+  }
+
   toggleSidebar() {
     if (!this.panelService.isSidebarOpen) {
-      console.log('open');
-
       this.panelService.openSidebar();
     } else if (this.panelService.isSidebarOpen) {
-      console.log('close');
-
       this.panelService.isSidebarOpen = false;
     }
   }
@@ -220,7 +213,10 @@ export class MainPageComponent {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
     this.sidebarNavComponent.clearSearch();
-    if (this.emojiPickerComponent && !this.emojiPickerComponent.showEmojiPicker) {
+    if (
+      this.emojiPickerComponent &&
+      !this.emojiPickerComponent.showEmojiPicker
+    ) {
       this.currentEditMessageId = '';
     }
 
