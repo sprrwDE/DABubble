@@ -18,6 +18,7 @@ import { EmojiPickerComponent } from '../shared/emoji-picker/emoji-picker.compon
 import { Channel } from '../shared/models/channel.model';
 import { ChannelService } from '../shared/services/channel.service';
 import { MainChatService } from '../shared/services/main-chat.service';
+import { AuthService } from '../shared/services/auth.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -58,7 +59,8 @@ export class MainPageComponent {
     private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService,
     private searchChatService: SearchChatService,
-    private mainChatService: MainChatService
+    private mainChatService: MainChatService,
+    private auth: AuthService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -163,6 +165,11 @@ export class MainPageComponent {
 
   set currentEditMessageId(value: string) {
     this.mainChatService.currentEditMessageId = value;
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.auth.logout(); // Hier den Logout aufrufen
   }
 
   @HostListener('mousemove')
