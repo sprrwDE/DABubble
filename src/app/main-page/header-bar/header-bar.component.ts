@@ -62,7 +62,7 @@ export class HeaderBarComponent {
   constructor(
     private popupService: PopupService,
     public userService: UserService,
-    private globalVariablesService: GlobalVariablesService,
+    public globalVariablesService: GlobalVariablesService,
     private channelService: ChannelService,
     private mainChatService: MainChatService,
     public searchChatService: SearchChatService,
