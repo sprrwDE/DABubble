@@ -167,10 +167,10 @@ export class MainPageComponent {
     this.mainChatService.currentEditMessageId = value;
   }
 
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
-    this.auth.logout(); // Hier den Logout aufrufen
-  }
+  // @HostListener('window:beforeunload')
+  // onBeforeUnload() {
+  //   this.auth.logout(); // Hier den Logout aufrufen
+  // }
 
   @HostListener('mousemove')
   @HostListener('keydown')
