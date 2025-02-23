@@ -9,6 +9,7 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { AddUserService } from '../../shared/services/add-user.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { AddUsersToNewChannelComponent } from './add-users-to-new-channel/add-users-to-new-channel.component';
+import { PanelService } from '../../shared/services/panel.service';
 
 @Component({
   selector: 'app-create-channel-popup',
@@ -35,7 +36,8 @@ export class CreateChannelPopupComponent {
     public userService: UserService,
     public channelService: ChannelService,
     public addUserService: AddUserService,
-    public globalVariablesService: GlobalVariablesService
+    public globalVariablesService: GlobalVariablesService,
+    public panelService: PanelService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -96,22 +98,24 @@ export class CreateChannelPopupComponent {
     }
   }
 
-  createChannel() {
-    if (!this.showCreateChannelAddPeopleInput) {
-      this.allUsers.forEach((user) => this.channel.users.push(user.id));
-    } else {
-      this.addUserService.userToAdd.forEach((user) =>
-        this.channel.users.push(user.id)
-      );
-    }
-    this.channel.channelCreatorId = this.loggedInUser.id;
+  // createChannel() {
+  //   if (!this.showCreateChannelAddPeopleInput) {
+  //     this.allUsers.forEach((user) => this.channel.users.push(user.id));
+  //   } else {
+  //     this.addUserService.userToAdd.forEach((user) =>
+  //       this.channel.users.push(user.id)
+  //     );
+  //   }
+  //   this.channel.channelCreatorId = this.loggedInUser.id;
 
-    this.channelService.addChannel(this.channel.toJSON());
-    this.addUserService.userToAdd = [];
-    this.addUserService.possibleUserList = [];
-    console.log(this.channel);
-    this.closePopup();
-  }
+  //   this.channelService.addChannel(this.channel.toJSON());
+
+  //   this.panelService.closeReplyPanel();
+  //   this.addUserService.userToAdd = [];
+  //   this.addUserService.possibleUserList = [];
+  //   console.log(this.channel);
+  //   this.closePopup();
+  // }
 
   addMemberToNewChannel(event: Event) {
     this.addUserService.isCreatingNewChannel = true;

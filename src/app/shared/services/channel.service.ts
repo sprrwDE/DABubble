@@ -196,26 +196,25 @@ export class ChannelService {
   //   }
   // }
 
-/*   async addChannel(data: any) {
+  /*   async addChannel(data: any) {
     try {
       const docRef = await addDoc(collection(this.firestore, 'channels'), data);
     } catch (error) {
       console.error('Fehler beim Erstellen des Benutzers: ', error);
     }
   } */
- 
-    async addChannel(data: any) {
-      try {
-        const docRef = await addDoc(collection(this.firestore, 'channels'), data);
-        // Nehme die generierte ID in dein Channel-Objekt auf
-        data.id = docRef.id;
-        // Optional: Aktualisiere den currentChannel, falls benötigt
-        this.currentChannel.set(new Channel(data));
-      } catch (error) {
-        console.error('Fehler beim Erstellen des Channels: ', error);
-      }
+
+  async addChannel(data: any) {
+    try {
+      const docRef = await addDoc(collection(this.firestore, 'channels'), data);
+      // Nehme die generierte ID in dein Channel-Objekt auf
+      data.id = docRef.id;
+      // Optional: Aktualisiere den currentChannel, falls benötigt
+      return data;
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Channels: ', error);
     }
-    
+  }
 
   async leaveChannel(channelId: string, userId: string) {
     const channelRef = doc(this.firestore, 'channels', channelId);

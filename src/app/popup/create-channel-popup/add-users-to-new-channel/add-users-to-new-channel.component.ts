@@ -10,6 +10,8 @@ import { ChannelService } from '../../../shared/services/channel.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../shared/models/channel.model';
 import { loggedIn } from '@angular/fire/auth-guard';
+import { PanelService } from '../../../shared/services/panel.service';
+import { SearchChatService } from '../../../shared/services/search-chat.service';
 
 @Component({
   selector: 'app-add-users-to-new-channel',
@@ -34,7 +36,9 @@ export class AddUsersToNewChannelComponent {
     public userService: UserService,
     public channelService: ChannelService,
     public addUserService: AddUserService,
-    public globalVariablesService: GlobalVariablesService
+    public globalVariablesService: GlobalVariablesService,
+    public panelService: PanelService,
+    public searchChatService: SearchChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -81,6 +85,10 @@ export class AddUsersToNewChannelComponent {
     this.popupService.showCreateChannelAddPeopleInput = value;
   }
 
+  set showAddUserToChannelPopup(value: boolean) {
+    this.display = value;
+  }
+
   showAddUsersToChannelPopup() {
     if (this.channel.name.trim() !== '') {
       this.showCreateChannelAddPeoplePopup = true;
@@ -93,7 +101,7 @@ export class AddUsersToNewChannelComponent {
     }
   }
 
-  createChannel() {
+  async createChannel() {
     if (!this.showCreateChannelAddPeopleInput) {
       this.allUsers.forEach((user) => this.channel.users.push(user.id));
     } else {
@@ -107,11 +115,15 @@ export class AddUsersToNewChannelComponent {
     this.channel.channelCreatorId = this.loggedInUser.id;
     this.channel.timestamp = new Date().getTime();
 
-    this.channelService.addChannel(this.channel.toJSON());
+    let data = await this.channelService.addChannel(this.channel.toJSON());
+
+    this.searchChatService.setCurrentChannel(new Channel(data));
 
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
     console.log(this.channel, 'channnn');
+
+    this.panelService.closeReplyPanel();
 
     this.popupService.createChannelPopupOpen = false;
     this.popupService.createChannelPopupChannel = new Channel();
@@ -141,10 +153,6 @@ export class AddUsersToNewChannelComponent {
 
   showAddMembersSection(event: Event) {
     event.stopPropagation();
-  }
-
-  set showAddUserToChannelPopup(value: boolean) {
-    this.display = value;
   }
 
   showAddUserToChannelSection(event: Event) {
