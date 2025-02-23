@@ -48,8 +48,20 @@ export class RegisterComponent {
   }
 
   emailValidator(control: AbstractControl) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(control.value) ? null : { invalidEmail: true };
+    const validTLDs = ['com', 'net', 'org', 'de', 'edu', 'gov', 'io', 'ai', 'co', 'us', 'uk']; // Liste der erlaubten TLDs
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,})$/;
+
+    const match = control.value.match(emailRegex);
+    if (!match) {
+      return { invalidEmail: true }; // Falls das Format grundsätzlich nicht passt
+    }
+
+    const tld = match[1].toLowerCase();
+    if (!validTLDs.includes(tld)) {
+      return { invalidTLD: true }; // Falls die TLD nicht erlaubt ist
+    }
+
+    return null;
   }
 
 
