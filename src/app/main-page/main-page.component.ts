@@ -78,6 +78,10 @@ export class MainPageComponent {
           this.panelService.openSidebar();
         }
       }
+
+      if (window.innerWidth > 2000) {
+        this.panelService.isSidebarOpen = true;
+      }
     });
   }
 
