@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -27,14 +28,15 @@ export class RegisterComponent {
     private firestore: Firestore
   ) {
     this.contactForm = this.fb.group({
-      name: ['', Validators.required], // Name ist erforderlich
-      email: ['', [Validators.required, Validators.email]], // E-Mail muss gültig sein
-      password: ['', [Validators.required, Validators.minLength(6)]], // Passwort min. 6 Zeichen
-      terms: [false, Validators.requiredTrue], // Checkbox muss ausgewählt sein
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email, this.emailValidator]], // Eigener Validator
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      terms: [false, Validators.requiredTrue],
       id: '',
       avatar: '/imgs/avatar/elias_neumann.svg',
       status: 'offline',
     });
+
   }
 
   onSubmit() {
@@ -45,7 +47,11 @@ export class RegisterComponent {
     }
   }
 
-  createUserOnFirebase() {}
+  emailValidator(control: AbstractControl) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(control.value) ? null : { invalidEmail: true };
+  }
+
 
   async registerUser() {
     try {
