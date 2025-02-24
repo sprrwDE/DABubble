@@ -85,6 +85,15 @@ export class MainPageComponent {
         this.panelService.isSidebarOpen = true;
       }
     });
+
+    // Füge Event-Listener für Tab-Visibility hinzu
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.updateUserStatus('offline');
+      } else {
+        this.updateUserStatus('online');
+      }
+    });
   }
 
   get allUsers() {
@@ -167,10 +176,11 @@ export class MainPageComponent {
     this.mainChatService.currentEditMessageId = value;
   }
 
-  // @HostListener('window:beforeunload')
-  // onBeforeUnload() {
-  //   this.auth.logout(); // Hier den Logout aufrufen
-  // }
+  // Füge Event-Listener für Fenster/Tab-Schließung hinzu
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.updateUserStatus('offline');
+  }
 
   @HostListener('mousemove')
   @HostListener('keydown')
