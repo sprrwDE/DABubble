@@ -468,7 +468,11 @@
           [ngClass]="{ 'active-contact': user.id === currentDirectChatUser.id }"
         >
           <div class="relative">
-            <img src="{{ getUserImage(user) }}" alt="imgs/avatar/profile.svg" />
+            <img
+              [src]="getUserImage(user)"
+              (error)="handleImageError($event)"
+              alt=""
+            />
             <div
               [ngClass]="{
                 'bg-online': user.status === 'online',
