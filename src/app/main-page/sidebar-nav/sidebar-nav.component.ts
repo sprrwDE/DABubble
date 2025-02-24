@@ -234,4 +234,12 @@ export class SidebarNavComponent {
   clearSearch() {
     this.searchControl.setValue('');
   }
+
+  getUserImage(user: User) {
+    if (user.image && user.image !== '') {
+      return user.image;
+    } else {
+      return 'imgs/avatar/profile.svg';
+    }
+  }
 }
