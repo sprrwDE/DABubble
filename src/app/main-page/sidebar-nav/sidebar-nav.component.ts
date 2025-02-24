@@ -242,8 +242,4 @@ export class SidebarNavComponent {
       return 'imgs/avatar/profile.svg';
     }
   }
-
-  handleImageError(event: any) {
-    event.target.src = 'imgs/avatar/profile.svg';
-  }
 }

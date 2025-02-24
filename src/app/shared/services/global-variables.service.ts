@@ -28,4 +28,8 @@ export class GlobalVariablesService {
     this.isTablet.set(window.innerWidth < 1280);
     console.log(this.isTablet(), 'tablet');
   }
+
+  handleImageError(event: any) {
+    event.target.src = 'imgs/avatar/profile.svg';
+  }
 }

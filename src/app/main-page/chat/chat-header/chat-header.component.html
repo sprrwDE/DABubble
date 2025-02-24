@@ -72,6 +72,7 @@
           *ngFor="let userId of currentChannel.users.slice(0, 3)"
           class="group-members-avatar"
           [src]="userService.getUserById(userId)?.image || 'imgs/avatar1.png'"
+          (error)="globalVariablesService.handleImageError($event)"
           alt=""
         />
       </div>
@@ -126,6 +127,7 @@
       <img
         class="w-[50px] h-[50px] rounded-full"
         src="{{ currentDirectChatUser.image || 'imgs/avatar/profile.svg' }}"
+        (error)="globalVariablesService.handleImageError($event)"
         alt=""
       />
       <div

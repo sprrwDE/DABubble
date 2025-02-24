@@ -470,7 +470,7 @@
           <div class="relative">
             <img
               [src]="getUserImage(user)"
-              (error)="handleImageError($event)"
+              (error)="globalVariablesService.handleImageError($event)"
               alt=""
             />
             <div

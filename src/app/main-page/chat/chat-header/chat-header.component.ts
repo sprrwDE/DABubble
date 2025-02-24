@@ -45,7 +45,7 @@ export class ChatHeaderComponent {
     private popupService: PopupService,
     private directChatService: DirectChatService,
     public searchChatService: SearchChatService,
-    private globalVariablesService: GlobalVariablesService,
+    public globalVariablesService: GlobalVariablesService,
     private addUserService: AddUserService
   ) {
     effect(() => {
