@@ -236,7 +236,7 @@ export class SidebarNavComponent {
   }
 
   getUserImage(user: User) {
-    if (user.image && user.image !== '') {
+    if (user.image && user.image !== '' && user.image !== null) {
       return user.image;
     } else {
       return 'imgs/avatar/profile.svg';
