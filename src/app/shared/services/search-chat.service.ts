@@ -64,7 +64,6 @@ export class SearchChatService {
     const channelName = '#' + channel.name.trim();
 
     if (!this.matchesSearchTerm(channelName)) return false;
-    console.log(channel.name);
 
     return channel.users.some((userId) => userId === this.loggedInUser?.id);
   }
