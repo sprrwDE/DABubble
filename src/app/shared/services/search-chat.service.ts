@@ -61,8 +61,10 @@ export class SearchChatService {
   }
 
   private shouldAddChannel(channel: Channel): boolean {
-    const channelName = '# ' + channel.name;
+    const channelName = '#' + channel.name.trim();
+
     if (!this.matchesSearchTerm(channelName)) return false;
+    console.log(channel.name);
 
     return channel.users.some((userId) => userId === this.loggedInUser?.id);
   }
@@ -78,8 +80,8 @@ export class SearchChatService {
   }
 
   private shouldAddUser(user: User): boolean {
-    const userName = '@' + user.name;
-    const userEmail = user.email;
+    const userName = '@' + user.name.trim();
+    const userEmail = user.email.trim();
     if (!this.matchesSearchTerm(userName) && !this.matchesSearchTerm(userEmail))
       return false;
 
@@ -101,6 +103,7 @@ export class SearchChatService {
     this.channelService.currentChannel.set(channel);
     this.resetDirectChat();
     this.resetSearchChat();
+    this.scrollToActiveChannel();
   }
 
   // setSearchChat
@@ -212,6 +215,18 @@ export class SearchChatService {
       const activeElement =
         this.sidebarNavComponent.allUsersContainer.nativeElement.querySelector(
           '.active-contact'
+        );
+      if (activeElement) {
+        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
+  }
+
+  scrollToActiveChannel() {
+    setTimeout(() => {
+      const activeElement =
+        this.sidebarNavComponent.allChannelsContainer.nativeElement.querySelector(
+          '.active-channel'
         );
       if (activeElement) {
         activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

@@ -23,7 +23,13 @@ import { DirectChat } from '../../shared/models/direct-chat.model';
 import { SearchChatService } from '../../shared/services/search-chat.service';
 import { MainChatService } from '../../shared/services/main-chat.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-sidebar-nav',
@@ -64,8 +70,7 @@ export class SidebarNavComponent {
   isSearching: boolean = false;
   searchControl = new FormControl('');
   isOpen = signal(false);
-  noMessage:boolean = false;
-
+  noMessage: boolean = false;
 
   @Output() openPopupEvent = new EventEmitter<{
     type: string;
@@ -78,6 +83,7 @@ export class SidebarNavComponent {
   public currentDirectChatUser: User = new User();
 
   @ViewChild('allUsersContainer') allUsersContainer!: ElementRef;
+  @ViewChild('allChannelsContainer') allChannelsContainer!: ElementRef;
 
   constructor(
     public user: UserService,
@@ -90,7 +96,8 @@ export class SidebarNavComponent {
     public directChatService: DirectChatService,
     public searchChatService: SearchChatService,
     public mainChatService: MainChatService,
-    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.searchChatService.sidebarNavComponent = this;
 
@@ -139,25 +146,25 @@ export class SidebarNavComponent {
   }
 
   test() {
-    console.error("HIIIIIIIIIER")
+    console.error('HIIIIIIIIIER');
   }
 
   scrollToMessage(message: any, messageId: any, chanel: any) {
-    this.isSearching = true
+    this.isSearching = true;
     chanel.messages.filter((eachMessage: any) => {
       if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
         setTimeout(() => {
-          const element = this.document.querySelector(`[data-message-id="${messageId}"]`);
+          const element = this.document.querySelector(
+            `[data-message-id="${messageId}"]`
+          );
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
-          this.isSearching = false
+          this.isSearching = false;
         }, 500); // Warten, bis der Kanal geladen ist
-
       }
-    })
+    });
   }
-
 
   applyFilter(query: string | null) {
     this.searchForUser(query);
@@ -166,8 +173,8 @@ export class SidebarNavComponent {
     // Stelle sicher, dass keine Nachricht angezeigt wird, wenn weniger als 3 Zeichen eingegeben wurden
     if (!query || query.length < 3) {
       this.filteredList = [];
-      this.noMessage = false;  // Nachricht ausblenden
-      return;  // Beende die Funktion sofort
+      this.noMessage = false; // Nachricht ausblenden
+      return; // Beende die Funktion sofort
     }
 
     // Standardmäßig setzen wir die Nachricht auf "keine Ergebnisse"
@@ -175,7 +182,9 @@ export class SidebarNavComponent {
 
     this.filteredList = this.channelService.allChannels
       .map((channel: any) => {
-        const messages = Array.isArray(channel.messages) ? channel.messages : [];
+        const messages = Array.isArray(channel.messages)
+          ? channel.messages
+          : [];
 
         // Filtere Nachrichten, die den Suchbegriff enthalten
         const filteredMessages = messages.filter((msg: any) =>
@@ -184,7 +193,9 @@ export class SidebarNavComponent {
 
         return { ...channel, messages: filteredMessages };
       })
-      .filter((channel: any) => channel.messages && channel.messages.length > 0);
+      .filter(
+        (channel: any) => channel.messages && channel.messages.length > 0
+      );
 
     // Falls es Treffer gibt, setzen wir noMessage auf false
     if (this.filteredList.length > 0) {
@@ -223,5 +234,4 @@ export class SidebarNavComponent {
   clearSearch() {
     this.searchControl.setValue('');
   }
-
 }
