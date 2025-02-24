@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
   }
 
   async guestLogin() {
-    const userCredentail = await this.authService.login("gast@gastmail.de", "qweqweqwe")
+    const userCredentail = await this.authService.login("gast@gast.de", "qweqwe")
     if (userCredentail) {
       this.goToMainPage();
     } else {
