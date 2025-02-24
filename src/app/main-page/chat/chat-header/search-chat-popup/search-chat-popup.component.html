@@ -19,24 +19,20 @@
     </p>
 
     <div
-      *ngIf="ifDirectChat(chat)"
+      *ngIf="ifUser(chat)"
       class="flex flex-wrap items-center gap-x-[15px] gap-y-[10px] justify-between w-full hover-primary-bg px-[10px] py-[4px] rounded-[30px] cursor-pointer text-[20px] font-bold text-primary transition-svg-text"
-      (click)="
-        searchChatService.setCurrentDirectChat(
-          userService.getUserById(chat.userIds[1])!
-        )
-      "
+      (click)="searchChatService.setCurrentDirectChat(chat)"
     >
       <div class="flex items-center gap-[10px]">
         <img
           class="w-[50px] h-[50px] rounded-full"
-          src="{{ getUserImage(chat) }}"
+          src="{{ chat.image }}"
           alt=""
         />
-        <p>&#64; {{ getUserName(chat) }}</p>
+        <p>&#64; {{ chat.name }}</p>
       </div>
 
-      <span class="text-[16px] font-normal"> {{ getUserEmail(chat) }}</span>
+      <span class="text-[16px] font-normal"> {{ chat.email }}</span>
     </div>
   </div>
 

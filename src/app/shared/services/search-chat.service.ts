@@ -17,7 +17,7 @@ export class SearchChatService {
 
   openSearchPopup = false;
 
-  allChats: (Channel | DirectChat)[] = [];
+  allChats: (Channel | User)[] = [];
 
   loggedInUser: any;
 
@@ -38,8 +38,8 @@ export class SearchChatService {
     return this.channelService.allChannels;
   }
 
-  get allDirectChats() {
-    return this.directChatService.allDirectChats;
+  get allUsers() {
+    return this.userService.allUsers;
   }
 
   searchChats() {
@@ -47,7 +47,7 @@ export class SearchChatService {
     if (this.loggedInUser.id === '') return;
 
     this.searchChannels();
-    this.searchDirectChats();
+    this.searchUsers();
   }
 
   private searchChannels() {
@@ -67,49 +67,23 @@ export class SearchChatService {
     return channel.users.some((userId) => userId === this.loggedInUser?.id);
   }
 
-  private searchDirectChats() {
+  private searchUsers() {
     if (this.searchChatInput.startsWith('#')) return;
 
-    this.allDirectChats.forEach((chat) => {
-      if (this.shouldAddDirectChat(chat)) {
-        this.allChats.push(chat);
+    this.allUsers.forEach((user) => {
+      if (this.shouldAddUser(user)) {
+        this.allChats.push(user);
       }
     });
   }
 
-  private shouldAddDirectChat(chat: DirectChat): boolean {
-    const users = this.getDirectChatUsers(chat);
-    if (!this.isUserInChat(users)) return false;
+  private shouldAddUser(user: User): boolean {
+    const userName = '@' + user.name;
+    const userEmail = user.email;
+    if (!this.matchesSearchTerm(userName) && !this.matchesSearchTerm(userEmail))
+      return false;
 
-    return this.matchesUserNames(users);
-  }
-
-  private getDirectChatUsers(chat: DirectChat) {
-    return {
-      userOne: this.userService.getUserById(chat.userIds[0]),
-      userTwo: this.userService.getUserById(chat.userIds[1]),
-    };
-  }
-
-  private isUserInChat(users: { userOne?: User; userTwo?: User }): boolean {
-    return (
-      users.userOne?.id === this.loggedInUser?.id ||
-      users.userTwo?.id === this.loggedInUser?.id
-    );
-  }
-
-  private matchesUserNames(users: { userOne?: User; userTwo?: User }): boolean {
-    const nameOne = '@' + users.userOne?.name;
-    const nameTwo = '@' + users.userTwo?.name;
-    const emailOne = users.userOne?.email || '';
-    const emailTwo = users.userTwo?.email || '';
-
-    return (
-      this.matchesSearchTerm(nameOne) ||
-      this.matchesSearchTerm(nameTwo) ||
-      this.matchesSearchTerm(emailOne) ||
-      this.matchesSearchTerm(emailTwo)
-    );
+    return true;
   }
 
   private matchesSearchTerm(text: string): boolean {
