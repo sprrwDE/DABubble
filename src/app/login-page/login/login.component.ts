@@ -72,6 +72,7 @@ export class LoginComponent implements OnInit {
       image: user.photoURL,
       name: user.displayName,
       status: 'online',
+      isNotGoogle: false,
     });
   }
 
