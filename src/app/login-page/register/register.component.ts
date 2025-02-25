@@ -10,7 +10,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/models/user.model';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
-import { FirebaseError } from 'firebase/app';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -86,7 +85,6 @@ export class RegisterComponent {
         isNotGoogle: true,
       });
 
-      console.log("user ist: ", user);
       this.addUserToFirebase(user);
       this.routeId(user.id);
     } catch (error: any) {
