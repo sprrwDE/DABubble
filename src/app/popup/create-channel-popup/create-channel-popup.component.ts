@@ -1,5 +1,5 @@
 import { Component, effect, EventEmitter, Output, Input } from '@angular/core';
-import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { Channel } from '../../shared/models/channel.model';
 import { FormsModule } from '@angular/forms';
@@ -98,26 +98,7 @@ export class CreateChannelPopupComponent {
     }
   }
 
-  // createChannel() {
-  //   if (!this.showCreateChannelAddPeopleInput) {
-  //     this.allUsers.forEach((user) => this.channel.users.push(user.id));
-  //   } else {
-  //     this.addUserService.userToAdd.forEach((user) =>
-  //       this.channel.users.push(user.id)
-  //     );
-  //   }
-  //   this.channel.channelCreatorId = this.loggedInUser.id;
-
-  //   this.channelService.addChannel(this.channel.toJSON());
-
-  //   this.panelService.closeReplyPanel();
-  //   this.addUserService.userToAdd = [];
-  //   this.addUserService.possibleUserList = [];
-  //   console.log(this.channel);
-  //   this.closePopup();
-  // }
-
-  addMemberToNewChannel(event: Event) {
+addMemberToNewChannel(event: Event) {
     this.addUserService.isCreatingNewChannel = true;
     this.getNameInput(event);
   }

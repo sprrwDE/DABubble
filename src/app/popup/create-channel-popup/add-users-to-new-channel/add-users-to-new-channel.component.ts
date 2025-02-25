@@ -7,9 +7,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 import { AddUserService } from '../../../shared/services/add-user.service';
 import { ChannelService } from '../../../shared/services/channel.service';
-import { Subscription } from 'rxjs';
 import { Channel } from '../../../shared/models/channel.model';
-import { loggedIn } from '@angular/fire/auth-guard';
 import { PanelService } from '../../../shared/services/panel.service';
 import { SearchChatService } from '../../../shared/services/search-chat.service';
 
@@ -102,29 +100,45 @@ export class AddUsersToNewChannelComponent {
   }
 
   async createChannel() {
+    this.populateChannelUsers();
+    this.setChannelMetadata();
+  
+    const data = await this.persistChannel();
+  
+    this.searchChatService.setCurrentChannel(new Channel(data));
+    this.resetUserServices();
+    this.resetUI();
+  }
+  
+  private populateChannelUsers() {
     if (!this.showCreateChannelAddPeopleInput) {
       this.allUsers.forEach((user) => this.channel.users.push(user.id));
     } else {
-      this.addUserService.userToAdd.forEach((user) =>
-        this.channel.users.push(user.id)
-      );
+      this.addUserService.userToAdd.forEach((user) => {
+        this.channel.users.push(user.id);
+      });
       if (!this.channel.users.includes(this.channelService.loggedInUser.id)) {
         this.channel.users.push(this.channelService.loggedInUser.id);
       }
     }
+  }
+  
+  private setChannelMetadata() {
     this.channel.channelCreatorId = this.loggedInUser.id;
     this.channel.timestamp = new Date().getTime();
-
-    let data = await this.channelService.addChannel(this.channel.toJSON());
-
-    this.searchChatService.setCurrentChannel(new Channel(data));
-
+  }
+  
+  private async persistChannel() {
+    return await this.channelService.addChannel(this.channel.toJSON());
+  }
+  
+  private resetUserServices() {
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
-    console.log(this.channel, 'channnn');
-
+  }
+  
+  private resetUI() {
     this.panelService.closeReplyPanel();
-
     this.popupService.createChannelPopupOpen = false;
     this.popupService.createChannelPopupChannel = new Channel();
     this.closePopup();
