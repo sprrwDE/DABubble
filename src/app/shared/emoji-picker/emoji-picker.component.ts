@@ -84,25 +84,9 @@ export class EmojiPickerComponent {
   }
 
   emojiSelected(event: any) {
-    console.log(this.editMessage, 'edit')
     if (!this.isTextInput && !this.editMessage) {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
-      console.log(
-        'current Reply Likes',
-        this.replyLikes,
-        'for',
-        this.replyId,
-        'in',
-        this.messageId
-      );
-
-      console.log('HIIIIIIIIIIIIII');
-      console.log(this.messageId, 'messageId');
-      console.log(this.replyId, 'replyId');
-      console.log(this.currentDirectChat.id, 'channelId');
-      console.log(this.isDirectChat, 'channelId');
-
       this.emojiCounterService.handleEmojiLogic(
         selectedEmoji,
         this.messageId,
@@ -121,7 +105,6 @@ export class EmojiPickerComponent {
     else {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
-      console.log('input', selectedEmoji);
       this.emojiSelectedEvent.emit(selectedEmoji);
       this.showEmojiPicker = !this.showEmojiPicker;
     }
@@ -134,19 +117,8 @@ export class EmojiPickerComponent {
       !this.container.nativeElement.contains(event.target as Node)
     ) {
       this.isOpened = false;
-      console.log('Emoji Picker geschlossen');
     }
   };
-
-  /* toggleEmojiPicker() {
-    this.isOpened = !this.isOpened;
-    if (this.isOpened) {
-      window.addEventListener('click', this.eventHandler);
-    } else {
-      window.removeEventListener('click', this.eventHandler);
-    }
-    // this.emojiCounterService.resetList()
-  } */
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: Event) {

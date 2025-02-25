@@ -71,7 +71,6 @@
   <div class="text-left w-full flex justify-center flex-col">
     <span class="text-xl">Neuen Avatar auswählen</span>
     <div class="flex gap-2 md:gap-2 mt-2 md:mt-8 justify-center w-fit m-auto">
-      <!-- for schleife hier !!! -->
       @for (avatar of avatars; track $index) {
       <img
         (click)="selectAvatar($index)"
@@ -93,7 +92,6 @@
     <div class="flex justify-between items-center w-full">
       <p class="text-[32px] font-bold">{{ returnUserData("name") }}</p>
 
-      <!-- Gast ID Hardcode verbirgt bearbeiten für Gastaccount -->
       <p
         (click)="editingUserProfile = true"
         class="text-[18px] text-hover cursor-pointer hover:font-bold"
