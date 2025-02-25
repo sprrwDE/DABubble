@@ -1,13 +1,3 @@
-// Checken ob Message oder Reply / DM
-
-/// Im DOM / html Rendern / Synchen
-
-/// Stylen
-// Liste
-// Component
-
-/// Code aufräumen
-
 import { effect, Injectable } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { FirebaseService } from './firebase.service';
@@ -51,72 +41,59 @@ export class EmojiCounterService {
     messageId: string,
     userId: string,
     channelId: string,
-    previousReactions: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    > = {},
+    previousReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
     isReply: boolean,
     replyId: string,
-    prevRevReactions: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    > = {},
+    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
     isDirectChat: boolean,
     isFirstReply: boolean
   ) {
     if (!isReply || isFirstReply) {
-      if (!this.messageLikes[messageId]) {
-        this.messageLikes[messageId] = previousReactions[messageId]
-          ? [...previousReactions[messageId]]
-          : [];
-      }
-      const reactionIndex = this.messageLikes[messageId].findIndex(
-        (item) => item.emoji === emoji
-      );
-      this.checkReactingUser(reactionIndex, userId, messageId, emoji);
-      if (this.currentChannel.id !== '') {
-        this.firebaseService.updateEmojiCount(
-          this.messageLikes,
-          messageId,
-          channelId,
-          'channels'
-        );
-      } else {
-        this.firebaseService.updateEmojiCount(
-          this.messageLikes,
-          messageId,
-          channelId,
-          'direct-chats'
-        );
-      }
+      this.handleMessageReaction(emoji, messageId, userId, channelId, previousReactions);
     } else {
-      if (!this.messageLikes[replyId]) {
-        this.messageLikes[replyId] = prevRevReactions[replyId]
-          ? [...prevRevReactions[replyId]]
-          : [];
-      }
-      const reactionIndex = this.messageLikes[replyId].findIndex(
-        (item) => item.emoji === emoji
-      );
-      this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
-      if (this.currentChannel.id !== '') {
-        this.firebaseService.updateEmojiCountReplies(
-          this.messageLikes,
-          messageId,
-          channelId,
-          replyId,
-          'channels'
-        );
-      } else {
-        this.firebaseService.updateEmojiCountReplies(
-          this.messageLikes,
-          messageId,
-          channelId,
-          replyId,
-          'direct-chats'
-        );
-      }
+      this.handleReplyReaction(emoji, messageId, userId, channelId, replyId, prevRevReactions);
     }
+  }
+  
+  private handleMessageReaction(
+    emoji: string,
+    messageId: string,
+    userId: string,
+    channelId: string,
+    previousReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]>
+  ) {
+    if (!this.messageLikes[messageId]) {
+      this.messageLikes[messageId] = previousReactions[messageId]
+        ? [...previousReactions[messageId]]
+        : [];
+    }
+    const reactionIndex = this.messageLikes[messageId].findIndex(
+      (item) => item.emoji === emoji
+    );
+    this.checkReactingUser(reactionIndex, userId, messageId, emoji);
+    const collection = this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
+    this.firebaseService.updateEmojiCount(this.messageLikes, messageId, channelId, collection);
+  }
+  
+  private handleReplyReaction(
+    emoji: string,
+    messageId: string,
+    userId: string,
+    channelId: string,
+    replyId: string,
+    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]>
+  ) {
+    if (!this.messageLikes[replyId]) {
+      this.messageLikes[replyId] = prevRevReactions[replyId]
+        ? [...prevRevReactions[replyId]]
+        : [];
+    }
+    const reactionIndex = this.messageLikes[replyId].findIndex(
+      (item) => item.emoji === emoji
+    );
+    this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
+    const collection = this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
+    this.firebaseService.updateEmojiCountReplies(this.messageLikes, messageId, channelId, replyId, collection);
   }
 
   checkReactingUserReply(
