@@ -218,34 +218,39 @@ export class UserMessageComponent {
     channel: string,
     likes: { emoji: string; count: number; userIds: string[] }[]
   ) {
-    const reactionsAsRecord: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    > = { [this.messageObj?.id]: likes }; // hier zusätzliche abfrage first reply + in parameter übergeben....
-
-    const revReactionsAsRecord: Record<
-      string,
-      { emoji: string; count: number; userIds: string[] }[]
-    > = { [this.messageObj?.id]: likes };
-
+    const reactionsRecord = this.buildReactionsRecord(likes);
+    const revReactionsRecord = this.buildReactionsRecord(likes);
+    const targetMessageId = this.getTargetMessageId(messageId);
+    const targetChannelId = this.getTargetChannelId();
+  
     this.emojiCounterService.handleEmojiLogic(
       emoji,
-      !this.isFirstReply && this.isReply
-        ? this.parentElement?.id
-        : this.messageObj?.id,
+      targetMessageId,
       user,
-      this.currentChannel.id === ''
-        ? this.currentDirectChat.id || ''
-        : this.currentChannel.id,
-      reactionsAsRecord,
+      targetChannelId,
+      reactionsRecord,
       this.isReply,
       messageId,
-      revReactionsAsRecord,
+      revReactionsRecord,
       this.isDirectChat,
       this.isFirstReply
     );
-
-    return;
+  }
+  
+  private buildReactionsRecord(
+    likes: { emoji: string; count: number; userIds: string[] }[]
+  ): Record<string, { emoji: string; count: number; userIds: string[] }[]> {
+    return { [this.messageObj?.id]: likes };
+  }
+  
+  private getTargetMessageId(defaultMessageId: string): string {
+    return (!this.isFirstReply && this.isReply) ? this.parentElement?.id : this.messageObj?.id;
+  }
+  
+  private getTargetChannelId(): string {
+    return this.currentChannel.id === ''
+      ? this.currentDirectChat.id || ''
+      : this.currentChannel.id;
   }
 
   onMouseLeave() {
@@ -276,7 +281,6 @@ export class UserMessageComponent {
     return this.allUsers.find((user) => user.id === userId);
   }
 
-  // Beispiel: Emoji setzen
   setEmoji(emoji: string) {
     this.emojiInput$.next(emoji);
   }
@@ -322,15 +326,13 @@ export class UserMessageComponent {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    // Prüfen, ob Enter ohne Shift gedrückt wurde
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
+      event.preventDefault();
       this.saveEditedMessage();
     }
   }
 
   insertEmoji(emoji: string) {
-    // Emoji an den aktuellen Text anhängen
     this.editedMessage += emoji;
   }
 }
