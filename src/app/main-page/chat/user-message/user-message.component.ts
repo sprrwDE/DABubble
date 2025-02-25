@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { Channel } from '../../../shared/models/channel.model';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { DirectChatService } from '../../../shared/services/direct-chat.service';
+import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-user-message',
@@ -73,7 +74,8 @@ export class UserMessageComponent {
     private userService: UserService,
     private emojiCounterService: EmojiCounterService,
     private mainChatService: MainChatService,
-    private directChatService: DirectChatService
+    private directChatService: DirectChatService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -323,7 +325,7 @@ export class UserMessageComponent {
     // Prüfen, ob Enter ohne Shift gedrückt wurde
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault(); // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
-      this.saveEditedMessage()
+      this.saveEditedMessage();
     }
   }
 
@@ -331,5 +333,4 @@ export class UserMessageComponent {
     // Emoji an den aktuellen Text anhängen
     this.editedMessage += emoji;
   }
-  
 }

@@ -26,6 +26,7 @@ import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
 import { SearchChatService } from '../../shared/services/search-chat.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-chat',
@@ -65,7 +66,8 @@ export class ChatComponent {
     public channelService: ChannelService,
     public userService: UserService,
     public directChatService: DirectChatService,
-    public searchChatService: SearchChatService
+    public searchChatService: SearchChatService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       if (this.channelService.currentChannel()) {
@@ -110,6 +112,10 @@ export class ChatComponent {
     return this.searchChatService.searchChat;
   }
 
+  get contactProfileContent() {
+    return this.popupService.contactProfileContent;
+  }
+
   getLikes(message: Message) {
     return message.likes || [];
   }
@@ -142,6 +148,19 @@ export class ChatComponent {
   openContactProfilePopup(user: User) {
     this.popupService.contactProfileContent = user;
     this.popupService.contactProfilePopupOpen = true;
+  }
+
+  openUserProfilePopup() {
+    this.popupService.openUserProfilePopup = true;
+    this.popupService.editingUserProfile = false;
+  }
+
+  openProfilePopup(user: User) {
+    this.popupService.contactProfileContent = user;
+
+    if (this.loggedInUser.id === this.contactProfileContent.id)
+      this.openUserProfilePopup();
+    else this.openContactProfilePopup(this.currentDirectChatUser);
   }
 
   scrollToBottom() {

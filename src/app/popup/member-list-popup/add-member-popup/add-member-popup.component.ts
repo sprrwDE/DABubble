@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
 //// DUMMY
 import { AddUserService } from '../../../shared/services/add-user.service';
+import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-add-member-popup',
@@ -21,6 +22,7 @@ export class AddMemberPopupComponent {
 
   constructor(
     public popupService: PopupService,
+    public globalVariablesService: GlobalVariablesService,
     public addUserService: AddUserService
   ) {}
 

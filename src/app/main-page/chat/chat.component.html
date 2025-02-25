@@ -151,12 +151,13 @@
         *ngIf="currentDirectChat?.messages?.length === 0"
       >
         <div
-          (click)="openContactProfilePopup(currentDirectChatUser)"
+          (click)="openProfilePopup(currentDirectChatUser)"
           class="flex gap-[25px] items-end cursor-pointer hover:text-hover"
         >
           <img
             class="w-[80px] md:w-[100px] h-[80px] md:h-[100px] rounded-full"
             src="{{ currentDirectChatUser.image || 'imgs/avatar/profile.svg' }}"
+            (error)="globalVariablesService.handleImageError($event)"
             alt=""
           />
 
@@ -168,7 +169,7 @@
         <p class="flex gap-[5px] flex-wrap">
           Diese Unterhaltung findet nur zwischen
           <span
-            (click)="openContactProfilePopup(currentDirectChatUser)"
+            (click)="openProfilePopup(currentDirectChatUser)"
             class="flex items-center gap-[10px] text-hover cursor-pointer hover:font-bold"
           >
             {{ "@" + currentDirectChatUser.name || " lädt... " }}

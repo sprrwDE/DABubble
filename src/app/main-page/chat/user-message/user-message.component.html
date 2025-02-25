@@ -446,6 +446,7 @@
   <img
     class="max-w-[50px] max-h-[50px] w-[50px] h-[50px] md:max-w-[60px] md:max-h-[60px] md:w-[60px] md:h-[60px] lg:max-w-[70px] lg:max-h-[70px] lg:w-[70px] lg:h-[70px] rounded-full"
     src="{{ imgUrl || '' }}"
+    (error)="globalVariablesService.handleImageError($event)"
     alt=""
   />
 </div>

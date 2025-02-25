@@ -28,6 +28,7 @@
           class="w-[50px] h-[50px] rounded-full"
           src="{{ chat.image }}"
           alt=""
+          (error)="globalVariablesService.handleImageError($event)"
         />
         <p>&#64; {{ chat.name }}</p>
       </div>

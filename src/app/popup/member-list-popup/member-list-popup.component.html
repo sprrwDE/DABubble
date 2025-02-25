@@ -53,6 +53,7 @@
             class="w-[50px] h-[50px] rounded-full"
             src="{{ user.image || 'imgs/avatar1.png' }}"
             alt=""
+            (error)="globalVariablesService.handleImageError($event)"
           />
 
           <div

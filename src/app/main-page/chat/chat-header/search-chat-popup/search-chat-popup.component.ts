@@ -5,6 +5,7 @@ import { DirectChat } from '../../../../shared/models/direct-chat.model';
 import { Channel } from '../../../../shared/models/channel.model';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../shared/models/user.model';
+import { GlobalVariablesService } from '../../../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-search-chat-popup',
@@ -16,7 +17,8 @@ import { User } from '../../../../shared/models/user.model';
 export class SearchChatPopupComponent {
   constructor(
     public searchChatService: SearchChatService,
-    public userService: UserService
+    public userService: UserService,
+    public globalVariablesService: GlobalVariablesService
   ) {}
 
   ifChannel(chat: Channel | User): chat is Channel {

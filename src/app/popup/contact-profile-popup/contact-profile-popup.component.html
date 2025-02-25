@@ -38,6 +38,7 @@
     src="{{ contactProfileContent.image }}"
     alt="Example"
     class="rounded-full w-[200px] h-[200px]"
+    (error)="globalVariablesService.handleImageError($event)"
   />
 
   <div class="w-full">

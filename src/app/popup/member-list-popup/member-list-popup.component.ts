@@ -14,6 +14,7 @@ import { User } from '../../shared/models/user.model';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.component';
 import { UserService } from '../../shared/services/user.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-member-list-popup',
@@ -36,7 +37,8 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
   constructor(
     public popupService: PopupService,
     private channelService: ChannelService,
-    private userService: UserService
+    private userService: UserService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     this.popupService.memberListPopup = this;
     effect(() => {

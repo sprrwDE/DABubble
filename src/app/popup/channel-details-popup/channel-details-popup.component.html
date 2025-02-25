@@ -258,6 +258,7 @@
                   userService.getUserById(userId)?.image || 'imgs/avatar1.png'
                 "
                 alt=""
+                (error)="globalVariablesService.handleImageError($event)"
               />
 
               <div

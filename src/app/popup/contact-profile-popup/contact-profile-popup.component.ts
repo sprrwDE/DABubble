@@ -18,6 +18,7 @@ import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
 import { Channel } from '../../shared/models/channel.model';
 import { ChannelService } from '../../shared/services/channel.service';
+import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-contact-profile-popup',
@@ -43,7 +44,8 @@ export class ContactProfilePopupComponent {
     private popupService: PopupService,
     private directChatService: DirectChatService,
     private userService: UserService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     this.currentUser = user;
 
