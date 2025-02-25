@@ -16,7 +16,7 @@ import { ChannelService } from './channel.service';
   providedIn: 'root',
 })
 export class AddUserService implements OnDestroy {
-  private firestore: Firestore = inject(Firestore); 
+  private firestore: Firestore = inject(Firestore);
   private unsubscribeChannel: any;
   selectedChannel: Channel | null = null;
 
@@ -26,7 +26,7 @@ export class AddUserService implements OnDestroy {
   isCreatingNewChannel: boolean = false;
 
   private allUsersSubject = new BehaviorSubject<User[]>([]);
-  allUsers$ = this.allUsersSubject.asObservable(); 
+  allUsers$ = this.allUsersSubject.asObservable();
 
   currentChannel: Channel = new Channel();
 
@@ -37,7 +37,7 @@ export class AddUserService implements OnDestroy {
 
   loggedInUserData: User = new User();
 
-  private channelUserIdsSubject = new BehaviorSubject<string[]>([]); 
+  private channelUserIdsSubject = new BehaviorSubject<string[]>([]);
 
   constructor(
     private userservice: UserService,
@@ -54,7 +54,6 @@ export class AddUserService implements OnDestroy {
         this.subscribeToChannelById(this.currentChannel.id);
       }
     });
-
 
     combineLatest([
       this.userservice.fetchedCollection$,
@@ -81,12 +80,7 @@ export class AddUserService implements OnDestroy {
     if (push) {
       this.userToAdd.push(push);
       this.preventDuplicate(userToPush);
-    } else {
-      console.warn(
-        `User mit ID ${userToPush} nicht gefunden. Aktuelle PossibleUserList:`,
-        this.filteredUsers
-      );
-    }
+    } else return;
   }
 
   preventDuplicate(userToPush: string) {
@@ -99,7 +93,6 @@ export class AddUserService implements OnDestroy {
   }
 
   removeUserToAdd(userToRemove: string) {
-    console.log(this.possibleUserList, 'possible remove start');
     if (!this.isCreatingNewChannel) {
     }
     const remove: User | undefined = this.userToAdd.find(
@@ -111,51 +104,35 @@ export class AddUserService implements OnDestroy {
       );
       this.possibleUserList.push(remove);
       this.filteredUsers = this.possibleUserList;
-      console.log(this.possibleUserList, 'possible remove end');
-    } else {
-      console.warn(
-        `User mit ID ${userToRemove} nicht gefunden. \nAktuelle UserToAdd-Liste:`,
-        this.userToAdd
-      );
-    }
+    } else return;
   }
 
   pushMembersToChannel(channelId: string) {
-    console.log(this.userToAdd, 'automatisch hinzugefügt')
-    const arrayToPush = this.userToAdd.map((user) => user.id); // Extrahiert nur die IDs
+    const arrayToPush = this.userToAdd.map((user) => user.id);
     const channelRef = doc(this.firestore, 'channels', channelId);
 
     updateDoc(channelRef, {
-      users: arrayUnion(...arrayToPush), // Fügt alle IDs in die users-Liste hinzu
-    })
-      .then(() => console.log(`User-IDs ${arrayToPush} hinzugefügt`))
-      .catch((error) =>
-        console.error('Fehler beim Hinzufügen der User-IDs:', error)
-      );
-
+      users: arrayUnion(...arrayToPush),
+    }).catch((error) =>
+      console.error('Fehler beim Hinzufügen der User', error)
+    );
   }
 
   filterArrayForNameInput(name: string) {
-    console.log('New Channel?', this.isCreatingNewChannel);
     if (!this.isCreatingNewChannel) {
       this.filteredUsers = this.possibleUserList.filter((user) =>
         user.name.toLowerCase().includes(name.toLowerCase())
       );
-      console.log('filtered users', this.filteredUsers)
     } else {
-      if(this.userToAdd.length == 0) this.possibleUserList = this.allUsers;
+      if (this.userToAdd.length == 0) this.possibleUserList = this.allUsers;
       this.filteredUsers = this.possibleUserList.filter((user) =>
         user.name.toLowerCase().includes(name.toLowerCase())
       );
-      console.log('filtered users', this.filteredUsers)
     }
   }
 
   subscribeToChannelById(channelId: string) {
-    console.log(`Lade Channel mit ID: ${channelId}`);
-
     const channelRef = doc(this.firestore, `channels/${channelId}`);
-
     this.unsubscribeChannel = onSnapshot(channelRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as Partial<Channel>;
@@ -164,37 +141,23 @@ export class AddUserService implements OnDestroy {
           name: data.name || 'Unbekannt',
           users: data.users ?? [],
         });
-
         this.currentChannelUserIds = this.selectedChannel.users;
-        console.log('current channel user ids', this.currentChannelUserIds)
-
         this.channelUserIdsSubject.next(this.currentChannelUserIds);
       } else {
-        console.warn('Channel nicht gefunden.');
         this.selectedChannel = null;
       }
     });
   }
 
   resetLists() {
-    // Setze alle Listen auf den gewünschten Zustand zurück
-    this.allUsers = this.allUsersSubject.getValue(); // Holt alle globalen Nutzer
-    this.userToAdd = []; // Leere Liste für hinzuzufügende Nutzer
-    this.filteredUsers = []; // Leere gefilterte Liste
-    
-    // Aktualisiere possibleUserList mit allen Nutzern, die noch nicht im aktuellen Channel sind
+    this.allUsers = this.allUsersSubject.getValue();
+    this.userToAdd = [];
+    this.filteredUsers = [];
     this.possibleUserList = this.allUsers.filter(
       (user) => !this.currentChannelUserIds.includes(user.id)
     );
-  
-    console.log('Listen zurückgesetzt:', {
-      allUsers: this.allUsers,
-      userToAdd: this.userToAdd,
-      filteredUsers: this.filteredUsers,
-      possibleUserList: this.possibleUserList,
-    });
   }
-  
+
   ngOnDestroy(): void {
     if (this.unsubscribeChannel) {
       this.unsubscribeChannel();
