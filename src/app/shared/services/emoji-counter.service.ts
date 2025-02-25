@@ -120,43 +120,73 @@ export class EmojiCounterService {
     replyId: string
   ) {
     const alreadyReacted = reaction.userIds.includes(userId);
-
+  
     if (alreadyReacted) {
-      reaction.userIds = reaction.userIds.filter((id) => id !== userId);
-      reaction.count = Math.max(reaction.count - 1, 0);
-      if (reaction.count === 0) {
-        reaction.userIds = [];
-        this.messageLikes[replyId] = this.messageLikes[replyId].filter(
-          (r) => r.emoji !== reaction.emoji
-        );
-      }
+      this.removeUserReactionReply(reaction, userId, replyId);
     } else {
-      reaction.userIds.push(userId);
-      reaction.count++;
+      this.addUserReactionReply(reaction, userId);
     }
   }
-
+  
+  private removeUserReactionReply(
+    reaction: { emoji: string; count: number; userIds: string[] },
+    userId: string,
+    replyId: string
+  ) {
+    reaction.userIds = reaction.userIds.filter((id) => id !== userId);
+    reaction.count = Math.max(reaction.count - 1, 0);
+    if (reaction.count === 0) {
+      reaction.userIds = [];
+      this.messageLikes[replyId] = this.messageLikes[replyId].filter(
+        (r) => r.emoji !== reaction.emoji
+      );
+    }
+  }
+  
+  private addUserReactionReply(
+    reaction: { emoji: string; count: number; userIds: string[] },
+    userId: string
+  ) {
+    reaction.userIds.push(userId);
+    reaction.count++;
+  }
+  
   handleReaction(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
     messageId: string
   ) {
     const alreadyReacted = reaction.userIds.includes(userId);
-
+  
     if (alreadyReacted) {
-      reaction.userIds = reaction.userIds.filter((id) => id !== userId);
-      reaction.count = Math.max(reaction.count - 1, 0);
-      if (reaction.count === 0) {
-        reaction.userIds = [];
-        this.messageLikes[messageId] = this.messageLikes[messageId].filter(
-          (r) => r.emoji !== reaction.emoji
-        );
-      }
+      this.removeUserReactionFromMessage(reaction, userId, messageId);
     } else {
-      reaction.userIds.push(userId);
-      reaction.count++;
+      this.addUserReactionToMessage(reaction, userId);
     }
   }
+  
+  private removeUserReactionFromMessage(
+    reaction: { emoji: string; count: number; userIds: string[] },
+    userId: string,
+    messageId: string
+  ) {
+    reaction.userIds = reaction.userIds.filter((id) => id !== userId);
+    reaction.count = Math.max(reaction.count - 1, 0);
+    if (reaction.count === 0) {
+      reaction.userIds = [];
+      this.messageLikes[messageId] = this.messageLikes[messageId].filter(
+        (r) => r.emoji !== reaction.emoji
+      );
+    }
+  }
+  
+  private addUserReactionToMessage(
+    reaction: { emoji: string; count: number; userIds: string[] },
+    userId: string
+  ) {
+    reaction.userIds.push(userId);
+    reaction.count++;
+  }  
 
   checkReactingUser(
     reactionIndex: number,
