@@ -1,4 +1,5 @@
-<form class="bg-white rounded-3xl flex flex-col justify-center w-[90%] xs:w-full items-center  md:w-2/3 py-4  px-1 xs:p-4 md:p-12 shadow-lg m-auto"
+<form
+    class="bg-white rounded-3xl flex flex-col justify-center w-[90%] xs:w-full items-center  md:w-2/3 py-4  px-1 xs:p-4 md:p-12 shadow-lg m-auto"
     [formGroup]="contactForm" (submit)="onSubmit()">
 
     <div class="w-full">
@@ -38,11 +39,17 @@
             </div>
 
             <!-- E-Mail -->
-            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
-                <label for="email" class="sr-only">E-Mail-Adresse</label>
-                <img src="imgs/icons/mail.svg" alt="Mail Icon">
-                <input id="email" formControlName="email" type="email" placeholder="beispielname@email.com"
-                    class="bg-transparent flex-1 focus:outline-none" />
+            <div>
+                <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+                    <label for="email" class="sr-only">E-Mail-Adresse</label>
+                    <img src="imgs/icons/mail.svg" alt="Mail Icon">
+                    <input id="email" formControlName="email" type="email" placeholder="beispielname@email.com"
+                        class="bg-transparent flex-1 focus:outline-none" />
+                </div>
+
+                <small *ngIf="errorMessage" class="text-error text-sm mt-2">
+                    {{ errorMessage }}
+                </small>
             </div>
 
             <!-- Passwort -->

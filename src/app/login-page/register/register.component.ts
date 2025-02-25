@@ -10,16 +10,19 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/models/user.model';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
+import { FirebaseError } from 'firebase/app';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   contactForm: FormGroup;
+  errorMessage: string | null = '';
 
   constructor(
     private fb: FormBuilder,
@@ -66,11 +69,14 @@ export class RegisterComponent {
 
 
   async registerUser() {
+    this.errorMessage = null;  // Fehler zurücksetzen
+
     try {
       const userCredential = await this.authService.register(
         this.contactForm.value.email,
         this.contactForm.value.password
       );
+
       const user = new User({
         id: userCredential.user?.uid,
         email: userCredential.user?.email || '',
@@ -79,13 +85,23 @@ export class RegisterComponent {
         status: 'offline',
         isNotGoogle: true,
       });
-      console.log("user ist: ", user)
+
+      console.log("user ist: ", user);
       this.addUserToFirebase(user);
       this.routeId(user.id);
-    } catch (error) {
-      console.error('Fehler bei der Anmeldung:', error);
+    } catch (error: any) {
+      if (error?.code === 'auth/email-already-in-use') {
+        this.errorMessage = '*Diese E-Mail-Adresse wird bereits verwendet.';
+      } else if (error?.code === 'auth/invalid-email') {
+        this.errorMessage = 'Ungültige E-Mail-Adresse.';
+      } else if (error?.code === 'auth/weak-password') {
+        this.errorMessage = 'Das Passwort ist zu schwach.';
+      } else {
+        this.errorMessage = 'Registrierung fehlgeschlagen. Versuche es erneut.';
+      }
     }
   }
+
 
   routeId(userId: string) {
     this.router.navigate(['/login/avatar/', userId]);
