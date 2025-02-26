@@ -20,6 +20,7 @@ import { DirectChatService } from '../../../shared/services/direct-chat.service'
 import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
 import { Subject } from 'rxjs';
+import { Channel } from '../../../shared/models/channel.model';
 
 @Component({
   selector: 'app-message-input',
@@ -44,13 +45,23 @@ export class MessageInputComponent implements OnInit {
   unsubLoggedInUser!: Subscription;
 
   currentDirectChat: DirectChat = new DirectChat();
+  currentChannel: Channel = new Channel();
   currentDirectChatUser: User = new User();
 
   currentReplyMessageId: string = '';
 
+  message: Message = new Message();
+  reply: Reply = new Reply();
+
+  allUserIds: string[] = [];
+
+  directChat: DirectChat = new DirectChat();
+
+  showUserPopup = false;
+
   constructor(
     private channelService: ChannelService,
-    private userService: UserService,
+    public userService: UserService,
     private directChatService: DirectChatService
   ) {
     effect(() => {
@@ -69,25 +80,84 @@ export class MessageInputComponent implements OnInit {
     effect(() => {
       this.currentReplyMessageId = this.channelService.currentReplyMessageId();
     });
+
+    effect(() => {
+      this.currentChannel = this.channelService.currentChannel();
+    });
   }
 
   ngOnInit(): void {}
-
-  message: Message = new Message();
-  reply: Reply = new Reply();
-
-  directChat: DirectChat = new DirectChat();
 
   get isDirectChat(): boolean {
     return this.directChatService.isDirectChat;
   }
 
+  get allUsers() {
+    return this.userService.allUsers;
+  }
+
   onKeyDown(event: KeyboardEvent): void {
-    // Prüfen, ob Enter ohne Shift gedrückt wurde
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); // Verhindert den Standard-Enter-Ereignis (Zeilenumbruch)
-      this.isReplyInput ? this.sendReply() : this.sendMessage(); // Formular abschicken
+      event.preventDefault();
+      this.isReplyInput ? this.sendReply() : this.sendMessage();
     }
+
+    const currentMessage = this.isReplyInput
+      ? this.reply.message
+      : this.message.message;
+    const atIndex = currentMessage.lastIndexOf('@');
+
+    if (atIndex !== -1) {
+      const searchText = currentMessage.slice(atIndex + 1).toLowerCase();
+      this.allUserIds = this.currentChannel.users.filter((userId) => {
+        const user = this.userService.getUserById(userId);
+        return user?.name.toLowerCase().includes(searchText);
+      });
+      this.showUserPopup = this.allUserIds.length > 0;
+    } else {
+      this.showUserPopup = false;
+      this.allUserIds = [];
+    }
+
+    if (currentMessage === '') {
+      this.showUserPopup = false;
+    }
+  }
+
+  showTagUserPopup() {
+    this.allUserIds = this.currentChannel.users;
+
+    if (this.isReplyInput) {
+      if (
+        !this.reply.message ||
+        this.reply.message.charAt(this.reply.message.length - 1) !== '@'
+      ) {
+        this.reply.message += '@';
+      }
+    } else {
+      if (
+        !this.message.message ||
+        this.message.message.charAt(this.message.message.length - 1) !== '@'
+      ) {
+        this.message.message += '@';
+      }
+    }
+
+    this.showUserPopup = true;
+  }
+
+  tagUser(userId: string) {
+    if (this.isReplyInput) {
+      const lastAtIndex = this.reply.message.lastIndexOf('@');
+      this.reply.message = this.reply.message.substring(0, lastAtIndex);
+      this.reply.message += `@${this.userService.getUserById(userId)?.name} `;
+    } else {
+      const lastAtIndex = this.message.message.lastIndexOf('@');
+      this.message.message = this.message.message.substring(0, lastAtIndex);
+      this.message.message += `@${this.userService.getUserById(userId)?.name} `;
+    }
+    this.showUserPopup = false;
+    this.chatInput.nativeElement.focus();
   }
 
   async sendMessage() {

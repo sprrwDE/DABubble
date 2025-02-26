@@ -11,3 +11,7 @@
 .main-chat-input-container:has(textarea:focus) {
   @apply border-primary;
 }
+
+.tagged-user {
+  @apply bg-hover;
+}

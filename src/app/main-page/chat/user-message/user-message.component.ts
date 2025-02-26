@@ -222,7 +222,7 @@ export class UserMessageComponent {
     const revReactionsRecord = this.buildReactionsRecord(likes);
     const targetMessageId = this.getTargetMessageId(messageId);
     const targetChannelId = this.getTargetChannelId();
-  
+
     this.emojiCounterService.handleEmojiLogic(
       emoji,
       targetMessageId,
@@ -236,17 +236,19 @@ export class UserMessageComponent {
       this.isFirstReply
     );
   }
-  
+
   private buildReactionsRecord(
     likes: { emoji: string; count: number; userIds: string[] }[]
   ): Record<string, { emoji: string; count: number; userIds: string[] }[]> {
     return { [this.messageObj?.id]: likes };
   }
-  
+
   private getTargetMessageId(defaultMessageId: string): string {
-    return (!this.isFirstReply && this.isReply) ? this.parentElement?.id : this.messageObj?.id;
+    return !this.isFirstReply && this.isReply
+      ? this.parentElement?.id
+      : this.messageObj?.id;
   }
-  
+
   private getTargetChannelId(): string {
     return this.currentChannel.id === ''
       ? this.currentDirectChat.id || ''
@@ -257,13 +259,13 @@ export class UserMessageComponent {
     this.editMessagePopupOpen = false;
   }
 
-  openProfilePopup() {
-    let user = this.getUser(this.messageObj.userId);
+  openProfilePopup(userId: string = this.messageObj.userId) {
+    console.log('hie');
+    let user = this.getUser(userId);
 
     this.popupService.contactProfileContent = user || new User();
 
-    if (this.loggedInUser.id === this.messageObj.userId)
-      this.openUserProfilePopupFunction();
+    if (this.loggedInUser.id === userId) this.openUserProfilePopupFunction();
     else this.openContactProfilePopup(user || new User());
   }
 
@@ -334,5 +336,26 @@ export class UserMessageComponent {
 
   insertEmoji(emoji: string) {
     this.editedMessage += emoji;
+  }
+
+  formatMessage(message: string) {
+    if (!message) return '';
+
+    const formattedMessage = message.replace(
+      /@([\w\s.-]+)/g,
+      (match, username) => {
+        const user = this.currentChannel.users.find(
+          (userId) =>
+            this.userService.getUserById(userId)?.name === username.trim()
+        );
+
+        if (user) {
+          return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">@${username}</span>`;
+        }
+        return match;
+      }
+    );
+
+    return formattedMessage;
   }
 }
