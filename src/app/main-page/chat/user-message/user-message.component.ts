@@ -148,6 +148,16 @@ export class UserMessageComponent {
     }
   }
 
+  onContainerClick(event: MouseEvent, messageId: string) {
+    // Falls das geklickte Element (oder eines seiner Eltern) die Klasse "reaction-item" hat,
+    // dann den Container-Click nicht ausführen.
+    if ((event.target as HTMLElement).closest('.reaction-item')) {
+      return;
+    }
+    event.preventDefault();
+    this.getMessageFromId(messageId);
+  }
+  
   adjustTextareaHeight() {
     const textarea = this.editMessage.nativeElement;
     textarea.style.height = 'auto';

@@ -1,5 +1,5 @@
 <div
-  (click)="$event.preventDefault(); getMessageFromId(messageId)"
+  (click)="onContainerClick($event, messageId)"
   (mouseleave)="onMouseLeave()"
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{
@@ -24,6 +24,7 @@
     <div
       *ngIf="!isReply"
       (click)="
+        $event.stopPropagation();
         reactOnEmoji(
           '✅',
           loggedInUser.id,
@@ -55,6 +56,7 @@
     <div
       *ngIf="!isReply"
       (click)="
+        $event.stopPropagation();
         reactOnEmoji(
           '🙌',
           loggedInUser.id,
@@ -302,6 +304,7 @@
       <div
         class="cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         (click)="
+          $event.stopPropagation();
           reactOnEmoji(
             like.emoji,
             loggedInUser?.id || '',
@@ -312,13 +315,6 @@
         "
       >
         <span>{{ like.emoji }}</span>
-        <!-- <span
-          [ngClass]="{
-            'text-[#D9D9D9]': like.userIds.includes(loggedInUser.id),
-            'text-black': !like.userIds.includes(loggedInUser.id)
-          }"
-        > {{ like.count }}
-        </span> -->
         <span class="text-[16px]">{{ like.count }}</span>
       </div>
       } }
@@ -362,7 +358,7 @@
       class="flex items-center gap-[20px] flex-wrap"
     >
       <p
-        (click)="openReplyPanel()"
+        (click)="$event.stopPropagation(); openReplyPanel()"
         class="text-primary text-[18px] hover:font-bold hover:cursor-pointer"
       >
         <span> {{ numberOfAnswers }} </span> Antworten
