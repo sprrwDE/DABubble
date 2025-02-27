@@ -102,14 +102,14 @@ export class AddUsersToNewChannelComponent {
   async createChannel() {
     this.populateChannelUsers();
     this.setChannelMetadata();
-  
+
     const data = await this.persistChannel();
-  
+
     this.searchChatService.setCurrentChannel(new Channel(data));
     this.resetUserServices();
     this.resetUI();
   }
-  
+
   private populateChannelUsers() {
     if (!this.showCreateChannelAddPeopleInput) {
       this.allUsers.forEach((user) => this.channel.users.push(user.id));
@@ -122,21 +122,21 @@ export class AddUsersToNewChannelComponent {
       }
     }
   }
-  
+
   private setChannelMetadata() {
     this.channel.channelCreatorId = this.loggedInUser.id;
     this.channel.timestamp = new Date().getTime();
   }
-  
+
   private async persistChannel() {
     return await this.channelService.addChannel(this.channel.toJSON());
   }
-  
+
   private resetUserServices() {
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
   }
-  
+
   private resetUI() {
     this.panelService.closeReplyPanel();
     this.popupService.createChannelPopupOpen = false;
@@ -161,7 +161,7 @@ export class AddUsersToNewChannelComponent {
     if (this.nameInput !== '') {
       this.showAddUserToChannelSection(event);
     } else {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 
@@ -180,7 +180,7 @@ export class AddUsersToNewChannelComponent {
     if (this.addUserService.filteredUsers.length > 0) {
       this.showUserPopup = true;
     } else {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 

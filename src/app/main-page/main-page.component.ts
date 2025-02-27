@@ -241,6 +241,8 @@ export class MainPageComponent {
       this.currentEditMessageId = '';
     }
 
+    this.popupService.closeUserPopup();
+
     /*     
     if (this.emojiPickerComponent) {
       this.emojiPickerComponent.toggleEmojiPicker();

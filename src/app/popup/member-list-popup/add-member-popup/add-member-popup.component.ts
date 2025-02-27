@@ -65,7 +65,7 @@ export class AddMemberPopupComponent {
     if (this.nameInput !== '') {
       this.showAddUserToChannelSection(event);
     } else {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 

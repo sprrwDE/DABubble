@@ -4,7 +4,7 @@
       ? replyInput.nativeElement.focus()
       : chatInput.nativeElement.focus()
   "
-  class="main-chat-input-container relative z-[2] bg-white p-[20px] mt-[20px] pb-[15px] h-[145px] rounded-[20px] hover:border-primary transition-svg-text border-lines border-[1px] flex flex-col w-full items-center justify-between"
+  class="main-chat-input-container relative z-[3] bg-white p-[20px] mt-[20px] pb-[15px] h-[145px] rounded-[20px] hover:border-primary transition-svg-text border-lines border-[1px] flex flex-col w-full items-center justify-between"
 >
   <textarea
     #chatInput
@@ -132,7 +132,8 @@
       showUserPopup,
     'top-[0%] shadow-[0px_6px_10px_0px_white] overflow-y-hidden': !showUserPopup
   }"
-  class="absolute flex flex-col gap-[10px] left-0 w-full h-full z-[1] transition-svg-text bg-white p-[20px] rounded-[20px]"
+  class="absolute flex flex-col gap-[10px] left-0 w-full h-full z-[2] transition-svg-text bg-white p-[20px] rounded-[20px]"
+  (click)="$event.stopPropagation()"
 >
   <div
     *ngFor="let userId of allUserIds"

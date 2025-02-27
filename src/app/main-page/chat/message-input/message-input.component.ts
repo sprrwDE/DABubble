@@ -21,6 +21,7 @@ import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
 import { Subject } from 'rxjs';
 import { Channel } from '../../../shared/models/channel.model';
+import { PopupService } from '../../../popup/popup.service';
 
 @Component({
   selector: 'app-message-input',
@@ -57,13 +58,13 @@ export class MessageInputComponent implements OnInit {
 
   directChat: DirectChat = new DirectChat();
 
-  showUserPopup = false;
-
   constructor(
     private channelService: ChannelService,
     public userService: UserService,
-    private directChatService: DirectChatService
+    private directChatService: DirectChatService,
+    private popupService: PopupService
   ) {
+    this.popupService.messageInputComponent = this;
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
@@ -96,6 +97,14 @@ export class MessageInputComponent implements OnInit {
     return this.userService.allUsers;
   }
 
+  get showUserPopup() {
+    return this.popupService.showUserPopup;
+  }
+
+  set showUserPopup(value: boolean) {
+    this.popupService.showUserPopup = value;
+  }
+
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -109,23 +118,34 @@ export class MessageInputComponent implements OnInit {
 
     if (atIndex !== -1) {
       const searchText = currentMessage.slice(atIndex + 1).toLowerCase();
-      this.allUserIds = this.currentChannel.users.filter((userId) => {
-        const user = this.userService.getUserById(userId);
-        return user?.name.toLowerCase().includes(searchText);
-      });
+      if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
+        this.allUserIds = this.currentDirectChat.userIds.filter((userId) => {
+          const user = this.userService.getUserById(userId);
+
+          return user?.name.toLowerCase().includes(searchText);
+        });
+      } else {
+        this.allUserIds = this.currentChannel.users.filter((userId) => {
+          const user = this.userService.getUserById(userId);
+          return user?.name.toLowerCase().includes(searchText);
+        });
+      }
       this.showUserPopup = this.allUserIds.length > 0;
     } else {
-      this.showUserPopup = false;
-      this.allUserIds = [];
+      this.popupService.closeUserPopup();
     }
 
     if (currentMessage === '') {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 
   showTagUserPopup() {
-    this.allUserIds = this.currentChannel.users;
+    if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
+      this.allUserIds = this.currentDirectChat.userIds;
+    } else {
+      this.allUserIds = this.currentChannel.users;
+    }
 
     if (this.isReplyInput) {
       if (

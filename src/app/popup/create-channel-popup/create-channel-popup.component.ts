@@ -98,7 +98,7 @@ export class CreateChannelPopupComponent {
     }
   }
 
-addMemberToNewChannel(event: Event) {
+  addMemberToNewChannel(event: Event) {
     this.addUserService.isCreatingNewChannel = true;
     this.getNameInput(event);
   }
@@ -115,7 +115,7 @@ addMemberToNewChannel(event: Event) {
     if (this.nameInput !== '') {
       this.showAddUserToChannelSection(event);
     } else {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 
@@ -138,7 +138,7 @@ addMemberToNewChannel(event: Event) {
     if (this.addUserService.filteredUsers.length > 0) {
       this.showUserPopup = true;
     } else {
-      this.showUserPopup = false;
+      this.popupService.closeUserPopup();
     }
   }
 

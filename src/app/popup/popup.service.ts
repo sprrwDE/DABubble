@@ -3,6 +3,7 @@ import { User } from '../shared/models/user.model';
 import { CreateChannelPopupComponent } from './create-channel-popup/create-channel-popup.component';
 import { MemberListPopupComponent } from './member-list-popup/member-list-popup.component';
 import { Channel } from '../shared/models/channel.model';
+import { MessageInputComponent } from '../main-page/chat/message-input/message-input.component';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class PopupService {
 
   openUserProfilePopup = false;
   editingUserProfile = false;
-  toggleAvatarSelection = false; 
+  toggleAvatarSelection = false;
 
   contactProfileContent: User = new User();
   contactProfilePopupOpen = false;
@@ -36,8 +37,18 @@ export class PopupService {
 
   channelDetailsPopup!: CreateChannelPopupComponent;
   memberListPopup!: MemberListPopupComponent;
+  messageInputComponent!: MessageInputComponent;
 
   showCreateChannelPopupErrorText = false;
+
+  showUserPopup = false;
+
+  closeUserPopup() {
+    this.showUserPopup = false;
+    this.messageInputComponent.allUserIds = [];
+
+    console.log('HI');
+  }
 
   resetEditStates() {
     if (this.channelDetailsPopup) {
@@ -51,6 +62,6 @@ export class PopupService {
     this.editChannelName = false;
     this.editChannelDescription = false;
     this.editingUserProfile = false;
-    this.toggleAvatarSelection = false; 
+    this.toggleAvatarSelection = false;
   }
 }
