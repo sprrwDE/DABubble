@@ -56,11 +56,13 @@
       <p
         [ngClass]="{
           'text-online': contactProfileContent.status === 'online',
-          'text-disable': contactProfileContent.status === 'offline'
+          'text-disable': contactProfileContent.status === 'offline',
+          'bg-orange-400': contactProfileContent.status === 'abwesend',
         }"
         class="text-[20px]"
       >
-        <span *ngIf="contactProfileContent.status === 'online'">Aktive</span>
+        <span *ngIf="contactProfileContent.status === 'online'">Aktiv</span>
+        <span *ngIf="contactProfileContent.status === 'abwesend'">Abwesend</span>
         <span *ngIf="contactProfileContent.status === 'offline'">Offline</span>
       </p>
     </div>

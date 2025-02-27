@@ -13,7 +13,8 @@
       <div
         [ngClass]="{
           'bg-online': user.status === 'online' || user.id === 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1',
-          'bg-disable': user.status === 'offline'
+          'bg-disable': user.status === 'offline',
+          'bg-orange-400': user.status === 'abwesend',
         }"
         class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
       ></div>
