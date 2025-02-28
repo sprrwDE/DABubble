@@ -41,10 +41,8 @@ export class PopupService {
 
   showCreateChannelPopupErrorText = false;
 
-  showUserPopup = false;
-
   closeUserPopup() {
-    this.showUserPopup = false;
+    this.messageInputComponent.showUserPopup = false;
     this.messageInputComponent.allUserIds = [];
 
     console.log('HI');

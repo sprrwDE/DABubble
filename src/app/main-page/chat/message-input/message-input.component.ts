@@ -58,6 +58,8 @@ export class MessageInputComponent implements OnInit {
 
   directChat: DirectChat = new DirectChat();
 
+  showUserPopup = false;
+
   constructor(
     private channelService: ChannelService,
     public userService: UserService,
@@ -97,14 +99,6 @@ export class MessageInputComponent implements OnInit {
     return this.userService.allUsers;
   }
 
-  get showUserPopup() {
-    return this.popupService.showUserPopup;
-  }
-
-  set showUserPopup(value: boolean) {
-    this.popupService.showUserPopup = value;
-  }
-
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -122,12 +116,12 @@ export class MessageInputComponent implements OnInit {
         this.allUserIds = this.currentDirectChat.userIds.filter((userId) => {
           const user = this.userService.getUserById(userId);
 
-          return user?.name.toLowerCase().includes(searchText);
+          return user?.name.toLowerCase().includes(searchText.trim());
         });
       } else {
         this.allUserIds = this.currentChannel.users.filter((userId) => {
           const user = this.userService.getUserById(userId);
-          return user?.name.toLowerCase().includes(searchText);
+          return user?.name.toLowerCase().includes(searchText.trim());
         });
       }
       this.showUserPopup = this.allUserIds.length > 0;
