@@ -44,8 +44,6 @@ export class PopupService {
   closeUserPopup() {
     this.messageInputComponent.showUserPopup = false;
     this.messageInputComponent.allUserIds = [];
-
-    console.log('HI');
   }
 
   resetEditStates() {

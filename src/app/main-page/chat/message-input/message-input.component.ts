@@ -113,9 +113,9 @@ export class MessageInputComponent implements OnInit {
     if (atIndex !== -1) {
       const searchText = currentMessage.slice(atIndex + 1).toLowerCase();
       if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
-        this.allUserIds = this.currentDirectChat.userIds.filter((userId) => {
+        const uniqueUserIds = [...new Set(this.currentDirectChat.userIds)];
+        this.allUserIds = uniqueUserIds.filter((userId) => {
           const user = this.userService.getUserById(userId);
-
           return user?.name.toLowerCase().includes(searchText.trim());
         });
       } else {
@@ -136,7 +136,7 @@ export class MessageInputComponent implements OnInit {
 
   showTagUserPopup() {
     if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
-      this.allUserIds = this.currentDirectChat.userIds;
+      this.allUserIds = [...new Set(this.currentDirectChat.userIds)];
     } else {
       this.allUserIds = this.currentChannel.users;
     }
