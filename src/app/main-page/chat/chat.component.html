@@ -37,7 +37,7 @@
           [lastAnswerTime]="getLastAnswerTime(message.replies)"
           [numberOfAnswers]="getNumberOfAnswers(message.replies)"
           [channelId]="currentChannel.id"
-          [path]="currentChannel.messages"
+          [path]="currentChannel.messages || ''"
         ></app-user-message>
       </div>
 
