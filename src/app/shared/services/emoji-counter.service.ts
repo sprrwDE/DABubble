@@ -41,26 +41,48 @@ export class EmojiCounterService {
     messageId: string,
     userId: string,
     channelId: string,
-    previousReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
+    previousReactions: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    > = {},
     isReply: boolean,
     replyId: string,
-    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]> = {},
+    prevRevReactions: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    > = {},
     isDirectChat: boolean,
     isFirstReply: boolean
   ) {
     if (!isReply || isFirstReply) {
-      this.handleMessageReaction(emoji, messageId, userId, channelId, previousReactions);
+      this.handleMessageReaction(
+        emoji,
+        messageId,
+        userId,
+        channelId,
+        previousReactions
+      );
     } else {
-      this.handleReplyReaction(emoji, messageId, userId, channelId, replyId, prevRevReactions);
+      this.handleReplyReaction(
+        emoji,
+        messageId,
+        userId,
+        channelId,
+        replyId,
+        prevRevReactions
+      );
     }
   }
-  
+
   private handleMessageReaction(
     emoji: string,
     messageId: string,
     userId: string,
     channelId: string,
-    previousReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]>
+    previousReactions: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    >
   ) {
     if (!this.messageLikes[messageId]) {
       this.messageLikes[messageId] = previousReactions[messageId]
@@ -71,17 +93,26 @@ export class EmojiCounterService {
       (item) => item.emoji === emoji
     );
     this.checkReactingUser(reactionIndex, userId, messageId, emoji);
-    const collection = this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
-    this.firebaseService.updateEmojiCount(this.messageLikes, messageId, channelId, collection);
+    const collection =
+      this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
+    this.firebaseService.updateEmojiCount(
+      this.messageLikes,
+      messageId,
+      channelId,
+      collection
+    );
   }
-  
+
   private handleReplyReaction(
     emoji: string,
     messageId: string,
     userId: string,
     channelId: string,
     replyId: string,
-    prevRevReactions: Record<string, { emoji: string; count: number; userIds: string[] }[]>
+    prevRevReactions: Record<
+      string,
+      { emoji: string; count: number; userIds: string[] }[]
+    >
   ) {
     if (!this.messageLikes[replyId]) {
       this.messageLikes[replyId] = prevRevReactions[replyId]
@@ -92,8 +123,15 @@ export class EmojiCounterService {
       (item) => item.emoji === emoji
     );
     this.checkReactingUserReply(reactionIndex, userId, replyId, emoji);
-    const collection = this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
-    this.firebaseService.updateEmojiCountReplies(this.messageLikes, messageId, channelId, replyId, collection);
+    const collection =
+      this.currentChannel.id !== '' ? 'channels' : 'direct-chats';
+    this.firebaseService.updateEmojiCountReplies(
+      this.messageLikes,
+      messageId,
+      channelId,
+      replyId,
+      collection
+    );
   }
 
   checkReactingUserReply(
@@ -120,14 +158,14 @@ export class EmojiCounterService {
     replyId: string
   ) {
     const alreadyReacted = reaction.userIds.includes(userId);
-  
+
     if (alreadyReacted) {
       this.removeUserReactionReply(reaction, userId, replyId);
     } else {
       this.addUserReactionReply(reaction, userId);
     }
   }
-  
+
   private removeUserReactionReply(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
@@ -142,7 +180,7 @@ export class EmojiCounterService {
       );
     }
   }
-  
+
   private addUserReactionReply(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string
@@ -150,21 +188,21 @@ export class EmojiCounterService {
     reaction.userIds.push(userId);
     reaction.count++;
   }
-  
+
   handleReaction(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
     messageId: string
   ) {
     const alreadyReacted = reaction.userIds.includes(userId);
-  
+
     if (alreadyReacted) {
       this.removeUserReactionFromMessage(reaction, userId, messageId);
     } else {
       this.addUserReactionToMessage(reaction, userId);
     }
   }
-  
+
   private removeUserReactionFromMessage(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string,
@@ -179,14 +217,14 @@ export class EmojiCounterService {
       );
     }
   }
-  
+
   private addUserReactionToMessage(
     reaction: { emoji: string; count: number; userIds: string[] },
     userId: string
   ) {
     reaction.userIds.push(userId);
     reaction.count++;
-  }  
+  }
 
   checkReactingUser(
     reactionIndex: number,

@@ -67,9 +67,9 @@
   <div
     (click)="searchInput.focus()"
     (click)="$event.stopPropagation()"
-    class="searchInput-container cursor-text hidden md:flex items-center justify-between h-full rounded-[42px] w-full text-[24px] bg-white px-3 lg:px-[45px] outline-none transition-all duration-75"
+    class="searchInput-container relative cursor-text hidden md:flex gap-[5px] items-center justify-between h-full rounded-[42px] w-full text-[24px] bg-white px-[12px] lg:px-[45px] outline-none transition-all duration-75"
   >
-    <div class="relative w-full max-w-md">
+    <div class="relative w-full">
       <!-- Suchfeld -->
       <input
         [formControl]="searchControl"
@@ -193,7 +193,7 @@
     <button
       *ngIf="searchControl.value"
       (click)="clearSearch()"
-      class="hidden lg:flex x-button w-fit h-fit size-4 right-0 justify-center items-center text-gray-500 hover:text-gray-700"
+      class="hidden lg:flex x-button w-fit h-fit size-4 justify-center items-center text-gray-500 hover:text-gray-700"
     >
       ✖
     </button>
