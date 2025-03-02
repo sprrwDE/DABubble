@@ -1,6 +1,9 @@
-@if(display && addUserService.filteredUsers.length !== 0) {
 <div
-  class="p-[20px_25px_20px_25px] gap-[15px] rounded-[0px_20px_20px_20px] border border-[#ADB0D9] shadow-[0px_2px_10px_0px_#00000014] opacity-100 bg-white max-h-[300px] overflow-y-auto"
+  [ngClass]="{
+    'opacity-100': display,
+    'opacity-0 pointer-events-none': !display
+  }"
+  class="p-[20px_25px_20px_25px] gap-[15px] rounded-[0px_20px_20px_20px] border border-[#ADB0D9] shadow-[0px_2px_10px_0px_#00000014] bg-white max-h-[300px] overflow-y-auto transition-opacity duration-300"
 >
   @for (user of addUserService.filteredUsers; track $index) {
     <div class="contact-item flex items-center gap-2 min-w-[150px] max-w-[250px]" (click)="addUserToList(user.id)">
@@ -15,19 +18,16 @@
           [ngClass]="{
             'bg-online': user.status === 'online' || user.id === 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1',
             'bg-disable': user.status === 'offline',
-            'bg-orange-400': user.status === 'abwesend',
+            'bg-orange-400': user.status === 'abwesend'
           }"
           class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
         ></div>
       </div>
       <p class="truncate max-w-[180px]"> {{ user.name || "lädt..." }} </p>
     </div>
-      }
+  }
+
+  @if (addUserService.filteredUsers.length === 0) {
+    <span>Keine Ergebnisse gefunden!</span>
+  }
 </div>
-} @if(display && addUserService.filteredUsers.length === 0) {
-<div
-  class="p-[20px_25px_20px_25px] gap-[15px] rounded-[0px_20px_20px_20px] border border-[#ADB0D9] shadow-[0px_2px_10px_0px_#00000014] opacity-100 bg-white max-h-[300px] overflow-y-auto"
->
-  <span>Keine Ergebnisse gefunden!</span>
-</div>
-}
