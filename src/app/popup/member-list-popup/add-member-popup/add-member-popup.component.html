@@ -50,7 +50,7 @@
           src="{{ user.image || 'imgs/avatar/profile.svg' }}"
           (error)="globalVariablesService.handleImageError($event)"
         />
-        <span class="truncate min-w-0">{{ user.name }}</span>
+        <span class="truncate min-w-0 max-w-[110px]">{{ user.name }}</span>
       </div>
       <span
         class="cursor-pointer"

@@ -64,7 +64,7 @@
           ></div>
         </div>
 
-        <p>
+        <p class="truncate max-w-[180px]">
           {{ user.name || "NoName" }}
           <span *ngIf="user.id === loggedInUser?.id">(Du)</span>
         </p>

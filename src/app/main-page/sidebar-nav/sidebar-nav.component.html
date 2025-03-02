@@ -482,7 +482,7 @@
               class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
             ></div>
           </div>
-          <p>
+          <p class="truncate min-w-0 max-w-[140px]">
             {{ user.name || "lädt..." }}
             <span *ngIf="loggedInUser?.id === user.id">(Du)</span>
           </p>

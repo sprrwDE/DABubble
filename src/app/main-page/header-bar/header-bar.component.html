@@ -236,7 +236,7 @@
       (click)="profileMenuPopupOpen = true"
       class="profile-container relative hover:cursor-pointer hover:text-primary w-[unset] md:pl-[40px] transition-all duration-150 md:w-[max-content] flex justify-end gap-4 max-h-full items-center min-w-[max-content]"
     >
-      <p class="text-[32px] hidden md:block font-bold">{{ UserName }}</p>
+      <p class="text-[32px] hidden md:block font-bold truncate min-w-0 max-w-[160px]">{{ UserName }}</p>
 
       <img
         src="{{ userImage }}"
