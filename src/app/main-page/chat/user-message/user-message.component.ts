@@ -5,22 +5,34 @@ import {
   Input,
   ViewChild,
   ElementRef,
-  OnDestroy,
+  OnInit,
+  AfterViewInit,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { PanelService } from '../../../shared/services/panel.service';
 import { PopupService } from '../../../popup/popup.service';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
-import { User } from '../../../shared/models/user.model';
 import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.component';
-import { Subject } from 'rxjs';
 import { EmojiCounterService } from '../../../shared/services/emoji-counter.service';
 import { MainChatService } from '../../../shared/services/main-chat.service';
-import { FormsModule } from '@angular/forms';
-import { Channel } from '../../../shared/models/channel.model';
-import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { DirectChatService } from '../../../shared/services/direct-chat.service';
 import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
+import { User } from '../../../shared/models/user.model';
+import { Channel } from '../../../shared/models/channel.model';
+import { DirectChat } from '../../../shared/models/direct-chat.model';
+import { MessageLike } from '../../../shared/models/message-like.interface';
+
+interface ReactionData {
+  reactionsRecord: { [key: string]: MessageLike[] };
+  revReactionsRecord: { [key: string]: MessageLike[] };
+}
+
+interface TargetData {
+  targetMessageId: string;
+  targetChannelId: string;
+}
 
 @Component({
   selector: 'app-user-message',
@@ -29,43 +41,35 @@ import { GlobalVariablesService } from '../../../shared/services/global-variable
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
-export class UserMessageComponent {
-  @Input() path: any;
-  @Input() parentElement: any;
-  @Input() messageId: any;
-  @Input() channelId: string = '';
+export class UserMessageComponent implements OnInit, AfterViewInit {
+  @Input() public path: any;
+  @Input() public parentElement: any;
+  @Input() public messageId: any;
+  @Input() public channelId: string = '';
+  @Input() public isContact: boolean = false;
+  @Input() public isDirectChat: boolean = false;
+  @Input() public isReply: boolean = false;
+  @Input() public isFirstReply: boolean = false;
+  @Input() public isChannelReply: boolean = false;
+  @Input() public lastAnswerTime: any = '';
+  @Input() public numberOfAnswers: number = 0;
 
-  @Input() isContact: boolean = false;
-  @Input() isDirectChat: boolean = false;
-  @Input() isReply: boolean = false;
-  @Input() isFirstReply: boolean = false;
-  @Input() isChannelReply: boolean = false;
+  @ViewChild('editMessage') public editMessage!: ElementRef;
 
-  @Input() lastAnswerTime: any = '';
-  @Input() numberOfAnswers: number = 0;
-
-  messageObj: any;
-  message: string = '';
-  time: string = '';
-  name: string = '';
-  imgUrl: string = '';
-  likes: Array<{ emoji: string; count: number; userIds: string[] }> = [];
-
-  loggedInUser: any;
-
-  editMessagePopupOpen: boolean = false;
-  showEmojiPicker = false;
-
-  editedMessage: string = '';
-
-  emojiInput$ = new Subject<string>();
-
-  renderReplyMessage: boolean = false;
-
-  currentChannel: Channel = new Channel();
-  currentDirectChat: DirectChat = new DirectChat();
-
-  @ViewChild('editMessage') editMessage!: ElementRef;
+  public messageObj: any;
+  public message: string = '';
+  public time: string = '';
+  public name: string = '';
+  public imgUrl: string = '';
+  public likes: MessageLike[] = [];
+  public loggedInUser: any;
+  public editMessagePopupOpen: boolean = false;
+  public showEmojiPicker: boolean = false;
+  public editedMessage: string = '';
+  public renderReplyMessage: boolean = false;
+  public currentChannel: Channel = new Channel();
+  public currentDirectChat: DirectChat = new DirectChat();
+  public emojiInput$: Subject<string> = new Subject<string>();
 
   constructor(
     private panelService: PanelService,
@@ -77,183 +81,219 @@ export class UserMessageComponent {
     private directChatService: DirectChatService,
     public globalVariablesService: GlobalVariablesService
   ) {
+    this.initializeLoggedInUserEffect();
+    this.initializeReplyMessageEffect();
+    this.initializeChannelEffect();
+    this.initializeDirectChatEffect();
+  }
+
+  private initializeLoggedInUserEffect(): void {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
+  }
 
+  private initializeReplyMessageEffect(): void {
     effect(() => {
       this.renderReplyMessage = this.mainChatService.renderReplyMessage();
 
       if (this.renderReplyMessage && this.isFirstReply) {
         this.getMessageFromId(this.messageId);
-
-        setTimeout(() => {
-          this.mainChatService.renderReplyMessage.set(false);
-        }, 0);
+        this.resetReplyMessageRender();
       }
     });
+  }
 
+  private resetReplyMessageRender(): void {
+    setTimeout(() => {
+      this.mainChatService.renderReplyMessage.set(false);
+    }, 0);
+  }
+
+  private initializeChannelEffect(): void {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
-
-      setTimeout(() => {
-        this.mainChatService.renderReplyMessage.set(true);
-      }, 0);
-    });
-
-    effect(() => {
-      this.currentDirectChat = this.directChatService.currentDirectChat();
+      this.setReplyMessageRender();
     });
   }
 
-  get editingUserProfile() {
-    return this.popupService.editingUserProfile;
-  }
-
-  set editingUserProfile(value: boolean) {
-    this.popupService.editingUserProfile = value;
-  }
-
-  get openUserProfilePopup() {
-    return this.popupService.openUserProfilePopup;
-  }
-
-  set openUserProfilePopup(value: boolean) {
-    this.popupService.openUserProfilePopup = value;
-  }
-
-  get allUsers() {
-    return this.userService.allUsers;
-  }
-
-  get currentEditMessageId() {
-    return this.mainChatService.currentEditMessageId;
-  }
-
-  set currentEditMessageId(value: string) {
-    this.mainChatService.currentEditMessageId = value;
-  }
-
-  get firstReplyMessageId() {
-    return this.panelService.messageId;
-  }
-
-  ngOnInit() {
-    this.getMessageFromId(this.messageId);
-  }
-
-  ngAfterViewInit() {
-    if (this.editMessage) {
-      this.adjustTextareaHeight();
-    }
-  }
-
-  onContainerClick(event: MouseEvent, messageId: string) {
-    // Falls das geklickte Element (oder eines seiner Eltern) die Klasse "reaction-item" hat,
-    // dann den Container-Click nicht ausführen.
-    if ((event.target as HTMLElement).closest('.reaction-item')) {
-      return;
-    }
-    event.preventDefault();
-    this.getMessageFromId(messageId);
-  }
-  
-  adjustTextareaHeight() {
-    const textarea = this.editMessage.nativeElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }
-
-  getMessageFromId(messageId: string) {
-    if (this.isFirstReply) {
-      if (this.currentChannel.id !== '') {
-        this.messageObj = this.currentChannel?.messages?.find(
-          (message: any) => message.id === this.firstReplyMessageId
-        );
-      } else {
-        this.messageObj = this.currentDirectChat?.messages?.find(
-          (message: any) => message.id === this.firstReplyMessageId
-        );
-      }
-    } else {
-      this.messageObj = this.path?.find(
-        (message: any) => message.id === messageId
-      );
-    }
-
-    this.message = this.messageObj?.message;
-    this.time = this.channelService.formatTime(this.messageObj?.timestamp);
-    this.name =
-      this.userService.getUserById(this.messageObj?.userId)?.name ||
-      'NAN = Not A NAME';
-    this.imgUrl =
-      this.userService.getUserById(this.messageObj?.userId)?.image ||
-      'imgs/avatar/profile.svg';
-    this.likes = this.messageObj?.likes;
-  }
-
-  getMessageLikes() {
-    return { [this.messageId]: this.likes };
-  }
-
-  getReplyLikes() {
-    return { [this.messageId]: this.likes };
-  }
-
-  toggleEditMessagePopup() {
-    this.editMessagePopupOpen = !this.editMessagePopupOpen;
-  }
-
-  async openReplyPanel() {
-    this.channelService.currentReplyMessageId.set(this.messageId);
-
-    this.panelService.renderReplyPanel(
-      this.isContact,
-      this.numberOfAnswers,
-      this.messageId
-    );
-
-    this.panelService.openReplyPanel();
-    this.panelService.scroll = true;
-
+  private setReplyMessageRender(): void {
     setTimeout(() => {
       this.mainChatService.renderReplyMessage.set(true);
     }, 0);
   }
 
-  reactOnEmoji(
+  private initializeDirectChatEffect(): void {
+    effect(() => {
+      this.currentDirectChat = this.directChatService.currentDirectChat();
+    });
+  }
+
+  public get editingUserProfile(): boolean {
+    return this.popupService.editingUserProfile;
+  }
+
+  public set editingUserProfile(value: boolean) {
+    this.popupService.editingUserProfile = value;
+  }
+
+  public get openUserProfilePopup(): boolean {
+    return this.popupService.openUserProfilePopup;
+  }
+
+  public set openUserProfilePopup(value: boolean) {
+    this.popupService.openUserProfilePopup = value;
+  }
+
+  public get allUsers(): User[] {
+    return this.userService.allUsers;
+  }
+
+  public get currentEditMessageId(): string {
+    return this.mainChatService.currentEditMessageId;
+  }
+
+  public set currentEditMessageId(value: string) {
+    this.mainChatService.currentEditMessageId = value;
+  }
+
+  public get firstReplyMessageId(): string {
+    return this.panelService.messageId;
+  }
+
+  ngOnInit(): void {
+    this.getMessageFromId(this.messageId);
+  }
+
+  ngAfterViewInit(): void {
+    if (this.editMessage) this.adjustTextareaHeight();
+  }
+
+  public onContainerClick(event: MouseEvent, messageId: string): void {
+    if ((event.target as HTMLElement).closest('.reaction-item')) return;
+
+    event.preventDefault();
+    this.getMessageFromId(messageId);
+  }
+
+  public adjustTextareaHeight(): void {
+    const textarea = this.editMessage.nativeElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  public getMessageFromId(messageId: string): void {
+    this.findAndSetMessageObject(messageId);
+    this.updateMessageDetails();
+  }
+
+  private findAndSetMessageObject(messageId: string): void {
+    if (this.isFirstReply) this.messageObj = this.findMessageInCurrentChat();
+    else {
+      this.messageObj = this.path?.find(
+        (message: any) => message.id === messageId
+      );
+    }
+  }
+
+  private findMessageInCurrentChat(): any {
+    if (this.currentChannel.id !== '') {
+      return this.currentChannel?.messages?.find(
+        (message: any) => message.id === this.firstReplyMessageId
+      );
+    } else {
+      return this.currentDirectChat?.messages?.find(
+        (message: any) => message.id === this.firstReplyMessageId
+      );
+    }
+  }
+
+  private updateMessageDetails(): void {
+    this.message = this.messageObj?.message;
+    this.time = this.channelService.formatTime(this.messageObj?.timestamp);
+    this.updateUserDetails();
+    this.likes = this.messageObj?.likes || [];
+  }
+
+  private updateUserDetails(): void {
+    const user = this.userService.getUserById(this.messageObj?.userId);
+    this.name = user?.name || 'NAN = Not A NAME';
+    this.imgUrl = user?.image || 'imgs/avatar/profile.svg';
+  }
+
+  public getMessageLikes(): { [key: string]: MessageLike[] } {
+    return { [this.messageId]: this.likes };
+  }
+
+  public getReplyLikes(): { [key: string]: MessageLike[] } {
+    return { [this.messageId]: this.likes };
+  }
+
+  public toggleEditMessagePopup(): void {
+    this.editMessagePopupOpen = !this.editMessagePopupOpen;
+  }
+
+  public async openReplyPanel(): Promise<void> {
+    this.setCurrentReplyMessageId();
+    this.setupReplyPanel();
+    this.enablePanelScrolling();
+    await this.scheduleReplyMessageRender();
+  }
+
+  private setCurrentReplyMessageId(): void {
+    this.channelService.currentReplyMessageId.set(this.messageId);
+  }
+
+  private setupReplyPanel(): void {
+    this.panelService.renderReplyPanel(
+      this.isContact,
+      this.numberOfAnswers,
+      this.messageId
+    );
+    this.panelService.openReplyPanel();
+  }
+
+  private enablePanelScrolling(): void {
+    this.panelService.scroll = true;
+  }
+
+  private scheduleReplyMessageRender(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        this.mainChatService.renderReplyMessage.set(true);
+        resolve();
+      }, 0);
+    });
+  }
+
+  public reactOnEmoji(
     emoji: string,
     user: string,
     messageId: string,
     channel: string,
-    likes: { emoji: string; count: number; userIds: string[] }[]
-  ) {
-    const reactionsRecord = this.buildReactionsRecord(likes);
-    const revReactionsRecord = this.buildReactionsRecord(likes);
-    const targetMessageId = this.getTargetMessageId(messageId);
-    const targetChannelId = this.getTargetChannelId();
+    likes: MessageLike[]
+  ): void {
+    const reactionData: ReactionData = this.prepareReactionData(likes);
+    const targetData: TargetData = this.determineTargetData();
 
-    this.emojiCounterService.handleEmojiLogic(
-      emoji,
-      targetMessageId,
-      user,
-      targetChannelId,
-      reactionsRecord,
-      this.isReply,
-      messageId,
-      revReactionsRecord,
-      this.isDirectChat,
-      this.isFirstReply
-    );
+    this.handleEmojiReaction(emoji, user, messageId, reactionData, targetData);
   }
 
-  private buildReactionsRecord(
-    likes: { emoji: string; count: number; userIds: string[] }[]
-  ): Record<string, { emoji: string; count: number; userIds: string[] }[]> {
-    return { [this.messageObj?.id]: likes };
+  private prepareReactionData(likes: MessageLike[]): ReactionData {
+    return {
+      reactionsRecord: { [this.messageObj?.id]: likes },
+      revReactionsRecord: { [this.messageObj?.id]: likes },
+    };
   }
 
-  private getTargetMessageId(defaultMessageId: string): string {
+  private determineTargetData(): TargetData {
+    return {
+      targetMessageId: this.getTargetMessageId(),
+      targetChannelId: this.getTargetChannelId(),
+    };
+  }
+
+  private getTargetMessageId(): string {
     return !this.isFirstReply && this.isReply
       ? this.parentElement?.id
       : this.messageObj?.id;
@@ -265,107 +305,164 @@ export class UserMessageComponent {
       : this.currentChannel.id;
   }
 
-  onMouseLeave() {
+  private handleEmojiReaction(
+    emoji: string,
+    user: string,
+    messageId: string,
+    reactionData: ReactionData,
+    targetData: TargetData
+  ): void {
+    this.emojiCounterService.handleEmojiLogic(
+      emoji,
+      targetData.targetMessageId,
+      user,
+      targetData.targetChannelId,
+      reactionData.reactionsRecord,
+      this.isReply,
+      messageId,
+      reactionData.revReactionsRecord,
+      this.isDirectChat,
+      this.isFirstReply
+    );
+  }
+
+  public onMouseLeave(): void {
     this.editMessagePopupOpen = false;
   }
 
-  openProfilePopup(userId: string = this.messageObj.userId) {
-    console.log('hie');
+  public openProfilePopup(userId: string = this.messageObj.userId): void {
     let user = this.getUser(userId);
-
     this.popupService.contactProfileContent = user || new User();
 
     if (this.loggedInUser.id === userId) this.openUserProfilePopupFunction();
     else this.openContactProfilePopup(user || new User());
   }
 
-  openUserProfilePopupFunction() {
+  public openUserProfilePopupFunction(): void {
     this.popupService.openUserProfilePopup = true;
     this.popupService.editingUserProfile = false;
   }
 
-  openContactProfilePopup(user: User) {
+  public openContactProfilePopup(user: User): void {
     this.popupService.contactProfileContent = user;
     this.popupService.contactProfilePopupOpen = true;
   }
 
-  getUser(userId: string) {
+  public getUser(userId: string): User | undefined {
     return this.allUsers.find((user) => user.id === userId);
   }
 
-  setEmoji(emoji: string) {
+  public setEmoji(emoji: string): void {
     this.emojiInput$.next(emoji);
   }
 
-  sortedLikes() {
+  public sortedLikes(): MessageLike[] {
     return this.likes.sort((a, b) => b.count - a.count);
   }
 
-  setCurrentEditMessageId() {
+  public setCurrentEditMessageId(): void {
     this.currentEditMessageId = this.messageId;
     this.editedMessage = this.message.trim();
   }
 
-  saveEditedMessage() {
-    if (this.currentChannel.id !== '') {
-      if (!this.isReply || this.isFirstReply) {
-        this.channelService.editMessage(
-          this.isFirstReply ? this.firstReplyMessageId : this.messageId,
-          this.editedMessage
-        );
-      } else {
-        this.channelService.editReply(
-          this.firstReplyMessageId,
-          this.messageId,
-          this.editedMessage
-        );
-      }
-    } else {
-      if (!this.isReply || this.isFirstReply) {
-        this.directChatService.editMessage(
-          this.isFirstReply ? this.firstReplyMessageId : this.messageId,
-          this.editedMessage
-        );
-      } else {
-        this.directChatService.editReply(
-          this.firstReplyMessageId,
-          this.messageId,
-          this.editedMessage
-        );
-      }
-    }
+  public saveEditedMessage(): void {
+    if (this.isInChannelChat()) this.handleChannelMessageEdit();
+    else this.handleDirectMessageEdit();
+
+    this.resetEditMessageId();
+  }
+
+  private isInChannelChat(): boolean {
+    return this.currentChannel.id !== '';
+  }
+
+  private handleChannelMessageEdit(): void {
+    if (this.isMainMessage()) this.editChannelMainMessage();
+    else this.editChannelReplyMessage();
+  }
+
+  private handleDirectMessageEdit(): void {
+    if (this.isMainMessage()) this.editDirectMainMessage();
+    else this.editDirectReplyMessage();
+  }
+
+  private isMainMessage(): boolean {
+    return !this.isReply || this.isFirstReply;
+  }
+
+  private editChannelMainMessage(): void {
+    this.channelService.editMessage(
+      this.getTargetEditMessageId(),
+      this.editedMessage
+    );
+  }
+
+  private editChannelReplyMessage(): void {
+    this.channelService.editReply(
+      this.firstReplyMessageId,
+      this.messageId,
+      this.editedMessage
+    );
+  }
+
+  private editDirectMainMessage(): void {
+    this.directChatService.editMessage(
+      this.getTargetEditMessageId(),
+      this.editedMessage
+    );
+  }
+
+  private editDirectReplyMessage(): void {
+    this.directChatService.editReply(
+      this.firstReplyMessageId,
+      this.messageId,
+      this.editedMessage
+    );
+  }
+
+  private getTargetEditMessageId(): string {
+    return this.isFirstReply ? this.firstReplyMessageId : this.messageId;
+  }
+
+  private resetEditMessageId(): void {
     this.currentEditMessageId = '';
   }
 
-  onKeyDown(event: KeyboardEvent): void {
+  public onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.saveEditedMessage();
     }
   }
 
-  insertEmoji(emoji: string) {
+  public insertEmoji(emoji: string): void {
     this.editedMessage += emoji;
   }
 
-  formatMessage(message: string) {
+  public formatMessage(message: string): string {
     if (!message) return '';
+    return this.formatMentions(message);
+  }
 
-    const formattedMessage = message.replace(
-      /@([\w\s.-]+)/g,
-      (match, username) => {
-        const user = this.currentChannel.users.find(
-          (userId) =>
-            this.userService.getUserById(userId)?.name === username.trim()
-        );
-
-        if (user) {
-          return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">@${username}</span>`;
-        }
-        return match;
+  private formatMentions(message: string): string {
+    const mentionPattern: RegExp = /@([\w\s.-]+)/g;
+    return message.replace(
+      mentionPattern,
+      (match: string, username: string) => {
+        const user: string | undefined = this.findUserByMention(username);
+        return user ? this.createMentionSpan(username) : match;
       }
     );
+  }
 
-    return formattedMessage;
+  private findUserByMention(username: string): string | undefined {
+    return this.currentChannel.users.find(
+      (userId: string) =>
+        this.userService.getUserById(userId)?.name === username.trim()
+    );
+  }
+
+  private createMentionSpan(username: string): string {
+    return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">@${username}</span>`;
   }
 }
