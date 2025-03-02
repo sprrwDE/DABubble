@@ -105,9 +105,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   private resetReplyMessageRender(): void {
-    setTimeout(() => {
-      this.mainChatService.renderReplyMessage.set(false);
-    }, 0);
+    setTimeout(() => this.mainChatService.renderReplyMessage.set(false), 0);
   }
 
   private initializeChannelEffect(): void {
@@ -118,9 +116,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   private setReplyMessageRender(): void {
-    setTimeout(() => {
-      this.mainChatService.renderReplyMessage.set(true);
-    }, 0);
+    setTimeout(() => this.mainChatService.renderReplyMessage.set(true), 0);
   }
 
   private initializeDirectChatEffect(): void {
@@ -446,11 +442,14 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
 
   private formatMentions(message: string): string {
     const mentionPattern: RegExp = /@([\w\s.-]+)/g;
+
     return message.replace(
       mentionPattern,
       (match: string, username: string) => {
-        const user: string | undefined = this.findUserByMention(username);
-        return user ? this.createMentionSpan(username) : match;
+        const trimmedUsername = username.trim();
+        const user: string | undefined =
+          this.findUserByMention(trimmedUsername);
+        return user ? this.createMentionSpan(trimmedUsername) : match;
       }
     );
   }
@@ -458,7 +457,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   private findUserByMention(username: string): string | undefined {
     return this.currentChannel.users.find(
       (userId: string) =>
-        this.userService.getUserById(userId)?.name === username.trim()
+        this.userService.getUserById(userId)?.name === username
     );
   }
 

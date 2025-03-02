@@ -143,6 +143,7 @@
   >
     <img
       src="{{ userService.getUserById(userId)?.image }}"
+      (error)="globalVariablesService.handleImageError($event)"
       class="w-[30px] h-[30px] rounded-full"
     />
 

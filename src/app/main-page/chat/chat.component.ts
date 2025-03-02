@@ -1,26 +1,13 @@
 import { CommonModule, NgFor } from '@angular/common';
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  EventEmitter,
-  Output,
-  Input,
-  OnInit,
-  effect,
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, effect } from '@angular/core';
 import { UserMessageComponent } from './user-message/user-message.component';
 import { MessageInputComponent } from './message-input/message-input.component';
-import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../shared/models/user.model';
 import { Message } from '../../shared/models/message.model';
-import { publishFacade } from '@angular/compiler';
-import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
 import { ChatHeaderComponent } from './chat-header/chat-header.component';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
@@ -35,7 +22,6 @@ import { GlobalVariablesService } from '../../shared/services/global-variables.s
     CommonModule,
     UserMessageComponent,
     MessageInputComponent,
-    PopupComponent,
     FormsModule,
     NgFor,
     ChatHeaderComponent,
@@ -47,18 +33,14 @@ export class ChatComponent {
   public channelDetailsPopupOpen: boolean = false;
   public channelDetailsPopupType: string = '';
   public channelDetailsPopupCorner: string = '';
-
   public memberListPopupOpen: boolean = false;
   public memberListPopupType: string = '';
   public memberListPopupCorner: string = '';
   loggedInUser: any;
-
   scroll: boolean = true;
-
   currentChannel: Channel = new Channel();
   currentDirectChat: DirectChat = new DirectChat();
   currentDirectChatUser: User = new User();
-
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   constructor(
@@ -70,11 +52,9 @@ export class ChatComponent {
     public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
-      if (this.channelService.currentChannel()) {
+      if (this.channelService.currentChannel())
         this.currentChannel = this.channelService.currentChannel();
-      } else {
-        this.currentChannel = new Channel();
-      }
+      else this.currentChannel = new Channel();
     });
 
     effect(() => {
@@ -116,34 +96,13 @@ export class ChatComponent {
     return this.popupService.contactProfileContent;
   }
 
+  ngOnInit() {
+    this.channelService.chatComponent = this;
+  }
+
   getLikes(message: Message) {
     return message.likes || [];
   }
-
-  // openChannelDetailsPopup(type: string, corner: string) {
-  //   this.channelDetailsPopupOpen = true;
-  //   this.channelDetailsPopupType = type;
-  //   this.channelDetailsPopupCorner = corner;
-  // }
-
-  // closeChannelDetailsPopup() {
-  //   this.channelDetailsPopupOpen = false;
-  // }
-
-  // openMemberListPopup(
-  //   type: string,
-  //   corner: string,
-  //   showAddMembersPopup: boolean = false
-  // ) {
-  //   this.memberListPopupOpen = true;
-  //   this.memberListPopupType = type;
-  //   this.memberListPopupCorner = corner;
-  //   this.popupService.showAddMembersPopup = showAddMembersPopup;
-  // }
-
-  // closeMemberListPopup() {
-  //   this.memberListPopupOpen = false;
-  // }
 
   openContactProfilePopup(user: User) {
     this.popupService.contactProfileContent = user;
@@ -191,9 +150,7 @@ export class ChatComponent {
     if (this.loggedInUser) {
       let loggedInUserId = this.loggedInUser.id;
       return loggedInUserId !== userId;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 
   getLastAnswerTime(replies: any[] | undefined): any {
@@ -221,30 +178,34 @@ export class ChatComponent {
     return currentDate !== previousDate;
   }
 
-  ngOnInit() {
-    this.channelService.chatComponent = this;
+  private isToday(date: Date): boolean {
+    const today: Date = new Date();
+    return date.toDateString() === today.toDateString();
   }
 
-  formatDate(timestamp: number) {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
+  private isYesterday(date: Date): boolean {
+    const yesterday: Date = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date.toDateString() === yesterday.toDateString();
+  }
 
-    const messageDate = new Date(timestamp);
-
+  private getGermanDateFormat(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
       day: 'numeric',
     };
+    return date.toLocaleDateString('de-DE', options);
+  }
 
-    if (messageDate.toDateString() === today.toDateString()) {
+  formatDate(timestamp: number): string {
+    const messageDate: Date = new Date(timestamp);
+
+    if (this.isToday(messageDate)) {
       return 'heute';
-    } else if (messageDate.toDateString() === yesterday.toDateString()) {
+    } else if (this.isYesterday(messageDate)) {
       return 'gestern';
     } else {
-      const date = new Date(timestamp);
-
-      return 'am ' + date.toLocaleDateString('de-DE', options);
+      return 'am ' + this.getGermanDateFormat(messageDate);
     }
   }
 }

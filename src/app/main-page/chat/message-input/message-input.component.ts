@@ -22,6 +22,7 @@ import { EmojiPickerComponent } from '../../../shared/emoji-picker/emoji-picker.
 import { Subject } from 'rxjs';
 import { Channel } from '../../../shared/models/channel.model';
 import { PopupService } from '../../../popup/popup.service';
+import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-message-input',
@@ -35,36 +36,30 @@ export class MessageInputComponent implements OnInit {
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
   @Input() isDirectChatComponent: boolean = false;
-
-  showEmojiPicker = false;
-  emojiInput$ = new Subject<string>();
-
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
 
   public loggedInUser: any;
-  unsubLoggedInUser!: Subscription;
 
+  showEmojiPicker = false;
+  emojiInput$ = new Subject<string>();
   currentDirectChat: DirectChat = new DirectChat();
   currentChannel: Channel = new Channel();
   currentDirectChatUser: User = new User();
-
   currentReplyMessageId: string = '';
-
   message: Message = new Message();
   reply: Reply = new Reply();
-
   allUserIds: string[] = [];
-
   directChat: DirectChat = new DirectChat();
-
   showUserPopup = false;
+  unsubLoggedInUser!: Subscription;
 
   constructor(
     private channelService: ChannelService,
     public userService: UserService,
     private directChatService: DirectChatService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    public globalVariablesService: GlobalVariablesService
   ) {
     this.popupService.messageInputComponent = this;
     effect(() => {
@@ -99,91 +94,115 @@ export class MessageInputComponent implements OnInit {
     return this.userService.allUsers;
   }
 
-  onKeyDown(event: KeyboardEvent): void {
+  private getCurrentMessage(): string {
+    return this.isReplyInput ? this.reply.message : this.message.message;
+  }
+
+  private handleEnterKey(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.isReplyInput ? this.sendReply() : this.sendMessage();
     }
-
-    const currentMessage = this.isReplyInput
-      ? this.reply.message
-      : this.message.message;
-    const atIndex = currentMessage.lastIndexOf('@');
-
-    if (atIndex !== -1) {
-      const searchText = currentMessage.slice(atIndex + 1).toLowerCase();
-      if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
-        const uniqueUserIds = [...new Set(this.currentDirectChat.userIds)];
-        this.allUserIds = uniqueUserIds.filter((userId) => {
-          const user = this.userService.getUserById(userId);
-          return user?.name.toLowerCase().includes(searchText.trim());
-        });
-      } else {
-        this.allUserIds = this.currentChannel.users.filter((userId) => {
-          const user = this.userService.getUserById(userId);
-          return user?.name.toLowerCase().includes(searchText.trim());
-        });
-      }
-      this.showUserPopup = this.allUserIds.length > 0;
-    } else {
-      this.popupService.closeUserPopup();
-    }
-
-    if (currentMessage === '') {
-      this.popupService.closeUserPopup();
-    }
   }
 
-  showTagUserPopup() {
-    if (this.currentChannel.id === '' && this.currentDirectChat.id !== '') {
-      this.allUserIds = [...new Set(this.currentDirectChat.userIds)];
-    } else {
-      this.allUserIds = this.currentChannel.users;
-    }
+  private searchUsersInDirectChat(searchText: string): void {
+    const uniqueUserIds: string[] = [
+      ...new Set(this.currentDirectChat.userIds),
+    ];
+    this.allUserIds = uniqueUserIds.filter((userId: string) => {
+      const user = this.userService.getUserById(userId);
+      return user?.name.toLowerCase().includes(searchText.trim());
+    });
+  }
 
-    if (this.isReplyInput) {
-      if (
-        !this.reply.message ||
-        this.reply.message.charAt(this.reply.message.length - 1) !== '@'
-      ) {
-        this.reply.message += '@';
-      }
-    } else {
-      if (
-        !this.message.message ||
-        this.message.message.charAt(this.message.message.length - 1) !== '@'
-      ) {
-        this.message.message += '@';
-      }
-    }
+  private searchUsersInChannel(searchText: string): void {
+    this.allUserIds = this.currentChannel.users.filter((userId: string) => {
+      const user = this.userService.getUserById(userId);
+      return user?.name.toLowerCase().includes(searchText.trim());
+    });
+  }
 
+  private handleUserSearch(currentMessage: string, atIndex: number): void {
+    const searchText: string = currentMessage.slice(atIndex + 1).toLowerCase();
+
+    if (this.currentChannel.id === '' && this.currentDirectChat.id !== '')
+      this.searchUsersInDirectChat(searchText);
+    else this.searchUsersInChannel(searchText);
+
+    this.showUserPopup = this.allUserIds.length > 0;
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    this.handleEnterKey(event);
+
+    const currentMessage: string = this.getCurrentMessage();
+    const atIndex: number = currentMessage.lastIndexOf('@');
+
+    if (atIndex !== -1) this.handleUserSearch(currentMessage, atIndex);
+    else this.popupService.closeUserPopup();
+
+    if (currentMessage === '') this.popupService.closeUserPopup();
+  }
+
+  private getUserIdsFromCurrentChat(): string[] {
+    if (this.currentChannel.id === '' && this.currentDirectChat.id !== '')
+      return [...new Set(this.currentDirectChat.userIds)];
+    return this.currentChannel.users;
+  }
+
+  private appendAtSymbolToMessage(): void {
+    if (this.isReplyInput) this.appendAtSymbolToReply();
+    else this.appendAtSymbolToDirectMessage();
+  }
+
+  private appendAtSymbolToReply(): void {
+    if (!this.reply.message || !this.reply.message.endsWith('@'))
+      this.reply.message = (this.reply.message || '') + '@';
+  }
+
+  private appendAtSymbolToDirectMessage(): void {
+    if (!this.message.message || !this.message.message.endsWith('@'))
+      this.message.message = (this.message.message || '') + '@';
+  }
+
+  showTagUserPopup(): void {
+    this.allUserIds = this.getUserIdsFromCurrentChat();
+    this.appendAtSymbolToMessage();
     this.showUserPopup = true;
   }
 
-  tagUser(userId: string) {
-    if (this.isReplyInput) {
-      const lastAtIndex = this.reply.message.lastIndexOf('@');
-      this.reply.message = this.reply.message.substring(0, lastAtIndex);
-      this.reply.message += `@${this.userService.getUserById(userId)?.name} `;
-    } else {
-      const lastAtIndex = this.message.message.lastIndexOf('@');
-      this.message.message = this.message.message.substring(0, lastAtIndex);
-      this.message.message += `@${this.userService.getUserById(userId)?.name} `;
-    }
+  private appendUserTagToReply(userId: string): void {
+    const lastAtIndex: number = this.reply.message.lastIndexOf('@');
+    const userName: string = this.userService.getUserById(userId)?.name || '';
+    this.reply.message = this.reply.message.substring(0, lastAtIndex);
+    this.reply.message += `@${userName} `;
+  }
+
+  private appendUserTagToMessage(userId: string): void {
+    const lastAtIndex: number = this.message.message.lastIndexOf('@');
+    const userName: string = this.userService.getUserById(userId)?.name || '';
+    this.message.message = this.message.message.substring(0, lastAtIndex);
+    this.message.message += `@${userName} `;
+  }
+
+  private resetTaggingState(): void {
     this.showUserPopup = false;
     this.chatInput.nativeElement.focus();
+    this.allUserIds = [];
+  }
+
+  tagUser(userId: string): void {
+    if (this.isReplyInput) this.appendUserTagToReply(userId);
+    else this.appendUserTagToMessage(userId);
+    this.resetTaggingState();
   }
 
   async sendMessage() {
-    console.log(this.channelService.currentChannel());
     if (this.isMessageEmpty()) return;
     this.prepareMessage();
 
-    if (this.isDirectChatComponent) {
-      await this.handleDirectChatMessage();
-    } else {
-      await this.handleChannelMessage();
-    }
+    if (this.isDirectChatComponent) await this.handleDirectChatMessage();
+    else await this.handleChannelMessage();
 
     this.scroll();
   }
@@ -202,9 +221,7 @@ export class MessageInputComponent implements OnInit {
   }
 
   private async handleDirectChatMessage() {
-    if (this.shouldCreateNewChat()) {
-      await this.createNewDirectChat();
-    }
+    if (this.shouldCreateNewChat()) await this.createNewDirectChat();
     this.directChatService.sendMessage(this.message.toJSON());
     this.message.message = '';
   }
@@ -238,9 +255,7 @@ export class MessageInputComponent implements OnInit {
       this.directChat.toJSON()
     );
 
-    if (chatId) {
-      this.updateDirectChat(chatId);
-    }
+    if (chatId) this.updateDirectChat(chatId);
   }
 
   private updateDirectChat(chatId: string) {
@@ -256,47 +271,55 @@ export class MessageInputComponent implements OnInit {
 
   private scroll() {
     this.chatComponent.scroll = true;
-    console.log('Successfully sent message!!');
   }
 
-  sendReply() {
-    if (this.reply.message.trim() === '') {
-      console.log('Message is empty');
-      return;
-    }
+  private isReplyEmpty(): boolean {
+    return this.reply.message.trim() === '';
+  }
+
+  private prepareReply(): void {
     this.reply.timestamp = new Date().getTime();
     this.reply.userId = this.loggedInUser.id;
+  }
 
-    if (this.isDirectChat) {
-      this.directChatService.sendReply(
-        this.currentReplyMessageId,
-        this.reply.toJSON()
-      );
-    } else {
-      this.channelService.sendReply(
-        this.currentReplyMessageId,
-        this.reply.toJSON()
-      );
-    }
+  private sendReplyToDirectChat(): void {
+    this.directChatService.sendReply(
+      this.currentReplyMessageId,
+      this.reply.toJSON()
+    );
+  }
 
+  private sendReplyToChannel(): void {
+    this.channelService.sendReply(
+      this.currentReplyMessageId,
+      this.reply.toJSON()
+    );
+  }
+
+  private resetReplyState(): void {
     this.reply.message = '';
-
     this.replyPanelComponent.scroll = true;
-    console.log('Successfully sent message!!');
+  }
+
+  sendReply(): void {
+    if (this.isReplyEmpty()) return;
+
+    this.prepareReply();
+
+    if (this.isDirectChat) this.sendReplyToDirectChat();
+    else this.sendReplyToChannel();
+
+    this.resetReplyState();
   }
 
   insertEmoji(emoji: string) {
-    if (!this.isReplyInput) {
-      this.message.message += emoji;
-    } else {
-      this.reply.message += emoji;
-    }
+    if (!this.isReplyInput) this.message.message += emoji;
+    else this.reply.message += emoji;
+
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
   ngOnDestroy() {
-    if (this.unsubLoggedInUser) {
-      this.unsubLoggedInUser.unsubscribe();
-    }
+    if (this.unsubLoggedInUser) this.unsubLoggedInUser.unsubscribe();
   }
 }

@@ -15,7 +15,6 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { collectionSnapshots } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-header-bar',
@@ -66,7 +65,8 @@ export class HeaderBarComponent {
     private channelService: ChannelService,
     private mainChatService: MainChatService,
     public searchChatService: SearchChatService,
-    private renderer: Renderer2, @Inject(DOCUMENT) private document: Document
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.searchControl.valueChanges.subscribe((value) =>
       this.applyFilter(value)
@@ -110,19 +110,20 @@ export class HeaderBarComponent {
   }
 
   scrollToMessage(message: any, messageId: any, chanel: any) {
-    this.isSearching = true
+    this.isSearching = true;
     chanel.messages.filter((eachMessage: any) => {
       if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
         setTimeout(() => {
-          const element = this.document.querySelector(`[data-message-id="${messageId}"]`);
+          const element = this.document.querySelector(
+            `[data-message-id="${messageId}"]`
+          );
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
-          this.isSearching = false
+          this.isSearching = false;
         }, 500); // Warten, bis der Kanal geladen ist
-
       }
-    })
+    });
   }
 
   applyFilter(query: string | null) {
@@ -132,8 +133,8 @@ export class HeaderBarComponent {
     // Stelle sicher, dass keine Nachricht angezeigt wird, wenn weniger als 3 Zeichen eingegeben wurden
     if (!query || query.length < 3) {
       this.filteredList = [];
-      this.noMessage = false;  // Nachricht ausblenden
-      return;  // Beende die Funktion sofort
+      this.noMessage = false; // Nachricht ausblenden
+      return; // Beende die Funktion sofort
     }
 
     // Standardmäßig setzen wir die Nachricht auf "keine Ergebnisse"
@@ -141,7 +142,9 @@ export class HeaderBarComponent {
 
     this.filteredList = this.channelService.allChannels
       .map((channel: any) => {
-        const messages = Array.isArray(channel.messages) ? channel.messages : [];
+        const messages = Array.isArray(channel.messages)
+          ? channel.messages
+          : [];
 
         // Filtere Nachrichten, die den Suchbegriff enthalten
         const filteredMessages = messages.filter((msg: any) =>
@@ -150,14 +153,15 @@ export class HeaderBarComponent {
 
         return { ...channel, messages: filteredMessages };
       })
-      .filter((channel: any) => channel.messages && channel.messages.length > 0);
+      .filter(
+        (channel: any) => channel.messages && channel.messages.length > 0
+      );
 
     // Falls es Treffer gibt, setzen wir noMessage auf false
     if (this.filteredList.length > 0) {
       this.noMessage = false;
     }
   }
-
 
   searchForUser(query: string | null) {
     if (query?.startsWith('@')) {

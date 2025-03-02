@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../popup/popup.component';
 import { ChannelService } from '../../../shared/services/channel.service';
@@ -8,12 +8,10 @@ import { User } from '../../../shared/models/user.model';
 import { PopupService } from '../../../popup/popup.service';
 import { DirectChatService } from '../../../shared/services/direct-chat.service';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
-import { AuthService } from '../../../shared/services/auth.service';
 import { SearchChatService } from '../../../shared/services/search-chat.service';
 import { FormsModule } from '@angular/forms';
 import { SearchChatPopupComponent } from './search-chat-popup/search-chat-popup.component';
 import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
-import { AddUserService } from '../../../shared/services/add-user.service';
 
 @Component({
   selector: 'app-chat-header',
@@ -45,8 +43,7 @@ export class ChatHeaderComponent {
     private popupService: PopupService,
     private directChatService: DirectChatService,
     public searchChatService: SearchChatService,
-    public globalVariablesService: GlobalVariablesService,
-    private addUserService: AddUserService
+    public globalVariablesService: GlobalVariablesService
   ) {
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
