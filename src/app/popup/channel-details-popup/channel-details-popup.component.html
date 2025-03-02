@@ -266,6 +266,7 @@
                 [ngClass]="{
                   'bg-online':
                     userService.getUserById(userId)?.status === 'online',
+                    'bg-orange-400': userService.getUserById(userId)?.status === 'abwesend',
                   'bg-disable':
                     userService.getUserById(userId)?.status === 'offline'
                 }"

@@ -133,6 +133,7 @@
       <div
         [ngClass]="{
           'bg-online': currentDirectChatUser.status === 'online',
+          'bg-orange-400': user.status === 'abwesend',
           'bg-disable': currentDirectChatUser.status === 'offline'
         }"
         class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
