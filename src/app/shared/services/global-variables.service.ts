@@ -21,12 +21,12 @@ export class GlobalVariablesService {
 
   private updateIsMobile() {
     this.isMobile.set(window.innerWidth < 768);
-    console.log(this.isMobile());
+
   }
 
   private updateIsTablet() {
     this.isTablet.set(window.innerWidth < 1280);
-    console.log(this.isTablet(), 'tablet');
+
   }
 
   handleImageError(event: any) {
