@@ -1,4 +1,4 @@
-import { Component, effect, Inject, Renderer2, signal } from '@angular/core';
+import { Component, effect, Inject, signal } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { PopupService } from '../../popup/popup.service';
 import { UserService } from '../../shared/services/user.service';
@@ -45,12 +45,13 @@ import {
   ],
 })
 export class HeaderBarComponent {
-  filteredChannels: any[] = [];
-  filteredUserNames: any[] = [];
-  filteredList: any = [];
   public UserName: string = '';
   public userImage: string = '';
   public isMobile: boolean = false;
+
+  filteredChannels: any[] = [];
+  filteredUserNames: any[] = [];
+  filteredList: any[] = [];
   searchControl = new FormControl('');
   list: any = '';
   isOpen = signal(false);
@@ -65,7 +66,6 @@ export class HeaderBarComponent {
     private channelService: ChannelService,
     private mainChatService: MainChatService,
     public searchChatService: SearchChatService,
-    private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.searchControl.valueChanges.subscribe((value) =>
@@ -74,7 +74,6 @@ export class HeaderBarComponent {
     effect(() => {
       const user = this.userService.loggedInUser();
       if (user && user !== undefined && user !== null) {
-        console.log('eingeloggter user: ', user);
         this.UserName = user.name;
         this.userImage = user.image;
       } else {
@@ -109,27 +108,59 @@ export class HeaderBarComponent {
     this.popupService.profileMenuPopupOpen = value;
   }
 
-  scrollToMessage(message: any, messageId: any, chanel: any) {
+  scrollToMessage(message: string, messageId: string, channel: any): void {
     this.isSearching = true;
-    chanel.messages.filter((eachMessage: any) => {
-      if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
-        setTimeout(() => {
-          const element = this.document.querySelector(
-            `[data-message-id="${messageId}"]`
-          );
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-          this.isSearching = false;
-        }, 500); // Warten, bis der Kanal geladen ist
-      }
+    this.findAndScrollToMessageInChannel(message, messageId, channel);
+  }
+
+  /**
+   * Sucht eine Nachricht im Kanal und scrollt zu ihr
+   */
+  private findAndScrollToMessageInChannel(
+    message: string,
+    messageId: string,
+    channel: any
+  ): void {
+    channel.messages.filter((eachMessage: any) => {
+      if (eachMessage.message.toLowerCase() === message.toLowerCase())
+        this.scrollToMessageWithDelay(messageId);
     });
   }
 
-  applyFilter(query: string | null) {
+  /**
+   * Scrollt mit Verzögerung zu einer Nachricht, um sicherzustellen, dass der Kanal geladen ist
+   */
+  private scrollToMessageWithDelay(messageId: string): void {
+    setTimeout(() => {
+      this.scrollToElementById(messageId);
+      this.isSearching = false;
+    }, 500); // Warten, bis der Kanal geladen ist
+  }
+
+  /**
+   * Scrollt zu einem Element mit der angegebenen Message-ID
+   */
+  private scrollToElementById(messageId: string): void {
+    const element = this.document.querySelector(
+      `[data-message-id="${messageId}"]`
+    );
+    if (element)
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /**
+   * Hauptfunktion für die Filterung der Suchergebnisse
+   */
+  applyFilter(query: string | null): void {
     this.searchForUser(query);
     this.searchForChannel(query);
+    this.searchForMessages(query);
+  }
 
+  /**
+   * Sucht nach Nachrichten in Kanälen, die den Suchbegriff enthalten
+   */
+  private searchForMessages(query: string | null): void {
     // Stelle sicher, dass keine Nachricht angezeigt wird, wenn weniger als 3 Zeichen eingegeben wurden
     if (!query || query.length < 3) {
       this.filteredList = [];
@@ -140,7 +171,17 @@ export class HeaderBarComponent {
     // Standardmäßig setzen wir die Nachricht auf "keine Ergebnisse"
     this.noMessage = true;
 
-    this.filteredList = this.channelService.allChannels
+    this.filteredList = this.filterChannelsByMessageContent(query);
+
+    // Falls es Treffer gibt, setzen wir noMessage auf false
+    if (this.filteredList.length > 0) this.noMessage = false;
+  }
+
+  /**
+   * Filtert Kanäle nach Nachrichten, die den Suchbegriff enthalten
+   */
+  private filterChannelsByMessageContent(query: string): any[] {
+    return this.channelService.allChannels
       .map((channel: any) => {
         const messages = Array.isArray(channel.messages)
           ? channel.messages
@@ -156,14 +197,12 @@ export class HeaderBarComponent {
       .filter(
         (channel: any) => channel.messages && channel.messages.length > 0
       );
-
-    // Falls es Treffer gibt, setzen wir noMessage auf false
-    if (this.filteredList.length > 0) {
-      this.noMessage = false;
-    }
   }
 
-  searchForUser(query: string | null) {
+  /**
+   * Sucht nach Benutzern, die mit @ beginnen
+   */
+  searchForUser(query: string | null): void {
     if (query?.startsWith('@')) {
       if (query.length >= 1) {
         this.isOpen.set(true);
@@ -172,12 +211,13 @@ export class HeaderBarComponent {
           user.name.toLowerCase().includes(usernameQuery.toLowerCase())
         );
       }
-    } else {
-      this.filteredUserNames = [];
-    }
+    } else this.filteredUserNames = [];
   }
 
-  searchForChannel(query: string | null) {
+  /**
+   * Sucht nach Kanälen, die mit # beginnen
+   */
+  searchForChannel(query: string | null): void {
     if (query?.startsWith('#')) {
       if (query.length >= 1) {
         const usernameQuery = query.slice(1).toLowerCase();
@@ -186,16 +226,20 @@ export class HeaderBarComponent {
             channel.name.toLowerCase().includes(usernameQuery.toLowerCase())
         );
       }
-    } else {
-      this.filteredChannels = [];
-    }
+    } else this.filteredChannels = [];
   }
 
-  clearSearch() {
+  /**
+   * Löscht den Suchbegriff
+   */
+  clearSearch(): void {
     this.searchControl.setValue('');
   }
 
-  resetChat() {
+  /**
+   * Setzt alle Chat-Zustände zurück
+   */
+  resetChat(): void {
     this.searchChatService.resetPanelAndChat();
     this.searchChatService.resetChannelChat();
     this.searchChatService.resetSearchChat();
