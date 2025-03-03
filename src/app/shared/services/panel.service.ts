@@ -6,18 +6,15 @@ import { GlobalVariablesService } from './global-variables.service';
   providedIn: 'root',
 })
 export class PanelService {
-  isReplyPanelOpen = false;
-  isSidebarOpen = true;
+  public isReplyPanelOpen = false;
+  public isSidebarOpen = true;
+  public numberOfAnswers: number = 0;
+  public scroll: boolean = true;
+  public replyPanelComponent!: ReplyPanelComponent;
+  public isContact: boolean = false;
+  public messageId: string = '';
+  public isTablet = false;
 
-  numberOfAnswers: number = 0;
-  scroll: boolean = true;
-
-  replyPanelComponent!: ReplyPanelComponent;
-
-  isContact: boolean = false;
-  messageId: string = '';
-
-  isTablet = false;
   constructor(private globalVariablesService: GlobalVariablesService) {
     effect(() => {
       this.isTablet = this.globalVariablesService.isTablet();
@@ -27,17 +24,13 @@ export class PanelService {
   openReplyPanel() {
     this.isReplyPanelOpen = true;
 
-    if (this.isTablet) {
-      this.isSidebarOpen = false;
-    }
+    if (this.isTablet) this.isSidebarOpen = false;
   }
 
   openSidebar() {
     this.isSidebarOpen = true;
 
-    if (this.isTablet) {
-      this.isReplyPanelOpen = false;
-    }
+    if (this.isTablet) this.isReplyPanelOpen = false;
   }
 
   closeReplyPanel() {

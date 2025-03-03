@@ -14,14 +14,11 @@ import { MainChatService } from './main-chat.service';
 export class SearchChatService {
   searchChat = true;
   searchChatInput: string = '';
-
   openSearchPopup = false;
-
   allChats: (Channel | User)[] = [];
-
   loggedInUser: any;
-
   sidebarNavComponent: any;
+
   constructor(
     private channelService: ChannelService,
     private directChatService: DirectChatService,
@@ -54,9 +51,7 @@ export class SearchChatService {
     if (this.searchChatInput.startsWith('@')) return;
 
     this.allChannels.forEach((channel) => {
-      if (this.shouldAddChannel(channel)) {
-        this.allChats.push(channel);
-      }
+      if (this.shouldAddChannel(channel)) this.allChats.push(channel);
     });
   }
 
@@ -72,9 +67,7 @@ export class SearchChatService {
     if (this.searchChatInput.startsWith('#')) return;
 
     this.allUsers.forEach((user) => {
-      if (this.shouldAddUser(user)) {
-        this.allChats.push(user);
-      }
+      if (this.shouldAddUser(user)) this.allChats.push(user);
     });
   }
 
@@ -94,7 +87,6 @@ export class SearchChatService {
       .includes(this.searchChatInput.toLowerCase().trim());
   }
 
-  // setCurrentChannel
   setCurrentChannel(channel: Channel, isSearching: boolean = false) {
     this.mainChatService.showMainChat = true;
 
@@ -105,7 +97,6 @@ export class SearchChatService {
     this.scrollToActiveChannel();
   }
 
-  // setSearchChat
   setSearchChat() {
     this.mainChatService.showMainChat = true;
     this.resetDirectChat();
@@ -113,7 +104,6 @@ export class SearchChatService {
     this.searchChat = true;
   }
 
-  // setCurrentDirectChat
   setCurrentDirectChat(user: User) {
     this.mainChatService.showMainChat = true;
     this.resetPanelAndChat();
@@ -127,11 +117,8 @@ export class SearchChatService {
 
   public resetPanelAndChat(isSearching: boolean = false) {
     this.panelService.closeReplyPanel();
-    if (!isSearching) {
-      this.channelService.chatComponent.scroll = true;
-    } else {
-      this.channelService.chatComponent.scroll = false;
-    }
+    if (!isSearching) this.channelService.chatComponent.scroll = true;
+    else this.channelService.chatComponent.scroll = false;
   }
 
   public resetDirectChat() {
@@ -153,9 +140,7 @@ export class SearchChatService {
   }
 
   private findExistingDirectChat(user: User): DirectChat | undefined {
-    if (this.isSelfChat(user)) {
-      return this.findSelfChat();
-    }
+    if (this.isSelfChat(user)) return this.findSelfChat();
     return this.findChatWithUser(user);
   }
 
@@ -202,9 +187,8 @@ export class SearchChatService {
     directChat: DirectChat | undefined,
     user: User
   ) {
-    if (!directChat) {
+    if (!directChat)
       this.directChatService.currentDirectChat.set(new DirectChat());
-    }
     this.directChatService.currentDirectChatUser.set(user);
     this.directChatService.isDirectChat = true;
   }
@@ -215,9 +199,8 @@ export class SearchChatService {
         this.sidebarNavComponent.allUsersContainer.nativeElement.querySelector(
           '.active-contact'
         );
-      if (activeElement) {
+      if (activeElement)
         activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
     }, 100);
   }
 
@@ -227,9 +210,8 @@ export class SearchChatService {
         this.sidebarNavComponent.allChannelsContainer.nativeElement.querySelector(
           '.active-channel'
         );
-      if (activeElement) {
+      if (activeElement)
         activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
     }, 100);
   }
 }

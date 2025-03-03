@@ -24,45 +24,29 @@ import { MainChatService } from './main-chat.service';
 })
 export class ChannelService {
   firestore = inject(Firestore);
-  unsubAllChannels: any;
-  unsubMessages: any;
-
   allChannels: Channel[] = [];
   currentChannelId: string = '';
-
   currentChannel = signal<Channel>(new Channel());
   currentChannelMessages: Message[] = [];
-
   currentChannelIdIsInitialized = false;
-
-  // currentChannelUserIds: string[] = [];
-  // currentChannelUsers: User[] = [];
-  private currentChannelIdSubject = new BehaviorSubject<string | null>(null);
-
   currentReplyMessageId = signal<string>('');
-
   chatComponent!: ChatComponent;
-
   loggedInUser: any;
+
+  unsubAllChannels: any;
+  unsubMessages: any;
 
   ngOnDestroy(): void {
     this.unsubAllChannels();
     this.unsubMessages();
   }
 
-  constructor(
-    public fb: FirebaseService,
-    private ngZone: NgZone,
-    private userService: UserService,
-    private mainChatService: MainChatService
-  ) {
+  constructor(public fb: FirebaseService, private userService: UserService) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
 
     this.getAllChannels();
-    // this.initializeCurrentChannelIfNeeded();
-    console.log(this.currentChannelId);
   }
 
   getAllChannels() {
@@ -71,7 +55,6 @@ export class ChannelService {
         collection(this.firestore, 'channels'),
         (snapshot) => this.handleChannelsSnapshot(snapshot)
       );
-      // this.initializeCurrentChannelIfNeeded();
     } catch (error) {
       console.error('Error fetching channels:', error);
     }
@@ -165,51 +148,21 @@ export class ChannelService {
 
   private updateChannelInList(channel: Channel) {
     const index = this.allChannels.findIndex((ch) => ch.id === channel.id);
-    if (index >= 0) {
-      this.allChannels[index] = channel;
-    } else {
-      this.allChannels.push(channel);
-    }
+    if (index >= 0) this.allChannels[index] = channel;
+    else this.allChannels.push(channel);
   }
 
   private updateCurrentChannel(channel: Channel, messages: Message[]) {
-    // this.initializeCurrentChannelIfNeeded();
-
     if (this.currentChannel().id === channel.id) {
       this.currentChannelMessages = messages;
       this.currentChannel.set(channel);
     }
   }
 
-  // private initializeCurrentChannelIfNeeded() {
-  //   if (
-  //     !this.currentChannelIdIsInitialized &&
-  //     this.allChannels.length > 0 &&
-  //     this.loggedInUser?.id
-  //   ) {
-  //     this.currentChannelId =
-  //       this.allChannels.find((channel) =>
-  //         channel.users.includes(this.loggedInUser.id)
-  //       )?.id || '';
-
-  //     this.currentChannelIdIsInitialized = true;
-  //   }
-  // }
-
-  /*   async addChannel(data: any) {
-    try {
-      const docRef = await addDoc(collection(this.firestore, 'channels'), data);
-    } catch (error) {
-      console.error('Fehler beim Erstellen des Benutzers: ', error);
-    }
-  } */
-
   async addChannel(data: any) {
     try {
       const docRef = await addDoc(collection(this.firestore, 'channels'), data);
-      // Nehme die generierte ID in dein Channel-Objekt auf
       data.id = docRef.id;
-      // Optional: Aktualisiere den currentChannel, falls benötigt
       return data;
     } catch (error) {
       console.error('Fehler beim Erstellen des Channels: ', error);

@@ -17,20 +17,18 @@ import { Reply } from '../models/reply.model';
   providedIn: 'root',
 })
 export class DirectChatService {
-  firestore = inject(Firestore);
-  unsubAllDirectChats!: Unsubscribe;
-  unsubMessages!: Unsubscribe;
+  public firestore = inject(Firestore);
+  public isDirectChat: boolean = false;
+  public allDirectChats: DirectChat[] = [];
+  public currentDirectChat = signal<DirectChat>(new DirectChat());
+  public currentDirectChatUser = signal<User>(new User());
+  public currentDirectChatIdTest: string = '';
+  public currentDirectChatId: string = '';
+  public currentDirectChatMessages: Message[] = [];
+  public currentDirectChatIdIsInitialized: boolean = false;
 
-  isDirectChat: boolean = false;
-
-  allDirectChats: DirectChat[] = [];
-  currentDirectChat = signal<DirectChat>(new DirectChat());
-  currentDirectChatUser = signal<User>(new User());
-  currentDirectChatIdTest: string = '';
-
-  currentDirectChatId: string = '';
-  currentDirectChatMessages: Message[] = [];
-  currentDirectChatIdIsInitialized: boolean = false;
+  private unsubAllDirectChats!: Unsubscribe;
+  private unsubMessages!: Unsubscribe;
 
   constructor() {
     this.getAllDirectChats();
@@ -140,11 +138,8 @@ export class DirectChatService {
     const index = this.allDirectChats.findIndex(
       (ch) => ch.id === directChat.id
     );
-    if (index >= 0) {
-      this.allDirectChats[index] = directChat;
-    } else {
-      this.allDirectChats.push(directChat);
-    }
+    if (index >= 0) this.allDirectChats[index] = directChat;
+    else this.allDirectChats.push(directChat);
   }
 
   private updateCurrentDirectChat(directChat: any, messages: Message[]) {
@@ -165,8 +160,6 @@ export class DirectChatService {
       this.currentDirectChatIdIsInitialized = true;
     }
   }
-
-  // add
 
   async addDirectChat(data: any) {
     try {
@@ -235,8 +228,6 @@ export class DirectChatService {
       console.error('Fehler beim Erstellen der Antwort:', error);
     }
   }
-
-  // set
 
   ngOnDestroy(): void {
     this.unsubAllDirectChats();
