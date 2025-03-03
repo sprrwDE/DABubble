@@ -1,17 +1,9 @@
 import { NgIf, NgClass } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Output,
-  OnInit,
-  OnDestroy,
-  effect,
-} from '@angular/core';
+import { Component, EventEmitter, Output, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
-import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { AddMemberPopupComponent } from './add-member-popup/add-member-popup.component';
 import { UserService } from '../../shared/services/user.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
@@ -23,11 +15,9 @@ import { GlobalVariablesService } from '../../shared/services/global-variables.s
   templateUrl: './member-list-popup.component.html',
   styleUrl: './member-list-popup.component.scss',
 })
-export class MemberListPopupComponent implements OnInit, OnDestroy {
+export class MemberListPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
 
-  // channelData$: BehaviorSubject<Channel | null>;
-  // private subscription!: Subscription;
   userList: User[] = [];
   userIds: string[] = [];
   loggedInUser: any;
@@ -51,8 +41,6 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
         this.currentChannel.users.includes(user.id)
       );
     });
-
-    // this.channelData$ = channelService.currentChannelData$;
   }
 
   get allUsers() {
@@ -71,30 +59,8 @@ export class MemberListPopupComponent implements OnInit, OnDestroy {
     return this.channelService.currentChannelId;
   }
 
-  ngOnInit() {
-    //   this.subscription = combineLatest([
-    //     this.userService.fetchedCollection$,
-    //     this.channelData$,
-    //   ]).subscribe(([allUsers, channel]) => {
-    //     if (channel) {
-    //       this.userIds = channel.users;
-    // this.userList = allUsers.filter((user) =>
-    //   this.userIds.includes(user.id)
-    // );
-    //       console.log('USER IM CHANNEL:', this.currentChannelUsers);
-    //     }
-    //   });
-    //   this.channelService.fetchChannel(this.currentChannelId);
-  }
-
-  ngOnDestroy() {
-    // this.subscription.unsubscribe();
-    // this.channelService.unsubscribeChannel();
-  }
-
   closePopup() {
     this.closePopupEvent.emit();
-    // this.showAddMembersPopup = false;
   }
 
   showAddMembersSection(event: Event) {

@@ -3,7 +3,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { PopupService } from '../../popup.service';
 import { FormsModule } from '@angular/forms';
 import { AddUserToChannelPopupComponent } from '../../add-user-to-channel-popup/add-user-to-channel-popup.component';
-//// DUMMY
 import { AddUserService } from '../../../shared/services/add-user.service';
 import { GlobalVariablesService } from '../../../shared/services/global-variables.service';
 
@@ -35,11 +34,9 @@ export class AddMemberPopupComponent {
   showAddUserToChannelSection(event: Event) {
     event.stopPropagation();
     this.addUserService.isCreatingNewChannel = false;
-    if (this.addUserService.userToAdd.length == 0 && this.nameInput == 'Gast') {
+    if (this.addUserService.userToAdd.length == 0 && this.nameInput == 'Gast')
       return;
-    } else {
-      this.showUserPopup = true;
-    }
+    else this.showUserPopup = true;
   }
 
   closeUserPopup() {
@@ -62,11 +59,8 @@ export class AddMemberPopupComponent {
       return;
     }
 
-    if (this.nameInput !== '') {
-      this.showAddUserToChannelSection(event);
-    } else {
-      this.popupService.closeUserPopup();
-    }
+    if (this.nameInput !== '') this.showAddUserToChannelSection(event);
+    else this.popupService.closeUserPopup();
   }
 
   setUser(userId: string) {

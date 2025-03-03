@@ -1,4 +1,4 @@
-import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
 import { ChannelService } from '../../shared/services/channel.service';
@@ -76,8 +76,6 @@ export class ChannelDetailsPopupComponent {
 
   editChannelNameFunction() {
     if (this.channelNameInput !== '') {
-      console.log(this.channelNameInput);
-
       this.channelService.editChannelName(
         this.currentChannel.id,
         this.channelNameInput
@@ -86,15 +84,11 @@ export class ChannelDetailsPopupComponent {
       this.editChannelName = false;
 
       this.channelNameInput = '';
-    } else {
-      this.editChannelName = false;
-    }
+    } else this.editChannelName = false;
   }
 
   editChannelDescriptionFunction() {
     if (this.channelDescriptionInput !== '') {
-      console.log(this.channelDescriptionInput);
-
       this.channelService.editChannelDescription(
         this.currentChannel.id,
         this.channelDescriptionInput
@@ -103,23 +97,20 @@ export class ChannelDetailsPopupComponent {
       this.editChannelDescription = false;
 
       this.channelDescriptionInput = '';
-    } else {
-      this.editChannelDescription = false;
-    }
+    } else this.editChannelDescription = false;
   }
 
   leaveChannel(event: Event) {
     event.stopPropagation();
     this.closePopup();
 
-    if (this.currentChannel.users.length === 1) {
+    if (this.currentChannel.users.length === 1)
       this.channelService.deleteChannel(this.currentChannel.id);
-    } else {
+    else
       this.channelService.leaveChannel(
         this.currentChannel.id,
         this.loggedInUser.id
       );
-    }
 
     this.searchChatService.setSearchChat();
   }

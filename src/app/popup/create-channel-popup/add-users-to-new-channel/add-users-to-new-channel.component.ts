@@ -91,12 +91,9 @@ export class AddUsersToNewChannelComponent {
     if (this.channel.name.trim() !== '') {
       this.showCreateChannelAddPeoplePopup = true;
 
-      if (this.channel.description.trim() === '') {
+      if (this.channel.description.trim() === '')
         this.channel.description = 'No description';
-      }
-    } else {
-      this.showErrorText = true;
-    }
+    } else this.showErrorText = true;
   }
 
   async createChannel() {

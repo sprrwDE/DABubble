@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { SearchChatService } from '../../../../shared/services/search-chat.service';
 import { UserService } from '../../../../shared/services/user.service';
-import { DirectChat } from '../../../../shared/models/direct-chat.model';
 import { Channel } from '../../../../shared/models/channel.model';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../shared/models/user.model';

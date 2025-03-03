@@ -6,7 +6,6 @@ import {
   Output,
   ViewChild,
   ElementRef,
-  Renderer2,
   Inject,
   signal,
 } from '@angular/core';
@@ -19,7 +18,6 @@ import { PanelService } from '../../shared/services/panel.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { User } from '../../shared/models/user.model';
-import { DirectChat } from '../../shared/models/direct-chat.model';
 import { SearchChatService } from '../../shared/services/search-chat.service';
 import { MainChatService } from '../../shared/services/main-chat.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -96,7 +94,6 @@ export class SidebarNavComponent {
     public directChatService: DirectChatService,
     public searchChatService: SearchChatService,
     public mainChatService: MainChatService,
-    private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.searchChatService.sidebarNavComponent = this;
@@ -145,62 +142,95 @@ export class SidebarNavComponent {
     this.popupService.createChannelPopupOpen = true;
   }
 
-  test() {
-    console.error('HIIIIIIIIIER');
+  scrollToMessage(message: any, messageId: any, channel: any) {
+    this.isSearching = true;
+    this.findAndScrollToMatchingMessage(message, messageId, channel);
   }
 
-  scrollToMessage(message: any, messageId: any, chanel: any) {
-    this.isSearching = true;
-    chanel.messages.filter((eachMessage: any) => {
-      if (eachMessage.message.toLowerCase() == message.toLowerCase()) {
-        setTimeout(() => {
-          const element = this.document.querySelector(
-            `[data-message-id="${messageId}"]`
-          );
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-          this.isSearching = false;
-        }, 500); // Warten, bis der Kanal geladen ist
-      }
+  /**
+   * Sucht nach einer passenden Nachricht im Kanal und scrollt zu ihr
+   */
+  private findAndScrollToMatchingMessage(
+    message: string,
+    messageId: string,
+    channel: any
+  ): void {
+    channel.messages.filter((eachMessage: any) => {
+      if (this.isMessageMatching(eachMessage.message, message))
+        this.scrollToMessageWithDelay(messageId);
     });
   }
 
-  applyFilter(query: string | null) {
+  /**
+   * Prüft, ob die Nachricht mit dem Suchbegriff übereinstimmt
+   */
+  private isMessageMatching(messageText: string, searchText: string): boolean {
+    return messageText.toLowerCase() === searchText.toLowerCase();
+  }
+
+  /**
+   * Scrollt zur Nachricht mit einer Verzögerung
+   */
+  private scrollToMessageWithDelay(messageId: string): void {
+    setTimeout(() => {
+      this.scrollToElementById(messageId);
+      this.isSearching = false;
+    }, 500); // Warten, bis der Kanal geladen ist
+  }
+
+  /**
+   * Scrollt zum Element mit der angegebenen ID
+   */
+  private scrollToElementById(messageId: string): void {
+    const element = this.document.querySelector(
+      `[data-message-id="${messageId}"]`
+    );
+    if (element)
+      element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  private initializeSearch(query: string | null): void {
     this.searchForUser(query);
     this.searchForChannel(query);
+  }
 
-    // Stelle sicher, dass keine Nachricht angezeigt wird, wenn weniger als 3 Zeichen eingegeben wurden
+  private handleShortQuery(query: string | null): void {
     if (!query || query.length < 3) {
       this.filteredList = [];
-      this.noMessage = false; // Nachricht ausblenden
-      return; // Beende die Funktion sofort
+      this.noMessage = false;
     }
+  }
 
-    // Standardmäßig setzen wir die Nachricht auf "keine Ergebnisse"
+  private filterChannelMessages(channel: any, query: string): any {
+    const messages: any[] = Array.isArray(channel.messages)
+      ? channel.messages
+      : [];
+    const filteredMessages = messages.filter((msg: any) =>
+      msg.message?.toLowerCase().includes(query.toLowerCase())
+    );
+    return { ...channel, messages: filteredMessages };
+  }
+
+  private updateFilteredList(query: string): void {
     this.noMessage = true;
-
     this.filteredList = this.channelService.allChannels
-      .map((channel: any) => {
-        const messages = Array.isArray(channel.messages)
-          ? channel.messages
-          : [];
-
-        // Filtere Nachrichten, die den Suchbegriff enthalten
-        const filteredMessages = messages.filter((msg: any) =>
-          msg.message?.toLowerCase().includes(query.toLowerCase())
-        );
-
-        return { ...channel, messages: filteredMessages };
-      })
+      .map((channel: any) => this.filterChannelMessages(channel, query))
       .filter(
         (channel: any) => channel.messages && channel.messages.length > 0
       );
 
-    // Falls es Treffer gibt, setzen wir noMessage auf false
-    if (this.filteredList.length > 0) {
-      this.noMessage = false;
+    if (this.filteredList.length > 0) this.noMessage = false;
+  }
+
+  applyFilter(query: string | null): void {
+    this.initializeSearch(query);
+
+    if (!query || query.length < 3) {
+      this.handleShortQuery(query);
+      return;
     }
+
+    this.updateFilteredList(query);
   }
 
   searchForUser(query: string | null) {
@@ -212,9 +242,7 @@ export class SidebarNavComponent {
           user.name.toLowerCase().includes(usernameQuery.toLowerCase())
         );
       }
-    } else {
-      this.filteredUserNames = [];
-    }
+    } else this.filteredUserNames = [];
   }
 
   searchForChannel(query: string | null) {
@@ -226,9 +254,7 @@ export class SidebarNavComponent {
             channel.name.toLowerCase().includes(usernameQuery.toLowerCase())
         );
       }
-    } else {
-      this.filteredChannels = [];
-    }
+    } else this.filteredChannels = [];
   }
 
   clearSearch() {
@@ -236,10 +262,8 @@ export class SidebarNavComponent {
   }
 
   getUserImage(user: User) {
-    if (user.image && user.image !== '' && user.image !== null) {
+    if (user.image && user.image !== '' && user.image !== null)
       return user.image;
-    } else {
-      return 'imgs/avatar/profile.svg';
-    }
+    return 'imgs/avatar/profile.svg';
   }
 }

@@ -1,12 +1,10 @@
 import { Component, effect } from '@angular/core';
 import { PopupService } from '../popup.service';
-import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
 import { ChannelService } from '../../shared/services/channel.service';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { Channel } from '../../shared/models/channel.model';
 import { User } from '../../shared/models/user.model';
-import { PanelService } from '../../shared/services/panel.service';
 import { CommonModule } from '@angular/common';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { SearchChatService } from '../../shared/services/search-chat.service';
@@ -23,11 +21,9 @@ export class ProfileMenuPopupComponent {
 
   constructor(
     private popupService: PopupService,
-    public authService: AuthService,
     public router: Router,
     public directChatService: DirectChatService,
     public channelService: ChannelService,
-    public panelService: PanelService,
     public globalService: GlobalVariablesService,
     public searchChatService: SearchChatService
   ) {

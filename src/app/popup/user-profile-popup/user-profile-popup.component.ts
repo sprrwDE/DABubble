@@ -34,7 +34,6 @@ export class UserProfilePopupComponent {
     { url: 'imgs/avatar/6av.svg', selected: false },
   ];
 
-  /// Loggedin User nicht synchon bei editieren
   constructor(
     public popupService: PopupService,
     private userService: UserService,
@@ -43,9 +42,7 @@ export class UserProfilePopupComponent {
   ) {
     effect(() => {
       const user = this.userService.loggedInUser();
-      if (user) {
-        this.loggedInUserData = user;
-      }
+      if (user) this.loggedInUserData = user;
     });
   }
 
@@ -70,21 +67,18 @@ export class UserProfilePopupComponent {
       this.loggedInUserData[property] === undefined ||
       this.loggedInUserData[property] === null
     ) {
-      if (property === 'image') {
-        return 'imgs/avatar/profile.svg';
-      }
+      if (property === 'image') return 'imgs/avatar/profile.svg';
       return fallbackValue;
     }
     return this.loggedInUserData[property];
   }
 
-  pushData() {
-    this.avatars.forEach((avatar) => {
-      avatar.selected = false;
-    });
+  private resetAvatarSelection(): void {
+    this.avatars.forEach((avatar) => (avatar.selected = false));
     this.popupService.toggleAvatarSelection = false;
-    const updates: Partial<User> = {};
+  }
 
+  private updateUserName(updates: Partial<User>): void {
     if (this.nameInput.trim() !== '') {
       updates.name = this.nameInput.trim();
       this.firebaseService.updateUserName(
@@ -92,7 +86,9 @@ export class UserProfilePopupComponent {
         updates.name
       );
     }
+  }
 
+  private updateProfileImage(updates: Partial<User>): void {
     if (this.avatarInput !== '') {
       updates.image = this.avatarInput;
       this.firebaseService.changeProfileImage(
@@ -100,11 +96,22 @@ export class UserProfilePopupComponent {
         updates.image
       );
     }
+  }
 
+  private updateUserService(updates: Partial<User>): void {
     if (Object.keys(updates).length > 0) {
-      this.userService.updateLoggedInUser(updates); // Hier wird der User synchron aktualisiert
+      this.userService.updateLoggedInUser(updates);
       this.popupService.editingUserProfile = false;
     }
+  }
+
+  public pushData(): void {
+    this.resetAvatarSelection();
+    const updates: Partial<User> = {};
+
+    this.updateUserName(updates);
+    this.updateProfileImage(updates);
+    this.updateUserService(updates);
   }
 
   showEditProfilePicPopup() {
@@ -113,9 +120,7 @@ export class UserProfilePopupComponent {
   }
 
   selectAvatar(i: number) {
-    this.avatars.forEach((avatar) => {
-      avatar.selected = false;
-    });
+    this.avatars.forEach((avatar) => (avatar.selected = false));
     this.avatarInput = this.avatars[i].url;
     this.avatars[i].selected = true;
   }
@@ -124,8 +129,6 @@ export class UserProfilePopupComponent {
     this.nameInput = this.loggedInUserData.name;
     this.avatarInput = this.loggedInUserData.image;
     this.toggleAvatarSelection = false;
-    this.avatars.forEach((avatar) => {
-      avatar.selected = false;
-    });
+    this.avatars.forEach((avatar) => (avatar.selected = false));
   }
 }

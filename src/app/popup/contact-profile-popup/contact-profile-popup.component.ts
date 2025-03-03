@@ -2,7 +2,6 @@ import {
   Component,
   effect,
   EventEmitter,
-  Input,
   NgZone,
   Output,
   ViewChild,
@@ -10,9 +9,8 @@ import {
 } from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
-import { BehaviorSubject } from 'rxjs';
 import { FirebaseService } from '../../shared/services/firebase.service';
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
 import { DirectChat } from '../../shared/models/direct-chat.model';
@@ -31,16 +29,12 @@ export class ContactProfilePopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
   @ViewChild('allUsersContainer') allUsersContainer!: ElementRef;
 
-  private unsubscribe?: () => void;
   currentUser: UserService;
-  // currentUserData$ = new BehaviorSubject<any>(null);
-
   loggedInUser: any;
 
   constructor(
     public service: FirebaseService,
-    private user: UserService,
-    private ngZone: NgZone,
+    public user: UserService,
     private popupService: PopupService,
     private directChatService: DirectChatService,
     private userService: UserService,
@@ -58,67 +52,53 @@ export class ContactProfilePopupComponent {
     return this.popupService.contactProfileContent;
   }
 
-  // ngOnInit() {
-  //   console.log('User Data:', this.userData);
-
-  //   this.user.updateStatus(this.userData.id);
-
-  //   this.unsubscribe = this.service.subscribeToSingleDoc(
-  //     'users',
-  //     this.userData.id,
-  //     (data) => {
-  //       this.ngZone.run(() => {
-  //         this.currentUserData$.next(data);
-  //       });
-  //     }
-  //   );
-  // }
-
-  // ngOnDestroy() {
-  //   if (this.unsubscribe) {
-  //     this.unsubscribe();
-  //   }
-  // }
-
   closePopup() {
     this.closePopupEvent.emit();
   }
 
-  setCurrentDirectChat(user: User) {
+  private initializeChat(): void {
     this.channelService.chatComponent.scroll = true;
     this.channelService.currentChannel.set(new Channel());
+  }
 
-    const directChat = this.directChatService.allDirectChats.find(
-      (directChat) => {
-        if (
-          directChat.userIds.includes(user.id) &&
-          directChat.userIds.includes(this.loggedInUser.id)
-        ) {
-          this.directChatService.currentDirectChat.set(directChat);
-          return true;
-        }
-        return false;
-      }
+  private findExistingDirectChat(user: User): DirectChat | undefined {
+    return this.directChatService.allDirectChats.find(
+      (directChat) =>
+        directChat.userIds.includes(user.id) &&
+        directChat.userIds.includes(this.loggedInUser.id)
     );
+  }
 
-    if (!directChat) {
-      this.directChatService.currentDirectChat.set(new DirectChat());
-    }
-
+  private setDirectChat(directChat: DirectChat | undefined, user: User): void {
+    this.directChatService.currentDirectChat.set(
+      directChat || new DirectChat()
+    );
     this.directChatService.currentDirectChatUser.set(user);
     this.directChatService.isDirectChat = true;
+  }
 
+  private closePopups(): void {
     this.closePopup();
-
     this.popupService.memberListPopup.closePopup();
+  }
 
-    // Scroll zum ausgewählten Benutzer in der Sidebar
+  private scrollToActiveContact(): void {
     setTimeout(() => {
-      const sidebarContainer = document.querySelector('#all-users');
-      const activeElement = sidebarContainer?.querySelector('.active-contact');
-      if (activeElement) {
+      const sidebarContainer: Element | null =
+        document.querySelector('#all-users');
+      const activeElement: Element | null =
+        sidebarContainer?.querySelector('.active-contact') || null;
+      if (activeElement)
         activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
     }, 100);
+  }
+
+  setCurrentDirectChat(user: User): void {
+    this.initializeChat();
+    const directChat: DirectChat | undefined =
+      this.findExistingDirectChat(user);
+    this.setDirectChat(directChat, user);
+    this.closePopups();
+    this.scrollToActiveContact();
   }
 }

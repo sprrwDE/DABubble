@@ -4,7 +4,6 @@ import { PopupService } from '../popup.service';
 import { Channel } from '../../shared/models/channel.model';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../shared/services/user.service';
-import { Subscription } from 'rxjs';
 import { ChannelService } from '../../shared/services/channel.service';
 import { AddUserService } from '../../shared/services/add-user.service';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
@@ -22,8 +21,6 @@ export class CreateChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<void>();
   @Input() display: boolean = false;
   userIds: string[] = [];
-
-  unsubLoggedInUser!: Subscription;
 
   showUserPopup: boolean = false;
   nameInput: string = '';
@@ -82,6 +79,10 @@ export class CreateChannelPopupComponent {
     this.popupService.showCreateChannelAddPeopleInput = value;
   }
 
+  set showAddUserToChannelPopup(value: boolean) {
+    this.display = value;
+  }
+
   get allUsers() {
     return this.userService.allUsers;
   }
@@ -90,12 +91,9 @@ export class CreateChannelPopupComponent {
     if (this.channel.name.trim() !== '') {
       this.showCreateChannelAddPeoplePopup = true;
 
-      if (this.channel.description.trim() === '') {
+      if (this.channel.description.trim() === '')
         this.channel.description = 'No description';
-      }
-    } else {
-      this.showErrorText = true;
-    }
+    } else this.showErrorText = true;
   }
 
   addMemberToNewChannel(event: Event) {
@@ -112,19 +110,12 @@ export class CreateChannelPopupComponent {
       return;
     }
 
-    if (this.nameInput !== '') {
-      this.showAddUserToChannelSection(event);
-    } else {
-      this.popupService.closeUserPopup();
-    }
+    if (this.nameInput !== '') this.showAddUserToChannelSection(event);
+    else this.popupService.closeUserPopup();
   }
 
   showAddMembersSection(event: Event) {
     event.stopPropagation();
-  }
-
-  set showAddUserToChannelPopup(value: boolean) {
-    this.display = value;
   }
 
   showAddUserToChannelSection(event: Event) {
@@ -135,11 +126,8 @@ export class CreateChannelPopupComponent {
       this.nameInput.trim().toLowerCase()
     );
 
-    if (this.addUserService.filteredUsers.length > 0) {
-      this.showUserPopup = true;
-    } else {
-      this.popupService.closeUserPopup();
-    }
+    if (this.addUserService.filteredUsers.length > 0) this.showUserPopup = true;
+    else this.popupService.closeUserPopup();
   }
 
   preventClose(event: Event) {

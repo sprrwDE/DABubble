@@ -10,15 +10,11 @@ import { PopupComponent } from '../popup/popup.component';
 import { PopupService } from '../popup/popup.service';
 import { UserService } from '../shared/services/user.service';
 import { FirebaseService } from '../shared/services/firebase.service';
-import { AddUserService } from '../shared/services/add-user.service';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 import { SearchChatService } from '../shared/services/search-chat.service';
 import { EmojiPickerComponent } from '../shared/emoji-picker/emoji-picker.component';
-
 import { Channel } from '../shared/models/channel.model';
-import { ChannelService } from '../shared/services/channel.service';
 import { MainChatService } from '../shared/services/main-chat.service';
-import { AuthService } from '../shared/services/auth.service';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -56,11 +52,9 @@ export class MainPageComponent {
     public popupService: PopupService,
     public userService: UserService,
     private fb: FirebaseService,
-    private addUserService: AddUserService,
     private globalVariablesService: GlobalVariablesService,
     private searchChatService: SearchChatService,
-    private mainChatService: MainChatService,
-    private auth: AuthService
+    private mainChatService: MainChatService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -76,23 +70,16 @@ export class MainPageComponent {
 
     window.addEventListener('resize', () => {
       if (this.isTablet) {
-        if (this.panelService.isReplyPanelOpen) {
-          this.panelService.openSidebar();
-        }
+        if (this.panelService.isReplyPanelOpen) this.panelService.openSidebar();
       }
 
-      if (window.innerWidth > 2000) {
-        this.panelService.isSidebarOpen = true;
-      }
+      if (window.innerWidth > 2000) this.panelService.isSidebarOpen = true;
     });
 
     // Füge Event-Listener für Tab-Visibility hinzu
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        this.updateUserStatus('offline');
-      } else {
-        this.updateUserStatus('online');
-      }
+      if (document.hidden) this.updateUserStatus('offline');
+      else this.updateUserStatus('online');
     });
   }
 
@@ -189,17 +176,16 @@ export class MainPageComponent {
     const user = this.userService.loggedInUser();
 
     // Prüfe, ob der User schon online ist → vermeide unnötige Schreibvorgänge
-    if (user?.status !== 'online') {
-      this.updateUserStatus('online');
-    }
+    if (user?.status !== 'online') this.updateUserStatus('online');
 
     // Verhindere mehrfach gesetzte Timeouts, indem der vorherige gelöscht wird
     clearTimeout(this.timeoutId);
 
     // Setze einen neuen Timeout für 5 Minuten
-    this.timeoutId = setTimeout(() => {
-      this.updateUserStatus('abwesend');
-    }, this.afkDelay);
+    this.timeoutId = setTimeout(
+      () => this.updateUserStatus('abwesend'),
+      this.afkDelay
+    );
   }
 
   updateUserStatus(status: string) {
@@ -207,9 +193,7 @@ export class MainPageComponent {
 
     if (user && user.id) {
       // Falls sich der Status nicht geändert hat, beende die Funktion
-      if (user.status === status) {
-        return;
-      }
+      if (user.status === status) return;
 
       // Erstelle eine neue User-Instanz mit dem aktualisierten Status
       const updatedUser = new User({ ...user, status });
@@ -223,29 +207,17 @@ export class MainPageComponent {
   }
 
   toggleSidebar() {
-    if (!this.panelService.isSidebarOpen) {
-      this.panelService.openSidebar();
-    } else if (this.panelService.isSidebarOpen) {
-      this.panelService.isSidebarOpen = false;
-    }
+    if (!this.panelService.isSidebarOpen) this.panelService.openSidebar();
+    else this.panelService.isSidebarOpen = false;
   }
 
   closePopups() {
     this.searchChatService.openSearchPopup = false;
     this.headerComponent.clearSearch();
     this.sidebarNavComponent.clearSearch();
-    if (
-      this.emojiPickerComponent &&
-      !this.emojiPickerComponent.showEmojiPicker
-    ) {
+    if (this.emojiPickerComponent && !this.emojiPickerComponent.showEmojiPicker)
       this.currentEditMessageId = '';
-    }
 
     this.popupService.closeUserPopup();
-
-    /*     
-    if (this.emojiPickerComponent) {
-      this.emojiPickerComponent.toggleEmojiPicker();
-    } */
   }
 }

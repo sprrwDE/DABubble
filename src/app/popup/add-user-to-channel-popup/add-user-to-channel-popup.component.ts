@@ -51,20 +51,15 @@ export class AddUserToChannelPopupComponent {
     if (
       target.tagName.toLowerCase() === 'input' ||
       this.elRef.nativeElement.contains(target)
-    ) {
+    )
       return;
-    }
 
-    if (this.display) {
-      this.closePopup();
-    }
+    if (this.display) this.closePopup();
   }
 
   addUserToList(id: string) {
     this.addUserService.setUserToAdd(id);
     this.clearInputEvent.emit();
-    if (this.addUserService.filteredUsers.length === 0) {
-      this.closePopup();
-    }
+    if (this.addUserService.filteredUsers.length === 0) this.closePopup();
   }
 }

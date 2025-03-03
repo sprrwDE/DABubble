@@ -6,7 +6,6 @@ import { ChannelService } from '../../shared/services/channel.service';
 import { UserService } from '../../shared/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../../shared/models/user.model';
-import { Subscription } from 'rxjs';
 import { Channel } from '../../shared/models/channel.model';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
 import { DirectChatService } from '../../shared/services/direct-chat.service';
@@ -65,7 +64,6 @@ export class ReplyPanelComponent {
 
   ngOnInit() {
     this.panelService.replyPanelComponent = this;
-    console.log();
   }
 
   get isDirectChat() {
@@ -123,8 +121,4 @@ export class ReplyPanelComponent {
       (message) => message.id === this.currentReplyMessageId
     );
   }
-
-  // ngOnDestroy() {
-  //   this.unsubscribeLoggedInUser.unsubscribe();
-  // }
 }
