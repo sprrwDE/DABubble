@@ -441,9 +441,9 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   private formatMentions(message: string): string {
+    // Suche nach @-Mentions
     const mentionPattern: RegExp = /@([\w\s.-]+)/g;
-
-    return message.replace(
+    let formattedMessage = message.replace(
       mentionPattern,
       (match: string, username: string) => {
         const trimmedUsername = username.trim();
@@ -452,6 +452,27 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
         return user ? this.createMentionSpan(trimmedUsername) : match;
       }
     );
+
+    // Suche nach Namen ohne @-Symbol
+    const allUsers = this.currentChannel.users
+      .map((userId: string) => this.userService.getUserById(userId)?.name)
+      .filter(Boolean);
+
+    allUsers.forEach((username) => {
+      if (username) {
+        const namePattern = new RegExp(
+          `@\\b${username}\\b(?![^<]*>|[^<>]*</)`,
+          'g'
+        );
+
+        formattedMessage = formattedMessage.replace(
+          namePattern,
+          (match: string) => this.createNameSpan(match)
+        );
+      }
+    });
+
+    return formattedMessage;
   }
 
   private findUserByMention(username: string): string | undefined {
@@ -463,5 +484,9 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
 
   private createMentionSpan(username: string): string {
     return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">@${username}</span>`;
+  }
+
+  private createNameSpan(username: string): string {
+    return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">${username}</span>`;
   }
 }
