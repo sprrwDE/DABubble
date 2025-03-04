@@ -273,17 +273,11 @@
               ></div>
             </div>
 
-            <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
             <p>
               {{ userService.getUserById(userId)?.name || "NoName" }}
               <span *ngIf="userId === loggedInUser?.id">(Du)</span>
-              <!-- beispiel:
-              <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
-            --></p>
+           </p>
           </div>
-          <!-- } -->
-
-          <!-- Oben rein rendern -->
         </div>
 
         <div

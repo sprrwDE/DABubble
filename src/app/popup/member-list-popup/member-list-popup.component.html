@@ -7,7 +7,7 @@
 
     <div
       (click)="$event.stopPropagation(); closePopup()"
-      class="flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
+      class=" flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
     >
       <svg
         width="24"
@@ -44,7 +44,7 @@
       @for (user of userList; track $index) {
       <div
         (click)="openProfilePopup(user)"
-        class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+        class="cursor-pointer flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
       >
         <div class="relative">
           <img
