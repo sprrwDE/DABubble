@@ -30,6 +30,7 @@ export class MemberListPopupComponent {
     private userService: UserService,
     public globalVariablesService: GlobalVariablesService
   ) {
+    console.log('Popup Service memberListPopup gesetzt:', this);
     this.popupService.memberListPopup = this;
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -48,13 +49,15 @@ export class MemberListPopupComponent {
   }
 
   get showAddMembersPopup() {
+    console.log('Popup wird überprüft. Aktueller Status:', this.popupService.showAddMembersPopup);
     return this.popupService.showAddMembersPopup;
-  }
+  }  
 
   set showAddMembersPopup(value: boolean) {
+    console.log('showAddMembersPopup wird gesetzt auf:', value, 'Stack:', new Error().stack);
     this.popupService.showAddMembersPopup = value;
   }
-
+  
   get currentChannelId() {
     return this.channelService.currentChannelId;
   }

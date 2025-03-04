@@ -1,5 +1,6 @@
 import { Component, effect, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { PopupComponent } from '../../../popup/popup.component';
 import { ChannelService } from '../../../shared/services/channel.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -25,7 +26,13 @@ import { GlobalVariablesService } from '../../../shared/services/global-variable
   templateUrl: './chat-header.component.html',
   styleUrl: './chat-header.component.scss',
 })
-export class ChatHeaderComponent {
+export class ChatHeaderComponent implements AfterViewInit {
+
+  @ViewChild('memberListContainer') memberListContainer!: ElementRef<HTMLDivElement>;
+  ngAfterViewInit() {
+    console.log('Member List Width:', this.memberListContainer.nativeElement.offsetWidth);
+  }
+
   currentChannel: Channel = new Channel();
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
@@ -86,6 +93,15 @@ export class ChatHeaderComponent {
   set channelDetailsPopupOpen(value: boolean) {
     this.popupService.channelDetailsPopupOpen = value;
   }
+
+  get isMemberListVisible(): boolean {
+    return (
+      this.currentChannel.users.length > 0 &&
+      !this.isMobile &&
+      (this.memberListContainer as any)?.nativeElement?.offsetWidth > 190
+    );
+  }
+  
 
   openChannelDetailsPopup() {
     this.channelDetailsPopupOpen = true;

@@ -34,11 +34,8 @@ export class ChannelDetailsPopupComponent {
     public globalVariablesService: GlobalVariablesService,
     public searchChatService: SearchChatService
   ) {
-    // Effect reagiert auf Änderungen des Signals
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
-
-      console.log(this.currentChannel);
     });
 
     effect(() => {

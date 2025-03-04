@@ -161,40 +161,20 @@ export class FirebaseService {
     replyId: string,
     chat: string
   ) {
-    console.log('🛠️ updateEmojiCount() gestartet mit:', {
-      reaction,
-      messageId,
-      channelId,
-      replyId,
-    });
-
     try {
       const docRef = doc(
         this.firestore,
         `${chat}/${channelId}/messages/${messageId}/replies/${replyId}`
       );
-
       const docSnap = await getDoc(docRef);
-
-      console.log('📄 Firebase DocSnap:', docSnap.exists());
-
       if (docSnap.exists()) {
         const docData = docSnap.data() as {
           likes?: { emoji: string; count: number; userIds: string[] }[];
         };
-
         let updatedLikes = reaction[replyId] || [];
-
-        // 🔥 Fix: Falls `count === 0`, entferne das Emoji aus der Liste
         updatedLikes = updatedLikes.filter((r) => r.count > 0);
-
-        console.log('✅ Speichere in Firebase:', updatedLikes);
-
         await updateDoc(docRef, { likes: updatedLikes });
 
-        console.log(
-          `🎉 Erfolgreich gespeichert für Reply ${replyId} in Message ${messageId} in Channel ${channelId}`
-        );
       } else {
         console.error('❌ Kein Dokument gefunden für', messageId, channelId);
       }
@@ -203,5 +183,4 @@ export class FirebaseService {
     }
   }
 
-  checkDocSnap() {}
 }

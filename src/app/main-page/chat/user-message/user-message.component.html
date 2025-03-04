@@ -296,12 +296,12 @@
 
     <!-- EMOJI CONTAINER -->
     <div
-      *ngIf="likes?.length || [].length > 0"
-      class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
+    class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
     >
       <!-- EMOJI RENDERN -->
       @for (like of sortedLikes(); track $index) { @if(like.count > 0) {
       <div
+      *ngIf="likes?.length || [].length > 0"
         class="cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         (click)="
           $event.stopPropagation();

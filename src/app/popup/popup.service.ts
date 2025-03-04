@@ -59,5 +59,6 @@ export class PopupService {
     this.editChannelDescription = false;
     this.editingUserProfile = false;
     this.toggleAvatarSelection = false;
+    this.showAddMembersPopup = false;
   }
 }

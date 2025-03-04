@@ -58,15 +58,13 @@
     *ngIf="!isDirectChat && !searchChat"
     class="flex items-center w-[200px] justify-end gap-[15px] max-w-[50%]"
   >
-    <div
-      *ngIf="
-        currentChannel.users.length > 0 &&
-        !isMobile &&
-        memberListContainer.offsetWidth > 190
-      "
-      class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
-      (click)="openMemberListPopup(false)"
-    >
+  <div
+  #memberListContainer
+  *ngIf="isMemberListVisible"
+  class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
+  (click)="openMemberListPopup(false)"
+>
+
       <div class="flex items-center">
         <img
           *ngFor="let userId of currentChannel.users.slice(0, 3)"
