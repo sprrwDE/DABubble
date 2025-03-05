@@ -137,8 +137,8 @@
     <app-add-user-to-channel-popup
     [display]="showUserPopup"
     [ngClass]="{
-      'scale-100 opacity-100 pointer-events-auto bottom-[unset] top-[-100px]': isMobile,
-      'scale-100 opacity-100 pointer-events-auto': !isMobile,
+      'scale-100 opacity-100 pointer-events-auto bottom-[unset] top-[-100px]': isMobile && showUserPopup,
+      'scale-100 opacity-100 pointer-events-auto': !isMobile && showUserPopup,
       'scale-0 pointer-events-none': !showUserPopup
     }"
     class="absolute left-[32px] mr-[32px] w-[85%] mt-[20px] transition-all duration-300 ease-in-out"
@@ -152,7 +152,7 @@
 
   <div class="flex justify-end w-full md:w-[unset]">
     <button (click)="createChannel()"
-    [disabled]="showCreateChannelAddPeopleInput && addUserService.userToAdd.length === 0"
+    [disabled]="!showCreateChannelAddPeopleInput && addUserService.userToAdd.length === 0"
     >Erstellen</button>
   </div>
 </section>
