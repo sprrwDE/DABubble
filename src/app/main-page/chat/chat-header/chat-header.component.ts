@@ -26,15 +26,11 @@ import { GlobalVariablesService } from '../../../shared/services/global-variable
   templateUrl: './chat-header.component.html',
   styleUrl: './chat-header.component.scss',
 })
-export class ChatHeaderComponent implements AfterViewInit {
+export class ChatHeaderComponent {
   @ViewChild('memberListContainer')
   memberListContainer!: ElementRef<HTMLDivElement>;
-  ngAfterViewInit() {
-    console.log(
-      'Member List Width:',
-      this.memberListContainer.nativeElement.offsetWidth
-    );
-  }
+
+  
 
   currentChannel: Channel = new Channel();
   channelDetailsPopupType: string = '';
