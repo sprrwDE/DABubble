@@ -12,7 +12,6 @@ export class AuthService {
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserSubject.next(user);
-      // console.log("user is:", user)
     });
   }
 
@@ -26,7 +25,6 @@ export class AuthService {
   async login(email: string, password: string): Promise<UserCredential | null> {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('Login erfolgreich:', userCredential);
       return userCredential;
     } catch (error) {
       console.error('Login fehlgeschlagen:', error);
