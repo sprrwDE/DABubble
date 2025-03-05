@@ -135,17 +135,20 @@
     </p> 
 
     <app-add-user-to-channel-popup
-      [display]="showUserPopup"
-      [ngClass]="{
-        'scale-100 opacity-100 pointer-events-auto': showUserPopup,
-        'scale-0 pointer-events-none': !showUserPopup
-      }"
-      class="absolute left-[40px] w-[400px] mt-[20px] transition-all duration-300 ease-in-out"
-      (closePopupEvent)="handleUserPopupClose($event)"
-      (clearInputEvent)="handleClearInput()"
-    >
-    </app-add-user-to-channel-popup>
-  </div>
+    [display]="showUserPopup"
+    [ngClass]="{
+      'scale-100 opacity-100 pointer-events-auto bottom-[unset] top-[-100px]': isMobile,
+      'scale-100 opacity-100 pointer-events-auto': !isMobile,
+      'scale-0 pointer-events-none': !showUserPopup
+    }"
+    class="absolute left-[32px] mr-[32px] w-[85%] mt-[20px] transition-all duration-300 ease-in-out"
+    (closePopupEvent)="handleUserPopupClose($event)"
+    (clearInputEvent)="handleClearInput()"
+    [creatingChannel]="true"
+    [isMobile]="isMobile"
+  >
+  </app-add-user-to-channel-popup>
+    </div>
 
   <div class="flex justify-end w-full md:w-[unset]">
     <button (click)="createChannel()"

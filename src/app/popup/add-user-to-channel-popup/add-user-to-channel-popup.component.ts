@@ -21,6 +21,8 @@ export class AddUserToChannelPopupComponent {
   @Output() closePopupEvent = new EventEmitter<boolean>();
   @Output() clearInputEvent = new EventEmitter<void>();
   @Input() display: boolean = false;
+  @Input() creatingChannel = false;
+  @Input() isMobile = false;
 
   constructor(
     public addUserService: AddUserService,
