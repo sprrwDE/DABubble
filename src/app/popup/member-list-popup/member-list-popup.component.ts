@@ -49,15 +49,20 @@ export class MemberListPopupComponent {
   }
 
   get showAddMembersPopup() {
-    console.log('Popup wird überprüft. Aktueller Status:', this.popupService.showAddMembersPopup);
+    // console.log('Popup wird überprüft. Aktueller Status:', this.popupService.showAddMembersPopup);
     return this.popupService.showAddMembersPopup;
-  }  
+  }
 
   set showAddMembersPopup(value: boolean) {
-    console.log('showAddMembersPopup wird gesetzt auf:', value, 'Stack:', new Error().stack);
+    console.log(
+      'showAddMembersPopup wird gesetzt auf:',
+      value,
+      'Stack:',
+      new Error().stack
+    );
     this.popupService.showAddMembersPopup = value;
   }
-  
+
   get currentChannelId() {
     return this.channelService.currentChannelId;
   }
