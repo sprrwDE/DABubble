@@ -1,6 +1,6 @@
 <div
   (click)="onContainerClick($event, messageId)"
-  (mouseleave)="onMouseLeave()"
+  (mouseleave)="closeEditMessagePopup()"
   class="main-chat-message-container transition-svg-text message py-[10px] flex items-center relative justify-end gap-[10px]"
   [ngClass]="{
     'flex-row-reverse': isContact,
@@ -16,7 +16,7 @@
     class="reaction-bar flex items-center gap-[10px] border-lines border-[1px] rounded-[30px] translate-y-[-50%] rounded-br-[0px] absolute top-0 bg-white pl-[20px] pr-[15px] py-[5px] transition-svg-text"
     [ngClass]="{
       'right-[50px]': isContact,
-      'left-[50px]': !isContact,
+      'left-[20px] md:left-[50px]': !isContact,
       'right-[30px]': isContact && isReply,
       'left-[30px]': !isContact && isReply
     }"
@@ -200,7 +200,7 @@
     <div
       (click)="toggleEditMessagePopup()"
       *ngIf="!isContact"
-      class="transition-svg-text reaction-item relative"
+      class="transition-svg-text reaction-item"
     >
       <svg
         width="24"
@@ -232,7 +232,7 @@
 
       <div
         (click)="$event.stopPropagation()"
-        class="px-[20px] py-[10px] w-[max-content] rounded-[30px] shadow-[0px_6px_14px_0px_#00000033] rounded-tl-[0px] top-[50%] left-[100%] cursor-default transition-svg-text bg-white absolute z-[10000]"
+        class="px-[20px] py-[10px] w-[max-content] rounded-[30px] shadow-[0px_6px_14px_0px_#00000033] rounded-tl-[0px] top-[110%] md:top-[50%] left-[0%] md:left-[100%] cursor-default transition-svg-text bg-white absolute z-[10000]"
         [ngClass]="{
           'scale-0': !editMessagePopupOpen,
           'scale-100': editMessagePopupOpen
@@ -286,7 +286,7 @@
 
     <!-- message -->
     <p
-      class="text-[17px] md:text-[18px] break-all rounded-[30px] p-[15px] flex justify-end items-center transition-svg-text"
+      class="text-[17px] flex-wrap md:text-[18px] break-all rounded-[30px] p-[15px] flex justify-end items-center transition-svg-text"
       [ngClass]="{
         'rounded-tl-[0px] bg-bg text-black contact-message': isContact,
         'rounded-tr-[0px] bg-chat text-white': !isContact
@@ -429,7 +429,7 @@
         <div class="flex flex-wrap items-center gap-[20px]">
           <button
             class="bg-white text-primary border-[1px] border-primary hover:text-white"
-            (click)="currentEditMessageId = ''"
+            (click)="resetEditMessage()"
           >
             Abbrechen
           </button>

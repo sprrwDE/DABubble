@@ -323,7 +323,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
     );
   }
 
-  public onMouseLeave(): void {
+  public closeEditMessagePopup(): void {
     this.editMessagePopupOpen = false;
   }
 
@@ -366,7 +366,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
     if (this.isInChannelChat()) this.handleChannelMessageEdit();
     else this.handleDirectMessageEdit();
 
-    this.resetEditMessageId();
+    this.resetEditMessage();
   }
 
   private isInChannelChat(): boolean {
@@ -421,8 +421,9 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
     return this.isFirstReply ? this.firstReplyMessageId : this.messageId;
   }
 
-  private resetEditMessageId(): void {
+  public resetEditMessage(): void {
     this.currentEditMessageId = '';
+    this.closeEditMessagePopup();
   }
 
   public onKeyDown(event: KeyboardEvent): void {
