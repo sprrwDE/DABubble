@@ -485,13 +485,13 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
 
   private createMentionSpan(username: string): string {
     return `
-      <span class="p-[3px] select-none cursor-pointer bg-bg text-primary  rounded-[5px]">@${username}</span>
+      <span class="p-[3px] select-none bg-bg text-primary  rounded-[5px]">@${username}</span>
       `;
   }
 
   private createNameSpan(username: string): string {
     return `
-      <span class="p-[3px] select-none cursor-pointer bg-bg text-primary rounded-[5px]">${username}</span>
+      <span class="p-[3px] select-none bg-bg text-primary rounded-[5px]">${username}</span>
       `;
   }
 }
