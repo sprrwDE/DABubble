@@ -45,7 +45,6 @@ export class ChannelService {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });
-
     this.getAllChannels();
   }
 

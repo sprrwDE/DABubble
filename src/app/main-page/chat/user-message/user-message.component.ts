@@ -168,7 +168,6 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   public onContainerClick(event: MouseEvent, messageId: string): void {
-    console.log('AAAAAAAAAAAAAAAAAAH');
     if ((event.target as HTMLElement).closest('.reaction-item')) return;
 
     event.preventDefault();
@@ -487,11 +486,15 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   private createMentionSpan(username: string): string {
-    return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">@${username}</span>`;
+    return `
+      <span class="p-[3px] select-none bg-bg text-primary  rounded-[5px]">@${username}</span>
+      `;
   }
 
   private createNameSpan(username: string): string {
-    return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">${username}</span>`;
+    return `
+      <span class="p-[3px] select-none bg-bg text-primary rounded-[5px]">${username}</span>
+      `;
   }
 
   hoverPopupVisible = false;

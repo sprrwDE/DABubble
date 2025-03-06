@@ -11,16 +11,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideFirebaseApp(() =>
-      initializeApp({
-        apiKey: 'AIzaSyDtBq05NJzrYhjDjxIa2InQ-7a813XNGJo',
-        authDomain: 'dabubble-850f6.firebaseapp.com',
-        projectId: 'dabubble-850f6',
-        storageBucket: 'dabubble-850f6.firebasestorage.app',
-        messagingSenderId: '82369633954',
-        appId: '1:82369633954:web:96dff6939085e5482281fb',
-      })
-    ),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     importProvidersFrom(BrowserAnimationsModule),
