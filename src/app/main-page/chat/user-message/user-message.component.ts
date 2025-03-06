@@ -23,6 +23,7 @@ import { User } from '../../../shared/models/user.model';
 import { Channel } from '../../../shared/models/channel.model';
 import { DirectChat } from '../../../shared/models/direct-chat.model';
 import { MessageLike } from '../../../shared/models/message-like.interface';
+import { EmojiHoverDisplayComponent } from './emoji-hover-display/emoji-hover-display.component';
 
 interface ReactionData {
   reactionsRecord: { [key: string]: MessageLike[] };
@@ -37,7 +38,7 @@ interface TargetData {
 @Component({
   selector: 'app-user-message',
   standalone: true,
-  imports: [NgClass, NgIf, EmojiPickerComponent, CommonModule, FormsModule],
+  imports: [NgClass, NgIf, EmojiPickerComponent, CommonModule, FormsModule, EmojiHoverDisplayComponent],
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
@@ -70,6 +71,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   public currentChannel: Channel = new Channel();
   public currentDirectChat: DirectChat = new DirectChat();
   public emojiInput$: Subject<string> = new Subject<string>();
+  public firstLike: User | undefined
 
   constructor(
     private panelService: PanelService,
@@ -491,4 +493,31 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   private createNameSpan(username: string): string {
     return `<span class="p-[3px] select-none cursor-pointer hover:bg-white bg-bg text-primary hover:underline rounded-[5px]">${username}</span>`;
   }
+
+  hoverPopupVisible = false;
+hoveredEmoji: string | null = null;
+hoveredLikers: any[] = [];
+hoverPopupPosition = { top: '0px', left: '0px' };
+
+showHoverPopup(event: MouseEvent, like: any) {
+  console.log(like)
+  this.hoveredEmoji = like.emoji;
+  this.hoveredLikers = like.userIds
+
+
+  this.firstLike = this.userService.allUsers.find(user => user.id === like.userIds[0]);
+  console.log(this.userService.allUsers)
+  console.log(this.firstLike?.name)
+  this.hoverPopupVisible = true;
+
+  this.hoverPopupPosition = {
+    top: `${event.clientY + 10}px`,
+    left: `${event.clientX + 10}px`,
+  };
+}
+
+hideHoverPopup() {
+  this.hoverPopupVisible = false;
+}
+
 }
