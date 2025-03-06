@@ -166,7 +166,6 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   public onContainerClick(event: MouseEvent, messageId: string): void {
-    console.log('AAAAAAAAAAAAAAAAAAH');
     if ((event.target as HTMLElement).closest('.reaction-item')) return;
 
     event.preventDefault();
