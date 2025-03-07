@@ -26,6 +26,7 @@ export class AddUsersToNewChannelComponent {
 
   showUserPopup: boolean = false;
   nameInput: string = '';
+  addAllMembers: boolean = true; 
 
   isMobile: any;
   loggedInUser: any;
@@ -196,4 +197,12 @@ export class AddUsersToNewChannelComponent {
   handleClearInput() {
     this.nameInput = '';
   }
+
+  toggleAddAllMembers() {
+    this.addAllMembers = true;
+    if (this.addAllMembers) {
+      this.showCreateChannelAddPeopleInput = false;
+    }
+  }
+
 }
