@@ -4,7 +4,7 @@ import { NgIf } from '@angular/common';
 import { User } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ValidationErrors } from '@angular/forms';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { NgClass } from '@angular/common';
 import { GlobalVariablesService } from '../../shared/services/global-variables.service';
@@ -25,6 +25,8 @@ export class UserProfilePopupComponent {
 
   avatarInput: string = '';
   toggleAvatarSelection: boolean = false;
+  errorMessage: string = '';
+  enable: boolean = false;
   avatars: { url: string; selected: boolean }[] = [
     { url: 'imgs/avatar/1av.svg', selected: false },
     { url: 'imgs/avatar/2av.svg', selected: false },
@@ -131,4 +133,34 @@ export class UserProfilePopupComponent {
     this.toggleAvatarSelection = false;
     this.avatars.forEach((avatar) => (avatar.selected = false));
   }
+
+  checkNameValidation(value: string): ValidationErrors | null {
+    if (value.trim().length === 0) {
+      this.enable = false;
+      return null;
+    }
+  
+    if (value.trim().length < 3) {
+      this.enable = false;
+      return { nameTooShort: true };
+    }
+  
+    if (/^\d+$/.test(value)) {
+      this.enable = false;
+      return { onlyNumbers: true };
+    }
+    this.enable = true;
+    return null;
+  }
+  
+  get nameErrorMessage(): string | null {
+    const errors = this.checkNameValidation(this.nameInput);
+    if (!errors) return null;
+  
+    if (errors['nameTooShort']) return 'Der Name muss mindestens 3 Zeichen lang sein';
+    if (errors['onlyNumbers']) return 'Der Name darf nicht nur aus Zahlen bestehen';
+  
+    return null;
+  }
+  
 }
