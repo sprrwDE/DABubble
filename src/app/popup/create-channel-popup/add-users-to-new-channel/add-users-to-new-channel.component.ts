@@ -130,7 +130,7 @@ export class AddUsersToNewChannelComponent {
     return await this.channelService.addChannel(this.channel.toJSON());
   }
 
-  private resetUserServices() {
+  public resetUserServices() {
     this.addUserService.userToAdd = [];
     this.addUserService.possibleUserList = [];
   }
@@ -203,6 +203,7 @@ export class AddUsersToNewChannelComponent {
     if (this.addAllMembers) {
       this.showCreateChannelAddPeopleInput = false;
     }
+    this.resetUserServices()
   }
 
 }
