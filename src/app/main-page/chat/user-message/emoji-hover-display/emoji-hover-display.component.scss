@@ -1,9 +1,15 @@
-:host {
-    position: absolute;
-    z-index: 99999;
-    left:0;
-    top: 0;
-    color: white;
-    background-color: aquamarine;
-  }
-  
+.emoji-hover-container {
+  position: relative; // Container bleibt relativ
+}
+
+.emoji-hover-popup {
+  position: absolute;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  z-index: 1000;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+}
