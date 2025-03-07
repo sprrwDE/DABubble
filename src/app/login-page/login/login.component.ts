@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
           this.failed = true;
         }
       } catch (error) {
-        console.log(error);
+        console.log("asdasd", error);
       }
     } else {
       this.loginForm.markAllAsTouched();

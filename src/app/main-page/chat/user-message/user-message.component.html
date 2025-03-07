@@ -319,11 +319,19 @@
       >
         <span>{{ like.emoji }}</span>
         <span class="text-[16px]">{{ like.count }}</span>
-        <!-- Floating Popup -->
+
       </div>
 
       } }
-
+        <!-- Floating Popup -->
+        <app-emoji-hover-display
+        *ngIf="hoverPopupVisible"
+        [emoji]="hoveredEmoji"
+        [likers]="hoveredLikers"
+        [position]="hoverPopupPosition"
+        [firstLike]="firstLike?.name"
+        class="emoji-hover-popup"
+        ></app-emoji-hover-display>
       <!-- add Emoji-btn -->
       <div
         class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text scale-90 hover:scale-100"
@@ -475,11 +483,3 @@
 >
 </app-emoji-picker>
 
-<app-emoji-hover-display
-*ngIf="hoverPopupVisible"
-[emoji]="hoveredEmoji"
-[likers]="hoveredLikers"
-[position]="hoverPopupPosition"
-[firstLike]="firstLike?.name"
-class="emoji-hover-popup"
-></app-emoji-hover-display>
