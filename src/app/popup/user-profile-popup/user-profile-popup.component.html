@@ -192,14 +192,21 @@
     </form>
   </div>
 
+  <span *ngIf="nameErrorMessage" class="text-error text-sm mt-2">
+    {{ nameErrorMessage }}
+  </span>  
+
   <div
     *ngIf="editingUserProfile"
     class="flex items-center justify-center w-full gap-[32px]"
   >
-    <button (click)="editingUserProfile = false" class="white-btn">
+    <button 
+    (click)="editingUserProfile = false" class="white-btn">
       Abbrechen
     </button>
 
-    <button (click)="pushData()">Speichern</button>
+    <button 
+    [disabled]="(enable && avatarInput == '' && popupService.toggleAvatarSelection) || !enable"
+    (click)="pushData()">Speichern</button>
   </div>
 </section>
