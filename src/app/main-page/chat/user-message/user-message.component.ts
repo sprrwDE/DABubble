@@ -509,8 +509,6 @@ showHoverPopup(event: MouseEvent, like: any) {
 
 
   this.firstLike = this.userService.allUsers.find(user => user.id === like.userIds[0]);
-  console.log(this.userService.allUsers)
-  console.log(this.firstLike?.name)
   this.hoverPopupVisible = true;
 
   this.hoverPopupPosition = {

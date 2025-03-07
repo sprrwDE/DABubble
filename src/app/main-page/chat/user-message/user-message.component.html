@@ -303,7 +303,7 @@
       @for (like of sortedLikes(); track $index) { @if(like.count > 0) {
       <div
         *ngIf="likes?.length || [].length > 0"
-        class="cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
+        class="relative cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         (click)="
           $event.stopPropagation();
           reactOnEmoji(
@@ -318,7 +318,16 @@
       >
         <span>{{ like.emoji }}</span>
         <span class="text-[16px]">{{ like.count }}</span>
+        <!-- Floating Popup -->
+
       </div>
+      <app-emoji-hover-display
+*ngIf="hoverPopupVisible"
+[emoji]="hoveredEmoji"
+[likers]="hoveredLikers"
+[position]="hoverPopupPosition"
+[firstLike]="firstLike?.name"
+></app-emoji-hover-display>
       } }
 
       <!-- add Emoji-btn -->
@@ -472,12 +481,5 @@
 >
 </app-emoji-picker>
 
-<!-- Floating Popup -->
-<app-emoji-hover-display
-  *ngIf="hoverPopupVisible"
-  [emoji]="hoveredEmoji"
-  [likers]="hoveredLikers"
-  [position]="hoverPopupPosition"
-  [firstLike]="firstLike?.name"
-></app-emoji-hover-display>
+
 

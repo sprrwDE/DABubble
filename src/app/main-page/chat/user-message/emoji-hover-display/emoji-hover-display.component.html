@@ -1,5 +1,7 @@
-<p>{{ emoji }}</p>
-<div>{{ firstLike }}</div>
-@if (likers.length > 1) {
-    <div>Und {{likers.length - 1}} weitere Mitglieder</div>
-}
+<div class="flex flex-col items-center justify-center p-4">
+  <p>{{ emoji }}</p>
+  <div>{{ firstLike }}</div>
+  @if (likers.length > 1) {
+  <div>Und {{ likers.length - 1 }} weitere Mitglieder</div>
+  }
+</div>
