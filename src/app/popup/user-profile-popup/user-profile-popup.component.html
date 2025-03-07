@@ -206,7 +206,7 @@
     </button>
 
     <button 
-    [disabled]="!enable"
+    [disabled]="(enable && avatarInput == '' && editingUserProfile) || !enable"
     (click)="checkNameValidation(nameInput)">Speichern</button>
   </div>
 </section>
