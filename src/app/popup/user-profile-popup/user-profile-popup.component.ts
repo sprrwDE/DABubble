@@ -149,9 +149,9 @@ export class UserProfilePopupComponent {
       this.enable = false;
       return { onlyNumbers: true };
     }
-
-    if (this.popupService.toggleAvatarSelection && this.avatarInput == '') {
-      return { emptyAvatar: true };
+    if (this.avatarInput == '' && this.popupService.toggleAvatarSelection) {
+      this.enable = false;
+      return { selectAvatar: true };
     }
     this.enable = true;
     return null;
@@ -163,7 +163,7 @@ export class UserProfilePopupComponent {
   
     if (errors['nameTooShort']) return 'Der Name muss mindestens 3 Zeichen lang sein';
     if (errors['onlyNumbers']) return 'Der Name darf nicht nur aus Zahlen bestehen';
-    if (errors['emptyAvatar']) return 'Bitte wähle einen Avatar oder schließe die Auswahl';
+    if (errors['selectAvatar']) return 'Bitte wähle einen neuen Avatar';
   
     return null;
   }
