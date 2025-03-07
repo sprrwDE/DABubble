@@ -312,24 +312,26 @@
             messageId,
             isDirectChat ? currentDirectChat.id || '' : currentChannel.id,
             likes
-          )"
-          (mouseover)="showHoverPopup($event, like)"
-          (mouseleave)="hideHoverPopup()"
+          )
+        "
+        (mouseover)="showHoverPopup($event, like)"
+        (mouseleave)="hideHoverPopup()"
       >
         <span>{{ like.emoji }}</span>
         <span class="text-[16px]">{{ like.count }}</span>
-        <!-- Floating Popup -->
 
       </div>
-      <app-emoji-hover-display
-*ngIf="hoverPopupVisible"
-[emoji]="hoveredEmoji"
-[likers]="hoveredLikers"
-[position]="hoverPopupPosition"
-[firstLike]="firstLike?.name"
-></app-emoji-hover-display>
-      } }
 
+      } }
+        <!-- Floating Popup -->
+        <app-emoji-hover-display
+        *ngIf="hoverPopupVisible"
+        [emoji]="hoveredEmoji"
+        [likers]="hoveredLikers"
+        [position]="hoverPopupPosition"
+        [firstLike]="firstLike?.name"
+        class="emoji-hover-popup"
+        ></app-emoji-hover-display>
       <!-- add Emoji-btn -->
       <div
         class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text scale-90 hover:scale-100"
@@ -480,6 +482,4 @@
   (emojiSelectedEvent)="insertEmoji($event)"
 >
 </app-emoji-picker>
-
-
 
