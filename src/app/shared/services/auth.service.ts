@@ -27,7 +27,6 @@ export class AuthService {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       return userCredential;
     } catch (error) {
-      console.error('Login fehlgeschlagen:', error);
       return null;
     }
   }
