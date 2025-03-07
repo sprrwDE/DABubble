@@ -4,6 +4,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -30,17 +31,67 @@ export class RegisterComponent {
     private firestore: Firestore
   ) {
     this.contactForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email, this.emailValidator]], // Eigener Validator
+      name: ['', [Validators.required, this.nameValidator]],  // Hier ist es korrekt
+      email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       terms: [false, Validators.requiredTrue],
       id: '',
       avatar: '/imgs/avatar/elias_neumann.svg',
       status: 'offline',
     });
-
   }
 
+
+  nameValidator(control: AbstractControl): ValidationErrors | null {
+    const value: string = control.value?.trim() || '';
+
+    if (value.length <= 0) {
+      return null
+    }
+
+    if (value.length < 3) {
+      return { nameTooShort: 'Der Name muss mindestens 3 Zeichen lang sein' };
+    }
+
+    if (/^\d+$/.test(value)) {
+      return { onlyNumbers: 'Der Name darf nicht nur aus Zahlen bestehen' };
+    }
+
+    return null; // Kein Fehler
+  }
+
+
+  get nameErrorMessage(): string | null {
+    const control = this.contactForm.get('name');
+    if (!control || !control.errors || !control.touched || control == null) return null;
+
+    if (control.errors['nameTooShort']) return 'Der Name muss mindestens 3 Zeichen lang sein';
+    if (control.errors['onlyNumbers']) return 'Der Name darf nicht nur aus Zahlen bestehen';
+
+    return null;
+  }
+
+  get passwordErrorMessage(): string | null {
+    const control = this.contactForm.get('password');
+    const value = control?.value || '';
+
+    if (value.length < 6 && value.length > 0) {
+      return 'Bitte mindestens 6 Zeichen';
+    }
+
+    if (value.length > 6) {
+      if (!/[A-Z]/.test(value)) {
+        return 'Das Passwort muss mindestens einen Großbuchstaben enthalten';
+      }
+
+      if (!/\d/.test(value)) {
+        return 'Das Passwort muss mindestens eine Zahl enthalten';
+      }
+    }
+
+
+    return null; // Kein Fehler
+  }
   onSubmit() {
     if (this.contactForm.valid) {
       this.registerUser();
@@ -62,7 +113,6 @@ export class RegisterComponent {
     if (!validTLDs.includes(tld)) {
       return { invalidTLD: true }; // Falls die TLD nicht erlaubt ist
     }
-
     return null;
   }
 
@@ -85,7 +135,7 @@ export class RegisterComponent {
         isNotGoogle: true,
       });
 
-      this.addUserToFirebase(user);
+      await this.addUserToFirebase(user);
       this.routeId(user.id);
     } catch (error: any) {
       if (error?.code === 'auth/email-already-in-use') {
@@ -98,6 +148,10 @@ export class RegisterComponent {
         this.errorMessage = 'Registrierung fehlgeschlagen. Versuche es erneut.';
       }
     }
+  }
+
+  resetError() {
+    this.errorMessage = null
   }
 
 

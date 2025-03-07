@@ -31,34 +31,56 @@
         <!-- Eingabefelder -->
         <div class="flex flex-col gap-7 pb-4 w-full">
             <!-- Name -->
-            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+            <div class="bg-bg flex rounded-full p-3 px-8 gap-3 xs:gap-12 items-center w-full">
                 <label for="name" class="sr-only">Name und Nachname</label>
                 <img src="imgs/icons/person_filled.svg" alt="Name Icon">
                 <input id="name" formControlName="name" maxlength="24" type="text" placeholder="Name und Nachname"
                     class="bg-transparent flex-1 focus:outline-none w-full truncate" />
             </div>
 
+            <span *ngIf="nameErrorMessage" class="text-error text-sm mt-2">
+                {{ nameErrorMessage }}
+            </span>
+
             <!-- E-Mail -->
             <div>
-                <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+                <div class="bg-bg flex rounded-full p-3 px-8 gap-3 xs:gap-12 items-center w-full">
                     <label for="email" class="sr-only">E-Mail-Adresse</label>
                     <img src="imgs/icons/mail.svg" alt="Mail Icon">
                     <input id="email" formControlName="email" type="email" placeholder="beispielname@email.com"
-                        class="bg-transparent flex-1 focus:outline-none" />
+                        class="bg-transparent truncate w-full flex-1 focus:outline-none" (keydown)="resetError()" />
                 </div>
 
-                <small *ngIf="errorMessage" class="text-error text-sm mt-2">
-                    {{ errorMessage }}
+                <small *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.errors || errorMessage"
+                    class="text-error text-sm mt-2">
+                    <span *ngIf="contactForm.get('email')?.errors?.['invalidEmail']">
+                        Ungültige E-Mail-Adresse.
+                    </span>
+                    <span *ngIf="contactForm.get('email')?.errors?.['invalidTLD']">
+                        Die eingegebene E-Mail-Adresse hat eine ungültige Domain.
+                    </span>
+                    <small *ngIf="errorMessage" class="text-error text-sm mt-2">
+                        {{ errorMessage }}
+                    </small>
+
                 </small>
+
             </div>
 
             <!-- Passwort -->
-            <div class="bg-bg flex rounded-full p-3 px-8 gap-12 items-center w-full">
+            <div class="bg-bg flex rounded-full p-3 px-8 gap-3 xs:gap-12 items-center w-full">
                 <label for="password" class="sr-only">Passwort</label>
                 <img src="imgs/icons/lock.svg" alt="Lock Icon">
                 <input id="password" formControlName="password" type="password" placeholder="Passwort"
                     class="bg-transparent flex-1 focus:outline-none" />
             </div>
+
+
+            <span *ngIf="passwordErrorMessage" class="text-error text-sm mt-2">
+                {{ passwordErrorMessage }}
+            </span>
+
+
         </div>
 
         <!-- Checkbox -->
