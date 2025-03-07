@@ -206,7 +206,7 @@
     </button>
 
     <button 
-    [disabled]="(enable && avatarInput == '' && editingUserProfile) || !enable"
+    [disabled]="(enable && avatarInput == '' && popupService.toggleAvatarSelection) || !enable"
     (click)="checkNameValidation(nameInput)">Speichern</button>
   </div>
 </section>
