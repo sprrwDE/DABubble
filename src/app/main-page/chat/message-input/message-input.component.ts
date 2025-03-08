@@ -36,6 +36,7 @@ export class MessageInputComponent implements OnInit {
   @Input() chatComponent!: ChatComponent;
   @Input() replyPanelComponent!: ReplyPanelComponent;
   @Input() isDirectChatComponent: boolean = false;
+
   @ViewChild('chatInput') chatInput!: ElementRef;
   @ViewChild('replyInput') replyInput!: ElementRef;
 
@@ -62,6 +63,7 @@ export class MessageInputComponent implements OnInit {
     public globalVariablesService: GlobalVariablesService
   ) {
     this.popupService.messageInputComponent = this;
+
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
     });

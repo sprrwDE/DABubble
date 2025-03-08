@@ -7,6 +7,7 @@ import { UserService } from './user.service';
 import { User } from '../models/user.model';
 import { PanelService } from './panel.service';
 import { MainChatService } from './main-chat.service';
+import { PopupService } from '../../popup/popup.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,8 @@ export class SearchChatService {
     private directChatService: DirectChatService,
     private userService: UserService,
     private panelService: PanelService,
-    private mainChatService: MainChatService
+    private mainChatService: MainChatService,
+    private popupService: PopupService
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -95,6 +97,10 @@ export class SearchChatService {
     this.resetDirectChat();
     this.resetSearchChat();
     this.scrollToActiveChannel();
+
+    setTimeout(() => {
+      this.popupService.messageInputComponent.chatInput.nativeElement.focus();
+    }, 50);
   }
 
   setSearchChat() {
@@ -106,6 +112,7 @@ export class SearchChatService {
 
   setCurrentDirectChat(user: User) {
     this.mainChatService.showMainChat = true;
+
     this.resetPanelAndChat();
     this.resetChannelChat();
     this.resetSearchChat();
@@ -113,6 +120,10 @@ export class SearchChatService {
     const directChat = this.findExistingDirectChat(user);
     this.updateDirectChatState(directChat, user);
     this.scrollToActiveContact();
+
+    setTimeout(() => {
+      this.popupService.messageInputComponent.chatInput.nativeElement.focus();
+    }, 100);
   }
 
   public resetPanelAndChat(isSearching: boolean = false) {
