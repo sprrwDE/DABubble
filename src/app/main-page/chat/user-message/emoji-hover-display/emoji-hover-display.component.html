@@ -1,7 +1,4 @@
-<div
-  class="emoji-hover-popup"
-  [ngStyle]="{ top: position?.top, left: position?.left }"
->
+<div class="emoji-hover-popup">
   <p>{{ emoji }}</p>
   <div>{{ firstLike }}</div>
   <div *ngIf="likers.length > 1">

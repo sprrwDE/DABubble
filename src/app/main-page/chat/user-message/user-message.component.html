@@ -297,13 +297,13 @@
     <!-- EMOJI CONTAINER -->
     <div
       *ngIf="likes?.length || [].length > 0"
-      class="flex items-center overflow-x-auto gap-[8px] flex-wrap"
+      class="flex items-center relative gap-[8px] flex-wrap"
     >
       <!-- EMOJI RENDERN -->
       @for (like of sortedLikes(); track $index) { @if(like.count > 0) {
       <div
         *ngIf="likes?.length || [].length > 0"
-        class="relative cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
+        class="emoji relative cursor-pointer flex items-center gap-[10px] border-[1px] border-lines rounded-[20px] py-[5px] px-[10px]"
         (click)="
           $event.stopPropagation();
           reactOnEmoji(
@@ -314,24 +314,21 @@
             likes
           )
         "
-        (mouseover)="showHoverPopup($event, like)"
-        (mouseleave)="hideHoverPopup()"
       >
         <span>{{ like.emoji }}</span>
         <span class="text-[16px]">{{ like.count }}</span>
 
-      </div>
-
-      } }
-        <!-- Floating Popup -->
         <app-emoji-hover-display
-        *ngIf="hoverPopupVisible"
-        [emoji]="hoveredEmoji"
-        [likers]="hoveredLikers"
-        [position]="hoverPopupPosition"
-        [firstLike]="firstLike?.name"
-        class="emoji-hover-popup"
+          [emoji]="like.emoji"
+          [likers]="like.userIds"
+          [firstLike]="returnFirstLike(like)"
+          class="emoji-hover-popup absolute"
         ></app-emoji-hover-display>
+      </div>
+      } }
+
+      <!-- Floating Popup -->
+
       <!-- add Emoji-btn -->
       <div
         class="add-icon-btn bg-white p-[5px] rounded-full hover-primary-bg transition-svg-text scale-90 hover:scale-100"
@@ -482,4 +479,3 @@
   (emojiSelectedEvent)="insertEmoji($event)"
 >
 </app-emoji-picker>
-

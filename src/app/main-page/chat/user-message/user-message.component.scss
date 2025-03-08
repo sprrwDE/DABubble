@@ -65,3 +65,23 @@
     @apply bg-bg;
   }
 }
+
+.emoji {
+  position: relative;
+
+  &:hover {
+    .emoji-hover-popup {
+      transform: scale(1);
+    }
+  }
+
+  .emoji-hover-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    transition: 0.2s ease-in-out;
+
+    transform: scale(0);
+  }
+}
