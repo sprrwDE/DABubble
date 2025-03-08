@@ -12,6 +12,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/models/user.model';
 import { Firestore, setDoc, doc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,8 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private users: UserService
   ) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, this.nameValidator]],  // Hier ist es korrekt
@@ -120,12 +122,22 @@ export class RegisterComponent {
   async registerUser() {
     this.errorMessage = null;  // Fehler zurücksetzen
 
+    // Prüfen, ob die E-Mail bereits existiert
+    const emailExists = this.users.allUsers.some((user) => user.email == this.contactForm.value.email.toLowerCase());
+
+    if (emailExists) {
+      this.errorMessage = "*Diese E-Mail-Adresse wird bereits verwendet.";
+      return; // Registrierung abbrechen, bevor wir in den try-Block kommen
+    }
+
     try {
+      // Benutzer registrieren
       const userCredential = await this.authService.register(
         this.contactForm.value.email,
         this.contactForm.value.password
       );
 
+      // Neues Benutzerobjekt erstellen
       const user = new User({
         id: userCredential.user?.uid,
         email: userCredential.user?.email || '',
@@ -135,8 +147,12 @@ export class RegisterComponent {
         isNotGoogle: true,
       });
 
+      // Benutzer in Firebase speichern
       await this.addUserToFirebase(user);
+
+      // Nutzer weiterleiten
       this.routeId(user.id);
+
     } catch (error: any) {
       if (error?.code === 'auth/email-already-in-use') {
         this.errorMessage = '*Diese E-Mail-Adresse wird bereits verwendet.';
@@ -149,6 +165,7 @@ export class RegisterComponent {
       }
     }
   }
+
 
   resetError() {
     this.errorMessage = null

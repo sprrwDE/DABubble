@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, onAuthStateChanged, User, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, onAuthStateChanged, User, sendPasswordResetEmail, user } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -25,6 +25,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<UserCredential | null> {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      console.log("hier, ", userCredential)
       return userCredential;
     } catch (error) {
       return null;
