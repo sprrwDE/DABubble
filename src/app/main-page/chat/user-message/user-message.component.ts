@@ -38,7 +38,14 @@ interface TargetData {
 @Component({
   selector: 'app-user-message',
   standalone: true,
-  imports: [NgClass, NgIf, EmojiPickerComponent, CommonModule, FormsModule, EmojiHoverDisplayComponent],
+  imports: [
+    NgClass,
+    NgIf,
+    EmojiPickerComponent,
+    CommonModule,
+    FormsModule,
+    EmojiHoverDisplayComponent,
+  ],
   templateUrl: './user-message.component.html',
   styleUrl: './user-message.component.scss',
 })
@@ -71,7 +78,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   public currentChannel: Channel = new Channel();
   public currentDirectChat: DirectChat = new DirectChat();
   public emojiInput$: Subject<string> = new Subject<string>();
-  public firstLike: User | undefined
+  public firstLike: User | undefined;
 
   constructor(
     private panelService: PanelService,
@@ -498,27 +505,27 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   hoverPopupVisible = false;
-hoveredEmoji: string | null = null;
-hoveredLikers: any[] = [];
-hoverPopupPosition = { top: '0px', left: '0px' };
+  hoveredEmoji: string | null = null;
+  hoveredLikers: any[] = [];
+  hoverPopupPosition = { top: '0px', left: '0px' };
 
-showHoverPopup(event: MouseEvent, like: any) {
-  console.log(like)
-  this.hoveredEmoji = like.emoji;
-  this.hoveredLikers = like.userIds
+  showHoverPopup(event: MouseEvent, like: any) {
+    console.log(like);
+    this.hoveredEmoji = like.emoji;
+    this.hoveredLikers = like.userIds;
 
+    this.firstLike = this.userService.allUsers.find(
+      (user) => user.id === like.userIds[0]
+    );
+    this.hoverPopupVisible = true;
 
-  this.firstLike = this.userService.allUsers.find(user => user.id === like.userIds[0]);
-  this.hoverPopupVisible = true;
+    this.hoverPopupPosition = {
+      top: `${event.clientY + 10}px`,
+      left: `${event.clientX + 10}px`,
+    };
+  }
 
-  this.hoverPopupPosition = {
-    top: `${event.clientY + 10}px`,
-    left: `${event.clientX + 10}px`,
-  };
-}
-
-hideHoverPopup() {
-  this.hoverPopupVisible = false;
-}
-
+  hideHoverPopup() {
+    this.hoverPopupVisible = false;
+  }
 }

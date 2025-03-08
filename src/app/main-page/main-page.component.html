@@ -159,4 +159,10 @@
     [popupType]="'add-users-to-new-channel'"
     (closePopupEvent)="showCreateChannelAddPeoplePopup = false"
   ></app-popup>
+
+  <!-- loading screen -->
+  <div
+    *ngIf="loading"
+    class="fixed bottom-0 left-0 w-full h-full bg-black/50 z-[99999999]"
+  ></div>
 </section>

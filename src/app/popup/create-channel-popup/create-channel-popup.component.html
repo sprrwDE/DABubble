@@ -81,7 +81,8 @@
   </div>
 
   <p *ngIf="showErrorText" class="text-error mt-[-10px]">
-    Bitte geben Sie einen Namen ein
+    <span *ngIf="noNameErrorText">Bitte geben Sie einen Namen ein</span>
+    <span *ngIf="!noNameErrorText">Dieser Channel Name existiert bereits</span>
   </p>
 
   <div class="flex flex-col gap-[20px]">

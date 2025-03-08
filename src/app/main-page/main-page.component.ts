@@ -163,6 +163,10 @@ export class MainPageComponent {
     this.mainChatService.currentEditMessageId = value;
   }
 
+  get loading() {
+    return this.globalVariablesService.loading;
+  }
+
   // Füge Event-Listener für Fenster/Tab-Schließung hinzu
   @HostListener('window:beforeunload')
   onBeforeUnload() {

@@ -38,6 +38,10 @@ export class PopupComponent {
 
   isMobile: any;
 
+  set showErrorText(value: boolean) {
+    this.popupService.showCreateChannelPopupErrorText = value;
+  }
+
   constructor(
     public popupService: PopupService,
     public globalService: GlobalVariablesService,
@@ -52,5 +56,6 @@ export class PopupComponent {
     this.popupService.resetEditStates();
     this.closePopupEvent.emit();
     this.addUserService.resetLists();
+    this.showErrorText = false;
   }
 }

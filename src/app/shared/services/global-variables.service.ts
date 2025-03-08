@@ -8,6 +8,7 @@ export class GlobalVariablesService {
   // Signal, das den mobilen Zustand speichert
   isMobile = signal(window.innerWidth < 768);
   isTablet = signal(window.innerWidth < 1280);
+  loading = false;
 
   constructor(private channelService: ChannelService) {
     // Initialen Zustand setzen
@@ -21,15 +22,21 @@ export class GlobalVariablesService {
 
   private updateIsMobile() {
     this.isMobile.set(window.innerWidth < 768);
-
   }
 
   private updateIsTablet() {
     this.isTablet.set(window.innerWidth < 1280);
-
   }
 
   handleImageError(event: any) {
     event.target.src = 'imgs/avatar/profile.svg';
+  }
+
+  showLoadingScreen() {
+    this.loading = true;
+  }
+
+  hideLoadingScreen() {
+    this.loading = false;
   }
 }

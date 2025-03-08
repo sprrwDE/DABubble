@@ -26,7 +26,7 @@ export class AddUsersToNewChannelComponent {
 
   showUserPopup: boolean = false;
   nameInput: string = '';
-  addAllMembers: boolean = true; 
+  addAllMembers: boolean = true;
 
   isMobile: any;
   loggedInUser: any;
@@ -88,16 +88,9 @@ export class AddUsersToNewChannelComponent {
     this.display = value;
   }
 
-  showAddUsersToChannelPopup() {
-    if (this.channel.name.trim() !== '') {
-      this.showCreateChannelAddPeoplePopup = true;
-
-      if (this.channel.description.trim() === '')
-        this.channel.description = 'No description';
-    } else this.showErrorText = true;
-  }
-
   async createChannel() {
+    this.globalVariablesService.showLoadingScreen();
+
     this.populateChannelUsers();
     this.setChannelMetadata();
 
@@ -106,6 +99,8 @@ export class AddUsersToNewChannelComponent {
     this.searchChatService.setCurrentChannel(new Channel(data));
     this.resetUserServices();
     this.resetUI();
+
+    this.globalVariablesService.hideLoadingScreen();
   }
 
   private populateChannelUsers() {
@@ -203,7 +198,6 @@ export class AddUsersToNewChannelComponent {
     if (this.addAllMembers) {
       this.showCreateChannelAddPeopleInput = false;
     }
-    this.resetUserServices()
+    this.resetUserServices();
   }
-
 }

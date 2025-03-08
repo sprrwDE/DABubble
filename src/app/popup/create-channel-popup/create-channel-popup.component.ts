@@ -1,4 +1,12 @@
-import { Component, effect, EventEmitter, Output, Input } from '@angular/core';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  Output,
+  Input,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../popup.service';
 import { Channel } from '../../shared/models/channel.model';
@@ -27,6 +35,8 @@ export class CreateChannelPopupComponent {
 
   isMobile: any;
   loggedInUser: any;
+
+  noNameErrorText: boolean = true;
 
   constructor(
     public popupService: PopupService,
@@ -87,13 +97,43 @@ export class CreateChannelPopupComponent {
     return this.userService.allUsers;
   }
 
-  showAddUsersToChannelPopup() {
-    if (this.channel.name.trim() !== '') {
-      this.showCreateChannelAddPeoplePopup = true;
+  get allChannels() {
+    return this.channelService.allChannels;
+  }
 
-      if (this.channel.description.trim() === '')
-        this.channel.description = 'No description';
-    } else this.showErrorText = true;
+  showAddUsersToChannelPopup(): void {
+    if (this.isChannelNameEmpty()) {
+      this.showErrorText = true;
+      this.noNameErrorText = true;
+      return;
+    }
+
+    if (this.doesChannelNameExist()) {
+      this.showErrorText = true;
+      this.noNameErrorText = false;
+      return;
+    }
+
+    this.showCreateChannelAddPeoplePopup = true;
+    this.showErrorText = false;
+    this.setDefaultDescription();
+  }
+
+  private isChannelNameEmpty(): boolean {
+    return this.channel.name.trim() === '';
+  }
+
+  private doesChannelNameExist(): boolean {
+    return this.allChannels.some(
+      (channel) =>
+        channel.name.trim().toLowerCase() ===
+        this.channel.name.trim().toLowerCase()
+    );
+  }
+
+  private setDefaultDescription(): void {
+    if (this.channel.description.trim() === '')
+      this.channel.description = 'No description';
   }
 
   addMemberToNewChannel(event: Event) {
@@ -138,6 +178,7 @@ export class CreateChannelPopupComponent {
     this.popupService.createChannelPopupOpen = false;
     this.showUserPopup = false;
     this.showCreateChannelAddPeoplePopup = false;
+    this.showErrorText = false;
 
     this.popupService.createChannelPopupChannel = new Channel();
     this.addUserService.userToAdd = [];
