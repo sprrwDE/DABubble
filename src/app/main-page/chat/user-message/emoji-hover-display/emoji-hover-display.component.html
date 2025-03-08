@@ -1,7 +1,10 @@
 <div class="emoji-hover-popup">
   <p>{{ emoji }}</p>
   <div>{{ firstLike }}</div>
-  <div *ngIf="likers.length > 1">
+  <div *ngIf="likers.length == 2">
+    Und {{ likers.length - 1 }} weiteres Mitglied
+  </div>
+  <div *ngIf="likers.length > 2">
     Und {{ likers.length - 1 }} weitere Mitglieder
   </div>
 </div>
