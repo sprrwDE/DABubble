@@ -25,7 +25,6 @@ export class AuthService {
   async login(email: string, password: string): Promise<UserCredential | null> {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log("hier, ", userCredential)
       return userCredential;
     } catch (error) {
       return null;
