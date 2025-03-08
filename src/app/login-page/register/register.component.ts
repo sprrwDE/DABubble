@@ -31,7 +31,7 @@ export class RegisterComponent {
     private firestore: Firestore
   ) {
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, this.nameValidator]],  // Hier ist es korrekt
+      name: ['', [Validators.required, this.nameValidator]], // Hier ist es korrekt
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       terms: [false, Validators.requiredTrue],
@@ -41,12 +41,11 @@ export class RegisterComponent {
     });
   }
 
-
   nameValidator(control: AbstractControl): ValidationErrors | null {
     const value: string = control.value?.trim() || '';
 
     if (value.length <= 0) {
-      return null
+      return null;
     }
 
     if (value.length < 3) {
@@ -60,13 +59,15 @@ export class RegisterComponent {
     return null; // Kein Fehler
   }
 
-
   get nameErrorMessage(): string | null {
     const control = this.contactForm.get('name');
-    if (!control || !control.errors || !control.touched || control == null) return null;
+    if (!control || !control.errors || !control.touched || control == null)
+      return null;
 
-    if (control.errors['nameTooShort']) return 'Der Name muss mindestens 3 Zeichen lang sein';
-    if (control.errors['onlyNumbers']) return 'Der Name darf nicht nur aus Zahlen bestehen';
+    if (control.errors['nameTooShort'])
+      return 'Der Name muss mindestens 3 Zeichen lang sein';
+    if (control.errors['onlyNumbers'])
+      return 'Der Name darf nicht nur aus Zahlen bestehen';
 
     return null;
   }
@@ -89,7 +90,6 @@ export class RegisterComponent {
       }
     }
 
-
     return null; // Kein Fehler
   }
   onSubmit() {
@@ -101,7 +101,19 @@ export class RegisterComponent {
   }
 
   emailValidator(control: AbstractControl) {
-    const validTLDs = ['com', 'net', 'org', 'de', 'edu', 'gov', 'io', 'ai', 'co', 'us', 'uk']; // Liste der erlaubten TLDs
+    const validTLDs = [
+      'com',
+      'net',
+      'org',
+      'de',
+      'edu',
+      'gov',
+      'io',
+      'ai',
+      'co',
+      'us',
+      'uk',
+    ]; // Liste der erlaubten TLDs
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,})$/;
 
     const match = control.value.match(emailRegex);
@@ -116,9 +128,8 @@ export class RegisterComponent {
     return null;
   }
 
-
   async registerUser() {
-    this.errorMessage = null;  // Fehler zurücksetzen
+    this.errorMessage = null; // Fehler zurücksetzen
 
     try {
       const userCredential = await this.authService.register(
@@ -151,9 +162,8 @@ export class RegisterComponent {
   }
 
   resetError() {
-    this.errorMessage = null
+    this.errorMessage = null;
   }
-
 
   routeId(userId: string) {
     this.router.navigate(['/login/avatar/', userId]);
