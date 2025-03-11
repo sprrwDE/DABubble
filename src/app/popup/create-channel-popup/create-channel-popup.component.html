@@ -83,6 +83,9 @@
   <p *ngIf="showErrorText" class="text-error mt-[-10px]">
     <span *ngIf="noNameErrorText">Bitte geben Sie einen Namen ein</span>
     <span *ngIf="!noNameErrorText">Dieser Channel Name existiert bereits</span>
+    <span *ngIf="nameInputTooLong">
+      Der Channel Name ist zu lang. Bitte geben Sie einen kürzeren Namen ein
+    </span>
   </p>
 
   <div class="flex flex-col gap-[20px]">

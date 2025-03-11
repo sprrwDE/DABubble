@@ -310,6 +310,7 @@
           [ngClass]="{ 'active-channel': channel.id === currentChannel.id }"
         >
           <svg
+            class="min-w-[24px] min-h-[25px]"
             width="24"
             height="25"
             viewBox="0 0 24 25"
@@ -335,7 +336,7 @@
             </g>
           </svg>
 
-          <p>{{ channel.name }}</p>
+          <p class="truncate">{{ channel.name }}</p>
         </div>
 
         <div

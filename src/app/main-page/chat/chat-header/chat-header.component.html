@@ -11,10 +11,10 @@
   <div
     *ngIf="!isDirectChat && !searchChat"
     (click)="openChannelDetailsPopup()"
-    class="hover-primary-bg relative rounded-[100px] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
+    class="hover-primary-bg relative rounded-[100px] max-w-[70%] px-[10px] py-[6px] transition-svg-text flex items-center gap-[10px]"
   >
     <svg
-      class="h-[27px] w-[32px] md:h-[33px]"
+      class="min-h-[27px] min-w-[32px] h-[27px] w-[32px] md:h-[33px] md:min-h-[33px]"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@
       />
     </svg>
 
-    <h2 class="text-[20px] md:text-[24px] font-bold min-w-[max-content]">
+    <h2 class="text-[20px] truncate max-w-[100%] md:text-[24px] font-bold">
       {{ currentChannel.name || "lädt..." }}
     </h2>
 
@@ -61,7 +61,7 @@
     <div
       #memberListContainer
       *ngIf="this.currentChannel.users.length > 0 && !this.isMobile"
-      class="relative hover-primary-bg transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
+      class="relative hover-primary-bg min-w-[max-content] transition-svg-text rounded-[30px] px-[10px] py-[3px] flex items-center gap-[10px]"
       (click)="openMemberListPopup(false)"
     >
       <div class="flex items-center">

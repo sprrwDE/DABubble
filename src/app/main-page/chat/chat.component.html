@@ -47,6 +47,7 @@
       >
         <div class="flex gap-[10px]">
           <svg
+            class="min-w-[32px] min-h-[33px] w-[32px] h-[33px]"
             width="32"
             height="33"
             viewBox="0 0 32 33"
@@ -64,13 +65,16 @@
           </h2>
         </div>
 
-        <p class="flex gap-[5px]">
+        <p class="flex flex-wrap gap-[5px]">
           <span>
             <span *ngIf="loggedInUser.id === currentChannel.channelCreatorId">
               Du hast
             </span>
 
-            <span *ngIf="loggedInUser.id !== currentChannel.channelCreatorId">
+            <span
+              *ngIf="loggedInUser.id !== currentChannel.channelCreatorId"
+              class=""
+            >
               {{
                 userService.getUserById(currentChannel.channelCreatorId)
                   ?.name || "lädt..."

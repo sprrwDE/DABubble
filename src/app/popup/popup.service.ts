@@ -4,6 +4,7 @@ import { CreateChannelPopupComponent } from './create-channel-popup/create-chann
 import { MemberListPopupComponent } from './member-list-popup/member-list-popup.component';
 import { Channel } from '../shared/models/channel.model';
 import { MessageInputComponent } from '../main-page/chat/message-input/message-input.component';
+import { ChannelDetailsPopupComponent } from './channel-details-popup/channel-details-popup.component';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,8 @@ import { MessageInputComponent } from '../main-page/chat/message-input/message-i
 export class PopupService {
   editChannelName = false;
   editChannelDescription = false;
+  channelNameInputTooLong: boolean = false;
+  channelNameExistsError: boolean = false;
 
   showAddMembersPopup = false;
 
@@ -35,7 +38,8 @@ export class PopupService {
 
   channelDetailsPopupOpen: boolean = false;
 
-  channelDetailsPopup!: CreateChannelPopupComponent;
+  createChannelPopupComponent!: CreateChannelPopupComponent;
+  channelDetailsPopupComponent!: ChannelDetailsPopupComponent;
   memberListPopup!: MemberListPopupComponent;
   messageInputComponent!: MessageInputComponent;
 
@@ -47,10 +51,15 @@ export class PopupService {
   }
 
   resetEditStates() {
-    if (this.channelDetailsPopup) {
-      this.channelDetailsPopup.channel.name = '';
-      this.channelDetailsPopup.channel.description = '';
-      this.channelDetailsPopup.channel.users = [];
+    if (this.createChannelPopupComponent) {
+      this.createChannelPopupComponent.channel.name = '';
+      this.createChannelPopupComponent.channel.description = '';
+      this.createChannelPopupComponent.channel.users = [];
+    }
+
+    if (this.channelDetailsPopupComponent) {
+      this.channelDetailsPopupComponent.channelNameInput = '';
+      this.channelDetailsPopupComponent.channelDescriptionInput = '';
     }
 
     this.showCreateChannelPopupErrorText = false;
@@ -60,5 +69,8 @@ export class PopupService {
     this.editingUserProfile = false;
     this.toggleAvatarSelection = false;
     this.showAddMembersPopup = false;
+
+    this.channelNameInputTooLong = false;
+    this.channelNameExistsError = false;
   }
 }

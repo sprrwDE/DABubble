@@ -34,6 +34,8 @@ export class ChannelDetailsPopupComponent {
     public globalVariablesService: GlobalVariablesService,
     public searchChatService: SearchChatService
   ) {
+    this.popupService.channelDetailsPopupComponent = this;
+
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });
@@ -71,21 +73,87 @@ export class ChannelDetailsPopupComponent {
     return this.userService.allUsers;
   }
 
-  editChannelNameFunction() {
-    if (this.channelNameInput !== '') {
-      this.channelService.editChannelName(
-        this.currentChannel.id,
-        this.channelNameInput
-      );
+  get channelNameInputTooLong() {
+    return this.popupService.channelNameInputTooLong;
+  }
 
-      this.editChannelName = false;
+  get channelNameExistsError() {
+    return this.popupService.channelNameExistsError;
+  }
 
-      this.channelNameInput = '';
-    } else this.editChannelName = false;
+  set channelNameInputTooLong(value: boolean) {
+    this.popupService.channelNameInputTooLong = value;
+  }
+
+  set channelNameExistsError(value: boolean) {
+    this.popupService.channelNameExistsError = value;
+  }
+
+  editChannelNameFunction(): void {
+    if (!this.isValidChannelNameChange()) {
+      this.resetChannelNameState();
+      return;
+    }
+
+    if (this.isChannelNameTooLong()) {
+      this.setChannelNameTooLongError();
+      return;
+    }
+
+    if (this.channelNameExists()) {
+      this.setChannelNameExistsError();
+      return;
+    }
+
+    this.updateChannelName();
+    this.resetChannelNameState();
+  }
+
+  private isValidChannelNameChange(): boolean {
+    return (
+      this.channelNameInput.trim() !== '' &&
+      this.channelNameInput.trim() !== this.currentChannel.name.trim()
+    );
+  }
+
+  private setChannelNameTooLongError(): void {
+    this.channelNameInputTooLong = true;
+    this.channelNameExistsError = false;
+  }
+
+  private setChannelNameExistsError(): void {
+    this.channelNameInputTooLong = false;
+    this.channelNameExistsError = true;
+  }
+
+  private updateChannelName(): void {
+    this.channelService.editChannelName(
+      this.currentChannel.id,
+      this.channelNameInput
+    );
+  }
+
+  private resetChannelNameState(): void {
+    this.channelNameInput = '';
+    this.editChannelName = false;
+    this.channelNameExistsError = false;
+    this.channelNameInputTooLong = false;
+  }
+
+  private channelNameExists(): boolean {
+    return this.channelService.allChannels.some(
+      (channel) =>
+        channel.name.trim().toLowerCase() ===
+        this.channelNameInput.trim().toLowerCase()
+    );
+  }
+
+  private isChannelNameTooLong(): boolean {
+    return this.channelNameInput.trim().length > 20;
   }
 
   editChannelDescriptionFunction() {
-    if (this.channelDescriptionInput !== '') {
+    if (this.channelDescriptionInput.trim() !== '') {
       this.channelService.editChannelDescription(
         this.currentChannel.id,
         this.channelDescriptionInput
@@ -120,7 +188,7 @@ export class ChannelDetailsPopupComponent {
 
   closePopup() {
     this.popupService.resetEditStates();
-
+    this.resetChannelNameState();
     this.closePopupEvent.emit();
   }
 

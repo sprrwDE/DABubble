@@ -140,6 +140,18 @@
         />
       </div>
 
+      <p
+        *ngIf="channelNameInputTooLong || channelNameExistsError"
+        class="text-error mt-[-10px]"
+      >
+        <span *ngIf="channelNameInputTooLong">
+          Der Channel Name ist zu lang. Bitte geben Sie einen kürzeren Namen ein
+        </span>
+        <span *ngIf="channelNameExistsError">
+          Dieser Channel Name existiert bereits
+        </span>
+      </p>
+
       <div *ngIf="!editChannelName" class="flex items-center gap-[10px]">
         <svg
           width="23"
@@ -266,7 +278,8 @@
                 [ngClass]="{
                   'bg-online':
                     userService.getUserById(userId)?.status === 'online',
-                    'bg-orange-400': userService.getUserById(userId)?.status === 'abwesend',
+                  'bg-orange-400':
+                    userService.getUserById(userId)?.status === 'abwesend',
                   'bg-disable':
                     userService.getUserById(userId)?.status === 'offline'
                 }"
@@ -276,7 +289,7 @@
             <p>
               {{ userService.getUserById(userId)?.name || "NoName" }}
               <span *ngIf="userId === loggedInUser?.id">(Du)</span>
-           </p>
+            </p>
           </div>
         </div>
 

@@ -37,6 +37,7 @@ export class CreateChannelPopupComponent {
   loggedInUser: any;
 
   noNameErrorText: boolean = true;
+  nameInputTooLong: boolean = false;
 
   constructor(
     public popupService: PopupService,
@@ -54,7 +55,7 @@ export class CreateChannelPopupComponent {
       this.isMobile = this.globalVariablesService.isMobile();
     });
 
-    this.popupService.channelDetailsPopup = this;
+    this.popupService.createChannelPopupComponent = this;
   }
 
   get channel() {
@@ -105,12 +106,22 @@ export class CreateChannelPopupComponent {
     if (this.isChannelNameEmpty()) {
       this.showErrorText = true;
       this.noNameErrorText = true;
+      this.nameInputTooLong = false;
+
+      return;
+    }
+
+    if (this.isChannelNameTooLong()) {
+      this.showErrorText = true;
+      this.noNameErrorText = true;
+      this.nameInputTooLong = true;
       return;
     }
 
     if (this.doesChannelNameExist()) {
       this.showErrorText = true;
       this.noNameErrorText = false;
+      this.nameInputTooLong = false;
       return;
     }
 
@@ -129,6 +140,10 @@ export class CreateChannelPopupComponent {
         channel.name.trim().toLowerCase() ===
         this.channel.name.trim().toLowerCase()
     );
+  }
+
+  private isChannelNameTooLong(): boolean {
+    return this.channel.name.trim().length > 20;
   }
 
   private setDefaultDescription(): void {
