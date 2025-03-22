@@ -150,6 +150,7 @@
       class="popup-input-container overflow-visible flex items-center"
       (click)="searchChatInput.focus()"
       (click)="showSearchPopup($event)"
+      (click)="searchChatService.searchChats()"
     >
       <input
         type="text"

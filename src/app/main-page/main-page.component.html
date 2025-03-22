@@ -39,7 +39,7 @@
     ></app-chat>
 
     <app-reply-panel
-      class="w-[450px] duration-300 max-w-full md:max-w-[450px] overflow-hidden"
+      class="w-[450px] duration-300 max-w-full md:max-w-[450px] overflow-hidden z-[1]"
       [ngClass]="{
         'w-px': !panelService.isReplyPanelOpen,
         'w-full': panelService.isReplyPanelOpen

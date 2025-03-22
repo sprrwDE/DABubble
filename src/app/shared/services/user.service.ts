@@ -60,6 +60,10 @@ export class UserService {
       if (a.id === loggedInUserId) return -1;
       if (b.id === loggedInUserId) return 1;
 
+      // Online-Benutzer kommen als nächstes
+      if (a.status === 'online' && b.status !== 'online') return -1;
+      if (a.status !== 'online' && b.status === 'online') return 1;
+
       // Prüfe ob name existiert
       const nameA = a.name || '';
       const nameB = b.name || '';

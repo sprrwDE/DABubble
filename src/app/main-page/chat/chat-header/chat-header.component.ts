@@ -30,8 +30,6 @@ export class ChatHeaderComponent {
   @ViewChild('memberListContainer')
   memberListContainer!: ElementRef<HTMLDivElement>;
 
-  
-
   currentChannel: Channel = new Channel();
   channelDetailsPopupType: string = '';
   channelDetailsPopupCorner: string = '';
@@ -43,6 +41,9 @@ export class ChatHeaderComponent {
   isMobile: boolean = false;
   memberListContainerWidth: boolean = false;
 
+  @ViewChild('searchChatInput')
+  searchChatInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private channelService: ChannelService,
     public userService: UserService,
@@ -51,6 +52,8 @@ export class ChatHeaderComponent {
     public searchChatService: SearchChatService,
     public globalVariablesService: GlobalVariablesService
   ) {
+    this.searchChatService.chatHeaderComponent = this;
+
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
     });

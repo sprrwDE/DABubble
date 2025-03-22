@@ -13,7 +13,7 @@
     </div>
 
     <svg
-      (click)="searchChatService.setSearchChat()"
+      (click)="searchChatService.setSearchChat($event)"
       class="hover-primary p-[8px] box-content"
       width="24"
       height="24"
@@ -361,7 +361,7 @@
         <!-- Add Channel btn -->
         <div
           *ngIf="channelService.filterAllChannels().length > 0"
-          class="hover-primarytransition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
+          class="hover-primary transition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
           (click)="openCreateChannelPopup()"
         >
           <svg
@@ -476,7 +476,7 @@
             />
             <div
               [ngClass]="{
-                'bg-online': user.status === 'online' || user.id === 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1',
+                'bg-online': user.status === 'online',
                 'bg-disable': user.status === 'offline',
                 'bg-orange-400': user.status === 'abwesend',
               }"
@@ -503,7 +503,7 @@
   <!-- show search chat input for mobile -->
   <div
     *ngIf="!showMainChat"
-    (click)="searchChatService.setSearchChat()"
+    (click)="searchChatService.setSearchChat($event)"
     class="md:hidden flex justify-center items-center bg-primary rounded-full p-[10px] fixed bottom-[30px] right-[16px]"
   >
     <svg

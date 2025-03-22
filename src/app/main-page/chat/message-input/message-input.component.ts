@@ -62,7 +62,9 @@ export class MessageInputComponent implements OnInit {
     private popupService: PopupService,
     public globalVariablesService: GlobalVariablesService
   ) {
-    this.popupService.messageInputComponent = this;
+    this.popupService.registerMessageInputComponent(this);
+
+    console.log(this);
 
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
@@ -83,6 +85,11 @@ export class MessageInputComponent implements OnInit {
 
     effect(() => {
       this.currentChannel = this.channelService.currentChannel();
+    });
+
+    effect(() => {
+      this.currentDirectChatUser =
+        this.directChatService.currentDirectChatUser();
     });
   }
 
@@ -147,9 +154,12 @@ export class MessageInputComponent implements OnInit {
   }
 
   private getUserIdsFromCurrentChat(): string[] {
-    if (this.currentChannel.id === '' && this.currentDirectChat.id !== '')
-      return [...new Set(this.currentDirectChat.userIds)];
-    return this.currentChannel.users;
+    if (this.currentChannel.id !== '') return this.currentChannel.users;
+    else {
+      if (this.loggedInUser.id !== this.currentDirectChatUser.id)
+        return [this.currentDirectChatUser.id, this.loggedInUser.id];
+      else return [this.currentDirectChatUser.id];
+    }
   }
 
   private appendAtSymbolToMessage(): void {
@@ -188,14 +198,17 @@ export class MessageInputComponent implements OnInit {
   }
 
   private resetTaggingState(): void {
-    this.showUserPopup = false;
-    this.chatInput.nativeElement.focus();
     this.allUserIds = [];
+    this.showUserPopup = false;
+
+    if (this.isReplyInput) this.replyInput.nativeElement.focus();
+    else this.chatInput.nativeElement.focus();
   }
 
   tagUser(userId: string): void {
     if (this.isReplyInput) this.appendUserTagToReply(userId);
     else this.appendUserTagToMessage(userId);
+
     this.resetTaggingState();
   }
 
@@ -253,11 +266,15 @@ export class MessageInputComponent implements OnInit {
       this.currentDirectChatUser.id,
     ];
 
+    this.globalVariablesService.showLoadingScreen();
+
     const chatId = await this.directChatService.addDirectChat(
       this.directChat.toJSON()
     );
 
     if (chatId) this.updateDirectChat(chatId);
+
+    this.globalVariablesService.hideLoadingScreen();
   }
 
   private updateDirectChat(chatId: string) {
@@ -322,6 +339,9 @@ export class MessageInputComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.unsubLoggedInUser) this.unsubLoggedInUser.unsubscribe();
+    if (this.unsubLoggedInUser) {
+      this.unsubLoggedInUser.unsubscribe();
+    }
+    this.popupService.unregisterMessageInputComponent(this);
   }
 }

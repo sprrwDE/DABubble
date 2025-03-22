@@ -370,6 +370,12 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   public saveEditedMessage(): void {
+    if (this.editedMessage.trim() === '') {
+      this.resetEditMessage();
+      console.log('editedMessage is empty');
+
+      return;
+    }
     if (this.isInChannelChat()) this.handleChannelMessageEdit();
     else this.handleDirectMessageEdit();
 
@@ -450,26 +456,32 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   }
 
   private formatMentions(message: string): string {
-    // Suche nach @-Mentions
+    let formattedMessage: string = this.replaceMentionsWithSpan(message);
+    formattedMessage = this.replaceNameOccurrencesWithSpan(formattedMessage);
+    return formattedMessage;
+  }
+
+  private replaceMentionsWithSpan(message: string): string {
     const mentionPattern: RegExp = /@([\w\s.-]+)/g;
-    let formattedMessage = message.replace(
+    return message.replace(
       mentionPattern,
       (match: string, username: string) => {
-        const trimmedUsername = username.trim();
+        const trimmedUsername: string = username.trim();
         const user: string | undefined =
           this.findUserByMention(trimmedUsername);
         return user ? this.createMentionSpan(trimmedUsername) : match;
       }
     );
+  }
 
-    // Suche nach Namen ohne @-Symbol
-    const allUsers = this.currentChannel.users
-      .map((userId: string) => this.userService.getUserById(userId)?.name)
-      .filter(Boolean);
+  private replaceNameOccurrencesWithSpan(message: string): string {
+    const userIds: string[] = this.getRelevantUserIds();
+    const allUsernames: string[] = this.getUsernamesFromIds(userIds);
 
-    allUsers.forEach((username) => {
+    let formattedMessage: string = message;
+    allUsernames.forEach((username: string) => {
       if (username) {
-        const namePattern = new RegExp(
+        const namePattern: RegExp = new RegExp(
           `@\\b${username}\\b(?![^<]*>|[^<>]*</)`,
           'g'
         );
@@ -484,8 +496,24 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
     return formattedMessage;
   }
 
+  private getUsernamesFromIds(userIds: string[]): string[] {
+    return userIds
+      .map((userId: string) => this.userService.getUserById(userId)?.name)
+      .filter(Boolean) as string[];
+  }
+
+  private getRelevantUserIds(): string[] {
+    if (this.currentChannel.id !== '') return this.currentChannel.users;
+    else if (this.currentDirectChat.id !== '')
+      return this.currentDirectChat.userIds || [];
+
+    return [];
+  }
+
   private findUserByMention(username: string): string | undefined {
-    return this.currentChannel.users.find(
+    const userIds: string[] = this.getRelevantUserIds();
+
+    return userIds.find(
       (userId: string) =>
         this.userService.getUserById(userId)?.name === username
     );

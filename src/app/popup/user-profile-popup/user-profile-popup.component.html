@@ -96,7 +96,7 @@
         (click)="editingUserProfile = true"
         class="text-[18px] text-hover cursor-pointer hover:font-bold"
         *ngIf="
-          loggedInUserData.id != 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1' &&
+          loggedInUserData.id != 'Tnp4hocBhBe9U1Cbemu1cVAvW9Z2' &&
           loggedInUserData.isNotGoogle
         "
       >
@@ -194,19 +194,24 @@
 
   <span *ngIf="nameErrorMessage" class="text-error text-sm mt-2">
     {{ nameErrorMessage }}
-  </span>  
+  </span>
 
   <div
     *ngIf="editingUserProfile"
     class="flex items-center justify-center w-full gap-[32px]"
   >
-    <button 
-    (click)="editingUserProfile = false" class="white-btn">
+    <button (click)="editingUserProfile = false" class="white-btn">
       Abbrechen
     </button>
 
-    <button 
-    [disabled]="(enable && avatarInput == '' && popupService.toggleAvatarSelection) || !enable"
-    (click)="pushData()">Speichern</button>
+    <button
+      [disabled]="
+        (enable && avatarInput == '' && popupService.toggleAvatarSelection) ||
+        !enable
+      "
+      (click)="pushData()"
+    >
+      Speichern
+    </button>
   </div>
 </section>

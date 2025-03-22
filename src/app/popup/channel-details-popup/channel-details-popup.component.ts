@@ -177,7 +177,7 @@ export class ChannelDetailsPopupComponent {
         this.loggedInUser.id
       );
 
-    this.searchChatService.setSearchChat();
+    this.searchChatService.setSearchChat(event);
   }
 
   public getCurrentChannelCreatorName() {

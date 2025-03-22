@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  Auth,
-  User,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from '@angular/fire/auth';
+import { Auth, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { User as AppUser } from '../../shared/models/user.model';
 import { AuthService } from '../../shared/services/auth.service';
@@ -16,7 +11,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -34,15 +28,13 @@ export class LoginComponent implements OnInit {
     private firebaseService: FirebaseService,
     private authService: AuthService,
     private router: Router,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     this.logOutUser();
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
-
-
   }
 
   ngOnInit(): void {
@@ -91,7 +83,7 @@ export class LoginComponent implements OnInit {
           this.failed = true;
         }
       } catch (error) {
-        console.log("asdasd", error);
+        console.log('asdasd', error);
       }
     } else {
       this.loginForm.markAllAsTouched();
@@ -99,11 +91,14 @@ export class LoginComponent implements OnInit {
   }
 
   async guestLogin() {
-    const userCredentail = await this.authService.login("gast@gast.de", "qweqwe")
+    const userCredentail = await this.authService.login(
+      'gast@gast.de',
+      '123456'
+    );
     if (userCredentail) {
       this.goToMainPage();
     } else {
-      this.failed = true
+      this.failed = true;
     }
   }
 

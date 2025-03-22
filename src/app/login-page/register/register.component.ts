@@ -134,10 +134,12 @@ export class RegisterComponent {
     this.errorMessage = null; // Fehler zurücksetzen
 
     // Prüfen, ob die E-Mail bereits existiert
-    const emailExists = this.users.allUsers.some((user) => user.email == this.contactForm.value.email.toLowerCase());
+    const emailExists = this.users.allUsers.some(
+      (user) => user.email == this.contactForm.value.email.toLowerCase()
+    );
 
     if (emailExists) {
-      this.errorMessage = "*Diese E-Mail-Adresse wird bereits verwendet.";
+      this.errorMessage = '*Diese E-Mail-Adresse wird bereits verwendet.';
       return; // Registrierung abbrechen, bevor wir in den try-Block kommen
     }
 
@@ -163,7 +165,6 @@ export class RegisterComponent {
 
       // Nutzer weiterleiten
       this.routeId(user.id);
-
     } catch (error: any) {
       if (error?.code === 'auth/email-already-in-use') {
         this.errorMessage = '*Diese E-Mail-Adresse wird bereits verwendet.';
@@ -176,7 +177,6 @@ export class RegisterComponent {
       }
     }
   }
-
 
   resetError() {
     this.errorMessage = null;

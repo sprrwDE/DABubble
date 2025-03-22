@@ -7,7 +7,6 @@ import { PopupService } from './popup.service';
 import { UserProfilePopupComponent } from './user-profile-popup/user-profile-popup.component';
 import { ProfileMenuPopupComponent } from './profile-menu-popup/profile-menu-popup.component';
 import { ContactProfilePopupComponent } from './contact-profile-popup/contact-profile-popup.component';
-import { AddUserToChannelPopupComponent } from './add-user-to-channel-popup/add-user-to-channel-popup.component';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 import { AddUsersToNewChannelComponent } from './create-channel-popup/add-users-to-new-channel/add-users-to-new-channel.component';
 import { AddUserService } from '../shared/services/add-user.service';

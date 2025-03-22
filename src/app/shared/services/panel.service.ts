@@ -1,6 +1,7 @@
 import { effect, Injectable } from '@angular/core';
 import { ReplyPanelComponent } from '../../main-page/reply-panel/reply-panel.component';
 import { GlobalVariablesService } from './global-variables.service';
+import { PopupService } from '../../popup/popup.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,10 @@ export class PanelService {
   public messageId: string = '';
   public isTablet = false;
 
-  constructor(private globalVariablesService: GlobalVariablesService) {
+  constructor(
+    private globalVariablesService: GlobalVariablesService,
+    private popupService: PopupService
+  ) {
     effect(() => {
       this.isTablet = this.globalVariablesService.isTablet();
     });
@@ -25,6 +29,12 @@ export class PanelService {
     this.isReplyPanelOpen = true;
 
     if (this.isTablet) this.isSidebarOpen = false;
+
+    // Fokussiere die Reply-Eingabe nach einer kurzen Verzögerung
+    // um sicherzustellen, dass die Komponente vollständig gerendert wurde
+    setTimeout(() => {
+      this.popupService.focusReplyMessageInput();
+    }, 100);
   }
 
   openSidebar() {

@@ -8,6 +8,7 @@ import { User } from '../models/user.model';
 import { PanelService } from './panel.service';
 import { MainChatService } from './main-chat.service';
 import { PopupService } from '../../popup/popup.service';
+import { ChatHeaderComponent } from '../../main-page/chat/chat-header/chat-header.component';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,8 @@ export class SearchChatService {
   allChats: (Channel | User)[] = [];
   loggedInUser: any;
   sidebarNavComponent: any;
+
+  chatHeaderComponent!: ChatHeaderComponent;
 
   constructor(
     private channelService: ChannelService,
@@ -99,15 +102,23 @@ export class SearchChatService {
     this.scrollToActiveChannel();
 
     setTimeout(() => {
-      this.popupService.messageInputComponent.chatInput.nativeElement.focus();
+      this.popupService.focusMainMessageInput();
     }, 50);
   }
 
-  setSearchChat() {
+  setSearchChat($event: any) {
+    $event.stopPropagation();
+
     this.mainChatService.showMainChat = true;
     this.resetDirectChat();
     this.resetChannelChat();
     this.searchChat = true;
+
+    setTimeout(() => {
+      this.chatHeaderComponent.searchChatInput.nativeElement.focus();
+      this.openSearchPopup = true;
+      this.searchChats();
+    }, 50);
   }
 
   setCurrentDirectChat(user: User) {
@@ -122,7 +133,7 @@ export class SearchChatService {
     this.scrollToActiveContact();
 
     setTimeout(() => {
-      this.popupService.messageInputComponent.chatInput.nativeElement.focus();
+      this.popupService.focusMainMessageInput();
     }, 100);
   }
 

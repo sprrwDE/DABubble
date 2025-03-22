@@ -41,13 +41,53 @@ export class PopupService {
   createChannelPopupComponent!: CreateChannelPopupComponent;
   channelDetailsPopupComponent!: ChannelDetailsPopupComponent;
   memberListPopup!: MemberListPopupComponent;
-  messageInputComponent!: MessageInputComponent;
+
+  // Statt einer einzelnen Referenz verwenden wir ein Array
+  messageInputComponents: MessageInputComponent[] = [];
 
   showCreateChannelPopupErrorText = false;
 
   closeUserPopup() {
-    this.messageInputComponent.showUserPopup = false;
-    this.messageInputComponent.allUserIds = [];
+    // Schließe das Popup für alle registrierten MessageInputComponents
+    this.messageInputComponents.forEach((component) => {
+      component.showUserPopup = false;
+      component.allUserIds = [];
+    });
+  }
+
+  // Neue Methode zum Registrieren einer MessageInputComponent
+  registerMessageInputComponent(component: MessageInputComponent) {
+    if (!this.messageInputComponents.includes(component)) {
+      this.messageInputComponents.push(component);
+    }
+  }
+
+  // Neue Methode zum Entfernen einer MessageInputComponent
+  unregisterMessageInputComponent(component: MessageInputComponent) {
+    const index = this.messageInputComponents.indexOf(component);
+    if (index !== -1) {
+      this.messageInputComponents.splice(index, 1);
+    }
+  }
+
+  // Neue Methode zum Fokussieren der Haupt-MessageInputComponent (wo isReplyInput false ist)
+  focusMainMessageInput() {
+    const mainComponent = this.messageInputComponents.find(
+      (component) => !component.isReplyInput
+    );
+    if (mainComponent && mainComponent.chatInput) {
+      mainComponent.chatInput.nativeElement.focus();
+    }
+  }
+
+  // Neue Methode zum Fokussieren der Antwort-MessageInputComponent (wo isReplyInput true ist)
+  focusReplyMessageInput() {
+    const replyComponent = this.messageInputComponents.find(
+      (component) => component.isReplyInput
+    );
+    if (replyComponent && replyComponent.replyInput) {
+      replyComponent.replyInput.nativeElement.focus();
+    }
   }
 
   resetEditStates() {

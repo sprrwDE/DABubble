@@ -1,5 +1,5 @@
 <div
-  class="gap-[30px] overflow-y-scroll overflow-x-hidden p-[16px] md:p-[30px] rounded-b-[30px] absolute max-h-[50vh] min-h-[100%] shadow-[0px_6px_14px_0px_#00000033] bg-white top-[100%] left-0 w-full flex flex-col transition-svg-text"
+  class="gap-[20px] overflow-y-scroll overflow-x-hidden p-[16px] md:p-[30px] rounded-b-[30px] absolute max-h-[50vh] min-h-[100%] shadow-[0px_6px_14px_0px_#00000033] bg-white top-[100%] left-0 w-full flex flex-col transition-svg-text"
   [ngClass]="{
     'scale-0': !searchChatService.openSearchPopup,
     'scale-100': searchChatService.openSearchPopup
@@ -11,7 +11,7 @@
     class="flex items-center gap-[10px]"
   >
     <p
-      class="flex items-center gap-[10px] hover-primary-bg px-[10px] py-[4px] rounded-[30px] cursor-pointer text-[20px] font-bold text-primary transition-svg-text"
+      class="flex items-center w-full gap-[10px] hover-primary-bg px-[10px] py-[5px] rounded-[30px] cursor-pointer text-[20px] font-bold text-primary transition-svg-text"
       *ngIf="ifChannel(chat)"
       (click)="searchChatService.setCurrentChannel(chat)"
     >

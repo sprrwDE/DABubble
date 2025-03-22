@@ -15,6 +15,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { PanelService } from '../../shared/services/panel.service';
 
 @Component({
   selector: 'app-header-bar',
@@ -66,7 +67,8 @@ export class HeaderBarComponent {
     private channelService: ChannelService,
     private mainChatService: MainChatService,
     public searchChatService: SearchChatService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private panelService: PanelService
   ) {
     this.searchControl.valueChanges.subscribe((value) =>
       this.applyFilter(value)
@@ -245,5 +247,6 @@ export class HeaderBarComponent {
     this.searchChatService.resetSearchChat();
     this.searchChatService.resetDirectChat();
     this.mainChatService.showMainChat = false;
+    this.panelService.isSidebarOpen = true;
   }
 }

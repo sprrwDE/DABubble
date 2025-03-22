@@ -35,7 +35,8 @@
 }
 
 .logo {
-  animation: logoScale 2.5s ease-in forwards;
+  animation: logoScale 1.5s ease-in forwards;
+  // animation: logoScale 2.5s ease-in forwards;
   width: 180px;
   height: 180px;
 }
@@ -52,7 +53,9 @@
   width: 470px;
   height: 24px;
   animation: slideLetters 0.5s ease-out forwards;
-  animation-delay: 2.5s; /* Verzögert den Start der Animation um 2500ms */
+  // animation: slideLetters 0.5s ease-out forwards;
+  animation-delay: 1.5s;
+  // animation-delay: 2.5s;
 }
 
 @keyframes backgroundOpacity {
@@ -71,7 +74,8 @@
 }
 
 .background-Opacity {
-  animation: backgroundOpacity 3s ease-in forwards;
+  animation: backgroundOpacity 1s ease-in forwards;
+  // animation: backgroundOpacity 3s ease-in forwards;
   background: linear-gradient(to top, #313ae5, #797ef3);
   animation-delay: 2.5s;
 }
@@ -83,7 +87,7 @@
     transform: translateY(40vh);
   }
 
-  90% {
+  80% {
     opacity: 1;
     transform: translateX(50vw);
     transform: translateY(40vh);
@@ -103,7 +107,7 @@
     padding-left: 40%;
   }
 
-  90% {
+  85% {
     opacity: 1;
     transform: translateX(50vw);
     transform: translateY(40vh);
@@ -118,17 +122,23 @@
 }
 
 .mobile-reposition {
-  animation: animateToPosition 4s ease-in forwards;
+  animation: animateToPosition 3s ease-in forwards;
+  // animation: animateToPosition 4s ease-in forwards;
   justify-content: center;
 }
 
 .window-reposition {
-  animation: animateToPositionWindow 4s ease-in forwards;
+  animation: animateToPositionWindow 3s ease-in forwards;
+  // animation: animateToPositionWindow 4s ease-in forwards;
   justify-content: start;
 }
 
 @keyframes changeColor {
   0% {
+    color: white;
+  }
+
+  50% {
     color: white;
   }
 
@@ -138,5 +148,6 @@
 }
 
 .change-color {
-  animation: changeColor 8s ease-in-out forwards;
+  // animation: changeColor 8s ease-in-out forwards;
+  animation: changeColor 4s ease-in-out forwards;
 }
