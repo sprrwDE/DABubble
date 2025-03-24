@@ -100,5 +100,6 @@ export class ContactProfilePopupComponent {
     this.setDirectChat(directChat, user);
     this.closePopups();
     this.scrollToActiveContact();
+    this.popupService.focusMainMessageInput();
   }
 }

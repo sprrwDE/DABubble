@@ -242,6 +242,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
     this.setupReplyPanel();
     this.enablePanelScrolling();
     await this.scheduleReplyMessageRender();
+    this.popupService.focusReplyMessageInput();
   }
 
   private setCurrentReplyMessageId(): void {
@@ -367,6 +368,10 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   public setCurrentEditMessageId(): void {
     this.currentEditMessageId = this.messageId;
     this.editedMessage = this.message.trim();
+
+    setTimeout(() => {
+      this.editMessage.nativeElement.focus();
+    }, 100);
   }
 
   public saveEditedMessage(): void {
