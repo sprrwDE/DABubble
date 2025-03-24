@@ -1,15 +1,25 @@
-import { Component } from '@angular/core';
-import { AnimationScreenComponent } from "./animation-screen/animation-screen.component";
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, HostListener } from '@angular/core';
+import { AnimationScreenComponent } from './animation-screen/animation-screen.component';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { BlueNotificationBoxComponent } from '../shared/blue-notification-box/blue-notification-box.component';
 import { GlobalVariablesService } from '../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [AnimationScreenComponent, RouterLink, RouterOutlet, BlueNotificationBoxComponent],
+  imports: [
+    AnimationScreenComponent,
+    RouterLink,
+    RouterOutlet,
+    BlueNotificationBoxComponent,
+  ],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.scss'
+  styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {
   notificationMessage: string = '';
@@ -21,7 +31,17 @@ export class LoginPageComponent {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
       }
-    })
+    });
+    history.pushState(null, '');
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: Event) {
+    history.pushState(null, '');
+  }
+
+  ngOnInit() {
+    history.pushState(null, '');
   }
 
   showNotification(message: string): void {
@@ -38,7 +58,7 @@ export class LoginPageComponent {
     if (component.notification) {
       component.notification.subscribe((message: string) => {
         this.showNotification(message);
-      })
+      });
     }
   }
 }

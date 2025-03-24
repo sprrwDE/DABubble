@@ -9,6 +9,7 @@ import {
   User,
   sendPasswordResetEmail,
 } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -18,9 +19,12 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private auth: Auth) {
+  constructor(private auth: Auth, private router: Router) {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserSubject.next(user);
+      if (!this.auth.currentUser) {
+        this.router.navigate(['/login']);
+      }
     });
   }
 

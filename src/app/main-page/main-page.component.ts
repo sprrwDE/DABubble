@@ -1,4 +1,10 @@
-import { Component, effect, HostListener, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { SidebarNavComponent } from './sidebar-nav/sidebar-nav.component';
 import { ReplyPanelComponent } from './reply-panel/reply-panel.component';
 import { ChatComponent } from './chat/chat.component';
@@ -15,6 +21,8 @@ import { SearchChatService } from '../shared/services/search-chat.service';
 import { EmojiPickerComponent } from '../shared/emoji-picker/emoji-picker.component';
 import { Channel } from '../shared/models/channel.model';
 import { MainChatService } from '../shared/services/main-chat.service';
+import { AuthService } from '../shared/services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-main-page',
   standalone: true,
@@ -31,7 +39,7 @@ import { MainChatService } from '../shared/services/main-chat.service';
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit {
   @ViewChild(HeaderBarComponent) headerComponent!: HeaderBarComponent;
   @ViewChild(SidebarNavComponent) sidebarNavComponent!: SidebarNavComponent;
   @ViewChild(EmojiPickerComponent, { static: false })
@@ -81,6 +89,17 @@ export class MainPageComponent {
       if (document.hidden) this.updateUserStatus('offline');
       else this.updateUserStatus('online');
     });
+
+    history.pushState(null, '');
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: Event) {
+    history.pushState(null, '');
+  }
+
+  ngOnInit() {
+    history.pushState(null, '');
   }
 
   get allUsers() {
