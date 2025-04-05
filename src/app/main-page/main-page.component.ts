@@ -77,9 +77,8 @@ export class MainPageComponent implements OnInit {
     });
 
     window.addEventListener('resize', () => {
-      if (this.isTablet) {
+      if (this.isTablet)
         if (this.panelService.isReplyPanelOpen) this.panelService.openSidebar();
-      }
 
       if (window.innerWidth > 2000) this.panelService.isSidebarOpen = true;
     });

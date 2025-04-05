@@ -32,6 +32,7 @@ export class LoginPageComponent {
         this.currentUrl = event.url;
       }
     });
+
     history.pushState(null, '');
   }
 

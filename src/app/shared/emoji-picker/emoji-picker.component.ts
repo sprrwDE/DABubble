@@ -101,8 +101,7 @@ export class EmojiPickerComponent {
         this.isDirectChat,
         this.isFirstReply
       );
-    } 
-    else {
+    } else {
       this.emojiInput$?.next(event.emoji.native);
       const selectedEmoji = event.emoji.native;
       this.emojiSelectedEvent.emit(selectedEmoji);
