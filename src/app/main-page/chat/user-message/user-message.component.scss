@@ -8,7 +8,7 @@
 
 .main-chat-message-container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   overflow: visible;
 
   &:before {
@@ -17,10 +17,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: -45px;
-    width: 100vw;
+    width: 105vw;
     height: 100%;
-    @apply bg-bg;
+    @apply bg-bg left-[0px] md:left-[-45px];
     z-index: -1;
     opacity: 0;
   }
@@ -64,5 +63,25 @@
 
   &:hover {
     @apply bg-bg;
+  }
+}
+
+.emoji {
+  position: relative;
+
+  &:hover {
+    .emoji-hover-popup {
+      transform: scale(1);
+    }
+  }
+
+  .emoji-hover-popup {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+
+    transition: 0.2s ease-in-out;
+
+    transform: scale(0);
   }
 }

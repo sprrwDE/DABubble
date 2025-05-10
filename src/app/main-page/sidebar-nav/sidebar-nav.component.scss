@@ -20,7 +20,7 @@
   @apply hover:bg-bg hover:cursor-pointer px-[20px] py-[4px] rounded-[35px] w-full flex items-center gap-[10px] transition-all duration-100;
 
   img {
-    @apply h-[50px] w-[50px] rounded-full;
+    @apply h-[50px] w-[50px] min-h-[50px] min-w-[50px] rounded-full;
   }
 
   p {
@@ -36,6 +36,8 @@
   height: 24px;
   width: 24px;
   transition: 0.15s;
+  padding: 4px;
+  box-sizing: content-box;
   @apply rounded-full;
 
   &:hover {
@@ -46,4 +48,47 @@
     }
     @apply bg-bg;
   }
+
+  @media (max-width: 768px) {
+    svg,
+    path {
+      @apply fill-primary;
+      @apply stroke-primary;
+    }
+    @apply bg-bg;
+  }
 }
+
+.searchInput-container {
+  &:has(input:focus) {
+    @apply border-[3px] border-primary;
+  }
+}
+
+.profile-container {
+  &:hover {
+    path {
+      @apply fill-primary;
+    }
+  }
+}
+
+.searchInput-container {
+  &:has(input:focus) {
+    @apply border-[3px] border-primary;
+  }
+}
+
+.x-button {
+  background-color: unset;
+  padding: unset;
+  width: 2rem /* 16px */;
+  height: 2rem /* 16px */;
+  border-radius: 100%;
+  &:hover {
+    background-color: rgb(233, 233, 233);
+  }
+}
+
+
+

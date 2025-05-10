@@ -1,22 +1,88 @@
 <div
+  class="transition-svg-text min-w-[100vw] min-h-[100vh] fixed top-0 left-0 bottom-0 right-0 z-[9999] bg-[rgba(0,0,0,0.3)]"
+  [ngClass]="{ 'opacity-0 pointer-events-none': !popupOpen }"
+  (click)="$event.stopPropagation(); closePopup()"
+></div>
+
+<div
   (click)="$event.stopPropagation()"
-  class="p-[40px] rounded-[30px] cursor-default transition-svg-text shadow-[0px_6px_10px_0px_#00000033] bg-white absolute z-[10000]"
+  class="cursor-default transition-svg-text bg-white absolute z-[9999]"
   [ngClass]="{
-    'scale-0': !popupOpen,
+    'rounded-[30px]':
+      popupType === 'contact-profile' ||
+      popupType === 'channel-details' ||
+      popupType === 'user-profile' ||
+      popupType === 'user-profile-mobile',
+
+    'py-[20px] px-[16px] md:py-[40px] md:px-[40px] md:p-[40px]': 
+      popupType === 'contact-profile' ||
+      popupType === 'channel-details' ||
+      popupType === 'create-channel' ||
+      popupType === 'member-list' ||
+      popupType === 'user-profile' ||
+      popupType === 'user-profile-mobile',
+
+    'shadow-[0px_6px_10px_0px_#00000033]': 
+      popupType === 'contact-profile' ||
+      popupType === 'channel-details' ||
+      popupType === 'create-channel' ||
+      popupType === 'member-list' ||
+      popupType === 'channel-details-mobile' ||
+      popupType === 'user-profile' ||
+      popupType === 'user-profile-mobile',
+
+    'scale-0':
+      !popupOpen &&
+        (popupType === 'contact-profile' ||
+        popupType === 'channel-details' ||
+        popupType === 'create-channel' ||
+        popupType === 'member-list' ||
+        popupType === 'channel-details-mobile' ||
+        popupType === 'user-profile' ||
+        popupType === 'user-profile-mobile'),
+
+    'translate-y-[100vh]': !popupOpen && (popupType === 'profile-menu' ||popupType === 'member-list-mobile'||  popupType === 'add-users-to-new-channel'),
+    'md:translate-y-[unset] md:scale-0': !popupOpen && (popupType === 'profile-menu' ||  popupType === 'add-users-to-new-channel'),
+    'xl:translate-y-[unset] xl:scale-0': !popupOpen && (popupType === 'member-list-mobile'),
+
+    'shadow-[0px_-3px_10px_0px_#00000033]': popupType === 'profile-menu' || popupType === 'member-list-mobile'|| popupType === 'add-users-to-new-channel',
+
     'rounded-tl-[0px]': popupCorner === 'tl',
     'rounded-tr-[0px]': popupCorner === 'tr',
+
+    'md:rounded-[30px]' : popupType === 'profile-menu' || popupType === 'member-list' || popupType === 'create-channel',
+
+    'top-0 left-0 right-0 bottom-0': popupType === 'channel-details-mobile' || popupType === 'create-channel',
+
     'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]':
-      popupType === 'create-channel' || popupType === 'contact-profile',
-    'top-[100%] left-[0] max-w-[870px] min-w-[870px] ':
-      popupType === 'channel-details',
-    'top-[calc(100%+15px)] right-[0] max-w-[415px] min-w-[415px] ':
+     popupType === 'contact-profile' || popupType === 'user-profile-mobile',
+
+    'md:min-w-[700px] h-[100vh] md:h-[max-content] rounded-none md:top-[50%] overflow-auto md:left-[50%] md:translate-x-[-50%] md:translate-y-[-50%]': popupType === 'create-channel',
+
+    'top-[100%] left-[0px] max-w-[870px] min-w-[870px] ': popupType === 'channel-details',
+    
+    'w-[100vw] h-[100vh] overflow-auto ': popupType === 'channel-details-mobile',
+
+    'top-[calc(100%+15px)] md:rounded-tr-[00] rounded-[20px] right-[0] w-[91vw] md:max-w-[415px] md:min-w-[415px] ':
       popupType === 'member-list',
-    'top-[calc(100%+20px)] right-[0px]':
-      popupType === 'profile-menu' || popupType === 'user-profile'
-      ,
-    'max-w-[500px] min-w-[500px]':
-      popupType === 'user-profile' || popupType === 'contact-profile',
-  
+
+    ' px-[16.001px] pt-[30px] pb-[100px] ':
+      popupType === 'member-list-mobile',
+
+    'md:rounded-tr-[0px] px-[26px] py-[30px] md:py-[40px] md:px-[40px]  md:left-[unset] md:bottom-[unset]':
+      popupType === 'profile-menu',
+
+
+    'px-[20px] py-[40px]': popupType === 'add-users-to-new-channel',
+
+    'rounded-t-[30px] bottom-[0%] left-[0%] right-[0%]':
+      popupType === 'profile-menu' || popupType === 'add-users-to-new-channel' || popupType === 'member-list-mobile' ,
+
+    'md:top-[calc(100%+20px)] md:right-[0px]':
+      popupType === 'user-profile' || popupType === 'profile-menu',
+
+    'overflow-y-auto w-[90vw] max-w-[500px] max-h-[95vh] md:max-h-[unset] md:w-[500px] md:min-w-[500px]':
+    popupType === 'user-profile' || popupType === 'user-profile-mobile' || popupType === 'contact-profile',
   }"
 >
   <app-create-channel-popup
@@ -25,12 +91,14 @@
   ></app-create-channel-popup>
 
   <app-channel-details-popup
-    *ngIf="popupType === 'channel-details'"
+    *ngIf="
+      popupType === 'channel-details' || popupType === 'channel-details-mobile'
+    "
     (closePopupEvent)="closePopup()"
   ></app-channel-details-popup>
 
   <app-member-list-popup
-    *ngIf="popupType === 'member-list'"
+    *ngIf="popupType === 'member-list' || popupType === 'member-list-mobile'"
     (closePopupEvent)="closePopup()"
   ></app-member-list-popup>
 
@@ -40,21 +108,20 @@
   ></app-profile-menu-popup>
 
   <app-user-profile-popup
-    *ngIf="popupType === 'user-profile'"
+    *ngIf="popupType === 'user-profile' || popupType === 'user-profile-mobile'"
     (closePopupEvent)="closePopup()"
   ></app-user-profile-popup>
 
   <app-contact-profile-popup
     *ngIf="popupType === 'contact-profile'"
-    [userData]="userData"
     (closePopupEvent)="closePopup()"
   ></app-contact-profile-popup>
+
+  <app-add-users-to-new-channel
+    *ngIf="popupType === 'add-users-to-new-channel'"
+    [display]="true"
+    (closePopupEvent)="closePopup()"
+  ></app-add-users-to-new-channel>
 </div>
 
 <!-- popup background -->
-
-<div
-  class="transition-svg-text min-w-[100vw] min-h-[100vh] fixed top-0 left-0 bottom-0 right-0 z-[9999] bg-[rgba(0,0,0,0.3)]"
-  [ngClass]="{ 'opacity-0 pointer-events-none': !popupOpen }"
-  (click)="$event.stopPropagation(); closePopup()"
-></div>

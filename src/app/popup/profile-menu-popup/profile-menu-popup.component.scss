@@ -2,7 +2,7 @@ section {
   color: black;
 
   .text-container {
-    @apply flex justify-center items-center px-[45px] py-[10px] rounded-[100px];
+    @apply flex justify-start md:justify-center items-center px-[30px] md:px-[45px] py-[10px] rounded-[100px] gap-[15px];
     p {
       @apply text-[24px] font-bold;
     }

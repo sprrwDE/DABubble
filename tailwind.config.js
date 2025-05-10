@@ -13,6 +13,16 @@ module.exports = {
         error: "rgb(237,30,121)", // Rose for error messages or states (Rosa error)
         bg: "rgb(236,238,254)", // Almost White for Background (Bg color)
       },
+      screens: {
+        xs: "370px",
+        sm: "640px", // Standard
+        md: "768px", // Standard
+        lg: "1024px", // Standard
+        xl: "1280px", // Standard
+        "2xl": "1536px", // Standard
+        "3xl": "2000px", // Benutzerdefiniert
+        ultra: "2560px", // Benutzerdefiniert
+      },
     },
   },
   plugins: [],

@@ -79,27 +79,52 @@
 @keyframes animateToPosition {
   0% {
     opacity: 1;
-    transform: translate(-50%, -50%); /* Startet in der Mitte */
-    top: 50%;
-    left: 50%;
-    position: absolute;
+    transform: translateX(50vw);
+    transform: translateY(40vh);
   }
+
+  90% {
+    opacity: 1;
+    transform: translateX(50vw);
+    transform: translateY(40vh);
+  }
+
   100% {
     opacity: 1;
     transform: translate(0, 0); /* Zurücksetzen der Translation */
-    top: 20px; /* Zielposition oben links */
-    left: 20px;
-    position: absolute;
   }
 }
 
-.reposition {
-  animation: animateToPosition 1s ease-in forwards;
-  animation-delay: 3s;
-  position: absolute; /* Sicherstellen, dass das Element absolut positioniert ist */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Zentriert das Element */
+@keyframes animateToPositionWindow {
+  0% {
+    opacity: 1;
+    transform: translateX(50vw);
+    transform: translateY(40vh);
+    padding-left: 40%;
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateX(50vw);
+    transform: translateY(40vh);
+    padding-left: 40%;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0); /* Zurücksetzen der Translation */
+    padding-left: 0%; /* Weicher Übergang nach links */
+  }
+}
+
+.mobile-reposition {
+  animation: animateToPosition 4s ease-in forwards;
+  justify-content: center;
+}
+
+.window-reposition {
+  animation: animateToPositionWindow 4s ease-in forwards;
+  justify-content: start;
 }
 
 @keyframes changeColor {

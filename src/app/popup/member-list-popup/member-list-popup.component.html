@@ -6,8 +6,8 @@
     <h2 class="text-[24px] font-bold">Mitglieder</h2>
 
     <div
-      (click)="closePopup($event)"
-      class="flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
+      (click)="$event.stopPropagation(); closePopup()"
+      class=" flex items-center justify-center p-[10px] hover-primary-bg transition-svg-text rounded-full"
     >
       <svg
         width="24"
@@ -38,83 +38,38 @@
   </div>
 
   <div class="flex flex-col gap-[15px]">
-    <div class="flex flex-col gap-[13px]">
-      <!-- Unten rein rendern -->
-
-      <!--             <div
-              [ngClass]="{
-                'bg-online': user.status === 'online',
-                'bg-disable': user.status === 'offline'
-              }"
-              class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
-            ></div> -->
-
-      <!-- Testing -->
-      <!-- @if (user.status === "online") {
-          <svg
-            class="absolute bottom-0 left-[56px] border-white border-2 rounded-full"
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#92C83E" />
-          </svg>
-          } @else if (user.status === "abwesend") {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#ffc93b" />
-          </svg>
-          } @else {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#686868" />
-          </svg>
-          } -->
-
+    <div
+      class="flex flex-col gap-[13px] overflow-y-scroll overflow-x-hidden max-h-[200px] md:max-h-[400px]"
+    >
       @for (user of userList; track $index) {
       <div
-        class="flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
+        (click)="openProfilePopup(user)"
+        class="cursor-pointer flex hover:bg-bg transition-svg-text items-center gap-[15px] rounded-[30px] px-[20px] py-[4px]"
       >
         <div class="relative">
           <img
             class="w-[50px] h-[50px] rounded-full"
-            src="{{ user.image }}"
+            src="{{ user.image || 'imgs/avatar1.png' }}"
             alt=""
+            (error)="globalVariablesService.handleImageError($event)"
           />
 
           <div
             class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
             [ngClass]="{
-              'bg-online': user.status === 'online',
-              'bg-disable': user.status === 'offline'
+              'bg-online': user.status === 'online' || user.id === 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1',
+              'bg-disable': user.status === 'offline',
+              'bg-orange-400': user.status === 'abwesend',
             }"
           ></div>
         </div>
 
-        <!-- Verwende eine Bedingung, die überprüft, ob die User-ID mit der ID des eingeloggten Users übereinstimmt -->
-        <p>
-          {{ user.name }}
-          <span *ngIf="true">(Du)</span>
-          <!-- beispiel:
-            <span *ngIf="user.id === loggedInUser.id">(Du)</span> 
-          -->
+        <p class="truncate max-w-[180px]">
+          {{ user.name || "NoName" }}
+          <span *ngIf="user.id === loggedInUser?.id">(Du)</span>
         </p>
       </div>
       }
-
-      <!-- Oben rein rendern -->
     </div>
 
     <div
@@ -154,5 +109,7 @@
   </div>
 </section>
 
-<!-- Dies ist das zweite Popup, um ein Mitglied hinzuzufügen -->
-<app-add-member-popup *ngIf="showAddMembersPopup"></app-add-member-popup>
+<app-add-member-popup
+  (closePopupEvent)="closePopup()"
+  *ngIf="showAddMembersPopup"
+></app-add-member-popup>

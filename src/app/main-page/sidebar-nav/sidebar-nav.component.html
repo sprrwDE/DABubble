@@ -1,7 +1,11 @@
 <section
-  class="px-[30px] py-[32px] overflow-hidden flex flex-col gap-[25px] h-full duration-150 rounded-[30px] mr-4 bg-white"
+  class="overflow-x-hidden overflow-y-auto flex flex-col gap-[25px] h-full duration-150 bg-white"
+  [ngClass]="{
+    'rounded-[0px] px-[20px] py-[30px] mr-[0]': isMobile,
+    'rounded-[30px] px-[30px] py-[32px] mr-4': !isMobile
+  }"
 >
-  <div class="flex justify-between items-center">
+  <div *ngIf="!isMobile" class="flex justify-between items-center">
     <div class="flex justify-between items-center gap-[10px]">
       <img class="h-[60px] w-[60px]" src="imgs/Devspace.png" alt="" />
 
@@ -9,6 +13,7 @@
     </div>
 
     <svg
+      (click)="searchChatService.setSearchChat()"
       class="hover-primary p-[8px] box-content"
       width="24"
       height="24"
@@ -36,17 +41,173 @@
     </svg>
   </div>
 
-  <div class="h-full overflow-hidden flex flex-col gap-[25px]">
-    <!-- Channels Container -->
+  <div
+    *ngIf="isMobile"
+    (click)="searchInput.focus()"
+    (click)="$event.stopPropagation()"
+    class="searchInput-container px-[24px] py-[8px] cursor-text flex items-center boder-lines border-[1px] justify-between h-[48px] rounded-[42px] w-full text-[17px] bg-white transition-all duration-75"
+  >
+    <div class="relative w-full max-w-md">
+      <!-- Suchfeld -->
+      <input
+        [formControl]="searchControl"
+        #searchInput
+        placeholder="Devspace durchsuchen"
+        class="h-full w-full text-[17px] outline-none border-none"
+      />
 
-    <div class="flex flex-col pb-[20px]">
+      <ul
+        *ngIf="noMessage"
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y"
+      >
+        <div class="p-3 hover:bg-gray-100 cursor-pointer">
+          <div class="flex justify-between items-center">
+            <p>Keine Einträge gefunden</p>
+          </div>
+        </div>
+      </ul>
+
+      <!-- Dropdown Liste -->
+      <!-- && searchInput.value.length > 0  später zu ngif hier unten einfügen um liste unsichtbar zu machen solange nichts gesucht wird-->
+      <ul
+        [@dropdownAnimation]="filteredUserNames.length > 0 ? 'open' : 'closed'"
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y"
+      >
+        <div
+          *ngFor="let user of filteredUserNames"
+          class="p-3 hover:bg-gray-100 cursor-pointer"
+        >
+          <div
+            (click)="this.searchChatService.setCurrentDirectChat(user)"
+            class="flex justify-between items-center"
+          >
+            <p>{{ "@" + user.name }}</p>
+            <img [src]="user.image" alt="" class="size-8 rounded-full" />
+          </div>
+        </div>
+      </ul>
+
+      <ul
+        [@dropdownAnimation]="filteredChannels.length > 0 ? 'open' : 'closed'"
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y"
+      >
+        <div
+          *ngFor="let channel of filteredChannels"
+          class="p-3 hover:bg-gray-100 cursor-pointer"
+        >
+          <div
+            (click)="searchChatService.setCurrentChannel(channel)"
+            class="flex justify-between items-center"
+          >
+            <p>{{ "#" + channel.name }}</p>
+          </div>
+        </div>
+      </ul>
+
+      <ul
+        [@dropdownAnimation]="filteredList.length > 0 ? 'open' : 'closed'"
+        class="absolute left-0 w-full mt-1 border rounded-md bg-white z-20 shadow-md divide-y overflow-auto h-[80vh]"
+      >
+        <div *ngFor="let item of filteredList" class="p-3 cursor-pointer">
+          <div
+            *ngFor="let message of item.messages"
+            class="hover:bg-gray-100"
+            (click)="searchChatService.setCurrentChannel(item, isSearching)"
+          >
+            <div
+              class="flex items-center gap-4"
+              [ngClass]="
+                this.userService.loggedInUser()?.name?.toLowerCase() ==
+                this.userService
+                  .getUserById(message.userId)
+                  ?.name?.toLowerCase()
+                  ? 'justify-end'
+                  : 'justify-start'
+              "
+            >
+              <p>
+                {{ " @" + this.userService.getUserById(message.userId)?.name }}
+              </p>
+              <img
+                [src]="this.userService.getUserById(message.userId)?.image"
+                alt=""
+                class="rounded-full size-8"
+              />
+            </div>
+
+            <p
+              (click)="scrollToMessage(message.message, message.id, item)"
+              [ngClass]="
+                this.userService.loggedInUser()?.name?.toLowerCase() ==
+                this.userService
+                  .getUserById(message.userId)
+                  ?.name?.toLowerCase()
+                  ? 'bg-chat rounded-tl-3xl rounded-tr-none'
+                  : 'bg-bg !text-black font-bold rounded-tl-none'
+              "
+              class="border p-4 overflow-y-auto max-h-20 text-base text-white rounded-3xl"
+            >
+              {{ message.message }}
+            </p>
+          </div>
+          <p class="font-bold"># {{ item.name }}</p>
+        </div>
+      </ul>
+    </div>
+
+    <button
+      *ngIf="searchControl.value"
+      (click)="clearSearch()"
+      class="x-button w-fit h-fit size-4 right-0 flex justify-center items-center text-gray-500 hover:text-gray-700"
+    >
+      ✖
+    </button>
+
+    <div>
+      <svg
+        *ngIf="searchInput.value.length <= 0"
+        class="h-[32px] w-[32px]"
+        width="35"
+        height="36"
+        viewBox="0 0 35 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_210_968"
+          style="mask-type: alpha"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="35"
+          height="36"
+        >
+          <rect y="0.5" width="35" height="35" fill="#D9D9D9" />
+        </mask>
+        <g mask="url(#mask0_210_968)">
+          <path
+            d="M27.5625 30.1042L19.3958 21.9375C18.6667 22.5208 17.8281 22.9826 16.8802 23.3229C15.9323 23.6632 14.9236 23.8333 13.8542 23.8333C11.2049 23.8333 8.96292 22.916 7.12833 21.0815C5.29278 19.2459 4.375 17.0035 4.375 14.3542C4.375 11.7049 5.29278 9.46243 7.12833 7.62687C8.96292 5.79229 11.2049 4.875 13.8542 4.875C16.5035 4.875 18.7459 5.79229 20.5815 7.62687C22.416 9.46243 23.3333 11.7049 23.3333 14.3542C23.3333 15.4236 23.1632 16.4323 22.8229 17.3802C22.4826 18.3281 22.0208 19.1667 21.4375 19.8958L29.6406 28.099C29.908 28.3663 30.0417 28.6944 30.0417 29.0833C30.0417 29.4722 29.8958 29.8125 29.6042 30.1042C29.3368 30.3715 28.9965 30.5052 28.5833 30.5052C28.1701 30.5052 27.8299 30.3715 27.5625 30.1042ZM13.8542 20.9167C15.6771 20.9167 17.2268 20.2789 18.5033 19.0033C19.7789 17.7268 20.4167 16.1771 20.4167 14.3542C20.4167 12.5312 19.7789 10.9815 18.5033 9.705C17.2268 8.42944 15.6771 7.79167 13.8542 7.79167C12.0312 7.79167 10.4815 8.42944 9.205 9.705C7.92944 10.9815 7.29167 12.5312 7.29167 14.3542C7.29167 16.1771 7.92944 17.7268 9.205 19.0033C10.4815 20.2789 12.0312 20.9167 13.8542 20.9167Z"
+            fill="#686868"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div
+    class="h-[unset] flex flex-col"
+    [ngClass]="{ 'gap-[15px]': isMobile, 'gap-[25px]': !isMobile }"
+  >
+    <!-- Channels Container -->
+    <!-- [ngClass]="{' max-h-[40%]': showChannels, 'h-[unset]': !showChannels,}" -->
+    <div class="flex flex-col">
       <div
         [ngClass]="{ 'pb-[0px] ': !showChannels, 'pb-[25px]': showChannels }"
         class="flex items-center w-full justify-between transition-all duration-500 ease-in-out"
       >
         <div
           (click)="toggleChannels()"
-          class="transition-svg-text hover-primary px-[10px] py-[5px] flex items-center gap-[15px] select-none"
+          class="transition-svg-text hover-primary p-[10px] flex items-center gap-[15px] select-none"
         >
           <svg
             [ngClass]="{ 'rotate-[-90deg]': !showChannels }"
@@ -95,7 +256,7 @@
         </div>
 
         <svg
-          (click)="openPopup('create-channel', '')"
+          (click)="openCreateChannelPopup()"
           class="hover:cursor-pointer plus-btn"
           width="24"
           height="24"
@@ -134,11 +295,22 @@
 
       <div
         id="all-channels"
-        [ngClass]="{ 'h-full': showChannels, 'h-0': !showChannels }"
-        class="pl-[5px] flex flex-col gap-[15px] overflow-hidden transition-all duration-300 ease-in-out select-none"
+        #allChannelsContainer
+        [ngClass]="{
+          'h-full': showChannels,
+          'h-0 overflow-hidden': !showChannels,      
+        }"
+        class="pl-[5px] max-h-[100%] flex flex-col gap-[10px] transition-all duration-300 ease-in-out select-none"
       >
-        <div class="channel-item active-channel">
+        <!-- render -->
+        <div
+          *ngFor="let channel of channelService.filterAllChannels()"
+          (click)="searchChatService.setCurrentChannel(channel)"
+          class="channel-item"
+          [ngClass]="{ 'active-channel': channel.id === currentChannel.id }"
+        >
           <svg
+            class="min-w-[24px] min-h-[25px]"
             width="24"
             height="25"
             viewBox="0 0 24 25"
@@ -164,13 +336,33 @@
             </g>
           </svg>
 
-          <p>Entwicklerteam</p>
+          <p class="truncate">{{ channel.name }}</p>
         </div>
 
+        <div
+          *ngIf="
+            channelService.filterAllChannels().length === 0 &&
+            allChannels.length === 0
+          "
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Lade Kanäle...</p>
+        </div>
+
+        <div
+          *ngIf="
+            channelService.filterAllChannels().length === 0 &&
+            allChannels.length > 0
+          "
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Du bist in keinem Kanal</p>
+        </div>
         <!-- Add Channel btn -->
         <div
-          class="hover-primary transition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
-          (click)="openPopup('create-channel', '')"
+          *ngIf="channelService.filterAllChannels().length > 0"
+          class="hover-primarytransition-svg-text flex items-center gap-[10px] px-[20px] py-[4px]"
+          (click)="openCreateChannelPopup()"
         >
           <svg
             width="24"
@@ -204,7 +396,7 @@
 
     <!-- Direct Messages Container -->
 
-    <div class="flex flex-col h-full overflow-hidden">
+    <div class="flex flex-col h-[100%]">
       <div
         [ngClass]="{ 'pb-[0px] ': !showContacts, 'pb-[25px]': showContacts }"
         class="flex items-center w-full justify-between transition-all duration-500 ease-in-out"
@@ -263,61 +455,81 @@
 
       <div
         id="all-users"
-        [ngClass]="{ 'h-full': showContacts, 'h-0': !showContacts }"
-        class="pl-[5px] flex flex-col gap-[15px] overflow-x-hidden overflow-y-auto h-full transition-all duration-150 ease-in select-none"
+        [ngClass]="{
+          'h-full': showContacts,
+          'h-0 overflow-hidden': !showContacts
+        }"
+        class="pl-[5px] flex flex-col gap-[15px] h-full transition-all duration-150 ease-in select-none"
+        #allUsersContainer
       >
-        @for (user of user.allUsers; track $index) {
-        <div class="contact-item" (click)="openDialog(user)">
+        @for (user of userService.sortUsers(); track $index) {
+        <div
+          (click)="searchChatService.setCurrentDirectChat(user)"
+          class="contact-item"
+          [ngClass]="{ 'active-contact': user.id === currentDirectChatUser.id }"
+        >
           <div class="relative">
-            <img src="{{ user.image }}" alt="" />
-
+            <img
+              [src]="getUserImage(user)"
+              (error)="globalVariablesService.handleImageError($event)"
+              alt=""
+            />
             <div
               [ngClass]="{
-                'bg-online': user.status === 'online',
-                'bg-disable': user.status === 'offline'
+                'bg-online': user.status === 'online' || user.id === 'xB7h4pzqv9gTDPBhnCeJgAtj0qp1',
+                'bg-disable': user.status === 'offline',
+                'bg-orange-400': user.status === 'abwesend',
               }"
               class="absolute bottom-0 right-0 h-[14px] w-[14px] rounded-full border-2 border-white"
             ></div>
           </div>
-
-          <p>{{ user.name }}</p>
-
-          <!-- Testing -->
-          <!-- @if (user.status === "online") {
-          <svg
-            class="absolute bottom-0 left-[56px] border-white border-2 rounded-full"
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#92C83E" />
-          </svg>
-          } @else if (user.status === "abwesend") {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#ffc93b" />
-          </svg>
-          } @else {
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8.5" r="8" fill="#686868" />
-          </svg>
-          } -->
+          <p class="truncate min-w-0 max-w-[140px]">
+            {{ user.name || "lädt..." }}
+            <span *ngIf="loggedInUser?.id === user.id">(Du)</span>
+          </p>
         </div>
         }
+
+        <div
+          *ngIf="userService.sortUsers().length === 0"
+          class="w-full flex justify-center items-center"
+        >
+          <p class="font-bold">Lade Benutzer...</p>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- show search chat input for mobile -->
+  <div
+    *ngIf="!showMainChat"
+    (click)="searchChatService.setSearchChat()"
+    class="md:hidden flex justify-center items-center bg-primary rounded-full p-[10px] fixed bottom-[30px] right-[16px]"
+  >
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <mask
+        id="mask0_110823_680"
+        style="mask-type: alpha"
+        maskUnits="userSpaceOnUse"
+        x="8"
+        y="8"
+        width="24"
+        height="24"
+      >
+        <path d="M8 8H32V32H8V8Z" fill="#D9D9D9" />
+      </mask>
+      <g mask="url(#mask0_110823_680)">
+        <path
+          d="M13 31.6998C12.45 31.6998 11.9792 31.504 11.5875 31.1123C11.1958 30.7206 11 30.2498 11 29.6998V15.6998C11 15.1498 11.1958 14.679 11.5875 14.2873C11.9792 13.8956 12.45 13.6998 13 13.6998H21.925L19.925 15.6998H13V29.6998H27V22.7498L29 20.7498V29.6998C29 30.2498 28.8042 30.7206 28.4125 31.1123C28.0208 31.504 27.55 31.6998 27 31.6998H13ZM24.175 14.2748L25.6 15.6748L19 22.2748V23.6998H20.4L27.025 17.0748L28.45 18.4748L21.825 25.0998C21.6417 25.2831 21.4292 25.429 21.1875 25.5373C20.9458 25.6456 20.6917 25.6998 20.425 25.6998H18C17.7167 25.6998 17.4792 25.604 17.2875 25.4123C17.0958 25.2206 17 24.9831 17 24.6998V22.2748C17 22.0081 17.05 21.754 17.15 21.5123C17.25 21.2706 17.3917 21.0581 17.575 20.8748L24.175 14.2748ZM28.45 18.4748L24.175 14.2748L26.675 11.7748C27.075 11.3748 27.5542 11.1748 28.1125 11.1748C28.6708 11.1748 29.1417 11.3748 29.525 11.7748L30.925 13.1998C31.3083 13.5831 31.5 14.0498 31.5 14.5998C31.5 15.1498 31.3083 15.6165 30.925 15.9998L28.45 18.4748Z"
+          fill="white"
+        />
+      </g>
+    </svg>
   </div>
 </section>

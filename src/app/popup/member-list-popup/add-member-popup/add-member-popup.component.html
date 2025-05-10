@@ -34,13 +34,66 @@
     </div>
   </div>
 
-  <div class="popup-input-container">
-    <input type="text" placeholder="Name eingeben" [(ngModel)]="memberName" />
+  <!-- Pills -->
+
+  <div
+    class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-2 mt-2 w-full max-w-[335px]"
+  >
+    @if (addUserService.userToAdd.length > 0) { @for (user of
+    addUserService.userToAdd; track $index) {
+    <div
+      class="flex items-center justify-between h-[40px] p-[3px_20px] gap-[15px] rounded-full bg-[#ECEEFE] opacity-100"
+    >
+      <div class="flex items-center gap-4">
+        <img
+          class="h-[24px] w-[24px] rounded-full"
+          src="{{ user.image || 'imgs/avatar/profile.svg' }}"
+          (error)="globalVariablesService.handleImageError($event)"
+        />
+        <span class="truncate min-w-0 max-w-[80px]">{{ user.name }}</span>
+      </div>
+      <span
+        class="cursor-pointer"
+        (click)="addUserService.removeUserToAdd(user.id)"
+      >
+        ✕
+      </span>
+    </div>
+    } }
+  </div>
+
+  <div
+    (click)="input.focus()"
+    class="popup-input-container relative overflow-visible"
+    (click)="addMemberToExistingChannel($event)"
+  >
+    <input
+      #input
+      type="text"
+      placeholder="Name eingeben"
+      [(ngModel)]="nameInput"
+      class="relative w-[100%]"
+      (input)="addMemberToExistingChannel($event)"
+    />
   </div>
 
   <div class="flex justify-end">
-    <button (click)="addMember()" class="bg-disable hover:bg-disable">
+    <button
+      (click)="addMembers(addUserService.currentChannel.id)"
+      class="bg-disable hover:bg-disable"
+    >
       Hinzufügen
     </button>
+    <app-add-user-to-channel-popup
+      [display]="showUserPopup"
+      (closePopupEvent)="handleUserPopupClose($event)"
+      (clearInputEvent)="handleClearInput()"
+      class="absolute left-[40px] w-[280px] transition-all duration-300 ease-in-out"
+      [ngClass]="{
+        'scale-100 opacity-100 pointer-events-auto': showUserPopup,
+        'scale-0 pointer-events-none': !showUserPopup
+      }"
+    >
+    </app-add-user-to-channel-popup>
   </div>
 </section>

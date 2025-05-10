@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential, onAuthStateChanged, User, sendPasswordResetEmail } from '@angular/fire/auth';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  UserCredential,
+  onAuthStateChanged,
+  User,
+  sendPasswordResetEmail,
+} from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -12,7 +21,6 @@ export class AuthService {
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => {
       this.currentUserSubject.next(user);
-      console.log("user is:", user)
     });
   }
 
@@ -22,8 +30,17 @@ export class AuthService {
   }
 
   // Anmeldung
-  async login(email: string, password: string): Promise<UserCredential> {
-    return await signInWithEmailAndPassword(this.auth, email, password);
+  async login(email: string, password: string): Promise<UserCredential | null> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+      return userCredential;
+    } catch (error) {
+      return null;
+    }
   }
 
   // Abmelden

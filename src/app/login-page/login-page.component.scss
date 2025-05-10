@@ -1,9 +1,26 @@
 .btn-3 {
-    padding: 8px;
-    text-align: center;
-    border: 1px transparent solid;
-    &:hover {
-        border: 1px rgb(173, 176, 217) solid;
-        border-radius: 9999px;
-    }
+  padding: 8px;
+  text-align: center;
+  border: 1px transparent solid;
+  &:hover {
+    border: 1px rgb(173, 176, 217) solid;
+    border-radius: 9999px;
+  }
+}
+
+a,
+p,
+input,
+button,
+span {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  p,
+  input,
+  button,
+  span {
+    font-size: 1.25rem;
+  }
 }

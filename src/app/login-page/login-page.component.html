@@ -1,24 +1,48 @@
-<!-- Login animation  -->
-<app-animation-screen></app-animation-screen>
-
-<!-- Blue notification box -->
-<app-blue-notification-box [message]="notificationMessage" [visible]="notificationVisible"></app-blue-notification-box>
-
-<section class="w-full h-screen flex flex-col justify-between p-5">
-    <div class="flex justify-end">
+<div class="flex items-center justify-center flex-col ">
+    <div class="flex justify-between w-full">
+        <!-- Login animation  -->
+        <app-animation-screen class="flex self-start pl-4 w-full md:h-[120px]"></app-animation-screen>
 
 
-        <div class="flex flex-col gap-4 text-right">
-            <span class="">Neu bei DABubble?</span>
-            <a href="" [routerLink]="['/login/register']" class="btn-3 text-primary">Konto erstellen</a>
+        <!-- Oben rechts Neues Konto erstellen wen es nicht mobile ist -->
+        @if(!global.isMobile() && (currentUrl.endsWith('/') || currentUrl.endsWith('/login'))) {
+        <div class="flex self-end  justify-endw-1/2 pr-2">
+            <div class="flex flex-col gap-4 text-end pt-4">
+                <span class="text-nowrap">Neu bei DABubble?</span>
+                <a href="" [routerLink]="['/login/register']" class="  text-center py-1 px-2 btn-3 text-primary">Konto
+                    erstellen</a>
+            </div>
         </div>
+        }
     </div>
 
-    <div class="flex justify-center items-center h-screen">
-        <router-outlet (activate)="onActivate($event)"></router-outlet>
-    </div>
-    <div class="flex justify-center gap-6">
-        <a [routerLink]="'/impressum'" href="" class="text-primary btn-3">Impressum</a>
-        <a [routerLink]="'/datenschutzerklaerung'" href="" class="text-primary btn-3">Datenschutz</a>
-    </div>
-</section>
+    <!-- Blue notification box -->
+    <app-blue-notification-box [message]="notificationMessage"
+        [visible]="notificationVisible"></app-blue-notification-box>
+
+    <section class="w-full flex flex-col justify-between p-2 xs:p-4">
+
+        <!-- login-page inhalt -->
+        <div class="flex justify-center items-center">
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
+        </div>
+
+        <!-- unten in der mitte, Neues Konto erstellen wen es mobile ist -->
+        @if(global.isMobile() && (currentUrl.endsWith('/') || currentUrl.endsWith('/login'))) {
+        <div class="flex justify-center">
+            <div class="flex flex-col gap-4 text-end pt-4">
+                <span class="">Neu bei DABubble?</span>
+                <a href="" [routerLink]="['/login/register']"
+                    class="white-btn rounded-full text-center py-1 font-bold px-2 md:btn-3 text-primary">Konto
+                    erstellen</a>
+            </div>
+        </div>
+        }
+    </section>
+</div>
+
+
+<div class="hidden md:flex justify-center gap-6">
+    <a [routerLink]="'/impressum'" href="" class="text-primary btn-3">Impressum</a>
+    <a [routerLink]="'/datenschutzerklaerung'" href="" class="text-primary btn-3">Datenschutz</a>
+</div>

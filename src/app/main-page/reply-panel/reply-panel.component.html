@@ -1,13 +1,19 @@
 <section
-  class="flex pb-[32px] rounded-[30px] h-full ml-4 bg-white relative overflow-hidden"
+  class="flex pb-[32px] rounded-[0px] md:rounded-[30px] h-full md:ml-4 bg-white relative overflow-hidden"
 >
   <header
-    class="z-[9] bg-white flex justify-between items-center px-[40px] py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+    class="z-[9] bg-white flex justify-between items-center px-[16px] md:px-[40px] py-[15px] md:py-[25px] absolute top-0 left-0 w-full shadow-[0px_2px_10px_0px_#00000014]"
+    [ngClass]="{
+      'max-h-[60px] md:max-h-[100px] min-h-[60px] md:min-h-[100px]':
+        !isDirectChat,
+      'min-h-[80px] md:min-h-[110px]': isDirectChat
+    }"
   >
     <div class="flex items-center gap-[5px] py-[6px]">
       <h2 class="text-[24px] font-bold">Thread</h2>
 
       <svg
+        *ngIf="!isDirectChat"
         width="16"
         height="16"
         viewBox="0 0 16 16"
@@ -33,7 +39,12 @@
         </g>
       </svg>
 
-      <p class="text-primary">Entwicklerteam</p>
+      <p *ngIf="!isDirectChat" class="text-primary">
+        {{ currentChannel.name || "lädt..." }}
+      </p>
+      <p *ngIf="isDirectChat" class="text-primary">
+        {{ " @ " + currentDirectChatUser.name || "lädt..." }}
+      </p>
     </div>
 
     <div
@@ -69,19 +80,18 @@
   </header>
 
   <main class="w-full h-full flex flex-col justify-end">
-    <!-- Hier die messages rein rendern -->
     <div
       #chatContainer
-      class="reply-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px] mt-[100px]"
+      class="reply-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px]"
+      [ngClass]="{
+        'mt-[60px] md:mt-[100px]': !isDirectChat,
+        'mt-[80px] md:mt-[110px]': isDirectChat
+      }"
     >
       <app-user-message
-        [message]="panelService.message"
-        [time]="panelService.time"
-        [name]="panelService.name"
-        [imgUrl]="panelService.imgUrl"
         [isContact]="panelService.isContact"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [isReplay]="true"
+        [isReply]="true"
+        [isFirstReply]="true"
       ></app-user-message>
 
       <div class="relative text-lines mx-[30px] flex items-center gap-[10px]">
@@ -93,31 +103,51 @@
         </p>
       </div>
 
+      @if(!isDirectChat) {
+
       <app-user-message
-        [message]="'Die Nachricht hier rein rendern'"
-        [time]="'11:11 Uhr'"
-        [name]="'Name hier rein rendern'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="true"
-        [lastAnswerTime]="'00:00 Uhr'"
-        [isReplay]="true"
+        *ngFor="let reply of getChannelReplies()?.replies"
+        [isContact]="
+          checkIfContact(
+            reply.userId,
+            reply,
+            getChannelReplies()?.replies || []
+          )
+        "
+        [isReply]="true"
+        [messageId]="reply.id"
+        [channelId]="currentChannel.id"
+        [parentElement]="getChannelReplies()"
+        [path]="getChannelReplies()?.replies"
+        [isDirectChat]="isDirectChat"
       ></app-user-message>
 
-      <!-- user test message -->
+      } @if(isDirectChat) {
+
       <app-user-message
-        [message]="'Die Nachricht hier rein rendern'"
-        [time]="'00:00 Uhr'"
-        [name]="'Name hier rein rendern'"
-        [imgUrl]="'imgs/avatar1.png'"
-        [isContact]="false"
-        [isReplay]="true"
+        *ngFor="let reply of getDirectChatReplies()?.replies"
+        [isContact]="
+          checkIfContact(
+            reply.userId,
+            reply,
+            getDirectChatReplies()?.replies || []
+          )
+        "
+        [isReply]="true"
+        [messageId]="reply.id"
+        [parentElement]="getDirectChatReplies()"
+        [path]="getDirectChatReplies()?.replies"
+        [isDirectChat]="isDirectChat"
       ></app-user-message>
+
+      }
     </div>
 
     <!-- input -->
     <app-message-input
-      [isReplayInput]="true"
-      class="px-[15px]"
+      [isReplyInput]="true"
+      class="px-[15px] relative"
+      [replyPanelComponent]="this"
     ></app-message-input>
   </main>
 </section>

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { AnimationScreenComponent } from "./animation-screen/animation-screen.component";
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { BlueNotificationBoxComponent } from '../shared/blue-notification-box/blue-notification-box.component';
+import { GlobalVariablesService } from '../shared/services/global-variables.service';
 
 @Component({
   selector: 'app-login-page',
@@ -13,6 +14,15 @@ import { BlueNotificationBoxComponent } from '../shared/blue-notification-box/bl
 export class LoginPageComponent {
   notificationMessage: string = '';
   notificationVisible: boolean = false;
+  currentUrl: string = '';
+
+  constructor(public global: GlobalVariablesService, public router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl = event.url;
+      }
+    })
+  }
 
   showNotification(message: string): void {
     this.notificationMessage = message;

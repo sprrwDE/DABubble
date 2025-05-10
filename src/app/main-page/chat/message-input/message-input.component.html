@@ -1,13 +1,30 @@
 <div
-  (click)="chatInput.focus()"
-  class="main-chat-input-container p-[20px] mt-[20px] pb-[15px] h-[145px] rounded-[20px] hover:border-primary transition-svg-text border-lines border-[1px] flex flex-col w-full items-center justify-between"
+  (click)="
+    isReplyInput
+      ? replyInput.nativeElement.focus()
+      : chatInput.nativeElement.focus();
+    $event.stopPropagation()
+  "
+  class="main-chat-input-container relative z-[3] bg-white p-[20px] mt-[20px] pb-[15px] h-[145px] rounded-[20px] hover:border-primary transition-svg-text border-lines border-[1px] flex flex-col w-full items-center justify-between"
 >
   <textarea
     #chatInput
+    *ngIf="!isReplyInput"
+    [(ngModel)]="message.message"
     class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
-    placeholder="{{
-      isReplayInput ? 'Antworten...' : 'Nachricht an #Entwicklerteam'
-    }}"
+    placeholder="Nachricht an #Entwicklerteam"
+    (keydown)="onKeyDown($event)"
+    (keyup)="onKeyDown($event)"
+  ></textarea>
+
+  <textarea
+    #replyInput
+    *ngIf="isReplyInput"
+    [(ngModel)]="reply.message"
+    class="w-full h-full resize-none pr-[10px] outline-none border-none text-[18px]"
+    placeholder="Antworten..."
+    (keydown)="onKeyDown($event)"
+    (keyup)="onKeyDown($event)"
   ></textarea>
 
   <!-- icons -->
@@ -22,6 +39,7 @@
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          (click)="showEmojiPicker = !showEmojiPicker"
         >
           <mask
             id="mask0_104638_669"
@@ -45,6 +63,7 @@
 
       <div
         class="hover-primary-bg transition-svg-text p-[4px] hover:scale-110 rounded-full box-content"
+        (click)="showTagUserPopup()"
       >
         <svg
           width="24"
@@ -74,7 +93,10 @@
       </div>
     </div>
 
-    <div class="main-chat-send-btn">
+    <div
+      (click)="isReplyInput ? sendReply() : sendMessage()"
+      class="main-chat-send-btn"
+    >
       <svg
         width="30"
         height="30"
@@ -103,3 +125,38 @@
     </div>
   </div>
 </div>
+
+<!-- popup -->
+<div
+  [ngClass]="{
+    'top-[-100%] shadow-[0px_6px_10px_0px_#00000033] overflow-y-auto':
+      showUserPopup,
+    'top-[0%] shadow-[0px_6px_10px_0px_white] overflow-y-hidden': !showUserPopup
+  }"
+  class="absolute flex flex-col gap-[10px] left-0 w-full h-full z-[2] transition-svg-text bg-white p-[20px] rounded-[20px]"
+  (click)="$event.stopPropagation()"
+>
+  <div
+    *ngFor="let userId of allUserIds"
+    class="flex items-center gap-[10px] w-full cursor-pointer hover-primary-bg transition-svg-text p-[10px] rounded-[10px]"
+    (click)="tagUser(userId)"
+  >
+    <img
+      src="{{ userService.getUserById(userId)?.image }}"
+      (error)="globalVariablesService.handleImageError($event)"
+      class="w-[30px] h-[30px] rounded-full"
+    />
+
+    <p>{{ userService.getUserById(userId)?.name }}</p>
+  </div>
+</div>
+
+<app-emoji-picker
+  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+  *ngIf="showEmojiPicker"
+  [showEmojiPicker]="showEmojiPicker"
+  (showEmojiPickerChange)="showEmojiPicker = $event"
+  [isTextInput]="true"
+  (emojiSelectedEvent)="insertEmoji($event)"
+>
+</app-emoji-picker>

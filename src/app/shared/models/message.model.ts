@@ -1,27 +1,49 @@
 import { Reply } from './reply.model';
 
+export interface Reaction {
+  emoji: string;
+  count: number;
+  userIds: string[]; // Optional: Liste der User, die reagiert haben
+}
+
 export class Message {
-    message: string;
-    user: string;
-    likes: number;
-    timestamp: Date;
-    replys: Reply[];
-  
-    constructor(obj?: any) {
-      this.message = obj?.message || '';
-      this.user = obj?.user || '';
-      this.likes = obj?.likes || 0;
-      this.timestamp = obj?.timestamp ? new Date(obj.timestamp) : new Date();
-      this.replys = obj?.replys ? obj.replys.map((rep: any) => new Reply(rep)) : [];
-    }
-  
-    toJSON() {
-      return {
-        message: this.message,
-        user: this.user,
-        likes: this.likes,
-        timestamp: this.timestamp.toISOString(),
-        replys: this.replys.map(rep => rep.toJSON()),
-      };
-    }
+  message: string;
+  userId: string;
+  // likes: number;
+  likes: Reaction[];
+  timestamp: number;
+  replies?: Reply[];
+  id?: string;
+
+  constructor(obj?: any) {
+    this.message = obj?.message || '';
+    this.userId = obj?.userId || '';
+    this.likes = obj?.likes 
+    ? obj.likes.map((like: any) => ({
+        emoji: like.emoji,
+        count: like.count,
+        userIds: like.userIds || [],
+      }))
+    : obj?.reactions 
+    ? obj.reactions.map((reaction: any) => ({
+        emoji: reaction.emoji,
+        count: reaction.count,
+        userIds: reaction.userIds || [],
+      }))
+    : [];
+      this.timestamp = obj?.timestamp || null;
+    this.replies = obj?.replies
+      ? obj.replies.map((rep: any) => new Reply(rep))
+      : [];
+    this.id = obj?.id || '';
   }
+
+  toJSON() {
+    return {
+      message: this.message,
+      userId: this.userId,
+      likes: this.likes,
+      timestamp: this.timestamp,
+    };
+  }
+}

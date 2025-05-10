@@ -1,48 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import { Auth, User, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import {
+  Auth,
+  User,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from '@angular/fire/auth';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { User as AppUser } from '../../shared/models/user.model';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../shared/services/user.service';
-
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  failed: boolean = false;
 
-  constructor(private auth: Auth, private firebaseService: FirebaseService, private authService: AuthService, private router: Router, private fb: FormBuilder, private user: UserService) {
+  constructor(
+    private auth: Auth,
+    private firebaseService: FirebaseService,
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder,
+  ) {
+    this.logOutUser();
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.auth.onAuthStateChanged((user: User | null) => {
-      if (user) {
-        this.user.loggedInUser = {email: user.email, id: user.uid}
-      } else {
-      }
-    });
+
   }
 
   ngOnInit(): void {
-    this.logOutUser()
+    this.logOutUser();
   }
 
   loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(this.auth, provider)
       .then((result) => {
-        this.updateFirebase(result.user)
-        this.goToMainPage()
+        this.updateFirebase(result.user);
+        this.goToMainPage();
       })
       .catch((error) => {
         console.error('Error during Google sign-in:', error);
@@ -50,7 +62,7 @@ export class LoginComponent implements OnInit {
   }
 
   updateFirebase(user: any) {
-    this.firebaseService.addUser(this.getUserInfosFromGoogle(user))
+    this.firebaseService.addUser(this.getUserInfosFromGoogle(user));
   }
 
   getUserInfosFromGoogle(user: any): AppUser {
@@ -60,29 +72,42 @@ export class LoginComponent implements OnInit {
       image: user.photoURL,
       name: user.displayName,
       status: 'online',
+      isNotGoogle: false,
     });
   }
 
   logOutUser() {
-    this.authService.logout()
+    this.authService.logout();
   }
 
-
-  onLogin() {
-    if(this.loginForm.invalid) {
+  async onLogin() {
+    if (this.loginForm.valid) {
+      try {
+        const { email, password } = this.loginForm.value;
+        const userCredentail = await this.authService.login(email, password);
+        if (userCredentail) {
+          this.goToMainPage();
+        } else {
+          this.failed = true;
+        }
+      } catch (error) {
+        console.log("asdasd", error);
+      }
+    } else {
       this.loginForm.markAllAsTouched();
     }
-
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password)
-      this.goToMainPage()
-    }
-
   }
 
+  async guestLogin() {
+    const userCredentail = await this.authService.login("gast@gast.de", "qweqwe")
+    if (userCredentail) {
+      this.goToMainPage();
+    } else {
+      this.failed = true
+    }
+  }
 
   goToMainPage() {
-    this.router.navigate(['/main'])
+    this.router.navigate(['/main']);
   }
 }

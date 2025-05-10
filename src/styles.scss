@@ -1,3 +1,4 @@
+@use "@ctrl/ngx-emoji-mart/picker";
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -20,14 +21,16 @@ body {
 
 @font-face {
   font-family: "Nunito";
-  src: url("/fonts/Nunito/static/Nunito-Regular.ttf") format("truetype");
+  src: url("/angular-projects/dabubble/fonts/Nunito/static/Nunito-Regular.ttf") format("truetype"); 
+  // src: url("/fonts/Nunito/static/Nunito-Regular.ttf") format("truetype");
   font-weight: 400; /* Regular */
   font-style: normal;
 }
 
 @font-face {
   font-family: "Nunito";
-  src: url("/fonts/Nunito/static/Nunito-Bold.ttf") format("truetype");
+  src: url("/angular-projects/dabubble/fonts/Nunito/static/Nunito-Bold.ttf") format("truetype");
+  // src: url("/fonts/Nunito/static/Nunito-Bold.ttf") format("truetype");
   font-weight: 700; /* Bold */
   font-style: normal;
 }
@@ -105,11 +108,12 @@ img {
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: white;
+  background: rgba(255, 255, 255, 0);
   border-radius: 10px;
 }
 

@@ -1,8 +1,79 @@
-<section class="flex items-center justify-center h-screen w-screen">
+<section class="flex flex-col items-center justify-center h-screen w-screen">
+  <img
+    src="imgs/logo-with-text.svg"
+    alt="Logo"
+    class="md:max-h-full p-8"
+  />
+
   <div
-    class="p-[40px] bg-white rounded-3xl flex flex-col gap-5"
+    class="p-10 h-[calc(100vh-220px)] bg-white rounded-3xl flex flex-col gap-5 max-h-screen overflow-auto shadow-lg w-11/12 md:w-3/4 lg:w-1/2"
   >
-    <span>Impressum</span>
-    <button routerLink="/main">Back</button>
+
+
+
+    <span class="text-2xl font-bold">Rechtliche Hinweise</span>
+
+    <span class="text-xl font-semibold">Impressum</span>
+
+    <div class="text-gray-700">
+      Mehmet Deliaci, Ayyub Quarar, Kai Schulz<br />
+      Altenweg 47<br />
+      75228 Ispringen<br />
+      Exploring the Board<br />
+      E-Mail:
+      <a
+        href="mailto:info@sparrowmedia.de"
+        class="text-blue-500 hover:underline"
+        >info&#64;sparrowmedia.de</a
+      >
+    </div>
+
+    <span class="text-xl font-semibold">Annahme der Nutzungsbedingungen</span>
+
+    <p class="text-gray-700">
+      Durch den Zugriff auf und die Nutzung von
+      <span class="font-semibold">DA Bubble</span> (Produkt) erkennst du die
+      folgenden Nutzungsbedingungen sowie alle von Zeit zu Zeit vorgestellten
+      Richtlinien, Richtlinienänderungen oder Ergänzungen an. Wir, die
+      aufgeführten Personen, behalten uns das Recht vor, die Nutzungsbedingungen
+      jederzeit ohne vorherige Ankündigung zu aktualisieren oder zu ändern.
+    </p>
+
+    <span class="text-xl font-semibold">Umfang und Eigentum des Produkts</span>
+
+    <p class="text-gray-700">
+      DA Bubble wurde im Rahmen eines studentischen Gruppenprojekts in einem
+      Webentwicklungs-Bootcamp bei der
+      <span class="font-semibold">Developer Akademie GmbH</span> entwickelt. Es
+      dient ausschließlich Bildungszwecken und ist nicht für umfangreiche
+      persönliche oder geschäftliche Nutzung vorgesehen. Daher übernehmen wir
+      keine Garantie für die ständige Verfügbarkeit, Zuverlässigkeit,
+      Genauigkeit oder andere qualitätsbezogene Aspekte dieses Produkts.
+    </p>
+
+    <p class="text-gray-700">
+      Das Design von DA Bubble ist Eigentum der
+      <span class="font-semibold">Developer Akademie GmbH</span>. Die unbefugte
+      Nutzung, Reproduktion, Modifikation, Verbreitung oder Nachbildung des
+      Designs ist strengstens untersagt.
+    </p>
+
+    <span class="text-xl font-semibold">Eigentumsrechte</span>
+
+    <p class="text-gray-700">
+      Abgesehen vom Design, das der
+      <span class="font-semibold">Developer Akademie GmbH</span> gehört,
+      verbleiben alle anderen geistigen Eigentumsrechte im Zusammenhang mit DA
+      Bubble, einschließlich, aber nicht beschränkt auf Code, Struktur und
+      Inhalte, im Besitz der aufgeführten Personen. Jede unbefugte Nutzung,
+      Kopie oder Weiterverbreitung ohne ausdrückliche Zustimmung ist untersagt.
+    </p>
+
+    <button
+      routerLink="/login"
+      class="mt-4 px-4 py-2 bg-[#444DF2] text-white rounded-lg hover:bg-[#525AF0] transition"
+    >
+      Zurück
+    </button>
   </div>
 </section>
