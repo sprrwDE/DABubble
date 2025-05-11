@@ -62,7 +62,8 @@ export class MainPageComponent implements OnInit {
     private fb: FirebaseService,
     private globalVariablesService: GlobalVariablesService,
     private searchChatService: SearchChatService,
-    private mainChatService: MainChatService
+    private mainChatService: MainChatService,
+    private authService: AuthService // don't remove this
   ) {
     effect(() => {
       this.loggedInUser = this.userService.loggedInUser();
