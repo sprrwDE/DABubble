@@ -139,12 +139,12 @@ export class UserProfilePopupComponent {
       this.enable = false;
       return null;
     }
-  
+
     if (value.trim().length < 3) {
       this.enable = false;
       return { nameTooShort: true };
     }
-  
+
     if (/^\d+$/.test(value)) {
       this.enable = false;
       return { onlyNumbers: true };
@@ -156,16 +156,27 @@ export class UserProfilePopupComponent {
     this.enable = true;
     return null;
   }
-  
+
   get nameErrorMessage(): string | null {
     const errors = this.checkNameValidation(this.nameInput);
     if (!errors) return null;
-  
-    if (errors['nameTooShort']) return 'Der Name muss mindestens 3 Zeichen lang sein';
-    if (errors['onlyNumbers']) return 'Der Name darf nicht nur aus Zahlen bestehen';
+
+    if (errors['nameTooShort'])
+      return 'Der Name muss mindestens 3 Zeichen lang sein';
+    if (errors['onlyNumbers'])
+      return 'Der Name darf nicht nur aus Zahlen bestehen';
     if (errors['selectAvatar']) return 'Bitte wähle einen neuen Avatar';
-  
+
     return null;
   }
-  
+
+  resetProfileEdit() {
+    this.popupService.editingUserProfile = false;
+  }
+
+  setEditingUserProfile(value: boolean) {
+    this.popupService.editingUserProfile = value;
+    this.nameInput = this.loggedInUserData.name;
+    this.popupService.toggleAvatarSelection = false;
+  }
 }

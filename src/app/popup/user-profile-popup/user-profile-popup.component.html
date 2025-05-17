@@ -67,7 +67,7 @@
     </div>
   </div>
 
-  @if(popupService.toggleAvatarSelection) {
+  @if(popupService.toggleAvatarSelection && editingUserProfile) {
   <div class="text-left w-full flex justify-center flex-col">
     <span class="text-xl">Neuen Avatar auswählen</span>
     <div class="flex gap-2 md:gap-2 mt-2 md:mt-8 justify-center w-fit m-auto">
@@ -93,7 +93,7 @@
       <p class="text-[32px] font-bold">{{ returnUserData("name") }}</p>
 
       <p
-        (click)="editingUserProfile = true"
+        (click)="setEditingUserProfile(true)"
         class="text-[18px] text-hover cursor-pointer hover:font-bold"
         *ngIf="
           loggedInUserData.id != 'Tnp4hocBhBe9U1Cbemu1cVAvW9Z2' &&
@@ -192,7 +192,10 @@
     </form>
   </div>
 
-  <span *ngIf="nameErrorMessage" class="text-error text-sm mt-2">
+  <span
+    *ngIf="nameErrorMessage && editingUserProfile"
+    class="text-error text-sm mt-2"
+  >
     {{ nameErrorMessage }}
   </span>
 
@@ -200,9 +203,7 @@
     *ngIf="editingUserProfile"
     class="flex items-center justify-center w-full gap-[32px]"
   >
-    <button (click)="editingUserProfile = false" class="white-btn">
-      Abbrechen
-    </button>
+    <button (click)="resetProfileEdit()" class="white-btn">Abbrechen</button>
 
     <button
       [disabled]="
