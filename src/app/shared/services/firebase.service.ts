@@ -174,7 +174,6 @@ export class FirebaseService {
         let updatedLikes = reaction[replyId] || [];
         updatedLikes = updatedLikes.filter((r) => r.count > 0);
         await updateDoc(docRef, { likes: updatedLikes });
-
       } else {
         console.error('❌ Kein Dokument gefunden für', messageId, channelId);
       }
@@ -182,5 +181,4 @@ export class FirebaseService {
       console.error('🔥 Fehler beim Speichern in Firebase:', error);
     }
   }
-
 }

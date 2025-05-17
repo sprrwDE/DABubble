@@ -1,8 +1,9 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Auth, User as FirebaseUser } from '@angular/fire/auth';
+import { GlobalVariablesService } from './global-variables.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,11 @@ export class UserService {
   fetchedCollection$: Observable<any[]>;
   loggedInUser = signal<User | null>(null); // Initialwert: null
   isLoggedIn = signal(false); // Signal für den Login-Status
+  loadingData = signal(false);
 
   constructor(private fb: FirebaseService, private auth: Auth) {
     this.fetchedCollection$ = this.fb.fetchedCollection$;
+    this.loadingData.set(true);
 
     fb.getData('users');
 
@@ -24,6 +27,8 @@ export class UserService {
 
     // state listener for logged in user ( logged in / logged out )
     this.auth.onAuthStateChanged(async (firebaseUser: FirebaseUser | null) => {
+      this.loadingData.set(true);
+
       if (firebaseUser) {
         this.isLoggedIn.set(true); // Login-Status aktualisieren
         await this.fb.updateStateUser(firebaseUser.uid, 'online');
@@ -36,6 +41,7 @@ export class UserService {
         }
         this.setLoggedInUser(null);
       }
+      this.loadingData.set(false);
     });
   }
 

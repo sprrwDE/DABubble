@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { ChannelService } from './channel.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,10 @@ export class GlobalVariablesService {
   isTablet = signal(window.innerWidth < 1280);
   loading = false;
 
-  constructor(private channelService: ChannelService) {
+  constructor(
+    private channelService: ChannelService,
+    private userService: UserService
+  ) {
     // Initialen Zustand setzen
     this.updateIsMobile();
     this.updateIsTablet();
@@ -18,6 +22,10 @@ export class GlobalVariablesService {
     // Event-Listener hinzufügen, um das Signal bei Fenstergrößenänderung zu aktualisieren
     window.addEventListener('resize', () => this.updateIsMobile());
     window.addEventListener('resize', () => this.updateIsTablet());
+
+    effect(() => {
+      this.loading = this.userService.loadingData();
+    });
   }
 
   private updateIsMobile() {
@@ -38,5 +46,9 @@ export class GlobalVariablesService {
 
   hideLoadingScreen() {
     this.loading = false;
+  }
+
+  setLoading(status: boolean) {
+    this.loading = status;
   }
 }
