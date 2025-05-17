@@ -223,10 +223,18 @@ export class HeaderBarComponent {
     if (query?.startsWith('#')) {
       if (query.length >= 1) {
         const usernameQuery = query.slice(1).toLowerCase();
-        this.filteredChannels = this.channelService.allChannels.filter(
-          (channel) =>
-            channel.name.toLowerCase().includes(usernameQuery.toLowerCase())
-        );
+        const loggedInUserId = this.userService.loggedInUser()?.id;
+        if (loggedInUserId) {
+          this.filteredChannels = this.channelService.allChannels.filter(
+            (channel) =>
+              channel.name
+                .toLowerCase()
+                .includes(usernameQuery.toLowerCase()) &&
+              channel.users.includes(loggedInUserId)
+          );
+        } else {
+          this.filteredChannels = [];
+        }
       }
     } else this.filteredChannels = [];
   }
