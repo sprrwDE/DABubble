@@ -78,6 +78,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
   public currentChannel: Channel = new Channel();
   public currentDirectChat: DirectChat = new DirectChat();
   public emojiInput$: Subject<string> = new Subject<string>();
+  public showAdditionalEmojis: boolean = false;
 
   constructor(
     private panelService: PanelService,
@@ -536,8 +537,7 @@ export class UserMessageComponent implements OnInit, AfterViewInit {
       `;
   }
 
-  returnFirstLike(like: any) {
-    return this.userService.allUsers.find((user) => user.id === like.userIds[0])
-      ?.name;
+  public toggleAdditionalEmojis(): void {
+    this.showAdditionalEmojis = !this.showAdditionalEmojis;
   }
 }
