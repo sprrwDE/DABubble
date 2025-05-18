@@ -83,6 +83,14 @@ export class SidebarNavComponent {
   @ViewChild('allUsersContainer') allUsersContainer!: ElementRef;
   @ViewChild('allChannelsContainer') allChannelsContainer!: ElementRef;
 
+  welcomeChannel = new Channel({
+    id: 'welcome',
+    name: 'Willkommen',
+    description: 'Willkommen im Chat',
+    users: [],
+    channelCreatorId: '',
+  });
+
   constructor(
     public user: UserService,
     public popupService: PopupService,

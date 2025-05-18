@@ -4,18 +4,27 @@
   <app-chat-header
     class="z-[10]"
     [isDirectChat]="isDirectChat"
+    *ngIf="currentChannel.id !== 'welcome'"
   ></app-chat-header>
 
-  <main class="main-chat w-full h-full flex flex-col justify-end">
+  <main
+    class="main-chat w-full h-full flex flex-col"
+    [ngClass]="{
+      'justify-start': currentChannel.id === 'welcome',
+      'justify-end': currentChannel.id !== 'welcome'
+    }"
+  >
     <div
       #chatContainer
       class="main-chat-messages-container overflow-y-auto overflow-x-hidden flex flex-col gap-[30px] pt-[45px] pb-[20px]"
       [ngClass]="{
-        'mt-[60px] md:mt-[100px]': !isDirectChat,
+        'mt-[60px] md:mt-[100px]':
+          !isDirectChat && currentChannel.id !== 'welcome',
         'mt-[80px] md:mt-[110px]': isDirectChat,
+        'pt-[45px] pl-[30px] pr-[30px]': currentChannel.id === 'welcome'
       }"
     >
-      @if (!isDirectChat && !searchChat) {
+      @if (!isDirectChat && !searchChat && currentChannel.id !== 'welcome') {
 
       <div
         *ngFor="let message of currentChannel?.messages"
@@ -186,12 +195,80 @@
         </p>
       </div>
 
+      } @if (currentChannel.id === 'welcome') {
+      <div class="flex flex-col gap-[10px] md:gap-[30px]">
+        <h1 class="text-[32px] font-bold">Herzlich Willkommen bei DaBubble!</h1>
+        <p class="text-[16px]">
+          Willkommen im Chat. Hier kannst du mit anderen Leuten chatten.
+        </p>
+        <div class="flex flex-col gap-[20px]">
+          <p>
+            Ob in öffentlichen Channels oder im privaten 1:1-Chat – bei uns
+            bleibst du flexibel und immer auf dem neuesten Stand. Diskutiere,
+            plane und tausche dich in Echtzeit aus!
+          </p>
+
+          <h2 class="text-[24px] font-bold">So nutzt du DaBubble</h2>
+          <div class="flex flex-col gap-[15px]">
+            <p>
+              <strong>Gast-Account:</strong> Als Gast nutzt du einen gemeinsamen
+              Account. Das bedeutet, dass alle Gäste die gleichen Nachrichten
+              sehen und bearbeiten können. Deine Channels und Nachrichten
+              bleiben auch nach dem Logout erhalten.
+            </p>
+            <p>
+              <strong>Channels:</strong> Erstelle eigene Channels und tausche
+              dich dort mit Community-Membern aus.
+            </p>
+            <p>
+              <strong>1:1-Chat:</strong> Starte private Gespräche mit jedem
+              Nutzer – auch als Gast kannst du problemlos private Chats
+              eröffnen.
+            </p>
+            <p>
+              <strong>Selbstorganisation:</strong> Nutze den "Self-Chat", um
+              Notizen zu machen oder To-do-Listen zu erstellen.
+            </p>
+            <p>
+              <strong>Suchfunktion:</strong> Mithilfe der Suchfunktion kannst du
+              durch die App navigieren, deine Channels und andere Nutzer*innen
+              finden.
+            </p>
+          </div>
+
+          <h2 class="text-[24px] font-bold">Erweiterte Funktionen</h2>
+          <div class="flex flex-col gap-[15px]">
+            <p>
+              <strong>Emojis & Reaktionen:</strong> Personalisiere Nachrichten
+              in Channels mit Emojis und sende Reaktionen auf Nachrichten.
+            </p>
+            <p>
+              <strong>Nachrichten bearbeiten:</strong> Möchtest du eine
+              gesendete Nachricht ändern, klicke auf die drei Punkte und
+              speichere deine Änderungen.
+            </p>
+            <p>
+              <strong>Eigenen Kontakt bearbeiten:</strong> Aktualisiere temporär
+              deinen Namen, damit er im Chat korrekt angezeigt wird.
+            </p>
+          </div>
+
+          <h2 class="text-[24px] font-bold">Support</h2>
+          <p>
+            Hast du Fragen zur Datenverarbeitung oder Probleme beim Erstellen
+            eines Accounts? Melde dich einfach über die Kontaktdaten im
+            Impressum – wir sind gerne für dich da!
+          </p>
+
+          <p class="font-bold">Viel Spaß beim Entdecken von DaBubble!</p>
+        </div>
+      </div>
       }
     </div>
 
     <!-- input -->
     <app-message-input
-      *ngIf="!searchChat"
+      *ngIf="!searchChat && currentChannel.id !== 'welcome'"
       class="mx-[16px] md:mx-[45px] relative z-[2]"
       [chatComponent]="this"
       [isDirectChatComponent]="isDirectChat"
